@@ -36,7 +36,8 @@ echo "<option>".$kar['nama_lengkap']."</option>";
 
 
 </div>
-<div class="row">
+    <hr>    
+<div class="row mt-5">
 <div class="col">
 <table style="width:100%;" id="data_tamu" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">

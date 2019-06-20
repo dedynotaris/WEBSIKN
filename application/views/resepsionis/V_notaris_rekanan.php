@@ -20,7 +20,7 @@
 
 </div>
 <div class="col">
-<label>Keperluan</label>
+<label>Alamat notaris</label>
 <textarea name="alamat"   class="form-control alamat required" accept="text/plain" rows="4" placeholder="alamat notaris . . ."></textarea>
 <hr>
 <button type="submit" class="btn btn-success simpan_notaris btn-sm btn-block">Simpan tamu <span class="fa fa-save"></span></button> 

@@ -3,7 +3,7 @@ class Resepsionis extends CI_Controller{
 public function __construct() {
     parent::__construct();
 
-  $this->load->helper('download');
+$this->load->helper('download');
 $this->load->library('session');
 $this->load->model('M_resepsionis');
 $this->load->library('Datatables');
@@ -18,9 +18,7 @@ $this->load->view('resepsionis/V_riwayat_pekerjaan');
 }
 
 public function index(){
-$this->load->view('umum/V_header');
-$this->load->view('resepsionis/V_resepsionis');
-    
+$this->buku_tamu();    
 }
 
 public function keluar(){
@@ -121,9 +119,62 @@ redirect(404);
 public function json_data_tamu(){
 echo $this->M_resepsionis->json_data_tamu();       
 }
+public function json_data_absen(){
+echo $this->M_resepsionis->json_data_absen();       
+}
 
 public function json_data_notaris_rekanan(){
 echo $this->M_resepsionis->json_data_notaris_rekanan();       
 }
+
+public function absen(){
+$data_karyawan = $this->M_resepsionis->data_karyawan();    
+$this->load->view('umum/V_header');
+$this->load->view('resepsionis/V_absen',['data_karyawan'=>$data_karyawan]);
+    
+    
+}
+
+public function simpan_absen(){
+if($this->input->post()){
+$input = $this->input->post();
+
+
+$data = array(
+'tugas'                 => $input['tugas'],
+'nama_karyawan'         => $input['nama_karyawan'],
+'jam_datang'            => $input['jam_datang'],
+'jam_pulang'            => $input['jam_pulang'],
+'penginput'             => $this->session->userdata('nama_lengkap'),
+'no_user_penginput'     => $this->session->userdata('no_user') 
+);
+
+$this->db->insert('data_buku_absen',$data);
+
+
+$status = array(
+"status" => "success",
+'pesan'  => 'Data Absen berhasil disimpan'    
+);
+
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}    
+    
+}
+public function lihat_tugas(){
+if($this->input->post()){
+$data  = $this->db->get_where('data_buku_absen',array('id_data_buku_absen'=>$this->input->post('id_data_buku_absen')))->row_array();
+
+echo $data['tugas'];
+}else{
+redirect(404);    
+}
+
+}
+
+
     
 }

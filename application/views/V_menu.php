@@ -31,15 +31,15 @@ Pilihan
         <div class="col"><p><h3 style="color:#FF8C00;">Selamat Datang <?php echo $this->session->userdata("nama_lengkap"); ?></h3>Aplikasi Management Tempat penyimpanan dokumen  untuk mempermudah anda dalam mengelola dan mencari dokumen </p></div>
     </div>
     <br><br>
-    <div class="row text-center mt-5 " >
+    <div class="row text-center mt-2 " >
         
-        <div class="col-md-2 mx-auto">
+        <div class="col-md-2 mt-4 mx-auto">
             <a class="menu_utama" onclick="check_akses('Level 2','User2');"> 
             <span class="fa fa-folder fa-5x"></span><br>Dokumen Utama
         </a>
         </div>
         
-        <div class="col-md-2 mx-auto" >
+        <div class="col-md-2 mt-4 mx-auto" >
         <a  class="menu_utama" onclick="check_akses('Level 3','User3');"> 
             <span class="fa fa-folder-plus fa-5x"></span><br>Dokumen Perizinan
         </a>
@@ -47,24 +47,32 @@ Pilihan
         
        
         
-        <div class="col-md-2 mx-auto">
+        <div class="col-md-2 mt-4 mx-auto">
         <a class="menu_utama" onclick="check_akses('Level 4','Resepsionis');"> 
             <span class="fa fa-address-book fa-5x"></span><br>Receptionist
          </a>    
        </div>
+        
+          <div class="col-md-2 mt-4 mx-auto">
+        <a  class="menu_utama" onclick="check_akses('Admin','Dashboard');"> 
+            <span class="fa fa-upload fa-5x"></span><br>Data lama
+        </a>    
+        </div>
        
-         <div class="col-md-2 mx-auto">
+         <div class="col-md-2 mt-4 mx-auto">
         <a class="menu_utama" onclick="check_akses('Level 1','User1');"> 
             <span class="fa fa-user-cog fa-5x"></span><br>Admin
          </a>    
        </div>
          
         
-        <div class="col-md-2 mx-auto">
+        <div class="col-md-2 mt-4 mx-auto">
         <a  class="menu_utama" onclick="check_akses('Admin','Dashboard');"> 
             <span class="fa fa-cogs fa-5x"></span><br>Setting
         </a>    
         </div>
+        
+         
     </div>
  </div>
 
