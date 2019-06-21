@@ -54,7 +54,7 @@ Pilihan
        </div>
         
           <div class="col-md-2 mt-4 mx-auto">
-        <a  class="menu_utama" onclick="check_akses('Admin','Dashboard');"> 
+        <a  class="menu_utama" onclick="check_akses('Username','Data_lama');"> 
             <span class="fa fa-upload fa-5x"></span><br>Data lama
         </a>    
         </div>
