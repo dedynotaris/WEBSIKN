@@ -348,7 +348,6 @@ $this->simpan_data_informasi($input,$static,$this->upload->data());
 }else if(!empty($input['data_meta'])){
 $this->simpan_data_meta($input,$static,$this->upload->data());
 
-
 }
 $status = array(
 "status"     => "success",

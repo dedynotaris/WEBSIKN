@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-theme border-bottom">
-    <button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> Menu</button>
+<button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> Menu</button>
 
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 <span class="navbar-toggler-icon"></span>
@@ -81,54 +81,40 @@ Pilihan
 
 <div class="container-fluid">
 <div class="row">
-<div class="col"><a   style="text-decoration:none;" href="<?php echo base_url('Dashboard/data_berkas') ?>">
+<div class="col">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fa fa-address-book float-right fa-3x sticky-top"></span>
+<span class="fa fa-book float-right fa-3x sticky-top"></span>
 Data berkas <br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah">Buku tamu<div class="float-right">
-    <?php 
-$query3 = $this->db->get_where('data_berkas',array('pengupload !='=>NULL))->num_rows();
-
+<div class="footer p-2 bg_data_bawah">Dalam bentuk lampiran<div class="float-right">
+<?php 
+$query3 = $this->db->get('data_berkas')->num_rows();
 echo $query3;
 ?>
 </div></div>
-</div></a>	
 </div>	
-<div class="col "><a  style="text-decoration:none;" href="<?php echo base_url('Dashboard/data_client') ?>">
-<div class="bg_data rounded-top">
-<div class="p-2">
-<span class="fa fa-exchange-alt float-right fa-3x sticky-top"></span>
-Data Kas <br>
-<h4>&nbsp;</h4>
-</div>
-<div class="footer p-2 bg_data_bawah">Kas  <div class="float-right">
-<?php 
-$query1 = $this->db->get('data_client')->num_rows();
-echo $query1;
-?>
-</div></div>
-</div></a>	
 </div>	
 
 
 
-<div class="col "><a  style="text-decoration:none;" href="<?php echo base_url('Dashboard/data_user') ?>">
+
+<div class="col ">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fa fa-calendar float-right fa-3x sticky-top"></span>
-Absen <br>
+<span class="fa fa-book float-right fa-3x sticky-top"></span>
+Data Informasi <br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah" >Absen <div class="float-right">
+<div class="footer p-2 bg_data_bawah" >Data Informasi <div class="float-right">
 <?php 
-$query2 = $this->db->get('user')->num_rows();
-echo $query2;
+$query3 = $this->db->get('data_informasi_pekerjaan')->num_rows();
+echo $query3;
 ?>
+
 </div></div>
-</div></a>	
+</div>	
 </div>	
 
 </div>	

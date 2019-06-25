@@ -23,6 +23,21 @@ return $query->result();
 }
 }
 
+public function data_client(){
+$query = $this->db->get('data_client');
+
+return $query;
+}
+
+public function data_client_where($no_client){
+
+$this->db->from('data_client');
+$this->db->where('data_client.no_client',$no_client);
+$query = $this->db->get();  
+return $query;      
+    
+    
+}
 
 }
 ?>
