@@ -41,7 +41,7 @@ Pilihan
         
         <div class="col-md-2 mt-4 mx-auto" >
         <a  class="menu_utama" onclick="check_akses('Level 3','User3');"> 
-            <span class="fa fa-folder-plus fa-5x"></span><br>Dokumen Perizinan
+            <span class="fa fa-folder-plus fa-5x"></span><br>Dokumen Penunjang
         </a>
         </div>   
         
