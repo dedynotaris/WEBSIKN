@@ -1082,5 +1082,22 @@ unset($_SESSION['toggled']);
 echo print_r($this->session->userdata()); 
 }
 
+
+public function print_persyaratan() {
+ $data = array(
+        "dataku" => array(
+            "nama" => "Petani Kode",
+            "url" => "http://petanikode.com"
+        )
+    );
+
+    $this->load->library('pdf');
+
+    $this->pdf->setPaper('A4', 'potrait');
+    $this->pdf->filename = "laporan-petanikode.pdf";
+    $this->pdf->load_view('laporan_pdf', $data);
+    
+}
+
 }
 
