@@ -62,6 +62,8 @@ echo json_encode($json);
 
 
 public function create_client(){
+
+ 
 if($this->input->post()){
 $data = $this->input->post();
 
@@ -116,11 +118,9 @@ $syarat = array('no_client'         => "C_".$no_client,
 $this->db->insert('data_persyaratan_pekerjaan',$syarat);
 }
 
-
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
-
 $keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum']." dan pekerjaan ".$data['jenis_akta'] ;
 $this->histori($keterangan);
 
