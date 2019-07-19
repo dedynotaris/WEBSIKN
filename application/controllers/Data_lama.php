@@ -15,8 +15,14 @@ redirect(base_url('Menu'));
 public function index(){
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_data_lama');
+}
+public function data_berkas_lama(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_data_berkas_lama');    
+}
 
-
+public function json_data_berkas(){
+echo $this->M_data_lama->json_data_berkas();       
 }
 
 public function set_toggled(){
@@ -68,7 +74,7 @@ $data_client = array(
 'jenis_client'              => ucwords($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
 'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
-'tanggal_daftar'            => date('Y/m/d H:i:s'),    
+'tanggal_daftar'            => date('Y/m/d'),    
 'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
 'no_user'                   => $this->session->userdata('no_user'), 
 'nama_folder'               =>"Dok".$no_client,
@@ -206,7 +212,7 @@ $data_berkas = array(
 'nama_file'         => $input['nama_dokumen'],    
 'status_berkas'     => 'Data lama',
 'Pengupload'        => $this->session->userdata('nama_lengkap'),
-'tanggal_upload'    => date('Y/m/d H:is' ),  
+'tanggal_upload'    => date('Y/m/d' ),  
 );    
 $this->db->insert('data_berkas',$data_berkas);
 

@@ -43,7 +43,7 @@
 <input type="file" name="file_upload" class="form-control file_upload required" >
 
 <label>&nbsp;</label>
-<button type="submit" class="btn btn-success btn-block">Simpan File <span class="fa fa-save"></span></button>
+<button type="submit" class="btn btn-success btn-sm btn-block">Simpan File <span class="fa fa-save"></span></button>
 </div>
 </div>    
 
@@ -61,10 +61,11 @@
 <input type="text" name="contact_person" class="form-control contact_person required" accept="text/plain">
 
 <label>No Telepon</label>
-<input type="text" name="no_tlp"  class="form-control contact_number required" accept="text/plain">
+<input type="number" name="no_tlp"  class="form-control contact_number required" accept="text/plain">
 
 <label>Pilih Jenis client</label>
 <select name="jenis" id="pilih_jenis" class="form-control  required" accept="text/plain">
+<option ></option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>
@@ -81,8 +82,10 @@
 <textarea rows="4" id="alamat_badan_hukum" class="form-control required" required="" accept="text/plain"></textarea>
 </div>
 
-<label>&nbsp;</label>
-<button type="submit" class="btn simpan_client btn-success btn-block">Simpan Client <span class="fa fa-save"></span></button>
+    
+</div>
+<div class="card-footer">
+<button type="submit" class="btn btn-sm simpan_client btn-success btn-block">Simpan Client <span class="fa fa-save"></span></button>
 </form>
 </div>
 </div>
