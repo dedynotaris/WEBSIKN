@@ -45,3 +45,5 @@ jQuery( document ).ajaxStop(function() {
 
 </script>
 
+<body onload="set_cookie();"></body>
+
