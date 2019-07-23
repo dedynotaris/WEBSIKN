@@ -26,7 +26,7 @@
 <h5 align="center">&nbsp;</h5>
 <hr>
 <h5 align="center">Data jenis pekerjaan</h5>
-<?php $this->load->view('dashboard/V_data_jenis_dokumen'); ?>
+<?php $this->load->view('dashboard/V_data_jenis_pekerjaan'); ?>
 </div>
 </div>
 </div>

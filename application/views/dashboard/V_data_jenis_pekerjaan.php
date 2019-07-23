@@ -1,9 +1,9 @@
 <table style="width:100%;"  id="data_jenis_dokumen" class="table table-sm table-bordered table-striped table-condensed  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header">No</th>
-<th  align="center" aria-controls="datatable-fixed-header">no jenis dokumen</th>
+<th  align="center" aria-controls="datatable-fixed-header">no jenis pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header">pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header">nama jenis</th>
+<th  align="center" aria-controls="datatable-fixed-header">nama pekerjaan</th>
 <th style="width: 25%;" align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody align="center">
@@ -122,7 +122,7 @@ sProcessing: "loading..."
 },
 processing: true,
 serverSide: true,
-ajax: {"url": "<?php echo base_url('Dashboard/json_data_jenis_dokumen') ?> ", 
+ajax: {"url": "<?php echo base_url('Dashboard/json_data_jenis_pekerjaan') ?> ", 
 "type": "POST",
 data: function ( d ) {
 d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
@@ -130,10 +130,10 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_jenis_dokumen",
+"data": "id_jenis_pekerjaan",
 "orderable": false
 },
-{"data": "no_jenis_dokumen"},
+{"data": "no_jenis_pekerjaan"},
 {"data": "pekerjaan"},
 {"data": "nama_jenis"},
 {"data": "view"}
@@ -323,12 +323,12 @@ $('#data_jenis_dokumen').val( json.lastInput );
 
 }
 
-function tampilkan_data_persyaratan(no_jenis_dokumen){
+function tampilkan_data_persyaratan(no_jenis_pekerjaan){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:'post',
 url:'<?php echo base_url('Dashboard/get_persyaratan') ?>',
-data:"token="+token+"&no_jenis_dokumen="+no_jenis_dokumen,
+data:"token="+token+"&no_jenis_pekerjaan="+no_jenis_pekerjaan,
 success:function(data){
 $('#data_persyaratan').modal('show');
 $('.data_persyaratan').html(data);

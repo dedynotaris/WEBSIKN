@@ -31,7 +31,7 @@ redirect(404);
 public function get_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
-$data = $this->db->get_where('data_persyaratan',array('no_jenis_dokumen'=>$input['no_jenis_dokumen']));
+$data = $this->db->get_where('data_persyaratan',array('no_jenis_pekerjaan'=>$input['no_jenis_pekejaan']));
 
 echo "<table class='table table-sm table-bordered table-striped table-hover'>"
 . "<tr>"
@@ -246,8 +246,8 @@ echo json_encode($json);
 }
 
 
-public function json_data_jenis_dokumen(){
-echo $this->M_dashboard->json_data_jenis_dokumen();       
+public function json_data_jenis_pekerjaan(){
+echo $this->M_dashboard->json_data_jenis_pekerjaan();       
 }
 public function json_data_daftar_persyaratan(){
 echo $this->M_dashboard->json_data_daftar_persyaratan();       
