@@ -11,7 +11,6 @@ $this->load->library('upload');
 if($this->session->userdata('level') != 'Super Admin'){
 redirect(base_url('Menu'));
 }
-
 } 
 
 

@@ -8,7 +8,6 @@
 </thead>
 <tbody align="center">
 </table>
-
 <!------------- Modal Tambah jenis dokumen---------------->
 <div class="modal fade bd-example-modal-lg" id="tambah_jenis_dokumen" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
@@ -28,7 +27,6 @@
 <option>PPAT</option>   
 </select>
 <hr>
-
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -41,8 +39,7 @@
 <!------------- Modal Tambah syarat jenis---------------->
 <div class="modal fade bd-example-modal-lg" id="tambah_syarat_jenis" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-    
+<div class="modal-content">  
 <div class="modal-body">
 <input type="hidden" class="form-control no_jenis_dokumen" value="" >
 <input type="hidden" class="form-control no_nama_dokumen" value="" >
@@ -61,9 +58,7 @@
 <div class="modal fade bd-example-modal-lg" id="data_persyaratan" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
 <div class="modal-content">
-    
 <div class="modal-body data_persyaratan">
-
 </div>
 
 </div>

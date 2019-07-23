@@ -34,6 +34,7 @@ $set_sesi = array(
 'nama_lengkap'  => $data_sesi['nama_lengkap'],
 'level'         => $data_sesi['level'],
 'status'        => $data_sesi['status'],
+'foto'          => $data_sesi['foto'],
 );
 $this->session->set_userdata($set_sesi);
 

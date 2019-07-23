@@ -62,6 +62,8 @@ echo json_encode($json);
 
 
 public function create_client(){
+
+ 
 if($this->input->post()){
 $data = $this->input->post();
 
@@ -116,11 +118,9 @@ $syarat = array('no_client'         => "C_".$no_client,
 $this->db->insert('data_persyaratan_pekerjaan',$syarat);
 }
 
-
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
-
 $keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum']." dan pekerjaan ".$data['jenis_akta'] ;
 $this->histori($keterangan);
 
@@ -347,7 +347,6 @@ if(!empty($input['data_informasi'])){
 $this->simpan_data_informasi($input,$static,$this->upload->data());
 }else if(!empty($input['data_meta'])){
 $this->simpan_data_meta($input,$static,$this->upload->data());
-
 
 }
 $status = array(
@@ -1081,6 +1080,23 @@ $this->session->set_userdata($array);
 unset($_SESSION['toggled']);   
 }
 echo print_r($this->session->userdata()); 
+}
+
+
+public function print_persyaratan() {
+ $data = array(
+        "dataku" => array(
+            "nama" => "Petani Kode",
+            "url" => "http://petanikode.com"
+        )
+    );
+
+    $this->load->library('pdf');
+
+    $this->pdf->setPaper('A4', 'potrait');
+    $this->pdf->filename = "laporan-petanikode.pdf";
+    $this->pdf->load_view('laporan_pdf', $data);
+    
 }
 
 }

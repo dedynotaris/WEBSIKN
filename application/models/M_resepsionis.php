@@ -26,6 +26,23 @@ $this->datatables->select('id_data_buku_tamu,'
 $this->datatables->from('data_buku_tamu');
 return $this->datatables->generate();
 }
+
+function json_data_absen(){
+    
+$this->datatables->select('id_data_buku_absen,'
+.'data_buku_absen.nama_karyawan as nama_karyawan,'
+.'data_buku_absen.jam_datang as jam_datang,'
+.'data_buku_absen.jam_pulang as jam_pulang,'
+.'data_buku_absen.penginput as penginput,'
+);
+$this->datatables->from('data_buku_absen');
+$this->datatables->add_column('view',""
+        . "<button class='btn btn-sm btn-success '  onclick=lihat_tugas('$1'); > Lihat Tugas <i class='fa fa-eye'></i></button> || "
+        . "<button class='btn btn-sm btn-success '  onclick=edit_absen('$1'); > Edit Absen <i class='fa fa-eye'></i></button>"
+        . "",'id_data_buku_absen');
+
+return $this->datatables->generate();
+}
 function json_data_notaris_rekanan(){
     
 $this->datatables->select('id_notaris_rekanan,'

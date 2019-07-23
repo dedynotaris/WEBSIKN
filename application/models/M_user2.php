@@ -161,7 +161,7 @@ return $query;
 }
 
 public function data_user(){
-$query = $this->db->get_where('user',array('sublevel'=>'Level 3'));   
+$query = $this->db->get('user');   
 return $query;    
 }
 public function  data_form_perizinan($no_berkas){
