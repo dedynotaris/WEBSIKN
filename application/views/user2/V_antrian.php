@@ -38,6 +38,7 @@ echo $d->diff(new DateTime())->format('%a');
 <option>-- Klik untuk lihat menu --</option>
 <option value="1">Proses Persyaratan</option>
 <option value="2">Buat laporan</option>
+<option value="3">Lihat laporan</option>
 </select>    
 </td>
 </tr>
@@ -66,6 +67,16 @@ echo $d->diff(new DateTime())->format('%a');
 </div>
 </div>
 </div>
+</div>
+
+
+<div class="modal fade" id="lihat_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-body lihat_laporan">
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -115,11 +126,40 @@ var nama_client = $("#nama_client"+id_data_pekerjaan).text();
 $(".laporan_client").text(nama_client);
 $(".no_pekerjaan").val(no_pekerjaan);
 $(".id_data_pekerjaan").val(id_data_pekerjaan);
+}else if(aksi_option == 3){
+lihat_laporan(no_pekerjaan);
 
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 2000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: "warning",
+title: "Anda belum menentukan pilihan"
+});
+}
+$(".data_option"+id_data_pekerjaan).prop('selectedIndex',0);
 
 }
-$(".data_option"+id_data_pekerjaan).val("-- Klik untuk lihat menu --");
-}    
+
+function lihat_laporan(no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/lihat_laporan_pekerjaan') ?>",
+success:function(data){
+$('#lihat_laporan').modal('show');
+$(".lihat_laporan").html(data);
+}
+});    
+}
 
 
 function tambahkan_kedalam_proses(no_pekerjaan){

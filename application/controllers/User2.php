@@ -77,7 +77,7 @@ $no_pekerjaan = str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
 
 $data_client = array(
-'no_client'                 => "C_".$no_client,    
+'no_client'                 => "C".$no_client,    
 'jenis_client'              => ucwords($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
 'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
@@ -88,18 +88,16 @@ $data_client = array(
 'contact_person'            => ucwords($data['contact_person']),    
 'contact_number'            => ucwords($data['contact_number']),    
 );    
-
 $this->db->insert('data_client',$data_client);
 
 $data_r = array(
-'no_client'          => "C_".$no_client,    
+'no_client'          => "C".$no_client,    
 'status_pekerjaan'      => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
-'tanggal_dibuat'     => date('Y/m/d H:i:s'),
+'tanggal_dibuat'     => date('Y/m/d'),
 'no_jenis_perizinan' => $data['id_jenis'],   
-'tanggal_antrian'    => date('Y/m/d H:i:s'),
+'tanggal_antrian'    => date('Y/m/d'),
 'target_kelar'       => $data['target_kelar'],
-'count_up'           => date('Y,m,d H:i:s'),        
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
 'jenis_perizinan'    => ucwords($data['jenis_akta']),
@@ -109,14 +107,16 @@ $this->db->insert('data_pekerjaan',$data_r);
 
 
 foreach ($data_persyaratan->result_array() as $persyaratan){
-$syarat = array('no_client'         => "C_".$no_client,    
+$syarat = array(
+'no_client'               => "C".$no_client,    
 'no_pekerjaan_syarat'      => $no_pekerjaan,    
-'no_nama_dokumen'   => $persyaratan['no_nama_dokumen'],    
-'nama_dokumen'      => $persyaratan['nama_dokumen'],
-'no_jenis_dokumen'  => $persyaratan['no_jenis_dokumen'], 
+'no_nama_dokumen'          => $persyaratan['no_nama_dokumen'],    
+'nama_dokumen'             => $persyaratan['nama_dokumen'],
+'no_jenis_dokumen'         => $persyaratan['no_jenis_dokumen'], 
 );
 $this->db->insert('data_persyaratan_pekerjaan',$syarat);
 }
+
 
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
@@ -759,7 +759,7 @@ $data = array(
 'laporan_pekerjaan'       => $input['laporan'],
 'no_pekerjaan'            => base64_decode($input['no_pekerjaan']),
 'no_user'                 => $this->session->userdata('no_user'),
-'waktu'                   => date('d/m/Y H:i:s')    
+'waktu'                   => date('Y/m/d')    
 );
 $this->db->insert('data_progress_pekerjaan',$data);
 $status = array(
@@ -771,6 +771,35 @@ echo json_encode($status);
 }else{
 redirect(404);    
 }    
+}
+
+function lihat_laporan_pekerjaan(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
+if($data->num_rows() == 0){
+echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
+    . "<br><br><span class='fa fa-list-alt fa-3x'></span></h5>";
+    
+}else{
+echo "<table class='table table-bordered table-striped table-hover table-sm'>"
+. "<tr>"
+. "<th>Tanggal </th>"
+. "<th>laporan</th>"
+. "</tr>";
+foreach ($data->result_array() as $d){
+echo "<tr>"
+    . "<td>".$d['waktu']."</td>"
+    . "<td>".$d['laporan_pekerjaan']."</td>"
+    . "</tr>";    
+}
+echo "</table>";
+}
+}else{
+redirect(404);    
+}
+    
 }
 
 

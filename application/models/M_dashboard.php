@@ -55,7 +55,7 @@ public function simpan_nama_dokumen($data){
 $this->db->insert('nama_dokumen',$data);    
 }
 public function data_jenis(){
-$query = $this->db->get('data_jenis_dokumen');
+$query = $this->db->get('data_jenis_pekerjaan');
 return $query;            
 }
 
@@ -130,15 +130,15 @@ public function simpan_syarat($data){
 $this->db->insert('data_syarat_jenis_dokumen',$data);    
 }
 
-function json_data_jenis_dokumen(){
-$this->datatables->select('id_jenis_dokumen,'
-. 'data_jenis_dokumen.id_jenis_dokumen as id_jenis_dokumen,'
-. 'data_jenis_dokumen.no_jenis_dokumen as no_jenis_dokumen,'
-. 'data_jenis_dokumen.pekerjaan as pekerjaan,'
-. 'data_jenis_dokumen.nama_jenis as nama_jenis,'
+function json_data_jenis_pekerjaan(){
+$this->datatables->select('id_jenis_pekerjaan,'
+. 'data_jenis_pekerjaan.id_jenis_pekerjaan as id_jenis_pekerjaan,'
+. 'data_jenis_pekerjaan.no_jenis_pekerjaan as no_jenis_pekerjaan,'
+. 'data_jenis_pekerjaan.pekerjaan as pekerjaan,'
+. 'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
 );
 
-$this->datatables->from('data_jenis_dokumen');
+$this->datatables->from('data_jenis_pekerjaan');
 $this->datatables->add_column('view',""
         . "<select onchange=opsi_jenis_pekerjaan('$1','$2') class='form-control text-center opsi_pekerjaan$1'>"
         . "<option>-- Klik untuk melihat menu --</option>"
@@ -146,7 +146,7 @@ $this->datatables->add_column('view',""
         . "<option value='2'>Lihat persyaratan</option>"
         . "<option value='3'>Edit Pekerjaan</option>"
         . "</select>"
-        . "",'id_jenis_dokumen , no_jenis_dokumen');
+        . "",'id_jenis_pekerjaan , no_jenis_pekerjaan');
 return $this->datatables->generate();
 }
 function json_data_jenis(){
