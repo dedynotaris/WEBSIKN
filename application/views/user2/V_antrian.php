@@ -27,7 +27,7 @@ Pekejaan masuk
 
 <tr>
 <td id='nama_client<?php echo $data['id_data_pekerjaan'] ?>'><?php echo $data['nama_client'] ?></td>
-<td><?php echo $data['jenis_perizinan'] ?></td>
+<td><?php echo $data['nama_jenis'] ?></td>
 <td><?php 
 
 $d = new DateTime($data['target_kelar']);

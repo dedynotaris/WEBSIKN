@@ -155,17 +155,17 @@ $('td:eq(0)', row).html(index);
 $(document).ready(function(){
 $(".update_nama_pekerjaan").click(function(){
 var token            = "<?php echo $this->security->get_csrf_hash() ?>";
-var no_jenis_dokumen = $("#no_jenis_pekerjaan_edit").val();
-var id_jenis_dokumen = $("#id_jenis_pekerjaan_edit").val();
+var no_jenis_pekerjaan = $("#no_jenis_pekerjaan_edit").val();
+var id_jenis_pekerjaan = $("#id_jenis_pekerjaan_edit").val();
 var nama_jenis       =  $("#jenis_pekerjaan_edit").val();
 var pekerjaan        = $("#pekerjaan_edit option:selected").text();
  
-if(nama_jenis !='' && pekerjaan !='' && no_jenis_dokumen !=''){
+if(nama_jenis !='' && pekerjaan !='' && no_jenis_pekerjaan !=''){
     
 $.ajax({
 type:"POST",
 url:"<?php echo base_url('Dashboard/update_jenis_pekerjaan') ?>",
-data:"token="+token+"&no_jenis_dokumen="+no_jenis_dokumen+"&nama_jenis="+nama_jenis+"&pekerjaan="+pekerjaan+"&id_jenis_dokumen="+id_jenis_dokumen,
+data:"token="+token+"&no_jenis_pekerjaan="+no_jenis_pekerjaan+"&nama_jenis="+nama_jenis+"&pekerjaan="+pekerjaan+"&id_jenis_pekerjaan="+id_jenis_pekerjaan,
 success:function(data){
 var r = JSON.parse(data);
 
@@ -274,13 +274,13 @@ $('.simpan_persyaratan').click(function(){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 var nama_dokumen    = $(".nama_dokumen").val();
 var no_nama_dokumen = $(".no_nama_dokumen").val();
-var no_jenis_dokumen = $(".no_jenis_dokumen").val();
+var no_jenis_pekerjaan = $(".no_jenis_dokumen").val();
 
 if(nama_dokumen != ''){
 $.ajax({
 type:'post',
 url:'<?php echo base_url('Dashboard/simpan_persyaratan') ?>',
-data:"token="+token+"&nama_dokumen="+nama_dokumen+"&no_nama_dokumen="+no_nama_dokumen+"&no_jenis_dokumen="+no_jenis_dokumen,
+data:"token="+token+"&nama_dokumen="+nama_dokumen+"&no_nama_dokumen="+no_nama_dokumen+"&no_jenis_pekerjaan="+no_jenis_pekerjaan,
 success:function(data){
 var r = JSON.parse(data);
 const Toast = Swal.mixin({
@@ -363,16 +363,16 @@ edit_jenis_pekerjaan(id_jenis_dokumen);
 $(".opsi_pekerjaan"+id_jenis_dokumen).val("-- Klik untuk melihat menu --");
 }
 
-function edit_jenis_pekerjaan(id_jenis_dokumen){
+function edit_jenis_pekerjaan(id_jenis_pekerjaan){
 var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
 $.ajax({
 type:"post",
 url :"<?php echo base_url('Dashboard/data_pekerjaan') ?>",
-data:"token="+token+"&id_jenis_dokumen="+id_jenis_dokumen,
+data:"token="+token+"&id_jenis_pekerjaan="+id_jenis_pekerjaan,
 success:function(data){
 var r = JSON.parse(data);    
-$("#id_jenis_pekerjaan_edit").val(id_jenis_dokumen);
-$("#no_jenis_pekerjaan_edit").val(r.no_jenis_dokumen);
+$("#id_jenis_pekerjaan_edit").val(id_jenis_pekerjaan);
+$("#no_jenis_pekerjaan_edit").val(r.no_jenis_pekerjaan);
 $("#jenis_pekerjaan_edit").val(r.nama_jenis);
 
 }

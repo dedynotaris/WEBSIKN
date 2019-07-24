@@ -31,8 +31,8 @@ redirect(404);
 public function get_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
-$data = $this->db->get_where('data_persyaratan',array('no_jenis_pekerjaan'=>$input['no_jenis_pekejaan']));
-
+$data = $this->M_dashboard->data_persyaratan($input['no_jenis_pekerjaan']);
+        
 echo "<table class='table table-sm table-bordered table-striped table-hover'>"
 . "<tr>"
 ."<th>Nama File</th>"
@@ -299,11 +299,11 @@ public function data_pekerjaan(){
 if($this->input->post()){
 $input = $this->input->post();    
 
-$query = $this->db->get_where('data_jenis_dokumen',array('id_jenis_dokumen'=>$input['id_jenis_dokumen']))->row_array();
+$query = $this->db->get_where('data_jenis_pekerjaan',array('id_jenis_pekerjaan'=>$input['id_jenis_pekerjaan']))->row_array();
 $data = array(
-'no_jenis_dokumen' =>$query['no_jenis_dokumen'],
-'pekerjaan'        =>$query['pekerjaan'],
-'nama_jenis'       =>$query['nama_jenis'],
+'no_jenis_pekerjaan' =>$query['no_jenis_pekerjaan'],
+'pekerjaan'          =>$query['pekerjaan'],
+'nama_jenis'         =>$query['nama_jenis'],
 );    
 echo json_encode($data);
 
@@ -318,13 +318,13 @@ if($this->input->post()){
 $input = $this->input->post();
 
 $data = array(
-'no_jenis_dokumen' =>$input['no_jenis_dokumen'],
-'pekerjaan'        =>$input['pekerjaan'],
-'nama_jenis'       =>$input['nama_jenis'],
-'pembuat_jenis'    => $this->session->userdata('nama_lengkap'),  
+'no_jenis_pekerjaan' =>$input['no_jenis_pekerjaan'],
+'pekerjaan'          =>$input['pekerjaan'],
+'nama_jenis'         =>$input['nama_jenis'],
+'pembuat_jenis'      => $this->session->userdata('nama_lengkap'),  
 );
 
-$this->db->update('data_jenis_dokumen',$data,array('id_jenis_dokumen'=>$input['id_jenis_dokumen']));
+$this->db->update('data_jenis_pekerjaan',$data,array('id_jenis_pekerjaan'=>$input['id_jenis_pekerjaan']));
 
 $status = array(
 "status"=>"success",
@@ -516,9 +516,8 @@ if($this->input->post()){
 $input = $this->input->post();
 
 $data = array(
-'nama_dokumen'      =>$input['nama_dokumen'], 
-'no_nama_dokumen'   =>$input['no_nama_dokumen'], 
-'no_jenis_dokumen'  =>$input['no_jenis_dokumen']   
+'no_nama_dokumen'     =>$input['no_nama_dokumen'], 
+'no_jenis_pekerjaan'  =>$input['no_jenis_pekerjaan']   
 );
 
 $this->db->insert('data_persyaratan',$data);

@@ -394,5 +394,16 @@ $this->db->like($array);
 $query = $this->db->get();
 return $query;
 }
+public function data_persyaratan($no_jenis_pekerjaan){
+   
+$this->db->select('*');
+$this->db->from('data_persyaratan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
+$this->db->where('data_persyaratan.no_jenis_pekerjaan',$no_jenis_pekerjaan);
+$query = $this->db->get();
+
+return $query;
+}
+
 }
 ?>

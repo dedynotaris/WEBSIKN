@@ -4,14 +4,14 @@
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <div class="container-fluid ">
 <div class="card-header mt-2 text-center ">
-<h5 align="center">Tambahkan pekerjaan dan client baru</h5>
+<h5 align="center">Tambahkan pekerjaan & Klien Baru</h5>
 </div>
 <form  id="fileForm" method="post" action="<?php echo base_url('User2/create_client') ?>">
 <div class="row  p-3" >
 <div class="col-md-6">
 <label>Jenis Pekerjaan</label>
-<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control required"  accept="text/plain">
-<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control required"  accept="text/plain">
+<input type="text" name="jenis_pekerjaan"  id="jenis_pekerjaan" class="form-control required"  accept="text/plain">
+<input type="hidden" name="id_jenis_pekerjaan" readonly="" id="id_jenis_pekerjaan" class="form-control required"  accept="text/plain">
 <label>Target selesai</label>
 <input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control required"  accept="text/plain">
 <label>Contact Person</label>
@@ -99,8 +99,7 @@ var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 formData = new FormData();
 formData.append('token',token);
 formData.append('jenis_client',$("#pilih_jenis option:selected").text());
-formData.append('jenis_akta',$("#jenis_akta").val()),
-formData.append('id_jenis',$("#id_jenis_akta").val()),
+formData.append('no_jenis_pekerjaan',$("#id_jenis_pekerjaan").val()),
 formData.append('badan_hukum',$("#badan_hukum").val()),
 formData.append('target_kelar',$("#target_kelar").val()),
 formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
@@ -141,13 +140,13 @@ return false;
 
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$("#jenis_akta,#jenis_akta_perorangan").autocomplete({
+$("#jenis_pekerjaan").autocomplete({
 minLength:0,
 delay:0,
-source:'<?php echo site_url('User2/cari_jenis_dokumen') ?>',
+source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
 select:function(event, ui){
-$("#id_jenis_akta").val("");
-$("#id_jenis_akta,#id_jenis_akta_perorangan").val(ui.item.no_jenis_dokumen);
+$("#id_jenis_pekerjaan").val("");
+$("#id_jenis_pekerjaan,#id_jenis_akta_pekerjaan").val(ui.item.no_jenis_pekerjaan);
 }
 }
 );

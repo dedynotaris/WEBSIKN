@@ -24,7 +24,7 @@ $this->db->insert('data_syarat_jenis_dokumen',$data);
 }
 
 public function cari_jenis_dokumen($term){
-$this->db->from("data_jenis_dokumen");
+$this->db->from("data_jenis_pekerjaan");
 $this->db->limit(15);
 $array = array('nama_jenis' => $term);
 $this->db->like($array);
@@ -130,6 +130,7 @@ public function data_pekerjaan($param){
 $this->db->select('*');
 $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->where('data_pekerjaan.status_pekerjaan',$param);
 $this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'),FALSE);
 $query = $this->db->get();

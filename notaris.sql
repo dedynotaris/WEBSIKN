@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
--- Host: localhost:3306
--- Generation Time: Jul 23, 2019 at 05:11 PM
--- Server version: 5.7.20-log
--- PHP Version: 7.2.19-0ubuntu0.18.04.1
+-- Host: 127.0.0.1
+-- Generation Time: Jul 24, 2019 at 03:24 AM
+-- Server version: 10.1.10-MariaDB
+-- PHP Version: 7.0.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -105,7 +105,7 @@ CREATE TABLE `data_client` (
 --
 
 INSERT INTO `data_client` (`id_data_client`, `no_client`, `nama_client`, `jenis_client`, `alamat_client`, `tanggal_daftar`, `pembuat_client`, `no_user`, `nama_folder`, `contact_person`, `contact_number`) VALUES
-(1, 'C_000001', 'PT ANGKASINDO DUNIA', 'Badan Hukum', 'Jl.Muara Karang Blok L9 No.8 Penjaringan Jakarta Utara', '2019/07/23 14:19:09', 'Admin', '0001', 'Dok000001', 'Zaenudin', '081289903664');
+(7, 'C000001', 'PT JAYA ABADI', 'Badan Hukum', 'JL.Muara Karang Blok L9 T No.8 Penjaringan Jakarta Utara', '2019/07/23 16:23:51', 'Admin', '0001', 'DokC000001', 'Bapak Saipudin', '081289903664');
 
 -- --------------------------------------------------------
 
@@ -141,7 +141,9 @@ CREATE TABLE `data_histori_pekerjaan` (
 --
 
 INSERT INTO `data_histori_pekerjaan` (`id_data_histori_pekerjaan`, `no_user`, `keterangan`, `tanggal`) VALUES
-(1, '0001', 'Admin Membuat client PT Angkasindo Dunia dan pekerjaan Akta pendirian Perseroan Terbatas ( PT )', '2019/07/23 14:19:11');
+(2, '0001', 'Admin Membuat client asd dan pekerjaan ', '2019/07/23 16:18:17'),
+(3, '0001', 'Admin Membuat client PT Jaya Abadi', '2019/07/23 16:19:30'),
+(4, '0001', 'Admin Membuat client PT Jaya Abadi', '2019/07/23 16:23:51');
 
 -- --------------------------------------------------------
 
@@ -169,9 +171,8 @@ CREATE TABLE `data_jenis_pekerjaan` (
   `no_jenis_pekerjaan` varchar(255) NOT NULL,
   `pekerjaan` varchar(255) NOT NULL,
   `nama_jenis` varchar(255) NOT NULL,
-  `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `pembuat_jenis` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ;
 
 --
 -- Dumping data for table `data_jenis_pekerjaan`
@@ -212,7 +213,7 @@ INSERT INTO `data_jenis_pekerjaan` (`id_jenis_pekerjaan`, `no_jenis_pekerjaan`, 
 (34, 'J_0032', 'NOTARIS', 'Akta Surat Kuasa Memberikan Hak Tanggungan (SKMHT)', '2019-05-10 07:35:05.180965', 'Admin'),
 (35, 'J_0033', 'PPAT', 'Akta Pemberian Hak Tanggungan (APHT)', '2019-05-15 05:56:54.040414', 'Admin'),
 (36, 'J_0034', 'NOTARIS', 'Akta Pernyataan (WARIS)', '2019-05-10 08:45:35.985455', 'Admin'),
-(37, 'J_0035', 'NOTARIS', 'Akta Pendirian PT PMA', '2019-05-15 04:26:29.469327', 'Admin');
+(37, 'J_0035', 'NOTARIS', 'Akta Pendirian PT PMA', '2019-07-23 13:44:13.825399', 'Admin');
 
 -- --------------------------------------------------------
 
@@ -245,7 +246,6 @@ INSERT INTO `data_meta` (`id_data_meta`, `no_nama_dokumen`, `nama_meta`) VALUES
 (59, 'N_0048', 'Nama PT/Yay/Perkumpulan/C'),
 (60, 'N_0048', 'Nama kekayaan yayasan/per'),
 (62, 'N_0046', 'Nama berita acara rapat'),
-(69, 'N_0055', 'Surat persetujuan'),
 (70, 'N_0014', 'Informasi'),
 (71, 'N_0043', 'Informasi'),
 (72, 'N_0039', 'Informasi'),
@@ -290,7 +290,8 @@ INSERT INTO `data_meta` (`id_data_meta`, `no_nama_dokumen`, `nama_meta`) VALUES
 (111, 'N_0008', 'Surat Persetujuan'),
 (112, 'N_0007', 'Surat BKPM'),
 (113, 'N_0005', 'Surat Domisili'),
-(114, 'N_0003', 'Asli Dokumen legalisasi');
+(114, 'N_0003', 'Asli Dokumen legalisasi'),
+(115, 'N_0055', 'Keterangan');
 
 -- --------------------------------------------------------
 
@@ -308,15 +309,6 @@ CREATE TABLE `data_meta_berkas` (
   `value_meta` varchar(255) NOT NULL,
   `nama_folder` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `data_meta_berkas`
---
-
-INSERT INTO `data_meta_berkas` (`id_data_meta_berkas`, `nama_berkas`, `no_client`, `no_pekerjaan`, `no_nama_dokumen`, `nama_meta`, `value_meta`, `nama_folder`) VALUES
-(71, 'cff4e434944b2f28eadfe5b95bf0d9f2.png', 'C_000001', '000001', 'N_0006', 'Nama KTP', 'Bapak Sukoco', 'Dok000001'),
-(72, 'cff4e434944b2f28eadfe5b95bf0d9f2.png', 'C_000001', '000001', 'N_0006', 'NIK', '327106230198', 'Dok000001'),
-(73, '2777eaf1a5ae05dec884d973f98fbb56.pdf', 'C_000001', '000001', 'N_0002', 'No NPWP', '89225855', 'Dok000001');
 
 -- --------------------------------------------------------
 
@@ -344,7 +336,8 @@ CREATE TABLE `data_pekerjaan` (
   `id_data_pekerjaan` int(11) NOT NULL,
   `no_client` varchar(255) NOT NULL,
   `no_pekerjaan` varchar(255) NOT NULL,
-  `no_persyaratan` varchar(255) NOT NULL,
+  `no_jenis_pekerjaan` varchar(255) NOT NULL,
+  `no_user` varchar(255) NOT NULL,
   `status_pekerjaan` varchar(255) NOT NULL,
   `tanggal_dibuat` varchar(255) NOT NULL,
   `tanggal_selesai` varchar(255) DEFAULT NULL,
@@ -357,8 +350,8 @@ CREATE TABLE `data_pekerjaan` (
 -- Dumping data for table `data_pekerjaan`
 --
 
-INSERT INTO `data_pekerjaan` (`id_data_pekerjaan`, `no_client`, `no_pekerjaan`, `no_persyaratan`, `status_pekerjaan`, `tanggal_dibuat`, `tanggal_selesai`, `pembuat_pekerjaan`, `tanggal_proses`, `target_kelar`) VALUES
-(92, 'C_000001', '000001', '', 'Masuk', '2019/07/23 14:19:10', NULL, 'Admin', '', '2019/07/24');
+INSERT INTO `data_pekerjaan` (`id_data_pekerjaan`, `no_client`, `no_pekerjaan`, `no_jenis_pekerjaan`, `no_user`, `status_pekerjaan`, `tanggal_dibuat`, `tanggal_selesai`, `pembuat_pekerjaan`, `tanggal_proses`, `target_kelar`) VALUES
+(95, 'C000001', 'P000001', 'J_0001', '0001', 'Masuk', '2019/07/23', NULL, 'Admin', '', '2019/07/31');
 
 -- --------------------------------------------------------
 
@@ -380,311 +373,309 @@ CREATE TABLE `data_perizinan` (
 
 CREATE TABLE `data_persyaratan` (
   `id_data_persyaratan` int(11) NOT NULL,
-  `no_persyaratan` varchar(255) NOT NULL,
   `no_nama_dokumen` varchar(255) NOT NULL,
-  `no_jenis_pekerjaan` varchar(255) NOT NULL,
-  `status_persyaratan` varchar(255) NOT NULL
+  `no_jenis_pekerjaan` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `data_persyaratan`
 --
 
-INSERT INTO `data_persyaratan` (`id_data_persyaratan`, `no_persyaratan`, `no_nama_dokumen`, `no_jenis_pekerjaan`, `status_persyaratan`) VALUES
-(7, '', 'N_0003', 'J_0027', ''),
-(8, '', 'N_0006', 'J_0027', ''),
-(9, '', 'N_0032', 'J_0027', ''),
-(10, '', 'N_0026', 'J_0026', ''),
-(11, '', 'N_0006', 'J_0026', ''),
-(12, '', 'N_0032', 'J_0026', ''),
-(26, '', 'N_0006', 'J_0025', ''),
-(27, '', 'N_0016', 'J_0025', ''),
-(28, '', 'N_0010', 'J_0025', ''),
-(29, '', 'N_0002', 'J_0025', ''),
-(33, '', 'N_0011', 'J_0025', ''),
-(34, '', 'N_0017', 'J_0025', ''),
-(35, '', 'N_0018', 'J_0025', ''),
-(39, '', 'N_0011', 'J_0032', ''),
-(40, '', 'N_0017', 'J_0032', ''),
-(41, '', 'N_0018', 'J_0032', ''),
-(42, '', 'N_0006', 'J_0032', ''),
-(43, '', 'N_0016', 'J_0032', ''),
-(46, '', 'N_0002', 'J_0032', ''),
-(47, '', 'N_0010', 'J_0032', ''),
-(48, '', 'N_0009', 'J_0032', ''),
-(49, '', 'N_0005', 'J_0032', ''),
-(50, '', 'N_0029', 'J_0032', ''),
-(52, '', 'N_0008', 'J_0032', ''),
-(53, '', 'N_0013', 'J_0032', ''),
-(54, '', 'N_0030', 'J_0032', ''),
-(55, '', 'N_0009', 'J_0025', ''),
-(56, '', 'N_0005', 'J_0025', ''),
-(57, '', 'N_0029', 'J_0025', ''),
-(58, '', 'N_0008', 'J_0025', ''),
-(59, '', 'N_0013', 'J_0025', ''),
-(60, '', 'N_0030', 'J_0025', ''),
-(61, '', 'N_0006', 'J_0024', ''),
-(62, '', 'N_0010', 'J_0024', ''),
-(63, '', 'N_0016', 'J_0024', ''),
-(64, '', 'N_0012', 'J_0024', ''),
-(65, '', 'N_0012', 'J_0025', ''),
-(66, '', 'N_0012', 'J_0032', ''),
-(67, '', 'N_0006', 'J_0034', ''),
-(68, '', 'N_0027', 'J_0034', ''),
-(69, '', 'N_0012', 'J_0034', ''),
-(70, '', 'N_0019', 'J_0034', ''),
-(71, '', 'N_0010', 'J_0034', ''),
-(73, '', 'N_0033', 'J_0024', ''),
-(74, '', 'N_0006', 'J_0021', ''),
-(75, '', 'N_0031', 'J_0034', ''),
-(76, '', 'N_0006', 'J_0023', ''),
-(77, '', 'N_0009', 'J_0023', ''),
-(78, '', 'N_0005', 'J_0023', ''),
-(79, '', 'N_0015', 'J_0023', ''),
-(80, '', 'N_0032', 'J_0023', ''),
-(81, '', 'N_0020', 'J_0023', ''),
-(82, '', 'N_0001', 'J_0023', ''),
-(83, '', 'N_0004', 'J_0023', ''),
-(84, '', 'N_0002', 'J_0023', ''),
-(85, '', 'N_0006', 'J_0022', ''),
-(86, '', 'N_0010', 'J_0022', ''),
-(87, '', 'N_0012', 'J_0022', ''),
-(88, '', 'N_0016', 'J_0022', ''),
-(89, '', 'N_0020', 'J_0022', ''),
-(90, '', 'N_0013', 'J_0023', ''),
-(91, '', 'N_0008', 'J_0023', ''),
-(92, '', 'N_0008', 'J_0022', ''),
-(93, '', 'N_0009', 'J_0022', ''),
-(94, '', 'N_0001', 'J_0021', ''),
-(95, '', 'N_0005', 'J_0021', ''),
-(96, '', 'N_0009', 'J_0021', ''),
-(97, '', 'N_0008', 'J_0021', ''),
-(98, '', 'N_0013', 'J_0021', ''),
-(99, '', 'N_0020', 'J_0021', ''),
-(101, '', 'N_0006', 'J_0018', ''),
-(102, '', 'N_0020', 'J_0018', ''),
-(103, '', 'N_0009', 'J_0018', ''),
-(104, '', 'N_0008', 'J_0018', ''),
-(105, '', 'N_0013', 'J_0018', ''),
-(107, '', 'N_0005', 'J_0018', ''),
-(110, '', 'N_0018', 'J_0018', ''),
-(111, '', 'N_0035', 'J_0018', ''),
-(112, '', 'N_0029', 'J_0021', ''),
-(113, '', 'N_0006', 'J_0020', ''),
-(114, '', 'N_0019', 'J_0020', ''),
-(115, '', 'N_0027', 'J_0020', ''),
-(116, '', 'N_0010', 'J_0020', ''),
-(117, '', 'N_0034', 'J_0020', ''),
-(118, '', 'N_0006', 'J_0019', ''),
-(119, '', 'N_0010', 'J_0019', ''),
-(120, '', 'N_0016', 'J_0019', ''),
-(121, '', 'N_0012', 'J_0019', ''),
-(122, '', 'N_0009', 'J_0019', ''),
-(123, '', 'N_0029', 'J_0019', ''),
-(124, '', 'N_0030', 'J_0019', ''),
-(125, '', 'N_0008', 'J_0019', ''),
-(126, '', 'N_0013', 'J_0019', ''),
-(127, '', 'N_0006', 'J_0016', ''),
-(128, '', 'N_0010', 'J_0016', ''),
-(129, '', 'N_0016', 'J_0016', ''),
-(130, '', 'N_0012', 'J_0016', ''),
-(131, '', 'N_0011', 'J_0016', ''),
-(132, '', 'N_0017', 'J_0016', ''),
-(133, '', 'N_0018', 'J_0016', ''),
-(134, '', 'N_0009', 'J_0016', ''),
-(135, '', 'N_0029', 'J_0016', ''),
-(136, '', 'N_0030', 'J_0016', ''),
-(137, '', 'N_0006', 'J_0015', ''),
-(138, '', 'N_0010', 'J_0015', ''),
-(139, '', 'N_0016', 'J_0015', ''),
-(140, '', 'N_0012', 'J_0015', ''),
-(141, '', 'N_0011', 'J_0015', ''),
-(142, '', 'N_0017', 'J_0015', ''),
-(143, '', 'N_0018', 'J_0015', ''),
-(144, '', 'N_0009', 'J_0015', ''),
-(145, '', 'N_0029', 'J_0015', ''),
-(146, '', 'N_0030', 'J_0015', ''),
-(147, '', 'N_0008', 'J_0015', ''),
-(148, '', 'N_0013', 'J_0015', ''),
-(149, '', 'N_0008', 'J_0016', ''),
-(150, '', 'N_0013', 'J_0016', ''),
-(151, '', 'N_0006', 'J_0017', ''),
-(152, '', 'N_0010', 'J_0017', ''),
-(153, '', 'N_0016', 'J_0017', ''),
-(154, '', 'N_0012', 'J_0017', ''),
-(155, '', 'N_0009', 'J_0017', ''),
-(156, '', 'N_0029', 'J_0017', ''),
-(157, '', 'N_0030', 'J_0017', ''),
-(158, '', 'N_0008', 'J_0017', ''),
-(159, '', 'N_0013', 'J_0017', ''),
-(160, '', 'N_0036', 'J_0017', ''),
-(161, '', 'N_0006', 'J_0014', ''),
-(162, '', 'N_0020', 'J_0014', ''),
-(163, '', 'N_0010', 'J_0013', ''),
-(165, '', 'N_0016', 'J_0013', ''),
-(166, '', 'N_0009', 'J_0013', ''),
-(167, '', 'N_0029', 'J_0013', ''),
-(168, '', 'N_0030', 'J_0013', ''),
-(169, '', 'N_0008', 'J_0013', ''),
-(170, '', 'N_0013', 'J_0013', ''),
-(172, '', 'N_0006', 'J_0013', ''),
-(173, '', 'N_0012', 'J_0013', ''),
-(174, '', 'N_0006', 'J_0012', ''),
-(178, '', 'N_0009', 'J_0012', ''),
-(179, '', 'N_0005', 'J_0012', ''),
-(180, '', 'N_0002', 'J_0012', ''),
-(182, '', 'N_0046', 'J_0012', ''),
-(183, '', 'N_0030', 'J_0012', ''),
-(184, '', 'N_0006', 'J_0011', ''),
-(186, '', 'N_0045', 'J_0011', ''),
-(187, '', 'N_0049', 'J_0011', ''),
-(188, '', 'N_0048', 'J_0011', ''),
-(189, '', 'N_0037', 'J_0011', ''),
-(190, '', 'N_0039', 'J_0011', ''),
-(191, '', 'N_0006', 'J_0010', ''),
-(192, '', 'N_0002', 'J_0010', ''),
-(193, '', 'N_0009', 'J_0010', ''),
-(194, '', 'N_0005', 'J_0010', ''),
-(195, '', 'N_0030', 'J_0010', ''),
-(196, '', 'N_0047', 'J_0010', ''),
-(197, '', 'N_0006', 'J_0009', ''),
-(198, '', 'N_0049', 'J_0009', ''),
-(200, '', 'N_0038', 'J_0012', ''),
-(201, '', 'N_0038', 'J_0011', ''),
-(202, '', 'N_0038', 'J_0010', ''),
-(203, '', 'N_0037', 'J_0009', ''),
-(204, '', 'N_0048', 'J_0009', ''),
-(205, '', 'N_0039', 'J_0009', ''),
-(206, '', 'N_0038', 'J_0009', ''),
-(207, '', 'N_0042', 'J_0009', ''),
-(208, '', 'N_0006', 'J_0008', ''),
-(209, '', 'N_0002', 'J_0008', ''),
-(210, '', 'N_0009', 'J_0008', ''),
-(211, '', 'N_0030', 'J_0008', ''),
-(212, '', 'N_0025', 'J_0008', ''),
-(213, '', 'N_0038', 'J_0008', ''),
-(214, '', 'N_0006', 'J_0007', ''),
-(215, '', 'N_0002', 'J_0007', ''),
-(216, '', 'N_0049', 'J_0007', ''),
-(217, '', 'N_0037', 'J_0007', ''),
-(218, '', 'N_0048', 'J_0007', ''),
-(219, '', 'N_0039', 'J_0007', ''),
-(220, '', 'N_0041', 'J_0007', ''),
-(222, '', 'N_0038', 'J_0007', ''),
-(223, '', 'N_0021', 'J_0007', ''),
-(224, '', 'N_0021', 'J_0011', ''),
-(225, '', 'N_0006', 'J_0006', ''),
-(226, '', 'N_0002', 'J_0006', ''),
-(227, '', 'N_0009', 'J_0006', ''),
-(228, '', 'N_0005', 'J_0006', ''),
-(229, '', 'N_0001', 'J_0006', ''),
-(230, '', 'N_0004', 'J_0006', ''),
-(231, '', 'N_0014', 'J_0006', ''),
-(232, '', 'N_0006', 'J_0005', ''),
-(233, '', 'N_0049', 'J_0005', ''),
-(234, '', 'N_0014', 'J_0005', ''),
-(235, '', 'N_0037', 'J_0005', ''),
-(236, '', 'N_0039', 'J_0005', ''),
-(237, '', 'N_0040', 'J_0005', ''),
-(238, '', 'N_0043', 'J_0005', ''),
-(239, '', 'N_0006', 'J_0004', ''),
-(240, '', 'N_0002', 'J_0004', ''),
-(241, '', 'N_0009', 'J_0004', ''),
-(242, '', 'N_0005', 'J_0004', ''),
-(243, '', 'N_0001', 'J_0004', ''),
-(244, '', 'N_0004', 'J_0004', ''),
-(245, '', 'N_0014', 'J_0004', ''),
-(246, '', 'N_0006', 'J_0003', ''),
-(247, '', 'N_0049', 'J_0003', ''),
-(248, '', 'N_0037', 'J_0003', ''),
-(249, '', 'N_0043', 'J_0003', ''),
-(250, '', 'N_0044', 'J_0003', ''),
-(251, '', 'N_0050', 'J_0011', ''),
-(252, '', 'N_0052', 'J_0011', ''),
-(253, '', 'N_0050', 'J_0009', ''),
-(254, '', 'N_0051', 'J_0012', ''),
-(255, '', 'N_0051', 'J_0010', ''),
-(256, '', 'N_0050', 'J_0007', ''),
-(257, '', 'N_0014', 'J_0003', ''),
-(258, '', 'N_0022', 'J_0008', ''),
-(259, '', 'N_0006', 'J_0002', ''),
-(260, '', 'N_0002', 'J_0002', ''),
-(261, '', 'N_0009', 'J_0002', ''),
-(262, '', 'N_0029', 'J_0002', ''),
-(263, '', 'N_0030', 'J_0002', ''),
-(264, '', 'N_0008', 'J_0002', ''),
-(265, '', 'N_0014', 'J_0002', ''),
-(266, '', 'N_0053', 'J_0002', ''),
-(267, '', 'N_0006', 'J_0001', ''),
-(268, '', 'N_0002', 'J_0001', ''),
-(269, '', 'N_0049', 'J_0001', ''),
-(270, '', 'N_0037', 'J_0001', ''),
-(271, '', 'N_0043', 'J_0001', ''),
-(272, '', 'N_0040', 'J_0001', ''),
-(273, '', 'N_0014', 'J_0001', ''),
-(274, '', 'N_0050', 'J_0001', ''),
-(275, '', 'N_0039', 'J_0001', ''),
-(276, '', 'N_0039', 'J_0003', ''),
-(277, '', 'N_0005', 'J_0022', ''),
-(278, '', 'N_0002', 'J_0022', ''),
-(279, '', 'N_0004', 'J_0022', ''),
-(280, '', 'N_0029', 'J_0022', ''),
-(281, '', 'N_0029', 'J_0018', ''),
-(282, '', 'N_0054', 'J_0018', ''),
-(283, '', 'N_0006', 'J_0035', ''),
-(284, '', 'N_0020', 'J_0035', ''),
-(285, '', 'N_0049', 'J_0035', ''),
-(286, '', 'N_0037', 'J_0035', ''),
-(287, '', 'N_0039', 'J_0035', ''),
-(288, '', 'N_0043', 'J_0035', ''),
-(289, '', 'N_0040', 'J_0035', ''),
-(290, '', 'N_0014', 'J_0035', ''),
-(291, '', 'N_0050', 'J_0035', ''),
-(292, '', 'N_0009', 'J_0035', ''),
-(293, '', 'N_0030', 'J_0035', ''),
-(294, '', 'N_0007', 'J_0035', ''),
-(295, '', 'N_0006', 'J_0030', ''),
-(296, '', 'N_0010', 'J_0030', ''),
-(297, '', 'N_0016', 'J_0030', ''),
-(298, '', 'N_0012', 'J_0030', ''),
-(299, '', 'N_0011', 'J_0030', ''),
-(300, '', 'N_0017', 'J_0030', ''),
-(301, '', 'N_0018', 'J_0030', ''),
-(302, '', 'N_0002', 'J_0030', ''),
-(303, '', 'N_0006', 'J_0029', ''),
-(304, '', 'N_0010', 'J_0029', ''),
-(305, '', 'N_0019', 'J_0029', ''),
-(307, '', 'N_0002', 'J_0029', ''),
-(308, '', 'N_0012', 'J_0029', ''),
-(309, '', 'N_0011', 'J_0029', ''),
-(310, '', 'N_0017', 'J_0029', ''),
-(311, '', 'N_0018', 'J_0029', ''),
-(313, '', 'N_0055', 'J_0029', ''),
-(314, '', 'N_0006', 'J_0028', ''),
-(315, '', 'N_0010', 'J_0028', ''),
-(316, '', 'N_0002', 'J_0028', ''),
-(317, '', 'N_0017', 'J_0028', ''),
-(318, '', 'N_0018', 'J_0028', ''),
-(319, '', 'N_0012', 'J_0028', ''),
-(320, '', 'N_0011', 'J_0028', ''),
-(321, '', 'N_0016', 'J_0028', ''),
-(322, '', 'N_0006', 'J_0033', ''),
-(323, '', 'N_0010', 'J_0033', ''),
-(324, '', 'N_0011', 'J_0033', ''),
-(325, '', 'N_0017', 'J_0033', ''),
-(326, '', 'N_0009', 'J_0033', ''),
-(327, '', 'N_0016', 'J_0033', ''),
-(329, '', 'N_0036', 'J_0033', ''),
-(330, '', 'N_0006', 'J_0031', ''),
-(331, '', 'N_0010', 'J_0031', ''),
-(332, '', 'N_0012', 'J_0031', ''),
-(333, '', 'N_0011', 'J_0031', ''),
-(334, '', 'N_0017', 'J_0031', ''),
-(335, '', 'N_0019', 'J_0031', ''),
-(336, '', 'N_0016', 'J_0031', ''),
-(337, '', 'N_0018', 'J_0033', ''),
-(338, '', 'N_0018', 'J_0031', ''),
-(339, '', 'N_0002', 'J_0031', '');
+INSERT INTO `data_persyaratan` (`id_data_persyaratan`, `no_nama_dokumen`, `no_jenis_pekerjaan`) VALUES
+(7, 'N_0003', 'J_0027'),
+(8, 'N_0006', 'J_0027'),
+(9, 'N_0032', 'J_0027'),
+(10, 'N_0026', 'J_0026'),
+(11, 'N_0006', 'J_0026'),
+(12, 'N_0032', 'J_0026'),
+(26, 'N_0006', 'J_0025'),
+(27, 'N_0016', 'J_0025'),
+(28, 'N_0010', 'J_0025'),
+(29, 'N_0002', 'J_0025'),
+(33, 'N_0011', 'J_0025'),
+(34, 'N_0017', 'J_0025'),
+(35, 'N_0018', 'J_0025'),
+(39, 'N_0011', 'J_0032'),
+(40, 'N_0017', 'J_0032'),
+(41, 'N_0018', 'J_0032'),
+(42, 'N_0006', 'J_0032'),
+(43, 'N_0016', 'J_0032'),
+(46, 'N_0002', 'J_0032'),
+(47, 'N_0010', 'J_0032'),
+(48, 'N_0009', 'J_0032'),
+(49, 'N_0005', 'J_0032'),
+(50, 'N_0029', 'J_0032'),
+(52, 'N_0008', 'J_0032'),
+(53, 'N_0013', 'J_0032'),
+(54, 'N_0030', 'J_0032'),
+(55, 'N_0009', 'J_0025'),
+(56, 'N_0005', 'J_0025'),
+(57, 'N_0029', 'J_0025'),
+(58, 'N_0008', 'J_0025'),
+(59, 'N_0013', 'J_0025'),
+(60, 'N_0030', 'J_0025'),
+(61, 'N_0006', 'J_0024'),
+(62, 'N_0010', 'J_0024'),
+(63, 'N_0016', 'J_0024'),
+(64, 'N_0012', 'J_0024'),
+(65, 'N_0012', 'J_0025'),
+(66, 'N_0012', 'J_0032'),
+(68, 'N_0027', 'J_0034'),
+(69, 'N_0012', 'J_0034'),
+(70, 'N_0019', 'J_0034'),
+(71, 'N_0010', 'J_0034'),
+(73, 'N_0033', 'J_0024'),
+(74, 'N_0006', 'J_0021'),
+(75, 'N_0031', 'J_0034'),
+(76, 'N_0006', 'J_0023'),
+(77, 'N_0009', 'J_0023'),
+(78, 'N_0005', 'J_0023'),
+(79, 'N_0015', 'J_0023'),
+(80, 'N_0032', 'J_0023'),
+(81, 'N_0020', 'J_0023'),
+(82, 'N_0001', 'J_0023'),
+(83, 'N_0004', 'J_0023'),
+(84, 'N_0002', 'J_0023'),
+(85, 'N_0006', 'J_0022'),
+(86, 'N_0010', 'J_0022'),
+(87, 'N_0012', 'J_0022'),
+(88, 'N_0016', 'J_0022'),
+(89, 'N_0020', 'J_0022'),
+(90, 'N_0013', 'J_0023'),
+(91, 'N_0008', 'J_0023'),
+(92, 'N_0008', 'J_0022'),
+(93, 'N_0009', 'J_0022'),
+(94, 'N_0001', 'J_0021'),
+(95, 'N_0005', 'J_0021'),
+(96, 'N_0009', 'J_0021'),
+(97, 'N_0008', 'J_0021'),
+(98, 'N_0013', 'J_0021'),
+(99, 'N_0020', 'J_0021'),
+(101, 'N_0006', 'J_0018'),
+(102, 'N_0020', 'J_0018'),
+(103, 'N_0009', 'J_0018'),
+(104, 'N_0008', 'J_0018'),
+(105, 'N_0013', 'J_0018'),
+(107, 'N_0005', 'J_0018'),
+(110, 'N_0018', 'J_0018'),
+(111, 'N_0035', 'J_0018'),
+(112, 'N_0029', 'J_0021'),
+(113, 'N_0006', 'J_0020'),
+(114, 'N_0019', 'J_0020'),
+(115, 'N_0027', 'J_0020'),
+(116, 'N_0010', 'J_0020'),
+(117, 'N_0034', 'J_0020'),
+(118, 'N_0006', 'J_0019'),
+(119, 'N_0010', 'J_0019'),
+(120, 'N_0016', 'J_0019'),
+(121, 'N_0012', 'J_0019'),
+(122, 'N_0009', 'J_0019'),
+(123, 'N_0029', 'J_0019'),
+(124, 'N_0030', 'J_0019'),
+(125, 'N_0008', 'J_0019'),
+(126, 'N_0013', 'J_0019'),
+(127, 'N_0006', 'J_0016'),
+(128, 'N_0010', 'J_0016'),
+(129, 'N_0016', 'J_0016'),
+(130, 'N_0012', 'J_0016'),
+(131, 'N_0011', 'J_0016'),
+(132, 'N_0017', 'J_0016'),
+(133, 'N_0018', 'J_0016'),
+(134, 'N_0009', 'J_0016'),
+(135, 'N_0029', 'J_0016'),
+(136, 'N_0030', 'J_0016'),
+(137, 'N_0006', 'J_0015'),
+(138, 'N_0010', 'J_0015'),
+(139, 'N_0016', 'J_0015'),
+(140, 'N_0012', 'J_0015'),
+(141, 'N_0011', 'J_0015'),
+(142, 'N_0017', 'J_0015'),
+(143, 'N_0018', 'J_0015'),
+(144, 'N_0009', 'J_0015'),
+(145, 'N_0029', 'J_0015'),
+(146, 'N_0030', 'J_0015'),
+(147, 'N_0008', 'J_0015'),
+(148, 'N_0013', 'J_0015'),
+(149, 'N_0008', 'J_0016'),
+(150, 'N_0013', 'J_0016'),
+(151, 'N_0006', 'J_0017'),
+(152, 'N_0010', 'J_0017'),
+(153, 'N_0016', 'J_0017'),
+(154, 'N_0012', 'J_0017'),
+(155, 'N_0009', 'J_0017'),
+(156, 'N_0029', 'J_0017'),
+(157, 'N_0030', 'J_0017'),
+(158, 'N_0008', 'J_0017'),
+(159, 'N_0013', 'J_0017'),
+(160, 'N_0036', 'J_0017'),
+(161, 'N_0006', 'J_0014'),
+(162, 'N_0020', 'J_0014'),
+(163, 'N_0010', 'J_0013'),
+(165, 'N_0016', 'J_0013'),
+(166, 'N_0009', 'J_0013'),
+(167, 'N_0029', 'J_0013'),
+(168, 'N_0030', 'J_0013'),
+(169, 'N_0008', 'J_0013'),
+(170, 'N_0013', 'J_0013'),
+(172, 'N_0006', 'J_0013'),
+(173, 'N_0012', 'J_0013'),
+(174, 'N_0006', 'J_0012'),
+(178, 'N_0009', 'J_0012'),
+(179, 'N_0005', 'J_0012'),
+(180, 'N_0002', 'J_0012'),
+(182, 'N_0046', 'J_0012'),
+(183, 'N_0030', 'J_0012'),
+(184, 'N_0006', 'J_0011'),
+(186, 'N_0045', 'J_0011'),
+(187, 'N_0049', 'J_0011'),
+(188, 'N_0048', 'J_0011'),
+(189, 'N_0037', 'J_0011'),
+(190, 'N_0039', 'J_0011'),
+(191, 'N_0006', 'J_0010'),
+(192, 'N_0002', 'J_0010'),
+(193, 'N_0009', 'J_0010'),
+(194, 'N_0005', 'J_0010'),
+(195, 'N_0030', 'J_0010'),
+(196, 'N_0047', 'J_0010'),
+(197, 'N_0006', 'J_0009'),
+(198, 'N_0049', 'J_0009'),
+(200, 'N_0038', 'J_0012'),
+(201, 'N_0038', 'J_0011'),
+(202, 'N_0038', 'J_0010'),
+(203, 'N_0037', 'J_0009'),
+(204, 'N_0048', 'J_0009'),
+(205, 'N_0039', 'J_0009'),
+(206, 'N_0038', 'J_0009'),
+(207, 'N_0042', 'J_0009'),
+(208, 'N_0006', 'J_0008'),
+(209, 'N_0002', 'J_0008'),
+(210, 'N_0009', 'J_0008'),
+(211, 'N_0030', 'J_0008'),
+(212, 'N_0025', 'J_0008'),
+(213, 'N_0038', 'J_0008'),
+(214, 'N_0006', 'J_0007'),
+(215, 'N_0002', 'J_0007'),
+(216, 'N_0049', 'J_0007'),
+(217, 'N_0037', 'J_0007'),
+(218, 'N_0048', 'J_0007'),
+(219, 'N_0039', 'J_0007'),
+(220, 'N_0041', 'J_0007'),
+(222, 'N_0038', 'J_0007'),
+(223, 'N_0021', 'J_0007'),
+(224, 'N_0021', 'J_0011'),
+(225, 'N_0006', 'J_0006'),
+(226, 'N_0002', 'J_0006'),
+(227, 'N_0009', 'J_0006'),
+(228, 'N_0005', 'J_0006'),
+(229, 'N_0001', 'J_0006'),
+(230, 'N_0004', 'J_0006'),
+(231, 'N_0014', 'J_0006'),
+(232, 'N_0006', 'J_0005'),
+(233, 'N_0049', 'J_0005'),
+(234, 'N_0014', 'J_0005'),
+(235, 'N_0037', 'J_0005'),
+(236, 'N_0039', 'J_0005'),
+(237, 'N_0040', 'J_0005'),
+(238, 'N_0043', 'J_0005'),
+(239, 'N_0006', 'J_0004'),
+(240, 'N_0002', 'J_0004'),
+(241, 'N_0009', 'J_0004'),
+(242, 'N_0005', 'J_0004'),
+(243, 'N_0001', 'J_0004'),
+(244, 'N_0004', 'J_0004'),
+(245, 'N_0014', 'J_0004'),
+(246, 'N_0006', 'J_0003'),
+(247, 'N_0049', 'J_0003'),
+(248, 'N_0037', 'J_0003'),
+(249, 'N_0043', 'J_0003'),
+(250, 'N_0044', 'J_0003'),
+(251, 'N_0050', 'J_0011'),
+(252, 'N_0052', 'J_0011'),
+(253, 'N_0050', 'J_0009'),
+(254, 'N_0051', 'J_0012'),
+(255, 'N_0051', 'J_0010'),
+(256, 'N_0050', 'J_0007'),
+(257, 'N_0014', 'J_0003'),
+(258, 'N_0022', 'J_0008'),
+(259, 'N_0006', 'J_0002'),
+(260, 'N_0002', 'J_0002'),
+(261, 'N_0009', 'J_0002'),
+(262, 'N_0029', 'J_0002'),
+(263, 'N_0030', 'J_0002'),
+(264, 'N_0008', 'J_0002'),
+(265, 'N_0014', 'J_0002'),
+(266, 'N_0053', 'J_0002'),
+(267, 'N_0006', 'J_0001'),
+(268, 'N_0002', 'J_0001'),
+(269, 'N_0049', 'J_0001'),
+(270, 'N_0037', 'J_0001'),
+(271, 'N_0043', 'J_0001'),
+(272, 'N_0040', 'J_0001'),
+(273, 'N_0014', 'J_0001'),
+(274, 'N_0050', 'J_0001'),
+(275, 'N_0039', 'J_0001'),
+(276, 'N_0039', 'J_0003'),
+(277, 'N_0005', 'J_0022'),
+(278, 'N_0002', 'J_0022'),
+(279, 'N_0004', 'J_0022'),
+(280, 'N_0029', 'J_0022'),
+(281, 'N_0029', 'J_0018'),
+(282, 'N_0054', 'J_0018'),
+(284, 'N_0020', 'J_0035'),
+(285, 'N_0049', 'J_0035'),
+(286, 'N_0037', 'J_0035'),
+(287, 'N_0039', 'J_0035'),
+(288, 'N_0043', 'J_0035'),
+(289, 'N_0040', 'J_0035'),
+(290, 'N_0014', 'J_0035'),
+(291, 'N_0050', 'J_0035'),
+(292, 'N_0009', 'J_0035'),
+(293, 'N_0030', 'J_0035'),
+(294, 'N_0007', 'J_0035'),
+(295, 'N_0006', 'J_0030'),
+(296, 'N_0010', 'J_0030'),
+(297, 'N_0016', 'J_0030'),
+(298, 'N_0012', 'J_0030'),
+(299, 'N_0011', 'J_0030'),
+(300, 'N_0017', 'J_0030'),
+(301, 'N_0018', 'J_0030'),
+(302, 'N_0002', 'J_0030'),
+(303, 'N_0006', 'J_0029'),
+(304, 'N_0010', 'J_0029'),
+(305, 'N_0019', 'J_0029'),
+(307, 'N_0002', 'J_0029'),
+(308, 'N_0012', 'J_0029'),
+(309, 'N_0011', 'J_0029'),
+(310, 'N_0017', 'J_0029'),
+(311, 'N_0018', 'J_0029'),
+(313, 'N_0055', 'J_0029'),
+(314, 'N_0006', 'J_0028'),
+(315, 'N_0010', 'J_0028'),
+(316, 'N_0002', 'J_0028'),
+(317, 'N_0017', 'J_0028'),
+(318, 'N_0018', 'J_0028'),
+(319, 'N_0012', 'J_0028'),
+(320, 'N_0011', 'J_0028'),
+(321, 'N_0016', 'J_0028'),
+(322, 'N_0006', 'J_0033'),
+(323, 'N_0010', 'J_0033'),
+(324, 'N_0011', 'J_0033'),
+(325, 'N_0017', 'J_0033'),
+(326, 'N_0009', 'J_0033'),
+(327, 'N_0016', 'J_0033'),
+(329, 'N_0036', 'J_0033'),
+(330, 'N_0006', 'J_0031'),
+(331, 'N_0010', 'J_0031'),
+(332, 'N_0012', 'J_0031'),
+(333, 'N_0011', 'J_0031'),
+(334, 'N_0017', 'J_0031'),
+(335, 'N_0019', 'J_0031'),
+(336, 'N_0016', 'J_0031'),
+(337, 'N_0018', 'J_0033'),
+(338, 'N_0018', 'J_0031'),
+(339, 'N_0002', 'J_0031'),
+(340, 'N_0006', 'J_0035'),
+(341, 'N_0006', 'J_0034');
 
 -- --------------------------------------------------------
 
@@ -698,6 +689,14 @@ CREATE TABLE `data_progress_pekerjaan` (
   `laporan_pekerjaan` varchar(255) NOT NULL,
   `waktu` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `data_progress_pekerjaan`
+--
+
+INSERT INTO `data_progress_pekerjaan` (`id_data_progress_pekerjaan`, `no_pekerjaan`, `laporan_pekerjaan`, `waktu`) VALUES
+(1, 'P000001', 'Dalam tahap perizinan', '2019/07/23'),
+(2, 'P000001', 'Dalam tahap masd', '2019/07/23');
 
 -- --------------------------------------------------------
 
@@ -721,9 +720,8 @@ CREATE TABLE `nama_dokumen` (
   `id_nama_dokumen` int(11) NOT NULL,
   `no_nama_dokumen` varchar(255) NOT NULL,
   `nama_dokumen` varchar(255) NOT NULL,
-  `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `pembuat` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ;
 
 --
 -- Dumping data for table `nama_dokumen`
@@ -836,11 +834,8 @@ CREATE TABLE `user` (
   `email` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `level` varchar(255) NOT NULL,
-  `tanggal_daftar` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-  `password` varchar(255) NOT NULL,
-  `foto` varchar(255) DEFAULT NULL,
-  `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `tanggal_daftar` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ;
 
 --
 -- Dumping data for table `user`
@@ -920,13 +915,6 @@ ALTER TABLE `data_informasi_pekerjaan`
   ADD KEY `no_pekerjaan` (`no_pekerjaan`);
 
 --
--- Indexes for table `data_jenis_pekerjaan`
---
-ALTER TABLE `data_jenis_pekerjaan`
-  ADD PRIMARY KEY (`id_jenis_pekerjaan`),
-  ADD KEY `no_jenis_dokumen` (`no_jenis_pekerjaan`);
-
---
 -- Indexes for table `data_meta`
 --
 ALTER TABLE `data_meta`
@@ -954,7 +942,7 @@ ALTER TABLE `data_pekerjaan`
   ADD PRIMARY KEY (`id_data_pekerjaan`),
   ADD KEY `no_client` (`no_client`),
   ADD KEY `no_pekerjaan` (`no_pekerjaan`),
-  ADD KEY `no_persyaratan` (`no_persyaratan`);
+  ADD KEY `no_persyaratan` (`no_jenis_pekerjaan`);
 
 --
 -- Indexes for table `data_perizinan`
@@ -969,8 +957,7 @@ ALTER TABLE `data_perizinan`
 ALTER TABLE `data_persyaratan`
   ADD PRIMARY KEY (`id_data_persyaratan`),
   ADD KEY `no_jenis_dokumen` (`no_jenis_pekerjaan`),
-  ADD KEY `no_nama_dokumen` (`no_nama_dokumen`),
-  ADD KEY `no_persyaratan` (`no_persyaratan`);
+  ADD KEY `no_nama_dokumen` (`no_nama_dokumen`);
 
 --
 -- Indexes for table `data_progress_pekerjaan`
@@ -986,24 +973,10 @@ ALTER TABLE `data_progress_perizinan`
   ADD KEY `no_perizinan` (`no_perizinan`);
 
 --
--- Indexes for table `nama_dokumen`
---
-ALTER TABLE `nama_dokumen`
-  ADD PRIMARY KEY (`id_nama_dokumen`),
-  ADD KEY `no_nama_dokumen` (`no_nama_dokumen`);
-
---
 -- Indexes for table `sublevel_user`
 --
 ALTER TABLE `sublevel_user`
   ADD PRIMARY KEY (`id_sublevel_user`),
-  ADD KEY `no_user` (`no_user`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id_user`),
   ADD KEY `no_user` (`no_user`);
 
 --
@@ -1029,7 +1002,7 @@ ALTER TABLE `data_buku_tamu`
 -- AUTO_INCREMENT for table `data_client`
 --
 ALTER TABLE `data_client`
-  MODIFY `id_data_client` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_data_client` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `data_dokumen_utama`
 --
@@ -1039,7 +1012,7 @@ ALTER TABLE `data_dokumen_utama`
 -- AUTO_INCREMENT for table `data_histori_pekerjaan`
 --
 ALTER TABLE `data_histori_pekerjaan`
-  MODIFY `id_data_histori_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_data_histori_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `data_informasi_pekerjaan`
 --
@@ -1049,17 +1022,17 @@ ALTER TABLE `data_informasi_pekerjaan`
 -- AUTO_INCREMENT for table `data_jenis_pekerjaan`
 --
 ALTER TABLE `data_jenis_pekerjaan`
-  MODIFY `id_jenis_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id_jenis_pekerjaan` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `data_meta`
 --
 ALTER TABLE `data_meta`
-  MODIFY `id_data_meta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `id_data_meta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 --
 -- AUTO_INCREMENT for table `data_meta_berkas`
 --
 ALTER TABLE `data_meta_berkas`
-  MODIFY `id_data_meta_berkas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id_data_meta_berkas` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `data_notaris_rekanan`
 --
@@ -1069,22 +1042,22 @@ ALTER TABLE `data_notaris_rekanan`
 -- AUTO_INCREMENT for table `data_pekerjaan`
 --
 ALTER TABLE `data_pekerjaan`
-  MODIFY `id_data_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id_data_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 --
 -- AUTO_INCREMENT for table `data_persyaratan`
 --
 ALTER TABLE `data_persyaratan`
-  MODIFY `id_data_persyaratan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
+  MODIFY `id_data_persyaratan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=342;
 --
 -- AUTO_INCREMENT for table `data_progress_pekerjaan`
 --
 ALTER TABLE `data_progress_pekerjaan`
-  MODIFY `id_data_progress_pekerjaan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_data_progress_pekerjaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `nama_dokumen`
 --
 ALTER TABLE `nama_dokumen`
-  MODIFY `id_nama_dokumen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id_nama_dokumen` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sublevel_user`
 --
@@ -1094,7 +1067,7 @@ ALTER TABLE `sublevel_user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -1158,7 +1131,7 @@ ALTER TABLE `data_notaris_rekanan`
 --
 ALTER TABLE `data_pekerjaan`
   ADD CONSTRAINT `data_pekerjaan_ibfk_1` FOREIGN KEY (`no_client`) REFERENCES `data_client` (`no_client`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `data_pekerjaan_ibfk_2` FOREIGN KEY (`no_persyaratan`) REFERENCES `data_persyaratan` (`no_persyaratan`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `data_pekerjaan_ibfk_2` FOREIGN KEY (`no_jenis_pekerjaan`) REFERENCES `data_jenis_pekerjaan` (`no_jenis_pekerjaan`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `data_perizinan`

@@ -47,14 +47,14 @@ public function json_data_client(){
 echo $this->M_user2->json_data_client();       
 }
 
-public function cari_jenis_dokumen(){
+public function cari_jenis_pekerjaan(){
 $term = strtolower($this->input->get('term'));    
 $query = $this->M_user2->cari_jenis_dokumen($term);
 
 foreach ($query as $d) {
 $json[]= array(
 'label'                    => $d->nama_jenis,   
-'no_jenis_dokumen'         => $d->no_jenis_dokumen,
+'no_jenis_pekerjaan'       => $d->no_jenis_pekerjaan,
 );   
 }
 echo json_encode($json);
@@ -70,14 +70,13 @@ $data = $this->input->post();
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
 
-$data_persyaratan = $this->db->get_where('data_persyaratan',array('no_jenis_dokumen' => $data['id_jenis']));
 
-$no_client    = str_pad($h_client,6 ,"0",STR_PAD_LEFT);
-$no_pekerjaan = str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
+$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+$no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
 
 $data_client = array(
-'no_client'                 => "C".$no_client,    
+'no_client'                 => $no_client,    
 'jenis_client'              => ucwords($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
 'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
@@ -91,37 +90,25 @@ $data_client = array(
 $this->db->insert('data_client',$data_client);
 
 $data_r = array(
-'no_client'          => "C".$no_client,    
-'status_pekerjaan'      => "Masuk",
+'no_client'          => $no_client,    
+'status_pekerjaan'   => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
 'tanggal_dibuat'     => date('Y/m/d'),
-'no_jenis_perizinan' => $data['id_jenis'],   
-'tanggal_antrian'    => date('Y/m/d'),
+'no_jenis_pekerjaan' => $data['no_jenis_pekerjaan'],   
 'target_kelar'       => $data['target_kelar'],
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
-'jenis_perizinan'    => ucwords($data['jenis_akta']),
 );
+
 $this->db->insert('data_pekerjaan',$data_r);
 
-
-
-foreach ($data_persyaratan->result_array() as $persyaratan){
-$syarat = array(
-'no_client'               => "C".$no_client,    
-'no_pekerjaan_syarat'      => $no_pekerjaan,    
-'no_nama_dokumen'          => $persyaratan['no_nama_dokumen'],    
-'nama_dokumen'             => $persyaratan['nama_dokumen'],
-'no_jenis_dokumen'         => $persyaratan['no_jenis_dokumen'], 
-);
-$this->db->insert('data_persyaratan_pekerjaan',$syarat);
-}
 
 
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
-$keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum']." dan pekerjaan ".$data['jenis_akta'] ;
+
+$keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum'];
 $this->histori($keterangan);
 
 $status = array(
@@ -273,7 +260,7 @@ redirect(404);
 }
 
 public function lengkapi_persyaratan(){    
-$minimal_persyaratan = $this->db->get_where('data_persyaratan_pekerjaan',array('no_pekerjaan_syarat'=> base64_decode($this->uri->segment(3))));
+$minimal_persyaratan = $this->db->get_where('data_persyaratan',array('no_jenis_dokumen'=> base64_decode($this->uri->segment(3))));
 $nama_dokumen        = $this->db->get_where('nama_dokumen');
 $data_berkas         = $this->db->get_where('data_berkas',array('no_pekerjaan'=> base64_decode($this->uri->segment(3))));
 $data                = $this->M_user2->data_pekerjaan_persyaratan(base64_decode($this->uri->segment(3))); 
@@ -758,7 +745,6 @@ $input = $this->input->post();
 $data = array(
 'laporan_pekerjaan'       => $input['laporan'],
 'no_pekerjaan'            => base64_decode($input['no_pekerjaan']),
-'no_user'                 => $this->session->userdata('no_user'),
 'waktu'                   => date('Y/m/d')    
 );
 $this->db->insert('data_progress_pekerjaan',$data);
