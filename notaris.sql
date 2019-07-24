@@ -171,7 +171,8 @@ CREATE TABLE `data_jenis_pekerjaan` (
   `no_jenis_pekerjaan` varchar(255) NOT NULL,
   `pekerjaan` varchar(255) NOT NULL,
   `nama_jenis` varchar(255) NOT NULL,
-  `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `tanggal_dibuat` varchar(255) NOT NULL, 
+ `pembuat_jenis` varchar(255) NOT NULL 
 ) ;
 
 --
