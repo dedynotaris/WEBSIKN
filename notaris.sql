@@ -254,18 +254,12 @@ CREATE TABLE `data_jenis_pekerjaan` (
   `no_jenis_pekerjaan` varchar(255) NOT NULL,
   `pekerjaan` varchar(255) NOT NULL,
   `nama_jenis` varchar(255) NOT NULL,
-<<<<<<< HEAD
-  `tanggal_dibuat` varchar(255) NOT NULL, 
- `pembuat_jenis` varchar(255) NOT NULL 
-) ;
-=======
   `tanggal_dibuat` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `pembuat_jenis` varchar(255) NOT NULL,
   PRIMARY KEY (`id_jenis_pekerjaan`),
   KEY `no_jenis_dokumen` (`no_jenis_pekerjaan`)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
->>>>>>> f5694b3b1134b4f7e17d32cdefe58901669b97c3
 
 --
 -- Dumping data for table `data_jenis_pekerjaan`

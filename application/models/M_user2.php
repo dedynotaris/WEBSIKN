@@ -126,7 +126,7 @@ $query = $this->db->get();
 
 return $query;
 }
-public function data_pekerjaan($param){
+public function data_pekerjaan_user($param){
 $this->db->select('*');
 $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
@@ -268,6 +268,99 @@ $this->db->like($array);
 
 $query = $this->db->get();
 return $query;
+}
+public function data_meta($no_nama_dokumen){
+$query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_dokumen));
+return $query;
+    
+}
+
+public function nama_persyaratan($no_pekerjaan){
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_persyaratan.no_nama_dokumen');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+$query = $this->db->get();  
+return $query;
+}
+
+public function data_pekerjaan($no_pekerjaan){
+$this->db->select('data_client.nama_folder,'
+        . 'data_client.no_client,'
+        . 'data_pekerjaan.no_pekerjaan');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+$query = $this->db->get();  
+return $query;
+}
+
+public function data_telah_dilampirkan($no_pekerjaan){
+$this->db->select('data_client.nama_folder,'
+        . 'data_client.no_client,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_berkas.nama_berkas,'
+        . 'data_berkas.no_berkas,'
+        . 'nama_dokumen.nama_dokumen,'
+        . 'data_berkas.id_data_berkas');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_berkas.no_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+$query = $this->db->get();  
+return $query;
+}
+
+public function data_berkas(){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$query = $this->db->get();  
+return $query;
+}
+
+public function hapus_berkas($id_data_berkas){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.id_data_berkas',$id_data_berkas);
+$query = $this->db->get();  
+
+return $query;
+
+}
+public function data_berkas_where($id_data_berkas){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.id_data_berkas',$id_data_berkas);
+$query = $this->db->get();  
+return $query;
+}
+
+public function total_berkas(){
+        $this->db->select('data_berkas.id_data_berkas');
+        $this->db->from('data_berkas');
+        $this->db->order_by('data_berkas.id_data_berkas',"DESC");
+        $query = $this->db->get();
+        return $query;    
 }
 
 }
