@@ -12,20 +12,20 @@ Lengkapi persyaratan dokumen
 
 <div class="container">
 <div class="row">
-<div class="col-md-6 card">
-<div class="text-center card"><b>Minimal Persyaratan <br> <?php echo $static['nama_jenis'] ?></b></div>
+<div class="col-md-7 card">
+<div class="text-center card"><b>Dokumen Penunjang yang harus direkam <br> <?php echo $static['nama_jenis'] ?></b></div>
 <hr>    
 <?php
 foreach ($query->result_array() as $d){ ?>
 <div class="row">
-<div class="col"><?php echo $d['nama_dokumen'] ?></div>    
-<div class="col-md-3"><button class="btn btn-block btn-dark m-1 btn-sm" onclick="tampil_modal_upload('<?php echo $d['no_pekerjaan'] ?>','<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_client'] ?>')"> Upload <span class="fa fa-upload"></span> </button></div>   
+<div class="col card-header"><?php echo $d['nama_dokumen'] ?></div>    
+<div class="card-header col-md-3"><button class="btn btn-block btn-dark m-1 btn-sm" onclick="tampil_modal_upload('<?php echo $d['no_pekerjaan'] ?>','<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_client'] ?>')"> Rekam Data <span class="fa fa-eye"></span> </button></div>   
 </div>
 <?php } ?>
 
 </div>
-<div class="col-md-6">
-    <div class="text-center card"><b>Daftar berkas yang sudah dilampirkan <br> <?php echo $static['nama_client'] ?></div>
+<div class="col">
+    <div class="text-center card"><b>Nama Dokumen yang sudah direkam <br> <?php echo $static['nama_client'] ?></b></div>
 <hr>    
     
 <div class="syarat_telah_dilampirkan">
@@ -38,10 +38,10 @@ foreach ($query->result_array() as $d){ ?>
 </div>
 
 <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
+<div class="modal-dialog modal-md" role="document">
 <div class="modal-content ">
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Lengkapi persyaratan <span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">Perekaman data<span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
@@ -55,7 +55,38 @@ foreach ($query->result_array() as $d){ ?>
 </div>
 </div>
 
+<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body data_perekaman">
+
+
+</div>
+</div>
+</div>
+</div>
+
 <script type="text/javascript">
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/data_perekaman') ?>",
+success:function(data){
+$(".data_perekaman").html(data);    
+$('#data_perekaman').modal('show');
+}
+
+});
+}
 
 
 
@@ -85,6 +116,7 @@ Toast.fire({
 type: r.status,
 title: r.pesan
 });
+lihat_data_perekaman();
 refresh();
 }
 });    
@@ -204,39 +236,6 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('.form_persyaratan').html(data);    
 $('#modal_upload').modal('show');
-
-if ($($("input[type='text'][name='Informasi']")).is(':empty')){
-CKEDITOR.replace('informasi', {
-toolbarGroups: [{
-"name": "basicstyles",
-"groups": ["basicstyles"]
-},
-{
-"name": "links",
-"groups": ["links"]
-},
-{
-"name": "paragraph",
-"groups": ["list", "blocks"]
-},
-{
-"name": "document",
-"groups": ["mode"]
-},
-{
-"name": "insert",
-"groups": ["insert"]
-},
-{
-"name": "styles",
-"groups": ["styles"]
-}
-
-],
-removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor,Styles,Specialchar'
-});
-}
-
 }    
 });
 }

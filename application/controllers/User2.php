@@ -253,7 +253,7 @@ if($this->input->post()){
 $input = $this->input->post();
 $query = $this->M_user2->data_meta($input['no_nama_dokumen']);
 echo "<div class='row'>";
-echo "<div class='col-md-6'>";
+echo "<div class='col'>";
 $i = 1;
 foreach ($query->result_array() as $d){
     
@@ -264,9 +264,7 @@ echo "<label>".$d['nama_meta']."</label>"
 echo "<label>Lampiran</label>"
 . "<input type='file' id='file_berkas' class='form-control'>"
 . "<hr>"
-. "<button onclick=simpan_syarat('".$input['no_nama_dokumen']."','".$input['no_pekerjaan']."','".$input['no_client']."');  class='btn btn-dark btn-block'>Simpan Berkas <span class='fa fa-save'></span></button>";
-echo "</div>";
-echo "<div class='col-md-6'>";
+. "<button onclick=simpan_syarat('".$input['no_nama_dokumen']."','".$input['no_pekerjaan']."','".$input['no_client']."');  class='btn btn-dark btn-block'>Simpan Data <span class='fa fa-save'></span></button>";
 echo "</div>";
 echo "</div>";
 }
@@ -315,9 +313,11 @@ $this->db->insert('data_berkas',$data_berkas);
 $data_meta = json_decode($input['data_meta']);
 foreach ($data_meta as $key=>$value){
 $meta = array(
-'no_berkas'      => $no_berkas,    
-'nama_meta'      => $key,
-'value_meta'     => $value,    
+'no_pekerjaan'      => $input['no_pekerjaan'],
+'no_nama_dokumen'   => $input['no_nama_dokumen'],
+'no_berkas'         => $no_berkas,    
+'nama_meta'         => $key,
+'value_meta'        => $value,    
 );
 $this->db->insert('data_meta_berkas',$meta);
 
@@ -341,30 +341,59 @@ $data_berkas  = $this->M_user2->data_telah_dilampirkan(base64_decode($this->uri-
 
 if($data_berkas->num_rows() != 0){
 foreach ($data_berkas->result_array() as $u){  
-$data_meta = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$u['no_berkas']));
-echo'<div class="card p-2 m-1">
+echo'<div class="card m-1">
 <div class="row">
-<div class="col">'.$u['nama_dokumen'].'</div> 
-<div class="col-md-4 text-right">
-<button class="btn btn-success btn-sm" onclick="download('. $u['id_data_berkas'].')"><span class="fa fa-download"></span></button>
-<button onclick="hapus_berkas_persyaratan('.$u['id_data_berkas'].')" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>
-<button type="button" class="btn btn-sm btn-warning" data-toggle="popover" title="Informasi" data-content="';
-foreach($data_meta->result_array() as $m){
-echo $m['nama_meta']." : ".$m['value_meta']."<br>";    
-}
-echo '"><span class="fa fa-eye"></span> </button>';
+<div class="col card-header">'.$u['nama_dokumen'].'</div> 
+<div class="col-md-4 card-header text-right">
+<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
 
 echo "</div>    
 </div>
 </div>";
-
-
 }
 }
+}
+public function data_perekaman(){
+if($this->input->post()){
+$input = $this->input->post();
+$query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
 
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr>";
+foreach ($query->result_array() as $d){
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "<th>Aksi</th>";
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr>";
+
+foreach ($b->result_array() as $i){
+echo "<td>".$i['value_meta']."</td>";    
+}
+echo '<td class="text-center">'
+.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
+<button onclick="hapus_berkas_persyaratan('.$d['id_data_berkas'].')" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>
+</td>';
+echo "</tr>";
+    
     
 }
+echo "</tbody>";
 
+
+echo"</table>";   
+}else{
+redirect(404);    
+}    
+}
 public function simpan_perizinan(){
 if($this->input->post()){
 $input = $this->input->post();

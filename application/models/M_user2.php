@@ -269,11 +269,7 @@ $this->db->like($array);
 $query = $this->db->get();
 return $query;
 }
-public function data_meta($no_nama_dokumen){
-$query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_dokumen));
-return $query;
-    
-}
+
 
 public function nama_persyaratan($no_pekerjaan){
 $this->db->select('nama_dokumen.nama_dokumen,'
@@ -309,14 +305,17 @@ $this->db->select('data_client.nama_folder,'
         . 'data_client.no_client,'
         . 'data_pekerjaan.no_pekerjaan,'
         . 'data_berkas.nama_berkas,'
+        . 'data_berkas.no_nama_dokumen,'
         . 'data_berkas.no_berkas,'
         . 'nama_dokumen.nama_dokumen,'
         . 'data_berkas.id_data_berkas');
 $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
-$this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_berkas.no_pekerjaan');
+$this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
+$this->db->group_by('nama_dokumen.no_nama_dokumen');
 $query = $this->db->get();  
 return $query;
 }
@@ -361,6 +360,37 @@ public function total_berkas(){
         $this->db->order_by('data_berkas.id_data_berkas',"DESC");
         $query = $this->db->get();
         return $query;    
+}
+
+public function data_meta($no_nama_dokumen){
+$query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_dokumen));
+return $query;
+}
+
+public function data_perekaman($no_nama_dokumen,$no_pekerjaan){
+$this->db->select("data_meta_berkas.nama_meta,"
+                ."data_meta_berkas.value_meta,"
+                ."data_berkas.no_berkas");
+$this->db->from('data_berkas');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
+$this->db->group_by('data_meta_berkas.nama_meta');
+$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
+$query = $this->db->get();  
+return $query;
+}
+public function data_perekaman2($no_nama_dokumen,$no_pekerjaan){
+$this->db->select("data_meta_berkas.nama_meta,"
+                ."data_meta_berkas.value_meta,"
+                ."data_berkas.no_berkas,"
+                . "data_berkas.id_data_berkas");
+$this->db->from('data_berkas');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
+$this->db->group_by('data_berkas.no_berkas');
+$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
+$query = $this->db->get();  
+return $query;
 }
 
 }
