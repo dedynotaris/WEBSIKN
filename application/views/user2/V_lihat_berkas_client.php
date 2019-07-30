@@ -4,16 +4,15 @@
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <?php $static = $data_client->row_array(); ?>   
 <div class="container-fluid mt-2"></div>
-<div class="col">
-<div class="card-header  text-center" >Data seluruh berkas <?php echo $static['nama_client'] ?></div>
+<div class="col ">
+<div class="card-header mb-1  text-center" >Data seluruh berkas <?php echo $static['nama_client'] ?></div>
 
-<table style="width:100%;" id="data_berkas" class="table  text-center   table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_berkas" class="table text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >jenis berkas</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >pengupload</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody align="center">
@@ -23,6 +22,25 @@
 </div>
 </div>
 </div>
+
+<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body data_perekaman">
+
+
+</div>
+</div>
+</div>
+</div>
+
 <script type="text/javascript">
 $(document).ready(function() {
 $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings)
@@ -67,7 +85,6 @@ columns: [
 },
 {"data": "no_client"},
 {"data": "nama_file"},
-{"data": "status_berkas"},
 {"data": "pengupload"},
 {"data": "view"}
 
@@ -86,6 +103,22 @@ $('td:eq(0)', row).html(index);
 
 function download_berkas(id_data_berkas){
 window.location.href="<?php echo base_url('User3/download_berkas/') ?>"+id_data_berkas;
+}
+
+
+
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/data_perekaman') ?>",
+success:function(data){
+$(".data_perekaman").html(data);    
+$('#data_perekaman').modal('show');
+}
+
+});
 }
 
 </script>    

@@ -57,7 +57,7 @@
 
 <!------------- Modal Meta---------------->
 <div class="modal fade bd-example-modal-lg" id="lihat_meta" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
+<div class="modal-dialog modal-xl" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <h6 class="modal-title" >Data Meta</h6>
@@ -94,6 +94,60 @@
 </div>
 
 <script type="text/javascript">
+function simpan_jenis_inputan(id_data_meta){
+var jenis_inputan = $(".jenis_inputan"+id_data_meta+" option:selected").text();
+
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
+$.ajax({
+type:"post",
+url :"<?php echo base_url('Dashboard/simpan_jenis_inputan') ?>",
+data:"token="+token+"&jenis_inputan="+jenis_inputan+"&id_data_meta="+id_data_meta,
+success:function(data){
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
+}
+});
+}
+function simpan_maksimal_karakter(id_data_meta){
+var maksimal_karakter = $(".maksimal_karakter"+id_data_meta).val();
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
+$.ajax({
+type:"post",
+url :"<?php echo base_url('Dashboard/simpan_maksimal_karakter') ?>",
+data:"token="+token+"&maksimal_karakter="+maksimal_karakter+"&id_data_meta="+id_data_meta,
+success:function(data){
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
+}
+});
+}
+
 $(document).ready(function() {
 $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings)
 {
@@ -392,4 +446,3 @@ title: 'Nama Dokumen Belum di isikan.'
 
 });
 </script> 
-

@@ -78,5 +78,24 @@ $query = $this->db->get();
 return $query;
 }
 
+public function data_user(){
+$this->db->select('no_user');
+$this->db->select('nama_lengkap');
+$query= $this->db->get_where('user',array('Level'=>'User')); 
+
+return $query;
+}
+
+public function data_level2($proses,$no_user){
+$this->db->select('*');
+$this->db->from('data_pekerjaan');
+$this->db->join('user','user.no_user = data_pekerjaan.no_user');
+$this->db->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where(array('data_pekerjaan.status_pekerjaan'=>$proses,'data_pekerjaan.no_user'=>$no_user));
+$data = $this->db->get();
+return $data;    
+}
+
 }
 ?>

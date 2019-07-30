@@ -11,7 +11,7 @@ Data perizinan yang selesai dikerjakan
 <table style="width:100%;" id="data_selesai" class="table table-striped table-condensed table-xs table-bordered  table-hover table-sm"><thead>
 <th align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th align="center" aria-controls="datatable-fixed-header"  >Jenis tugas</th>
+<th align="center" aria-controls="datatable-fixed-header"  >Jenis pekerjaan</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Dokumen</th>
 </thead>
 <tbody align="center">
@@ -52,7 +52,8 @@ sProcessing: "loading..."
 processing: true,
 serverSide: true,
 
-ajax: {"url": "<?php echo base_url('User3/json_data_perizinan_selesai') ?> ", 
+ajax: {
+"url": "<?php echo base_url('User3/json_data_perizinan_selesai') ?> ", 
 "type": "POST",
 data: function ( d ) {
 d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
@@ -60,12 +61,12 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_berkas",
+"data": "no_berkas_perizinan",
 "orderable": false
 },
 {"data": "nama_client"},
-{"data": "jenis_perizinan"},
-{"data": "nama_file"},
+{"data": "jenis_pekerjaan"},
+{"data": "nama_dokumen"}
 
 
 ],

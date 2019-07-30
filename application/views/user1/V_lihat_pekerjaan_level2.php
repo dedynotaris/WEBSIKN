@@ -22,7 +22,7 @@
 </tr>
 <?php foreach ($data->result_array() as $d) { ?>
 <tr>
-<td><?php echo $d['jenis_perizinan']  ?></td>
+<td><?php echo $d['nama_jenis']  ?></td>
 <td><?php echo $d['nama_client']  ?></td>
 <td>
  <select disabled="" onchange="alihkan_tugas('<?php echo base64_encode($d['no_pekerjaan']) ?>','<?php echo $d['id_data_pekerjaan'] ?>');" class="form-control pekerjaan<?php echo $d['id_data_pekerjaan'] ?>">    

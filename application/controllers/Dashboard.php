@@ -583,20 +583,29 @@ public function lihat_data_meta(){
 if($this->input->post()){
 $data = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$this->input->post('no_nama_dokumen')));
 if($data->num_rows() >0){
-echo "<table class='table table-sm  table-striped table-hover'>"
+echo "<table class='table table-sm table-bordered table-striped table-hover'>"
         . "<tr>"
         . "<th>No</th>"
         . "<th>Nama meta</th>"
+        . "<th>Jenis Inputan</th>"
+        . "<th>Maksimal karakter</th>"
         . "<th>Aksi</th>"
         . "</tr>";
-
 $h =1;
 foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$h++."</td>"
     . "<td>".$d['nama_meta']."</td>"
+    . "<td>"
+    . "<select onchange=simpan_jenis_inputan('".$d['id_data_meta']."'); class='form-control jenis_inputan".$d['id_data_meta']."'>"
+    . "<option>".$d['jenis_inputan']."</option>"
+    . "<option>Numeric dan Text</option>"
+    . "<option>Numeric</option>"
+    . "</select>"
+    . "</td>"
+    . "<td><input  onchange=simpan_maksimal_karakter('".$d['id_data_meta']."'); type='text' value='".$d['maksimal_karakter']."' class='form-control maksimal_karakter".$d['id_data_meta']."'></td>"
     . "<td><button class='btn btn-danger btn-sm' onclick=hapus_meta('".$d['id_data_meta']."')><span class='fa fa-trash'></span></button></td>"
-    . "</tr>";
+. "</tr>";
 }
 echo "</table>";
 }else{
@@ -858,6 +867,45 @@ redirect(404);
 
 }
 
+public function simpan_jenis_inputan(){
+if($this->input->post()){
+$inputan = array('jenis_inputan'=> $this->input->post('jenis_inputan'));
+
+$this->db->update('data_meta',$inputan,array('id_data_meta'=>$this->input->post('id_data_meta')));
+$status = array(
+"status"     => "success",
+"pesan"      => "Jenis Inputan Tersimpan",    
+);
+
+
+echo json_encode($status);
+
+
+    
+}else{
+redirect(404);    
+}    
+}
+
+public function simpan_maksimal_karakter(){
+if($this->input->post()){
+$inputan = array('maksimal_karakter'=> $this->input->post('maksimal_karakter'));
+
+$this->db->update('data_meta',$inputan,array('id_data_meta'=>$this->input->post('id_data_meta')));
+$status = array(
+"status"     => "success",
+"pesan"      => "Maskismal Inputan Tersimpan",    
+);
+
+
+echo json_encode($status);
+
+
+    
+}else{
+redirect(404);    
+}    
+}
 
 }
 

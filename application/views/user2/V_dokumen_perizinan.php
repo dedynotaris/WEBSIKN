@@ -4,7 +4,7 @@
 
 <select onchange="jenis_file_perizinan();" class="form-control file_perizinan">
 <option>-- Klik untuk lihat jenis perizinan --</option>
-<?php foreach ($data_persyaratan->result_array() as $persyaratan) { ?>
+<?php foreach ($data->result_array() as $persyaratan) { ?>
 <option value="<?php echo $persyaratan['no_nama_dokumen'] ?>"><?php echo $persyaratan['nama_dokumen'] ?></option>
 <?php } ?>
 </select>
@@ -14,7 +14,7 @@
 <div class="data_form_perizinan m-2 p-2"></div>
 <!-------------------modal laporan--------------------->
 <div class="modal fade" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-body data_laporan">
 
@@ -26,14 +26,28 @@
 <script type="text/javascript">
 function jenis_file_perizinan(){
 var no_nama_dokumen = $(".file_perizinan option:selected").val();     
-var nama_dokumen    = $(".file_perizinan option:selected").text();
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 var no_pekerjaan    = "<?php echo $this->uri->segment(3) ?>";   
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/simpan_perizinan') ?>",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_dokumen="+nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
-success:function(){
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 4000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
 refresh();    
 }
 
@@ -62,29 +76,27 @@ $(".data_form_perizinan").html(data);
 }
 
 
-function option_aksi(id_data_berkas){
-var val = $(".option_aksi"+id_data_berkas).val();
+function option_aksi(no_berkas_perizinan){
+var val = $(".option_aksi"+no_berkas_perizinan).val();
 
 if(val == 1){
-hapus_syarat(id_data_berkas);    
+hapus_syarat(no_berkas_perizinan);    
 }else if(val == 2){
-$('.tentukan_pengurus'+id_data_berkas).removeAttr("disabled");
+$('.tentukan_pengurus'+no_berkas_perizinan).removeAttr("disabled");
 }else if(val == 3){
-lihat_progress_perizinan(id_data_berkas);
+lihat_progress_perizinan(no_berkas_perizinan);
 }
-$(".option_aksi"+id_data_berkas).prop('selectedIndex',0);
+$(".option_aksi"+no_berkas_perizinan).prop('selectedIndex',0);
 }
 
-function tentukan_pengurus(id_data_berkas){
-var pengurus = $(".tentukan_pengurus"+id_data_berkas);
-var nama     = $(".tentukan_pengurus"+id_data_berkas+" option:selected").text();
-var no_user  = $(".tentukan_pengurus"+id_data_berkas+" option:selected").val();
+function tentukan_pengurus(no_berkas_perizinan){
+var no_user  = $(".tentukan_pengurus"+no_berkas_perizinan+" option:selected").val();
 var token     = "<?php echo $this->security->get_csrf_hash() ?>";
 if(no_user !=''){
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/simpan_pekerjaan_user') ?>",
-data:"token="+token+"&no_user="+no_user+"&nama_user="+nama+"&id_data_berkas="+id_data_berkas,
+data:"token="+token+"&no_user="+no_user+"&no_berkas_perizinan="+no_berkas_perizinan,
 success:function(data){
 refresh();
 }
@@ -107,24 +119,23 @@ title: 'Tentukan user yang akan mengerjakan perizinan tersebut'
 
 
 
-function hapus_syarat(id){
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+function hapus_syarat(no_berkas_perizinan){
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",	
 url:"<?php echo base_url('User2/hapus_syarat') ?>",	
-data:"token="+token+"&id_data_berkas="+id,
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
 success:function(data){	
 refresh(); 
 }
 });
 }
 
-function lihat_progress_perizinan(id_data_berkas){
+function lihat_progress_perizinan(no_berkas_perizinan){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&id_data_berkas="+id_data_berkas,
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
 url:"<?php echo base_url('User2/lihat_laporan') ?>",
 success:function(data){
 $('#modal_laporan').modal('show');

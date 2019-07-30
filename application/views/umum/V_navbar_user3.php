@@ -90,7 +90,7 @@ In <br>
 <h4>&nbsp;</h4>
 </div>
 <div class="footer p-2 bg_data_bawah" >Perizinan dalam antrian  <div class="float-right">
-<?php echo $this->db->get_where('data_berkas',array('no_pengurus'=>$this->session->userdata('no_user'),'status'=>'Masuk'))->num_rows(); ?>   
+<?php echo $this->db->get_where('data_berkas_perizinan',array('no_user_perizinan'=>$this->session->userdata('no_user'),'status_berkas'=>'Masuk'))->num_rows(); ?>   
 </div></div>
 </div></a>	
 </div>	
@@ -105,7 +105,7 @@ Proses <br>
 </div>
 <div class="footer p-2 bg_data_bawah" >Perizinan sedang dikerjakan
 <div class="float-right">
-<?php echo $this->db->get_where('data_berkas',array('no_pengurus'=>$this->session->userdata('no_user'),'status'=>'Proses'))->num_rows(); ?>   
+<?php echo $this->db->get_where('data_berkas_perizinan',array('no_user_perizinan'=>$this->session->userdata('no_user'),'status_berkas'=>'Proses'))->num_rows(); ?>   
     
 </div>
 </div>
@@ -120,7 +120,7 @@ Out <br>
 <h4>&nbsp;</h4>
 </div>
 <div class="footer p-2 bg_data_bawah" >Perizinan selesai dikerjakan <div class="float-right">
-<?php echo $this->db->get_where('data_berkas',array('no_pengurus'=>$this->session->userdata('no_user'),'status'=>'Selesai'))->num_rows(); ?>   
+<?php echo $this->db->get_where('data_berkas_perizinan',array('no_user_perizinan'=>$this->session->userdata('no_user'),'status_berkas'=>'Selesai'))->num_rows(); ?>   
 
 </div></div>
 </div>	
@@ -146,7 +146,7 @@ success:function(data){
 var z = JSON.parse(data);
 
 for(i=0; i<z.length; i++){
-toastr.success(z[i].nama_file+("<br><button class='btn btn-sm  btn-block btn-warning' onclick='dilihat("+z[i].id_data_berkas+");'>Ok saya mengetahui</button>"), 'Pekerjaan baru', {
+toastr.success(z[i].nama_dokumen+("<br><button class='btn btn-sm  btn-block btn-warning' onclick='dilihat("+z[i].id_perizinan+");'>Ok saya mengetahui</button>"), 'Pekerjaan baru', {
  "closeButton": false,
   "debug": false,
   "newestOnTop": false,
@@ -169,11 +169,11 @@ toastr.success(z[i].nama_file+("<br><button class='btn btn-sm  btn-block btn-war
 }    
 });
 }
-function dilihat(id_data_berkas){
+function dilihat(id_perizinan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&id_data_berkas="+id_data_berkas,
+data:"token="+token+"&id_perizinan="+id_perizinan,
 url:"<?php echo base_url('User3/dilihat') ?>",
 success:function(data){
 

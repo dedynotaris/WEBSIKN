@@ -52,14 +52,16 @@ function json_data_berkas_client($no_client){
     
 $this->datatables->select('id_data_berkas,'
 .'data_berkas.no_client as no_client,'
-.'data_berkas.nama_file as nama_file,'
-.'data_berkas.status_berkas as status_berkas,'
+.'data_berkas.no_pekerjaan as no_pekerjaan,'
+.'data_berkas.no_nama_dokumen as no_nama_dokumen,'
+.'nama_dokumen.nama_dokumen as nama_file,'
 .'data_berkas.pengupload as pengupload,'
 );
 $this->datatables->from('data_berkas');
-$this->datatables->where('no_client', base64_decode($no_client));
-$this->datatables->where('pengupload !=',NULL );
-$this->datatables->add_column('view',"<button class='btn btn-sm btn-success '  onclick=download_berkas('$1'); > Download lampiran <i class='fa fa-download'></i></button>",'id_data_berkas');
+$this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->datatables->group_by('data_berkas.no_nama_dokumen');
+$this->datatables->where('data_berkas.no_client',base64_decode($no_client));
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_data_perekaman('$1','$2'); >Lihat data <i class='fa fa-eye'></i></button>",'no_nama_dokumen,no_pekerjaan');
 return $this->datatables->generate();
 }
 
@@ -94,14 +96,15 @@ function json_data_pekerjaan_selesai(){
 $this->datatables->select('id_data_pekerjaan,'
 .'data_pekerjaan.id_data_pekerjaan as id_data_pekerjaan,'
 .'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
-.'data_pekerjaan.jenis_perizinan as jenis_perizinan,'
 .'data_client.nama_client as nama_client,'
 .'data_client.no_client as no_client,'
-.'data_pekerjaan.tanggal_selesai as tanggal_selesai,'
+.'data_jenis_pekerjaan.nama_jenis as pekerjaan,'
+.'data_pekerjaan.tanggal_selesai as tanggal_selesai'
 );
 
 $this->datatables->from('data_pekerjaan');
-$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->datatables->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
 $this->datatables->where('data_pekerjaan.status_pekerjaan','Selesai');
 $this->datatables->add_column('view',""
@@ -121,7 +124,8 @@ public function data_pekerjaan_histori($no_pekerjaan){
 $this->db->select('*');
 $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
-$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan,FALSE);
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
 $query = $this->db->get();
 
 return $query;
@@ -137,6 +141,7 @@ $query = $this->db->get();
 
 return $query;
 }
+
 
 public function data_pekerjaan_persyaratan($param){
 $this->db->select('*');
@@ -173,10 +178,14 @@ return $query;
 }
 public function data_pekerjaan_proses($no_pekerjaan){
 
-$this->db->select('*');
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_client.nama_client');
 $this->db->from('data_pekerjaan');
-$this->db->join('data_persyaratan_pekerjaan', 'data_persyaratan_pekerjaan.no_pekerjaan_syarat = data_pekerjaan.no_pekerjaan');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
 $this->db->where('data_pekerjaan.no_pekerjaan',base64_decode($no_pekerjaan));
 $query = $this->db->get();   
 
@@ -191,6 +200,7 @@ $query = $this->db->get('data_perorangan');
 return $query;    
     
 }
+
 
 
 public function hapus_data_syarat_perorangan($id_data_syarat_perorangan){
@@ -372,7 +382,8 @@ $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas");
 $this->db->from('data_berkas');
-$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
+$this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
 $this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
@@ -383,7 +394,9 @@ public function data_perekaman2($no_nama_dokumen,$no_pekerjaan){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
-                . "data_berkas.id_data_berkas");
+                . "data_berkas.id_data_berkas,"
+                . "data_meta_berkas.no_nama_dokumen,"
+                 . "data_meta_berkas.no_pekerjaan");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');
@@ -393,5 +406,47 @@ $query = $this->db->get();
 return $query;
 }
 
+public function simpan_perizinan($data){
+$this->db->insert('data_berkas_perizinan',$data);    
+    
+}
+public function data_perizinan($no_pekerjaan){
+$this->db->select("*");
+$this->db->from('data_berkas_perizinan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
+$this->db->join('user', 'user.no_user = data_berkas_perizinan.no_user_perizinan','left');
+$this->db->where('data_berkas_perizinan.no_pekerjaan',base64_decode($no_pekerjaan));
+$query = $this->db->get();  
+return $query;
+    
+}
+public function data_user_perizinan($level){
+$this->db->select("*");
+$this->db->from('sublevel_user');
+$this->db->join('user', 'user.no_user = sublevel_user.no_user');
+$this->db->group_by('sublevel_user.no_user');
+$this->db->where('sublevel_user.sublevel',$level);
+$query = $this->db->get();  
+return $query;
+}
+public function dokumen_utama($no_pekerjaan){
+$this->db->select("*");
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan','left');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user','left');
+$this->db->where('data_dokumen_utama.no_pekerjaan',base64_decode($no_pekerjaan));
+$query = $this->db->get();  
+return $query;    
+}
+
+public function data_asisten($no_user){
+$this->db->from('data_berkas_perizinan');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
+$this->db->join('user', 'user.no_user = data_berkas_perizinan.no_user_perizinan');
+$this->db->group_by('user.no_user');
+$query= $this->db->get();    
+
+return $query;
+}
 }
 ?>

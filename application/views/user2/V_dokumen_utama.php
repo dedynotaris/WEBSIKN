@@ -1,10 +1,11 @@
 
-<div class="container-fluid">    
+<div class="container-fluid mt-2">    
 <div class="row ">
-<div class="col-md-4">    
-  <div class="card-header mt-2 text-center">
-       Upload dokumen utama
-    </div>
+<div class="col-md-4 ">    
+<div class="card-header  text-center">
+Upload Dokumen Utama
+</div>
+
 <form action="<?php  echo base_url('User2/upload_utama')?>" method="post" enctype="multipart/form-data">
 <label>Upload file</label>
 <input type="hidden" value="<?php echo $this->uri->segment(3) ?>" name="no_pekerjaan">
@@ -22,13 +23,14 @@
 <option value="Salinan">Salinan</option>    
 </select>
 
-<label>&nbsp;</label>    
+<div class="card-footer">  
 <button type="submit" class="btn btn-block btn-sm btn-success">Upload File</button>
+</div>
 </form>
 </div>
 
 <div class="col-md-8">    
-<div class="card-header mt-2 text-center">
+<div class="card-header  text-center">
 Dokumen utama yang sudah diupload
 </div>
 <table class="table table-sm table-striped table-bordered text-center table-hover">

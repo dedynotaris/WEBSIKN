@@ -118,7 +118,7 @@ columns: [
 },
 {"data": "no_pekerjaan"},
 {"data": "nama_client"},
-{"data": "jenis_perizinan"},
+{"data": "pekerjaan"},
 {"data": "tanggal_selesai"},
 {"data": "view"}
 

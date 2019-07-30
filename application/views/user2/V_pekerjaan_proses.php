@@ -20,14 +20,14 @@
 <th>Nama client</th>
 <th>Jenis Pekerjaan</th>
 <th>Tanggal tugas</th>
-<th class="text-center">Target kelar</th>
+<th class="text-center">Target selesai</th>
 <th>Aksi</th>
 </tr>
 <?php foreach ($query->result_array() as $data){ ?> 
 <tr>
 <td id='nama_client<?php echo $data['id_data_pekerjaan'] ?>'><?php echo $data['nama_client'] ?></td>
-<td ><?php echo $data['jenis_perizinan'] ?></td>
-<td><?php echo $data['tanggal_antrian'] ?></td>
+<td ><?php echo $data['nama_jenis'] ?></td>
+<td><?php echo $data['tanggal_proses'] ?></td>
 <td><?php echo $data['target_kelar'] ?></td>
 <td>
 <select onchange="aksi_option('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $data['id_data_pekerjaan'] ?>">
@@ -145,7 +145,7 @@ var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/lihat_laporan_pekerjaan') ?>",
+url:"<?php echo base_url('User2/lihat_laporan_perizinan') ?>",
 success:function(data){
 $('#lihat_laporan').modal('show');
 $(".lihat_laporan").html(data);

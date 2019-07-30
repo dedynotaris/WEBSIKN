@@ -46,11 +46,16 @@ foreach ($query->result_array() as $d){ ?>
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
+<form  id="fileForm" method="post" action="<?php echo base_url('User2/simpan_persyaratan') ?>">
 
 <div class="modal-body form_persyaratan">
 
 
 </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-md btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+</div>
+</form>    
 </div>
 </div>
 </div>
@@ -95,7 +100,7 @@ function refresh(){
 persyaratan_telah_dilampirkan();
 }
 
-function hapus_berkas_persyaratan(id_data_berkas){
+function hapus_berkas_persyaratan(id_data_berkas,no_nama_dokumen,no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
@@ -116,8 +121,8 @@ Toast.fire({
 type: r.status,
 title: r.pesan
 });
-lihat_data_perekaman();
-refresh();
+lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
+persyaratan_telah_dilampirkan();    
 }
 });    
 }
@@ -172,56 +177,6 @@ $('.btn').not(this).popover('hide');
 }
 
 
-function simpan_syarat(no_nama_dokumen,no_pekerjaan,no_client){
-var result = { };
-var jml_meta = $('.meta').length;
-for (i = 1; i <=jml_meta; i++) {
-var key   =($("#data_meta"+i).attr('name'));
-var value =($("#data_meta"+i).val());
-$.each($('form').serializeArray(), function() {
-result[key] = value;
-});
-}
-
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-var name = $("#id").attr("name");
-formdata = new FormData();
-file = $("#file_berkas").prop('files')[0];;
-formdata.append("file_berkas", file);
-formdata.append("token", token);
-formdata.append("no_nama_dokumen",no_nama_dokumen);
-formdata.append("no_client",no_client);
-formdata.append("no_pekerjaan",no_pekerjaan);
-formdata.append('data_meta', JSON.stringify(result));
-
-jQuery.ajax({
-url: "<?php echo base_url('User2/simpan_persyaratan') ?>",
-type: "POST",
-data: formdata,
-processData: false,
-contentType: false,
-success: function (result) {
-var r = JSON.parse(result);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
-refresh();
-$('#modal_upload').modal('hide');
-}
-
-});
-
-}
 
 
 
@@ -236,8 +191,33 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('.form_persyaratan').html(data);    
 $('#modal_upload').modal('show');
+var inputQuantity = [];
+    $(function() {
+      $(".quantity").each(function(i) {
+        inputQuantity[i]=this.defaultValue;
+         $(this).data("idx",i); // save this field's index to access later
+      });
+      $(".quantity").on("keyup", function (e) {
+        var $field = $(this),
+            val=this.value,
+            $thisIndex=parseInt($field.data("idx"),10); // retrieve the index
+        if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
+            this.value = inputQuantity[$thisIndex];
+            return;
+        } 
+        if (val.length > Number($field.attr("maxlength"))) {
+            var t = Number($field.attr("maxlength"));
+          val=val.slice(0,t);
+          $field.val(val);
+        }
+        inputQuantity[$thisIndex]=val;
+      });      
+    });
 }    
 });
+
+
+
 }
 
 function simpan_persyaratan(){
@@ -315,6 +295,73 @@ window.location.href = "<?php echo base_url('User2/pekerjaan_proses/'); ?>";
 function download(id_data_berkas){
 window.location.href="<?php echo base_url('User2/download_berkas/') ?>"+id_data_berkas;
 }
+
+
+$("#fileForm").submit(function(e) {
+e.preventDefault();
+$.validator.messages.required = '';
+}).validate({
+highlight: function (element, errorClass) {
+$(element).closest('.form-control').addClass('is-invalid');
+},
+unhighlight: function (element, errorClass) {
+$(element).closest(".form-control").removeClass("is-invalid");
+},    
+submitHandler: function(form) {
+
+var result = { };
+var jml_meta = $('.meta').length;
+for (i = 1; i <=jml_meta; i++) {
+var key   =($("#data_meta"+i).attr('name'));
+var value =($("#data_meta"+i).val());
+$.each($('form').serializeArray(), function() {
+result[key] = value;
+});
+}
+
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+var name = $("#id").attr("name");
+
+formdata = new FormData();
+formdata.append("token", token);
+file = $("#file_berkas").prop('files')[0];;
+formdata.append("file_berkas", file);
+formdata.append("no_nama_dokumen",$(".no_nama_dokumen").val());
+formdata.append("no_client",$(".no_client").val());
+formdata.append("no_pekerjaan",$(".no_pekerjaan").val());
+formdata.append('data_meta', JSON.stringify(result));
+
+
+$.ajax({
+url: form.action,
+processData: false,
+contentType: false,
+type: form.method,
+data: formdata,
+success:function(data){
+    
+persyaratan_telah_dilampirkan();    
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
+}
+
+});
+return false; 
+}
+});
 
 
 </script>
