@@ -1,6 +1,5 @@
-<div class="container-fluid">
+<div class="container-fluid mt-2">
 <?php $static = $dokumen_persyaratan->row_array(); ?>    
-<div class="container">
 <div class="row">
 <div class="col-md-7 card">
 <div class="text-center card"><b>Dokumen Penunjang yang harus direkam <br> <?php echo $static['nama_jenis'] ?></b></div>
@@ -20,7 +19,6 @@ foreach ($dokumen_persyaratan->result_array() as $d){ ?>
     
 <div class="syarat_telah_dilampirkan">
 
-</div>
 </div>
 </div>
 </div>
@@ -50,23 +48,6 @@ foreach ($dokumen_persyaratan->result_array() as $d){ ?>
 </div>
 </div>
 
-<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content ">
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-
-<div class="modal-body data_perekaman">
-
-
-</div>
-</div>
-</div>
-</div>
 
 <script type="text/javascript">
 function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){

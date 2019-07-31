@@ -12,7 +12,6 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >jenis berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody align="center">
@@ -85,7 +84,6 @@ columns: [
 },
 {"data": "no_client"},
 {"data": "nama_file"},
-{"data": "pengupload"},
 {"data": "view"}
 
 

@@ -3,89 +3,39 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user1'); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Berkas yang dilampirkan</h5>
+
+
+<ul class="nav nav-tabs">
+<li class="nav-item">
+<a class="nav-link active" data-toggle="tab" href="#utama"> Dokumen Utama <i class="fas fa-file-word"></i></a>
+</li>
+<li class="nav-item ml-1">
+<a class="nav-link " data-toggle="tab" href="#perizinan"> Dokumen Penunjang <i class="fas fa-file"></i></a>
+</li>
+
+</ul>    
+
+<div class="tab-content">
+<div class="tab-pane card container-fluid active" id="utama">
+<?php $this->load->view('user1/V_dokumen_utama'); ?>
 </div>
-<table class="table mt-2 table-sm table-hover table-striped table-bordered">
-<tr>
-<th>Nama persyaratan</th>
-<th class="text-center">Aksi</th>
-</tr>
-<?php 
-foreach ($data_berkas->result_array() as $berkas){
-$data_meta = $this->db->get_where('data_meta_berkas',array('nama_berkas'=>$berkas['nama_berkas']));    
-?>
-<tr>
-<td ><?php echo $berkas['nama_file'] ?></td>    
-<td class="text-center">
-    <button class="btn btn-sm btn-success" onclick="download_berkas('<?php  echo $berkas['id_data_berkas']?>');"><span class="fa fa-download"></span></button>    
-<button class="btn btn-sm btn-success" data-toggle="popover" title="Data informasi" data-content="
-<?php 
-foreach ($data_meta->result_array() as $meta){
-echo $meta['nama_meta']." : ".$meta['value_meta'],"<br>";    
-}
-?>        
-        "><span class="fa fa-eye"></span></button>     
-</td>
-</tr>
-<?php }?>    
-</table>
-    
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Informasi yang diberikan</h5>
+
+<div class="tab-pane card container-fluid " id="perizinan">
+<?php $this->load->view('user1/V_dokumen_penunjang'); ?>
 </div>
-<table class="table mt-2 table-sm table-hover table-striped table-bordered">
-<tr>
-<th>Nama Informasi</th>
-<th class="text-center">Aksi</th>
-</tr>
-<?php 
-foreach ($data_informasi->result_array() as $informasi){
-?>
-<tr>
-<td ><?php echo $informasi['nama_informasi'] ?></td>    
-<td class="text-center">
-<?php if($informasi['lampiran'] !=''){ ?>    
-<button class="btn btn-sm btn-success" onclick="download_berkas_informasi('<?php  echo $informasi['id_data_informasi_pekerjaan']?>');"><span class="fa fa-download"></span></button>    
-<?php } ?>
-<button class="btn btn-sm btn-success" data-toggle="popover" title="Data informasi" data-content="<?php echo $informasi['data_informasi'] ?>"><span class="fa fa-eye"></span></button>     
     
-</td>
-</tr>
-<?php }?>    
-</table>    
-    
-    
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Dokumen utama yang dikerjakan</h5>
 </div>    
-<table class="table mt-2 table-sm table-hover table-striped table-bordered">
-<tr>
-<th>Nama Dokumen utama</th>
-<th class="text-center">Aksi</th>
-</tr>
-<?php 
-foreach ($dokumen_utama->result_array() as $utama){
-?>
-<tr>
-<td ><?php echo $utama['nama_berkas'] ?></td>    
-<td class="text-center">
-    <button class="btn btn-sm btn-success"  onclick="download_utama('<?php echo $utama['id_data_dokumen_utama'] ?>');"><span class="fa fa-download"></span></button>    
-    
-</td>
-</tr>
-<?php }?>    
-</table>    
-    
-    
+</div>    
 </div>
-</div>
+    
 </div>
 
-
+    
+</div>
+</div>
+</div>
 
 <!-------------------modal laporan--------------------->
-
 <div class="modal fade" id="modal_tampil_lampiran" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
@@ -96,6 +46,21 @@ foreach ($dokumen_utama->result_array() as $utama){
 </div>
 </div>
 
+<script type="text/javascript">
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User1/data_perekaman') ?>",
+success:function(data){
+$(".data_perekaman").html(data);    
+$('#data_perekaman').modal('show');
+}
+
+});
+}
+</script>
 
 <script type="text/javascript">
 $(function () {

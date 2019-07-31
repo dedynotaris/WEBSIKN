@@ -76,7 +76,7 @@ $(".data_form_perizinan").html(data);
 }
 
 
-function option_aksi(no_berkas_perizinan){
+function option_aksi(no_berkas_perizinan,no_nama_dokumen,no_pekerjaan){
 var val = $(".option_aksi"+no_berkas_perizinan).val();
 
 if(val == 1){
@@ -85,6 +85,8 @@ hapus_syarat(no_berkas_perizinan);
 $('.tentukan_pengurus'+no_berkas_perizinan).removeAttr("disabled");
 }else if(val == 3){
 lihat_progress_perizinan(no_berkas_perizinan);
+}else if(val == 4){
+lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
 }
 $(".option_aksi"+no_berkas_perizinan).prop('selectedIndex',0);
 }

@@ -453,11 +453,7 @@ echo "<div class='row'>"
 ."</tr>";
 foreach ($data->result_array() as $form){
 echo "<tr>";
-if($form['status_berkas']=='Selesai'){
-echo  "<td>".$form['nama_dokumen']." <button onclick=download_berkas('".$form['no_berkas_perizinan']."') class='btn btn-success btn-sm float-right'><span class='fa fa-download'></span></button></td>";
-}else{
 echo  "<td>".$form['nama_dokumen']."</td>";
-}
 
 echo "<td class='text-center'>".$form['status_berkas']." </td>"
 . "<td>".$form['target_selesai_perizinan']."</td>"
@@ -470,11 +466,12 @@ echo "<option value='".$user['no_user']."'>".$user['nama_lengkap']."</option>";
 echo "<select></td>";
 
 echo "<td>"
-."<select onchange=option_aksi('".$form['no_berkas_perizinan']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
+."<select onchange=option_aksi('".$form['no_berkas_perizinan']."','".$form['no_nama_dokumen']."','".$form['no_pekerjaan']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
 ."<option>-- Klik untuk lihat menu --</option>"
 ."<option value='1'>Hapus Syarat</option>"
 ."<option value='2'>Alihkan Tugas</option>"
 ."<option value='3'>Lihat laporan</option>"
+."<option value='4'>Lihat Rekaman Data</option>"
 ."<select></td>"
 
 . "<tr>";
@@ -661,16 +658,27 @@ redirect(404);
 public function cari_file(){
 if($this->input->post()){
 $input = $this->input->post();
-$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input);
-$dalam_bentuk_informasi = $this->M_user2->cari_informasi($input);
+$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input['cari_dokumen']);
 
 $this->load->view('umum/V_header');
-$this->load->view('user2/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran,'dalam_bentuk_informasi'=>$dalam_bentuk_informasi]);
+$this->load->view('user2/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran]);
 
 }else{
 redirect(404);    
 }    
 }
+public function cari_data(){
+if($this->input->post()){
+$input = $this->input->post();
+$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input['kata_kunci']);
+
+echo json_encode($dalam_bentuk_lampiran->result());
+
+}else{
+redirect(404);    
+}    
+}
+
 public function lihat_pekerjaan_asisten(){
 $proses = base64_decode($this->uri->segment(4));    
 $no_user = base64_decode($this->uri->segment(3));

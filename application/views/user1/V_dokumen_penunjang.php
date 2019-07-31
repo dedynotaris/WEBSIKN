@@ -1,0 +1,54 @@
+            <table class="table table-striped table-bordered table-sm mt-2">
+                <thead>
+                    <tr>
+                        <td>No</td>
+                        <td>No pekerjaan</td>
+                        <td>Nama dokumen penunjang</td>
+                        <td>Aksi</td>
+                    </tr>
+                </thead>
+                
+            <?php $no=1; foreach ($data_berkas->result_array() as $data){ ?>
+    <tr>
+        <td><?php echo $no++ ?></td>  
+        <td><?php echo $data['no_pekerjaan'] ?></td>
+        <td><?php echo $data['nama_dokumen'] ?></td>
+        <td><button onclick="lihat_data_perekaman('<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_pekerjaan'] ?>')" class="btn btn-sm btn-dark btn-block">Lihat rekaman data <span class="fa fa-eye"></span></button></td>
+    </tr> 
+            <?php } ?>
+        </table>
+
+ 
+<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+
+<div class="modal-body data_perekaman">
+
+
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User1/data_perekaman') ?>",
+success:function(data){
+$(".data_perekaman").html(data);    
+$('#data_perekaman').modal('show');
+}
+
+});
+}
+</script>

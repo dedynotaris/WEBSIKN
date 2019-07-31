@@ -118,16 +118,11 @@ $sublevel = $karyawan->row_array();
 $this->load->view('umum/V_header');
 if($level == 'Level 2'){
 $data_level2 = $this->M_user1->data_level2($proses,$no_user);
-$data_user  = $this->db->get_where('user',array ('level'=>'User'));   
+$data_user   = $this->M_user1->user_level2();   
 $this->load->view('user1/V_lihat_pekerjaan_level2',['data'=>$data_level2,'data_user'=>$data_user]);
 }else{    
-$this->db->select('*');
-$this->db->from('data_berkas');
-$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
-$this->db->join('user', 'user.no_user = data_berkas.no_pengurus');
-$this->db->where(array('data_berkas.status'=>$proses,'data_berkas.no_pengurus'=>$no_user));
-$data = $this->db->get();
-$this->load->view('user1/V_lihat_pekerjaan_level3',['data'=>$data]);    
+$data_level2   = $this->M_user1->data_level3($proses,$no_user);   
+$this->load->view('user1/V_lihat_pekerjaan_level3',['data'=>$data_level2]);    
 }
 
 }else{
@@ -136,11 +131,11 @@ redirect(404);
 }
 public function berkas_dikerjakan(){
 $no_pekerjaan               = base64_decode($this->uri->segment(3));
-$data_berkas                = $this->db->get_where('data_berkas',array('no_pekerjaan'=>$no_pekerjaan));
-$data_informasi             = $this->db->get_where('data_informasi_pekerjaan',array('no_pekerjaan'=>$no_pekerjaan));
-$dokumen_utama              = $this->db->get_where('data_dokumen_utama',array('no_pekerjaan'=>$no_pekerjaan));     
+$data_berkas                = $this->M_user1->data_berkas_pekerjaan($no_pekerjaan);
+$data_utama                 = $this->M_user1->data_berkas_utama($no_pekerjaan);
+
 $this->load->view('umum/V_header');
-$this->load->view('user1/V_lihat_berkas_dikerjakan',['data_berkas'=>$data_berkas,'data_informasi'=>$data_informasi,'dokumen_utama'=>$dokumen_utama]);        
+$this->load->view('user1/V_lihat_berkas_dikerjakan',['data_utama'=>$data_utama,'data_berkas'=>$data_berkas]);        
 
 
 }
@@ -309,7 +304,7 @@ public function lihat_laporan(){
 if($this->input->post()){
 $input = $this->input->post();
 
-$data = $this->db->get_where('data_progress_perizinan',array('id_data_berkas'=>$input['id_data_berkas']));
+$data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 if($data->num_rows() == 0){
 echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
     . "<span class='fa fa-list-alt fa-3x'></span></h5>";
@@ -343,7 +338,49 @@ unset($_SESSION['toggled']);
 }
 echo print_r($this->session->userdata()); 
 }
+public function data_perekaman(){
+if($this->input->post()){
+$input = $this->input->post();
+$query     = $this->M_user1->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query2     = $this->M_user1->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
 
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr>";
+foreach ($query->result_array() as $d){
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "<th>Pengupload</th>";
+echo "<th>Aksi</th>";
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr>";
+
+foreach ($b->result_array() as $i){
+echo "<td>".$i['value_meta']."</td>";    
+}
+echo '<td class="text-center">'.$d['pengupload'].'</td>';
+
+echo '<td class="text-center">'
+.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
+</td>';
+echo "</tr>";
+    
+    
+}
+echo "</tbody>";
+
+
+echo"</table>";   
+}else{
+redirect(404);    
+}    
+}
 
 }
 

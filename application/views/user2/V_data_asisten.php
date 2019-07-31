@@ -7,7 +7,7 @@
 
 <div class="row">
 <div class="col">
-<h5 align="center"><i class="fa fa-3x fa-users"></i><br>Daftar asisten yang anda berikan pekerjaan</h5>
+<h5 align="center"><i class="fa fa-3x fa-users"></i><br>Daftar asisten yang memiliki pekerjaan</h5>
 <table class="table table-sm table-bordered  table-condensed table-striped ">
 <tr>
 <th> Asisten</th>   

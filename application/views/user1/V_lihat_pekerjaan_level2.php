@@ -40,7 +40,7 @@ echo "<option value=".$user['no_user'].">".$user['nama_lengkap']."</option>";
 <option>-- Klik untuk melihat menu --</option>
 <option value="1">Lihat Laporan</option>
 <option value="2">Alihkan Pekerjaan</option>
-<option value="3">Lihat berkas </option>
+<option value="3">Lihat Dokumen </option>
 </select>    
 </td>
 

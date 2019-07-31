@@ -4,29 +4,7 @@
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <div class="container-fluid mt-2">
 		
-<ul id="clothing-nav" class="nav nav-tabs" role="tablist">
-	
-<li class="nav-item">
-<a class="nav-link active" href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Dalam bentuk lampiran ( <?php echo $dalam_bentuk_lampiran->num_rows(); ?> ) Ditampilkan</a>
-</li>
 
-<li class="nav-item ml-1">
-<a class="nav-link" href="#hats" role="tab" id="hats-tab" data-toggle="tab" aria-controls="hats">Dalam bentuk informasi ( <?php echo $dalam_bentuk_informasi->num_rows(); ?> ) Ditampilkan</a>
-</li>
-
-
-
-</ul>
-
-<div id="clothing-nav-content" class="tab-content">
-
-<div role="tabpanel" class="tab-pane fade show active" id="home" aria-labelledby="home-tab">
-<?php if($dalam_bentuk_lampiran->num_rows() == 0){ ?>
-   
-      <h3 class="text-center mt-2">Hasil pencarian lampiran tidak ditemukan <br><span class="fa fa-folder-open fa-4x"></span></h3>    
-  
-    
-<?php }else{?>
 <table class="table table-sm table-bordered table-striped table-condensed">
         <tr>
             <td>No</td>  
@@ -45,36 +23,7 @@
         </tr>
 <?php } ?>
 </table>
-<?php } ?>
     
-</div>
-
-<div role="tabpanel" class="tab-pane fade" id="hats" aria-labelledby="hats-tab">
-<?php if($dalam_bentuk_informasi->num_rows() == 0){ ?>
-    <h3 class="text-center mt-2">Hasil pencarian informasi tidak ditemukan <br><span class="fa fa-folder-open fa-4x"></span></h3>    
-<?php }else{  ?>
-    <table class="table table-sm table-bordered table-striped table-condensed">
-        <tr>
-            <td>No</td>  
-            <td>Jenis Informasi</td>  
-            <td>Aksi</td>  
-        </tr>   
-<?php $h=1; foreach ($dalam_bentuk_informasi->result_array() as $informasi){ ?>
-        <tr>
-            <td> <?php echo $h++ ?></td>
-            <td> <?php echo $informasi['nama_informasi'] ?></td>
-            <td class="text-center">
-                <button onclick="lihat_informasi('<?php echo $informasi['id_data_informasi_pekerjaan'] ?>')"  class="btn btn-sm btn-success">Lihat Informasi <span class="fa fa-list-alt"></span></button> 
-            <?php if($informasi['lampiran'] !=''){ ?>
-                <button onclick="download_berkas_informasi('<?php echo $informasi['id_data_informasi_pekerjaan'] ?>')" class="btn btn-sm btn-success">Download Lampiran <span class="fa fa-download"></span></button> 
-            
-            <?php } ?>
-            </td> 
-             
-        </tr>
-<?php } ?>
-</table>    
-<?php }?>
 </div>
 </div>
     
@@ -118,6 +67,7 @@ $(".data_informasi").html(data);
     </div>
   </div>
 </div>
-    
+
+
 </body>
 </html>

@@ -145,7 +145,7 @@ var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/lihat_laporan_perizinan') ?>",
+url:"<?php echo base_url('User2/lihat_laporan_pekerjaan') ?>",
 success:function(data){
 $('#lihat_laporan').modal('show');
 $(".lihat_laporan").html(data);

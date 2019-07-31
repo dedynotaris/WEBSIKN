@@ -30,17 +30,33 @@
 <script src="<?php echo base_url() ?>assets/toast/build/toastr.min.js" type="text/javascript"></script>
 <link href="<?php echo base_url() ?>assets/toast/build/toastr.min.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/jquery/list.min.js" type="text/javascript"></script>
 </head> 
 <script type="text/javascript">
 jQuery( document ).ajaxStart(function() {
-  NProgress.start();
+NProgress.start();
 });
-
 jQuery( document ).ajaxStop(function() {
-  NProgress.done();
+NProgress.done();
 });
 
 
+$(document).ready(function(){
+$(".search").keyup(function(){
+var token      = "<?php echo $this->security->get_csrf_hash() ?>";
+var kata_kunci = $(".search").val();    
+$.ajax({
+type:"post",
+data:"token="+token+"&kata_kunci="+kata_kunci,
+url:"<?php echo base_url('User2/cari_data') ?>",
+success:function(data){
+console.log(data);
+}
 
+});
 
+});
+
+});
 </script>
+

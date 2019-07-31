@@ -89,6 +89,12 @@ $('td:eq(0)', row).html(index);
 });
 
 </script>  
-       
+
+<script type="text/javascript">
+function lihat_berkas(no_pekerjaan){
+window.location.href="<?php echo base_url('User1/berkas_dikerjakan/') ?>"+no_pekerjaan;
+}
+</script>
+
 </body>
 </html>

@@ -29,7 +29,7 @@ Data perizinan yang perlu diproses
 <option value="2">Buat Laporan</option>
 <option value="3">Lihat Persyaratan</option>
 <option value="4">Rekam Data</option>
-<option value="5">Selesaikan Pekerjaan</option>
+<option value="5">Selesaikan Perizinan</option>
 </select>    
 </td>
 </tr>

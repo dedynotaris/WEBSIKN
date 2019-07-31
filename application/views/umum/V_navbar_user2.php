@@ -5,14 +5,14 @@
 <span class="navbar-toggler-icon"></span>
 </button>
     
-<form class="input-group col-md-9 mx-auto" id="adv-search" action="<?php echo base_url('User2/cari_file') ?>" method="post" >        
+<form class="input-group col-md-9 mx-auto search" id="adv-search" action="<?php echo base_url('User2/cari_file') ?>" method="post" >        
 <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="text" class="form-control" name="cari_dokumen" id="pencarian_nama_dokumen" placeholder="Cari File Dokumen" />
 <div class="btn-group" role="group">
 <button type="submit" style="padding: 0.63rem 0.75rem;" type="button" class="btn btn-success"><span class="fa fa-search" aria-hidden="true"></span></button>
 </div>
-
 </form>
+    
 <style>
 .dropdown.dropdown-lg .dropdown-menu {
     margin-top: -1px;
