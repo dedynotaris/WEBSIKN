@@ -833,42 +833,23 @@ redirect(404);
 public function buat_pekerjaan_baru(){
 
 if($this->input->post()){    
-
 $input = $this->input->post();
-$h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
-$no_pekerjaan= str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
-$data_persyaratan = $this->db->get_where('data_persyaratan',array('no_jenis_dokumen' => $input['id_jenis']));
-   
+$h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
+
+$no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
 $data_r = array(
 'no_client'          => base64_decode($input['no_client']),    
 'status_pekerjaan'   => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
-'tanggal_dibuat'     => date('d/m/Y H:i:s'),
-'no_jenis_perizinan' => $input['id_jenis'],   
-'tanggal_antrian'    => date('d/m/Y H:i:s'),
+'tanggal_dibuat'     => date('Y/m/d'),
+'no_jenis_pekerjaan' => $input['id_jenis'],   
 'target_kelar'       => $input['target_kelar'],
-'count_up'           => date('M,d,Y, H:i:s'),        
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
-'jenis_perizinan'    => $input['jenis_akta'],
 );
 $this->db->insert('data_pekerjaan',$data_r);
-
-
-foreach ($data_persyaratan->result_array() as $persyaratan){
-$syarat = array(
-'no_client'         => base64_decode($input['no_client']),    
-'no_pekerjaan_syarat'      => $no_pekerjaan,    
-'no_nama_dokumen'   => $persyaratan['no_nama_dokumen'],    
-'nama_dokumen'      => $persyaratan['nama_dokumen'],
-'no_jenis_dokumen'  => $persyaratan['no_jenis_dokumen'], 
-);
-$this->db->insert('data_persyaratan_pekerjaan',$syarat);
-}
-
-
 
 
 $status = array(

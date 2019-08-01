@@ -469,7 +469,6 @@ echo "<td>".$i['value_meta']."</td>";
 }
 echo '<td class="text-center">'
 .'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
-<button onclick=hapus_berkas_persyaratan("'.$d['id_data_berkas'].'","'.$d['no_nama_dokumen'].'","'.$d['no_pekerjaan'].'"); class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>
 </td>';
 echo "</tr>";
     

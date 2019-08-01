@@ -25,8 +25,8 @@ App Management
 <div class="list-group list-group-flush">
      
 <ul class="list-unstyled components">
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama'); ?>"><i class="fa fa-upload"></i> Upload data lama</a></li>
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/data_berkas_lama'); ?>"><i class="fas fa-book"></i> Data berkas lama</a></li>
+<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama'); ?>"><i class="fas fa-pen"></i> Buat File Arsip</a></li>
+<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/data_arsip'); ?>"><i class="fas fa-list-alt"></i> Data Arsip</a></li>
 
 </ul>
 </div>

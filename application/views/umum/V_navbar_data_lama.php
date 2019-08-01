@@ -79,46 +79,7 @@ Pilihan
 </nav>
 
 
-<div class="container-fluid">
-<div class="row">
-<div class="col">
-<div class="bg_data rounded-top">
-<div class="p-2">
-<span class="fa fa-book float-right fa-3x sticky-top"></span>
-Data berkas <br>
-<h4>&nbsp;</h4>
-</div>
-<div class="footer p-2 bg_data_bawah">Dalam bentuk lampiran<div class="float-right">
-<?php 
-$query3 = $this->db->get('data_berkas')->num_rows();
-echo $query3;
-?>
-</div></div>
-</div>	
-</div>	
 
-
-
-
-<div class="col ">
-<div class="bg_data rounded-top">
-<div class="p-2">
-<span class="fa fa-book float-right fa-3x sticky-top"></span>
-Data Informasi <br>
-<h4>&nbsp;</h4>
-</div>
-<div class="footer p-2 bg_data_bawah" >Data Informasi <div class="float-right">
-<?php 
-$query3 = $this->db->get('data_informasi_pekerjaan')->num_rows();
-echo $query3;
-?>
-
-</div></div>
-</div>	
-</div>	
-
-</div>	
-</div>
 
 <script type="text/javascript">
 $("#menu-toggle").click(function(e) {

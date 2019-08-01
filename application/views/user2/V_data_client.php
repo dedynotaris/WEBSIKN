@@ -195,20 +195,20 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 $("#jenis_akta,#jenis_akta_perorangan").autocomplete({
 minLength:0,
 delay:0,
-source:'<?php echo site_url('User2/cari_jenis_dokumen') ?>',
+source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
 select:function(event, ui){
 $("#id_jenis_akta").val("");
-$("#id_jenis_akta,#id_jenis_akta_perorangan").val(ui.item.no_jenis_dokumen);
+$("#id_jenis_akta,#id_jenis_akta_perorangan").val(ui.item.no_jenis_pekerjaan);
 }
 }
 );
 });
 
 $(function() {
-$("input[name='target_kelar']").datepicker({ minDate:0,dateFormat: 'dd/mm/yy'
-});
+$("input[name='target_kelar']").datepicker({ minDate:0,dateFormat: 'yy/mm/dd'
 });
 
+});
 
 </script>
 </body>

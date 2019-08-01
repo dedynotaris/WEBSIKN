@@ -2,20 +2,20 @@
 <?php  $this->load->view('umum/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_data_lama'); ?>
+    
 <div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Seluruh Data Berkas</h5>
+<div class="card-header mb-2 mt-2 text-center ">
+<h5 align="center">Seluruh Data Arsip</h5>
 </div>
 
 <div class="row">
 <div class="col">
-    <table style="width:100%;" id="data_berkas" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+    <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama file</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >pengupload</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >tanggal upload</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >milik</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama Notaris</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody align="center">
@@ -42,10 +42,10 @@ return {
 };
 };
 
-var t = $("#data_berkas").dataTable({
+var t = $("#data_arsip").dataTable({
 initComplete: function() {
 var api = this.api();
-$('#data_berkas')
+$('#data_arsip')
 .off('.DT')
 .on('keyup.DT', function(e) {
 if (e.keyCode == 13) {
@@ -58,7 +58,7 @@ sProcessing: "loading..."
 },
 processing: true,
 serverSide: true,
-ajax: {"url": "<?php echo base_url('Data_lama/json_data_berkas') ?> ", 
+ajax: {"url": "<?php echo base_url('Data_lama/json_data_arsip') ?> ", 
 "type": "POST",
 data: function ( d ) {
 d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
@@ -66,13 +66,12 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_berkas",
+"data": "id_data_pekerjaan",
 "orderable": false
 },
-{"data": "nama_file"},
-{"data": "pengupload"},
-{"data": "tanggal_upload"},
 {"data": "nama_client"},
+{"data": "nama_jenis"},
+{"data": "nama_lengkap"},
 {"data": "view"}
 
 
@@ -93,3 +92,4 @@ window.location.href="<?php echo base_url('Dashboard/download_berkas/') ?>"+id_d
 
 
 </script>
+

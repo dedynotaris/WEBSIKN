@@ -3,47 +3,39 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_data_lama'); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Upload data lama</h5>
+<div class="card-header mt-2 mb-2 text-center ">
+<h5 align="center">Tentukan Nama Client Dan Jenis Pekerjaan</h5>
 </div>
-<form  id="file_lama" method="post" action="<?php echo base_url('Data_lama/simpan_berkas') ?>">
+<form  id="file_lama" method="post" action="<?php echo base_url('Data_lama/simpan_pekerjaan_arsip') ?>">
 
 <div class="row">
-<div class="col">
+<div class="col-md-6 mx-auto">
 
 
 <label>Nama client</label>
 <div class="input-group ">
     <input type="text" name="nama_client" class="form-control nama_client required" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
-<button class="btn btn-success add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+<button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
 </div>
-
-<label>No client</label>
-<input type="text" name="no_client" readonly="" class="form-control no_client required" accept="text/plain">
-
-<label>Pilih Jenis Dokumen</label>
-<select onchange="opsi_jenis_dokumen();" name="jenis_dokumen"  class="form-control  jenis_dokumen required" accept="text/plain">
-<option >------ Pilih jenis dokumen -----</option>
-<option value="1"> Dokumen Utama </option>
-<option value="2"> Dokumen Perizinan </option>
-</select>
-</div>
-<div class="col">
-<label>Nama Dokumen</label>
-
-<select class="form-control nama_dokumen required" accept="text/plain" disabled="">
+<input type="hidden" name="no_client" readonly="" class="form-control no_client required" accept="text/plain">
+<label>Nama Notaris</label>
+<select class="form-control nama_notaris required" accept="text/plain">
     <option></option>    
+<?php 
+foreach ($nama_notaris->result_array() as $nama){
+echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";    
+}
+?>
+    
 </select>
-<div class="data_meta"></div>
 
-
-<label>Pilih File</label>
-<input type="file" name="file_upload" class="form-control file_upload required" >
-
+<label>Nama Pekerjaan</label>
+<input type="text" name="jenis_pekerjaan" class="form-control jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
+<input type="hidden" name="no_jenis_pekerjaan" class="form-control no_jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
 <label>&nbsp;</label>
-<button type="submit" class="btn btn-success btn-sm btn-block">Simpan File <span class="fa fa-save"></span></button>
+<button type="submit" class="btn btn-dark btn-md btn-block">Simpan File <span class="fa fa-save"></span></button>
 </div>
 </div>    
 
@@ -85,7 +77,7 @@
     
 </div>
 <div class="card-footer">
-<button type="submit" class="btn btn-sm simpan_client btn-success btn-block">Simpan Client <span class="fa fa-save"></span></button>
+<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
 </form>
 </div>
 </div>
@@ -94,81 +86,7 @@
 
 <script type="text/javascript">
 
-function tampilkan_meta(){
-var no_nama_dokumen = $(".opsi_meta option:selected").val();        
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
-$.ajax({
-type:"post",
-url:"<?php echo base_url('Data_lama/data_meta') ?>",
-data:"token="+token+"&no_nama_dokumen="+$(".opsi_meta option:selected").val(),
-success:function(data){
-$(".data_meta").html(data);
 
-if ($('.informasi').is(':empty')){
-CKEDITOR.replace('informasi', {
-toolbarGroups: [{
-"name": "basicstyles",
-"groups": ["basicstyles"]
-},
-{
-"name": "links",
-"groups": ["links"]
-},
-{
-"name": "paragraph",
-"groups": ["list", "blocks"]
-},
-{
-"name": "document",
-"groups": ["mode"]
-},
-
-{
-"name": "styles",
-"groups": ["styles"]
-}
-
-],
-removeButtons: 'Underline,Strike,Subscript,Superscript,Anchor,Styles,Specialchar'
-});
-}
-
-}
-});
-
-}
-
-function opsi_jenis_dokumen(){
-var jenis_dokumen = $(".jenis_dokumen option:selected").val();
-        
-if(jenis_dokumen == 1){
-$(".nama_dokumen").html("");    
-$(".nama_dokumen").removeAttr("disabled",true);
-var opsi = "<option>Draft</option>\n\
-<option>Minuta</option>\n\
-<option>Salinan</option>";
-$(".nama_dokumen").append(opsi);
-$(".nama_dokumen").removeClass("opsi_meta");    
-}else{
-    
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
-$(".nama_dokumen").addClass("opsi_meta");
-$('.nama_dokumen').attr('onClick', 'tampilkan_meta();');
-$(".nama_dokumen").html("");    
-$.ajax({
-type:"post",
-url:"<?php echo base_url('Data_lama/opsi_nama_dokumen') ?>",
-data:"token="+token,
-success:function(data){
-$(".nama_dokumen").append(data,".opsi_meta");
-}
-});
-
-$(".nama_dokumen").removeAttr("disabled",true);
-}        
-        
-        
-}    
     
     
 $(function(){
@@ -191,7 +109,7 @@ minLength:0,
 delay:0,
 source:'<?php echo site_url('Data_lama/cari_jenis_pekerjaan') ?>',
 select:function(event, ui){
-$(".no_client").val(ui.item.no_client);
+$(".no_jenis_pekerjaan").val(ui.item.no_jenis_pekerjaan);
 }
 }
 );
@@ -232,6 +150,57 @@ title: 'Silahkan pilih jenis client terlebih dahulu.'
 }
 });
 
+
+
+$("#fileForm").submit(function(e) {
+e.preventDefault();
+$.validator.messages.required = '';
+}).validate({
+highlight: function (element, errorClass) {
+$(element).closest('.form-control').addClass('is-invalid');
+},
+unhighlight: function (element, errorClass) {
+$(element).closest(".form-control").removeClass("is-invalid");
+},    
+submitHandler: function(form) {
+$(".simpan_client").attr("disabled", true);
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+formData = new FormData();
+formData.append('token',token);
+formData.append('jenis_client',$("#pilih_jenis option:selected").text());
+formData.append('badan_hukum',$("#badan_hukum").val()),
+formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
+formData.append('contact_person',$(".contact_person").val()),
+formData.append('contact_number',$(".contact_number").val()),
+$.ajax({
+url: form.action,
+processData: false,
+contentType: false,
+type: form.method,
+data: formData,
+success:function(data){
+$('#modal_tambah_client').modal('hide');       
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+$(".simpan_client").removeAttr("disabled", true);
+}
+});
+return false; 
+}
+});
+
+
 $("#file_lama").submit(function(e) {
 e.preventDefault();
 $.validator.messages.required = '';
@@ -245,37 +214,15 @@ $(element).closest(".form-control").removeClass("is-invalid");
 submitHandler: function(form) {
 $(".simpan_data").attr("disabled", true);
 
-var result = { };
-var jml_meta = $('.meta_data').length;
-
-for (i = 1; i <=jml_meta; i++) {
-var key   =($("#data_meta"+i).attr('name'));
-var value =($("#data_meta"+i).val());
-$.each($('form').serializeArray(), function() {
-result[key] = value;
-});
-}
-
-
-
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 formData = new FormData();
 formData.append('token',token);
 formData.append('nama_client',$(".nama_client").val()),
 formData.append('no_client',$(".no_client").val()),
-
-formData.append('nama_dokumen',$(".nama_dokumen option:selected").text()),
-formData.append('no_nama_dokumen',$('.nama_dokumen option:selected').val()),
-
-
-formData.append("file_berkas", $(".file_upload").prop('files')[0]);
-if ($('.informasi').is(':empty')){
-var data_informasi = CKEDITOR.instances['informasi'].getData();    
-formData.append('data_informasi',data_informasi);
-}else{
-formData.append('data_meta', JSON.stringify(result));
-}
-
+formData.append('jenis_pekerjaan',$(".jenis_pekerjaan").val()),
+formData.append('no_jenis_pekerjaan',$('.no_jenis_pekerjaan').val()),
+formData.append('no_user',$('.nama_notaris option:selected').val()),
+formData.append('pembuat_pekerjaan',$('.nama_notaris option:selected').text()),
 
 $.ajax({
 url: form.action,
@@ -294,77 +241,17 @@ timer: 3000,
 animation: false,
 customClass: 'animated bounceInDown'
 });
-
 Toast.fire({
 type: r.status,
 title: r.pesan
 });
 $(".simpan_data").removeAttr("disabled", true);
-
-
 $(".form-control").val("");
 }
 });
 return false; 
 }
 });
-
-
-
-$("#fileForm").submit(function(e) {
-e.preventDefault();
-$.validator.messages.required = '';
-}).validate({
-highlight: function (element, errorClass) {
-$(element).closest('.form-control').addClass('is-invalid');
-},
-unhighlight: function (element, errorClass) {
-$(element).closest(".form-control").removeClass("is-invalid");
-},    
-submitHandler: function(form) {
-$(".simpan_client").attr("disabled", true);
-
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
-formData = new FormData();
-formData.append('token',token);
-formData.append('jenis_client',$("#pilih_jenis option:selected").text());
-formData.append('badan_hukum',$("#badan_hukum").val()),
-formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
-formData.append('contact_person',$(".contact_person").val()),
-formData.append('contact_number',$(".contact_number").val()),
-
-
-$.ajax({
-url: form.action,
-processData: false,
-contentType: false,
-type: form.method,
-data: formData,
-success:function(data){
-$('#modal_tambah_client').modal('hide');       
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
-$(".simpan_client").removeAttr("disabled", true);
-
-}
-
-});
-return false; 
-}
-});
-
 </script>    
 
 

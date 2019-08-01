@@ -13,16 +13,31 @@ redirect(base_url('Menu'));
 }
 
 public function index(){
+$nama_notaris = $this->M_data_lama->nama_notaris();
 $this->load->view('umum/V_header');
-$this->load->view('data_lama/V_data_lama');
+$this->load->view('data_lama/V_data_lama',['nama_notaris'=>$nama_notaris]);
 }
-public function data_berkas_lama(){
+
+public function data_arsip(){
 $this->load->view('umum/V_header');
-$this->load->view('data_lama/V_data_berkas_lama');    
+$this->load->view('data_lama/V_data_arsip');    
+}
+
+public function rekam_data(){
+$dokumen_persyaratan = $this->M_data_lama->nama_persyaratan(base64_decode($this->uri->segment(3)));
+$dokumen_utama       = $this->M_data_lama->dokumen_utama($this->uri->segment(3));    
+    
+    
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_rekam_data',['dokumen_persyaratan'=>$dokumen_persyaratan,'dokumen_utama'=>$dokumen_utama]);    
 }
 
 public function json_data_berkas(){
 echo $this->M_data_lama->json_data_berkas();       
+}
+
+public function json_data_arsip(){
+echo $this->M_data_lama->json_data_arsip();       
 }
 
 public function set_toggled(){
@@ -54,23 +69,23 @@ $query = $this->M_data_lama->cari_jenis_pekerjaan($term);
 
 foreach ($query as $d) {
 $json[]= array(
-'label'                    => $d->nama_jenis,   
-'no_jenis_pekerjaan'                => $d->no_jenis_dokumen,
+'label'                             => $d->nama_jenis,   
+'no_jenis_pekerjaan'                => $d->no_jenis_pekerjaan,
 );   
 }
 echo json_encode($json);
 }
 
 public function create_client(){
-  if($this->input->post()){
+if($this->input->post()){
 $data = $this->input->post();
 
 $h_client = $this->M_data_lama->data_client()->num_rows()+1;
 
-$no_client    = str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
 
 $data_client = array(
-'no_client'                 => "C_".$no_client,    
+'no_client'                 => $no_client,    
 'jenis_client'              => ucwords($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
 'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
@@ -101,78 +116,85 @@ redirect(404);
 }
 }
 
-public function opsi_nama_dokumen(){
-         $this->db->order_by('nama_dokumen.nama_dokumen','ASC');
-$query = $this->db->get('nama_dokumen');
-echo "<option>---Pilih Jenis dokumen----</option";
-foreach ($query->result_array() as $d){
-echo "><option value=".$d['no_nama_dokumen'].">".$d['nama_dokumen']."</option>";    
-}
 
-}
 
-public function data_meta(){
+
+public function simpan_pekerjaan_arsip(){
 if($this->input->post()){
 $input = $this->input->post();
 
-$data_meta = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$input['no_nama_dokumen']));
+$h_berkas = $this->M_data_lama->hitung_pekerjaan()->num_rows()+1;
+$no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
-$static = $data_meta->row_array();
-if($static['nama_meta']  == 'Informasi'){
-echo "<label>Informasi</label>"
-    ."<textarea id='informasi' class='form-control informasi'></textarea>";    
-}else{
-    $h=1;
-    foreach ($data_meta->result_array() as $meta){
-        echo "<label>".$meta['nama_meta']."</label>"
-         . "<input type='text' id='data_meta".$h++."' name='".$meta['nama_meta']."' class='form-control meta_data required' accept='text/plain'>";
-        
-    }    
-    
-}
+
+
+$data_r = array(
+'no_client'          => $input['no_client'],    
+'status_pekerjaan'   => "Arsip",
+'no_pekerjaan'       => $no_pekerjaan,    
+'tanggal_dibuat'     => date('Y/m/d'),
+'no_jenis_pekerjaan' => $input['no_jenis_pekerjaan'],   
+'target_kelar'       => date('Y/m/d'),
+'no_user'            => $input['no_user'],    
+'pembuat_pekerjaan'  => $input['pembuat_pekerjaan'],    
+);
+
+$this->db->insert('data_pekerjaan',$data_r);
+$status = array(
+"status"     => "success",
+"pesan"      => "Arsip Berhasil dibuat"    
+);
+echo json_encode($status);
 
 }else{
 redirect(404);    
 }
-    
 }
 
-public function simpan_berkas(){
+public function form_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_data_lama->data_client_where($input['no_client']);
-$static    = $query->row_array();
+$query = $this->M_data_lama->data_meta($input['no_nama_dokumen']);
+
+echo "<div class='row'>";
+echo "<div class='col'>";
+echo "<input type='hidden' class='form-control no_nama_dokumen'  value='".$input['no_nama_dokumen']."' >";
+echo "<input type='hidden' class='form-control no_pekerjaan' value='".$input['no_pekerjaan']."'>";
+echo "<input type='hidden' class='form-control no_client' value='".$input['no_client']."'>";
+
+$i = 1;
+foreach ($query->result_array() as $d){
+    
+echo "<label>".$d['nama_meta']."</label>"
+    ."<input    ";
+    if($d['jenis_inputan'] == 'Numeric'){
+      echo "type='number' maxlength='".$d['maksimal_karakter']."'  class='form-control quantity meta required' required='' accept='text/plain'";  
+    }else{
+      echo "maxlength='".$d['maksimal_karakter']."' type='text'  class='form-control meta required' required='' accept='text/plain'";  
+    }echo "id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."' >";    
+}
+
+echo "<label>Lampiran</label>"
+. "<input type='file' id='file_berkas' class='form-control'>";
+echo "</div>";
+echo "</div>";
+}
+}
+
+public function simpan_persyaratan(){
+if($this->input->post()){
+$input = $this->input->post();
+$total_berkas = $this->M_data_lama->total_berkas()->row_array();
+
+$no_berkas = date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
+
+$static = $this->M_data_lama->data_pekerjaan($input['no_pekerjaan'])->row_array();
+
+
+if(!empty($_FILES['file_berkas'])){
 $config['upload_path']          = './berkas/'.$static['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
-
-if($input['nama_dokumen'] == "Draft" || $input['nama_dokumen'] == "Minuta" || $input['nama_dokumen'] == "Salinan" ){
-$this->upload->initialize($config);    
-
-if (!$this->upload->do_upload('file_berkas')){
-$status = array(
-"status"     => "error",
-"pesan"      => $this->upload->display_errors()    
-);
-
-}else{
-
-$data = array(
-'nama_file'    =>$this->upload->data('file_name'),
-'nama_berkas'  =>$input['nama_dokumen'],
-'nama_folder'  =>$static['nama_folder'],
-'no_client'    =>$input['no_client'],
-'waktu'        =>date('Y/m/d'),
-);
-
-$this->db->insert('data_dokumen_utama',$data);    
-$status = array(
-"status"     => "success",
-"pesan"      => "Dokumen utama berhasil ditambahkan"    
-);
-
-}
-}else{
 $this->upload->initialize($config);    
 
 if (!$this->upload->do_upload('file_berkas')){  
@@ -180,69 +202,163 @@ $status = array(
 "status"     => "error",
 "pesan"      => $this->upload->display_errors()    
 );
-echo json_encode($status);
 }else{
-}
-
-    
-if(!empty($input['data_informasi'])){
-$this->simpan_data_informasi($input,$static,$this->upload->data());
-}else if(!empty($input['data_meta'])){
-$this->simpan_data_meta($input,$static,$this->upload->data());
-}
-$status = array(
-"status"     => "success",
-"pesan"      => "Dokumen Lama berhasil diupload"    
-);
-}
-echo json_encode($status);
+$lampiran = $this->upload->data('file_name');    
+}   
 }else{
-redirect(404);    
+$lampiran = NULL;        
 }
 
-}
-
-public function simpan_data_meta($input,$static,$lampiran){
 $data_berkas = array(
-'no_client'         => $static['no_client'],
+'no_berkas'         => $no_berkas,    
+'no_client'         => $input['no_client'],    
+'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
-'pemberi_pekerjaan' => $this->session->userdata('no_user'),
-'nama_folder'       => $static['nama_folder'],
-'nama_berkas'       => $lampiran['file_name'],
-'nama_file'         => $input['nama_dokumen'],    
-'status_berkas'     => 'Data lama',
+'nama_berkas'       => $lampiran,
 'Pengupload'        => $this->session->userdata('nama_lengkap'),
 'tanggal_upload'    => date('Y/m/d' ),  
 );    
-$this->db->insert('data_berkas',$data_berkas);
 
+$this->db->insert('data_berkas',$data_berkas);
     
 $data_meta = json_decode($input['data_meta']);
 foreach ($data_meta as $key=>$value){
 $meta = array(
-'nama_berkas'    => $lampiran['file_name'],
-'no_client'      => $input['no_client'],
-'no_nama_dokumen'=> $input['no_nama_dokumen'],
-'nama_folder'    => $static['nama_folder'],
-'nama_meta'      => $key,
-'value_meta'     => $value,    
+'no_pekerjaan'      => $input['no_pekerjaan'],
+'no_nama_dokumen'   => $input['no_nama_dokumen'],
+'no_berkas'         => $no_berkas,    
+'nama_meta'         => $key,
+'value_meta'        => $value,    
 );
 $this->db->insert('data_meta_berkas',$meta);
 
-}   
 }
-
-public function simpan_data_informasi($input,$static,$lampiran){
-$data = array(
-'data_informasi'   => $input['data_informasi'],
-'no_client'        => $input['no_client'],
-'nama_informasi'   => $input['nama_dokumen'],    
-'nama_folder'      => $static['nama_folder'],
-'lampiran'         => $lampiran['file_name']   
+$status = array(
+"status"     => "success",
+"pesan"      => "Persyaratan berhasil ditambahkan"    
 );
 
-$this->db->insert('data_informasi_pekerjaan',$data);
+echo json_encode($status);
 
+
+}else{
+redirect(404);    
+}
+    
+}
+
+public function persyaratan_telah_dilampirkan(){
+$data_berkas  = $this->M_data_lama->data_telah_dilampirkan(base64_decode($this->uri->segment(3)));
+
+if($data_berkas->num_rows() != 0){
+foreach ($data_berkas->result_array() as $u){  
+echo'<div class="card m-1">
+<div class="row">
+<div class="col card-header">'.$u['nama_dokumen'].'</div> 
+<div class="col-md-4 card-header text-right">
+<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
+
+echo "</div>    
+</div>
+</div>";
+}
+}
+}
+
+public function data_perekaman(){
+if($this->input->post()){
+$input = $this->input->post();
+$query     = $this->M_data_lama->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query2     = $this->M_data_lama->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
+
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr>";
+foreach ($query->result_array() as $d){
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "<th>Aksi</th>";
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr>";
+
+foreach ($b->result_array() as $i){
+echo "<td>".$i['value_meta']."</td>";    
+}
+echo '<td class="text-center">'
+.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
+</td>';
+echo "</tr>";
+    
+    
+}
+echo "</tbody>";
+
+
+echo"</table>";   
+}else{
+redirect(404);    
+}    
+}
+
+
+public function upload_utama(){
+if($this->input->post()){
+$input = $this->input->post();    
+$data_pekerjaan = $this->M_data_lama->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
+
+
+$config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
+$config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
+$config['encrypt_name']         = TRUE;
+$this->upload->initialize($config);
+
+
+if (!$this->upload->do_upload('file')){
+$error = array('error' => $this->upload->display_errors());
+echo print_r($error);
+}else{
+
+$data = array(
+'nama_file'    =>$this->upload->data('file_name'),
+'nama_berkas'  =>$input['nama_file'],
+'no_pekerjaan' =>$data_pekerjaan['no_pekerjaan'],
+'waktu'        =>date('Y/m/d'),
+'jenis'        =>$input['jenis'],    
+);
+
+$this->db->insert('data_dokumen_utama',$data);    
+
+}
+
+
+redirect(base_url('Data_lama/rekam_data/'.base64_encode($data_pekerjaan['no_pekerjaan'])));
+}else{
+redirect(404);    
+}
+}
+public function hapus_file_utama(){
+if($this->input->post()){
+$data = $this->db->get_where('data_dokumen_utama',array('id_data_dokumen_utama'=>$this->input->post('id_data_dokumen_utama')))->row_array();    
+
+unlink('./berkas/'.$data['nama_folder']."/".$data['nama_file']);
+
+$this->db->delete('data_dokumen_utama',array('id_data_dokumen_utama'=>$this->input->post('id_data_dokumen_utama')));    
+
+
+$keterangan = $this->session->userdata('nama_lengkap')." Menghapus ".$data['nama_berkas'] ;
+$this->histori($keterangan);
+
+
+
+}else{
+redirect(404);    
+}    
 }
 
 }
