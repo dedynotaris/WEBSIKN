@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED='48f32e65-9d3b-11e9-8a3f-f44d30e97fb9:1-2434,
+SET @@GLOBAL.GTID_PURGED='48f32e65-9d3b-11e9-8a3f-f44d30e97fb9:1-3386,
 70fdff0e-efa2-4f30-8019-2feea7315ee8:1-36:1000003-1000089';
 
 --
@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS `data_berkas`;
 CREATE TABLE `data_berkas` (
   `id_data_berkas` int(11) NOT NULL AUTO_INCREMENT,
   `no_berkas` varchar(255) NOT NULL,
+  `no_pemilik` varchar(255) NOT NULL,
   `no_client` varchar(255) DEFAULT NULL,
   `no_pekerjaan` varchar(255) DEFAULT NULL,
   `no_nama_dokumen` varchar(255) DEFAULT NULL,
@@ -46,8 +47,9 @@ CREATE TABLE `data_berkas` (
   KEY `no_pekerjaan` (`no_pekerjaan`),
   KEY `no_nama_dokumen` (`no_nama_dokumen`),
   KEY `no_berkas` (`no_berkas`),
-  CONSTRAINT `data_berkas_ibfk_1` FOREIGN KEY (`no_client`) REFERENCES `data_client` (`no_client`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=latin1;
+  KEY `no_pemilik` (`no_pemilik`),
+  CONSTRAINT `data_berkas_ibfk_1` FOREIGN KEY (`no_pemilik`) REFERENCES `data_pemilik` (`no_pemilik`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,7 +58,6 @@ CREATE TABLE `data_berkas` (
 
 LOCK TABLES `data_berkas` WRITE;
 /*!40000 ALTER TABLE `data_berkas` DISABLE KEYS */;
-INSERT INTO `data_berkas` VALUES (117,'20190726000116','C000004','P000002','N_0006','48eabdb7c5eb7683f20f83edd7381c59.png','Yus Suwandari','2019/07/26'),(121,'20190726000118','C000003','P000001','N_0006','6c85911c9f2fbd4d8250fce5ea91bafe.png','MK Fadzri Patriajaya','2019/07/26'),(122,'20190726000121','C000003','P000001','N_0002','73d098893d13d39cc723aeacc41f6130.png','MK Fadzri Patriajaya','2019/07/26'),(123,'20190726000122','C000003','P000001','N_0006','ab2858c3ca3936d5a47819eed5e7f8e7.png','MK Fadzri Patriajaya','2019/07/26'),(124,'20190726000123','C000003','P000001','N_0043','271eea47494c828548ea972221c822ef.png','MK Fadzri Patriajaya','2019/07/26');
 /*!40000 ALTER TABLE `data_berkas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,18 +69,22 @@ DROP TABLE IF EXISTS `data_berkas_perizinan`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_berkas_perizinan` (
+  `id_perizinan` int(11) NOT NULL AUTO_INCREMENT,
   `no_berkas_perizinan` char(255) NOT NULL,
   `no_pekerjaan` varchar(255) NOT NULL,
   `no_nama_dokumen` varchar(255) NOT NULL,
-  `no_user_perizinan` char(255) NOT NULL,
-  `no_user_penugas` varchar(255) NOT NULL,
-  `status_lihat` varchar(255) NOT NULL,
-  `status_berkas` varchar(255) NOT NULL,
-  `target_selesai` varchar(255) NOT NULL,
-  PRIMARY KEY (`no_berkas_perizinan`),
+  `no_user_perizinan` char(255) DEFAULT NULL,
+  `no_user_penugas` varchar(255) DEFAULT NULL,
+  `status_lihat` varchar(255) DEFAULT NULL,
+  `status_berkas` varchar(255) DEFAULT NULL,
+  `target_selesai_perizinan` varchar(255) DEFAULT NULL,
+  `tanggal_penugasan` varchar(255) NOT NULL,
+  `tanggal_selesai` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_perizinan`),
   KEY `no_pekerjaan` (`no_pekerjaan`),
+  KEY `no_berkas_perizinan` (`no_berkas_perizinan`),
   CONSTRAINT `data_berkas_perizinan_ibfk_1` FOREIGN KEY (`no_pekerjaan`) REFERENCES `data_pekerjaan` (`no_pekerjaan`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,6 +93,7 @@ CREATE TABLE `data_berkas_perizinan` (
 
 LOCK TABLES `data_berkas_perizinan` WRITE;
 /*!40000 ALTER TABLE `data_berkas_perizinan` DISABLE KEYS */;
+INSERT INTO `data_berkas_perizinan` VALUES (61,'PRZ000000','P000001','N_0002','0002','0007','Dilihat','Selesai','2019/08/15','2019/08/01','2019/08/01');
 /*!40000 ALTER TABLE `data_berkas_perizinan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +180,7 @@ CREATE TABLE `data_client` (
   PRIMARY KEY (`id_data_client`),
   KEY `no_client` (`no_client`),
   KEY `no_user` (`no_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +189,7 @@ CREATE TABLE `data_client` (
 
 LOCK TABLES `data_client` WRITE;
 /*!40000 ALTER TABLE `data_client` DISABLE KEYS */;
-INSERT INTO `data_client` VALUES (9,'C000001','PT JAYA AGUNG','Badan Hukum','Jl.Raya KH.Sholeh Iskandar Kota Bogor','2019/07/25 10:21:33','Admin','0001','DokC000001','Bapak Saipudin','081289903664'),(10,'C000002','PT. AZURA TECHNINDO UTAMA','Badan Hukum','Jlkijkjik','2019/07/25 16:26:17','MK Fadzri Patriajaya','0012','DokC000002','Sulaiman','081289903664'),(11,'C000003','PT JAYA AGUNG','Badan Hukum','JL.Muara Karang Blok L9 T No.8 Penjaringan Jakarta Utara','2019/07/26 16:43:14','MK Fadzri Patriajaya','0012','DokC000003','Bapak Saipudin','081289903664'),(12,'C000004','PT KOMARUDIN','Badan Hukum','JL.Raya Bogor KM 23 Jakarta Barat','2019/07/26 16:48:04','Yus Suwandari','0007','DokC000004','Komar','8925885555855');
+INSERT INTO `data_client` VALUES (23,'C000001','PT JAYA ABADI','Badan Hukum','Jl.ABC','2019/08/01 14:40:09','Yus Suwandari','0007','DokC000001','Bapak Saipudin','081289903664');
 /*!40000 ALTER TABLE `data_client` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +204,6 @@ CREATE TABLE `data_dokumen_utama` (
   `id_data_dokumen_utama` int(11) NOT NULL AUTO_INCREMENT,
   `nama_berkas` varchar(255) NOT NULL,
   `nama_file` varchar(255) NOT NULL,
-  `nama_folder` varchar(255) NOT NULL,
   `no_pekerjaan` varchar(255) NOT NULL,
   `waktu` varchar(255) NOT NULL,
   `jenis` varchar(255) NOT NULL,
@@ -232,7 +237,7 @@ CREATE TABLE `data_histori_pekerjaan` (
   PRIMARY KEY (`id_data_histori_pekerjaan`),
   KEY `no_user` (`no_user`),
   CONSTRAINT `data_histori_pekerjaan_ibfk_1` FOREIGN KEY (`no_user`) REFERENCES `user` (`no_user`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,37 +246,8 @@ CREATE TABLE `data_histori_pekerjaan` (
 
 LOCK TABLES `data_histori_pekerjaan` WRITE;
 /*!40000 ALTER TABLE `data_histori_pekerjaan` DISABLE KEYS */;
-INSERT INTO `data_histori_pekerjaan` VALUES (2,'0001','Admin Membuat client asd dan pekerjaan ','2019/07/23 16:18:17'),(3,'0001','Admin Membuat client PT Jaya Abadi','2019/07/23 16:19:30'),(4,'0001','Admin Membuat client PT Jaya Abadi','2019/07/23 16:23:51'),(5,'0001','Admin Membuat client PT Jaya Agung','2019/07/24 09:59:22'),(6,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:10:53'),(7,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:24'),(8,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:30'),(9,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:31'),(10,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:13:37'),(11,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:14:55'),(12,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:15:15'),(13,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:16:37'),(14,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:02:53'),(15,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:03:22'),(16,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:12:34'),(17,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:14:04'),(18,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:17:24'),(19,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:18:42'),(20,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:19:30'),(21,'0001','Admin Membuat client PT Jaya Agung','2019/07/25 10:21:34'),(22,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:22:41'),(23,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:21'),(24,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:22'),(25,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:23'),(26,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:06:01'),(27,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:51'),(28,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:52'),(29,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:54'),(30,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:18:55'),(31,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/25 14:18:56'),(32,'0001','Admin Menghapus File Persyaratan Nama PT/Yay/Perkumpulan/CV/Koperasi/Firma','2019/07/25 14:18:57'),(33,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:58:33'),(34,'0001','Admin Menghapus File Persyaratan susunan permodalan (MD, MT, MS)','2019/07/25 15:22:46'),(35,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/25 15:22:47'),(36,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:22:48'),(37,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:00'),(38,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:20'),(39,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:54'),(40,'0012','MK Fadzri Patriajaya Membuat client PT. AZURA TECHNINDO UTAMA','2019/07/25 16:26:17'),(41,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 16:26:30'),(42,'0001','Admin Menghapus File Persyaratan susunan permodalan (MD, MT, MS)','2019/07/26 08:33:40'),(43,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/26 08:33:41'),(44,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 08:33:41'),(45,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 08:33:42'),(46,'0012','MK Fadzri Patriajaya Membuat client PT Jaya Agung','2019/07/26 16:43:14'),(47,'0007','Yus Suwandari Membuat client PT Komarudin','2019/07/26 16:48:04'),(48,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:04:22'),(49,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:05:27'),(50,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:06:09'),(51,'0007','Yus Suwandari Menghapus File Persyaratan Nama PT/Yay/Perkumpulan/CV/Koperasi/Firma','2019/07/26 17:12:35'),(52,'0007','Yus Suwandari Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/26 17:12:42');
+INSERT INTO `data_histori_pekerjaan` VALUES (2,'0001','Admin Membuat client asd dan pekerjaan ','2019/07/23 16:18:17'),(3,'0001','Admin Membuat client PT Jaya Abadi','2019/07/23 16:19:30'),(4,'0001','Admin Membuat client PT Jaya Abadi','2019/07/23 16:23:51'),(5,'0001','Admin Membuat client PT Jaya Agung','2019/07/24 09:59:22'),(6,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:10:53'),(7,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:24'),(8,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:30'),(9,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:11:31'),(10,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:13:37'),(11,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:14:55'),(12,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:15:15'),(13,'0001','Admin Menghapus File Persyaratan ','2019/07/25 09:16:37'),(14,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:02:53'),(15,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:03:22'),(16,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:12:34'),(17,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:14:04'),(18,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:17:24'),(19,'0001','Admin Menghapus File Persyaratan ','2019/07/25 10:18:42'),(20,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:19:30'),(21,'0001','Admin Membuat client PT Jaya Agung','2019/07/25 10:21:34'),(22,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:22:41'),(23,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:21'),(24,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:22'),(25,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 10:57:23'),(26,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:06:01'),(27,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:51'),(28,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:52'),(29,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:15:54'),(30,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:18:55'),(31,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/25 14:18:56'),(32,'0001','Admin Menghapus File Persyaratan Nama PT/Yay/Perkumpulan/CV/Koperasi/Firma','2019/07/25 14:18:57'),(33,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 14:58:33'),(34,'0001','Admin Menghapus File Persyaratan susunan permodalan (MD, MT, MS)','2019/07/25 15:22:46'),(35,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/25 15:22:47'),(36,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:22:48'),(37,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:00'),(38,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:20'),(39,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 15:23:54'),(40,'0012','MK Fadzri Patriajaya Membuat client PT. AZURA TECHNINDO UTAMA','2019/07/25 16:26:17'),(41,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/25 16:26:30'),(42,'0001','Admin Menghapus File Persyaratan susunan permodalan (MD, MT, MS)','2019/07/26 08:33:40'),(43,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/26 08:33:41'),(44,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 08:33:41'),(45,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 08:33:42'),(46,'0012','MK Fadzri Patriajaya Membuat client PT Jaya Agung','2019/07/26 16:43:14'),(47,'0007','Yus Suwandari Membuat client PT Komarudin','2019/07/26 16:48:04'),(48,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:04:22'),(49,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:05:27'),(50,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/26 17:06:09'),(51,'0007','Yus Suwandari Menghapus File Persyaratan Nama PT/Yay/Perkumpulan/CV/Koperasi/Firma','2019/07/26 17:12:35'),(52,'0007','Yus Suwandari Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/26 17:12:42'),(53,'0001','Admin Membuat client PT Jaya Agung','2019/07/29 08:16:34'),(54,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/29 11:05:24'),(55,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/29 11:05:32'),(56,'0001','Admin Menghapus File Persyaratan susunan permodalan (MD, MT, MS)','2019/07/29 11:05:35'),(57,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 11:05:38'),(58,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 11:05:41'),(59,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/29 11:05:44'),(60,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 11:11:01'),(61,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/29 11:19:28'),(62,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/29 11:19:33'),(63,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 11:19:36'),(64,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 11:19:38'),(65,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:07:10'),(66,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:07:12'),(67,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:07:15'),(68,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:07:36'),(69,'0001','Admin Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/29 12:08:10'),(70,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:08:33'),(71,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:10:25'),(72,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:10:38'),(73,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:10:59'),(74,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:11:19'),(75,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:12:07'),(76,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:16:40'),(77,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:20:39'),(78,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 12:20:41'),(79,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 13:17:26'),(80,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 13:17:27'),(81,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 13:17:29'),(82,'0012','MK Fadzri Patriajaya Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/29 13:17:33'),(83,'0012','MK Fadzri Patriajaya Memproses perizinan  client PT JAYA AGUNG','2019/07/29 13:40:22'),(84,'0012','MK Fadzri Patriajaya Memproses perizinan NOTARIS client PT JAYA AGUNG','2019/07/29 13:44:00'),(85,'0012','MK Fadzri Patriajaya Membuat client PT Jaya Agung','2019/07/29 13:44:34'),(86,'0012','MK Fadzri Patriajaya Memproses perizinan NOTARIS client PT JAYA AGUNG','2019/07/29 13:45:23'),(87,'0001','Admin Memproses perizinan NOTARIS client PT JAYA AGUNG','2019/07/29 15:34:07'),(88,'0001','Admin Menghapus sad','2019/07/29 18:49:05'),(89,'0001','Admin Menghapus sad','2019/07/29 18:50:24'),(90,'0001','Admin Menghapus sad','2019/07/29 18:50:27'),(91,'0001','Admin Membuat client PT Angkasindo Dunia','2019/07/29 19:01:28'),(92,'0001','Admin Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/29 19:15:21'),(93,'0001','Admin Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/29 19:15:24'),(94,'0001','Admin Memproses perizinan NOTARIS client PT ANGKASINDO DUNIA','2019/07/30 08:24:09'),(95,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:00:05'),(96,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:13:41'),(97,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:16:41'),(98,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:26:44'),(99,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:36:58'),(100,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:43:35'),(101,'0001','Admin Memproses ulang pekerjaan ','2019/07/30 10:43:40'),(102,'0007','Yus Suwandari Memproses perizinan NOTARIS client PT KOMARUDIN','2019/07/30 11:18:33'),(103,'0001','Admin Membuat client PT Angkasindo Dunia','2019/07/30 15:53:05'),(104,'0002','Wisnu Subroto N.A Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/30 18:23:58'),(105,'0002','Wisnu Subroto N.A Menghapus File Persyaratan Nomor pokok wajib pajak (NPWP)','2019/07/30 18:24:15'),(106,'0002','Wisnu Subroto N.A Menghapus File Persyaratan KTP (Kartu Tanda Penduduk)','2019/07/30 18:24:26'),(107,'0002','Wisnu Subroto N.A Menghapus File Persyaratan susunan pemegang saham dan pengurus','2019/07/30 18:24:39'),(108,'0007','Yus Suwandari Membuat client PT Angkasindo Dunia','2019/07/31 08:16:34'),(109,'0007','Yus Suwandari Memproses perizinan NOTARIS client PT ANGKASINDO DUNIA','2019/07/31 08:17:12'),(110,'0012','MK Fadzri Patriajaya Membuat client PT Jaya Agung','2019/07/31 08:20:10'),(111,'0012','MK Fadzri Patriajaya Memproses perizinan NOTARIS client PT JAYA AGUNG','2019/07/31 08:21:22'),(112,'0001','Admin Membuat client PT BBQ Indonesia','2019/07/31 09:27:34'),(113,'0001','Admin Memproses perizinan NOTARIS client PT BBQ INDONESIA','2019/07/31 09:27:57'),(114,'0012','MK Fadzri Patriajaya Membuat client PT Komarudin','2019/07/31 10:15:19'),(115,'0012','MK Fadzri Patriajaya Memproses perizinan NOTARIS client PT KOMARUDIN','2019/07/31 10:15:24'),(116,'0012','MK Fadzri Patriajaya Menghapus Akta perubahan ke satu','2019/07/31 10:16:10'),(117,'0001','Admin Menghapus akta pendirian','2019/08/01 12:28:04'),(118,'0001','Admin Menghapus akta pendirian','2019/08/01 12:30:19'),(119,'0007','Yus Suwandari Membuat client PT Jaya Abadi','2019/08/01 14:40:10'),(120,'0007','Yus Suwandari Memproses perizinan NOTARIS client PT JAYA ABADI','2019/08/01 15:13:59');
 /*!40000 ALTER TABLE `data_histori_pekerjaan` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `data_informasi_pekerjaan`
---
-
-DROP TABLE IF EXISTS `data_informasi_pekerjaan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `data_informasi_pekerjaan` (
-  `id_data_informasi_pekerjaan` int(11) NOT NULL AUTO_INCREMENT,
-  `no_pekerjaan` varchar(255) NOT NULL,
-  `nama_informasi` varchar(255) NOT NULL,
-  `data_informasi` text NOT NULL,
-  `lampiran` varchar(255) DEFAULT NULL,
-  `nama_folder` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_data_informasi_pekerjaan`),
-  KEY `no_pekerjaan` (`no_pekerjaan`),
-  CONSTRAINT `data_informasi_pekerjaan_ibfk_1` FOREIGN KEY (`no_pekerjaan`) REFERENCES `data_pekerjaan` (`no_pekerjaan`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `data_informasi_pekerjaan`
---
-
-LOCK TABLES `data_informasi_pekerjaan` WRITE;
-/*!40000 ALTER TABLE `data_informasi_pekerjaan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `data_informasi_pekerjaan` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -314,10 +290,12 @@ CREATE TABLE `data_meta` (
   `id_data_meta` int(11) NOT NULL AUTO_INCREMENT,
   `no_nama_dokumen` varchar(255) NOT NULL,
   `nama_meta` varchar(255) NOT NULL,
+  `jenis_inputan` varchar(255) NOT NULL,
+  `maksimal_karakter` varchar(255) NOT NULL,
   PRIMARY KEY (`id_data_meta`),
   KEY `no_nama_dokumen` (`no_nama_dokumen`),
   CONSTRAINT `data_meta_ibfk_1` FOREIGN KEY (`no_nama_dokumen`) REFERENCES `nama_dokumen` (`no_nama_dokumen`)
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=161 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,7 +304,7 @@ CREATE TABLE `data_meta` (
 
 LOCK TABLES `data_meta` WRITE;
 /*!40000 ALTER TABLE `data_meta` DISABLE KEYS */;
-INSERT INTO `data_meta` VALUES (43,'N_0004','No TDP'),(45,'N_0002','No NPWP'),(46,'N_0001','No SIUP'),(47,'N_0009','Keterangan'),(48,'N_0008','Keterangan'),(49,'N_0007','Keterangan'),(51,'N_0006','Nama KTP'),(52,'N_0006','NIK'),(70,'N_0014','Informasi'),(72,'N_0039','Informasi'),(73,'N_0052','Surat pernyataan'),(74,'N_0051','Surat pernyataan'),(78,'N_0044','Informasi'),(80,'N_0041','Informasi'),(82,'N_0038','Informasi'),(83,'N_0035','Informasi'),(84,'N_0034','Dokumen obyek wasiat'),(85,'N_0033','Dokumen obyek hibah'),(86,'N_0032','Dokumen lain'),(87,'N_0031','Surat ganti nama WNI'),(88,'N_0030','Izin lainnya'),(89,'N_0029','NIB'),(90,'N_0028','Surat keterangan waris'),(91,'N_0027','Akta Kematian'),(92,'N_0026','Dokumen Warmeking'),(93,'N_0025','Surat BAR Anggota'),(94,'N_0024','Fotocopy Deposito'),(95,'N_0023','Surat daftar hadir rapat'),(96,'N_0022','Nomor Induk Koperasi (NIK'),(97,'N_0021','Surat BAR '),(98,'N_0020','Nama passpor'),(99,'N_0020','No Passpor'),(100,'N_0019','Surat Akta kelahiran'),(101,'N_0018','Surat IMB'),(102,'N_0017','SPPT PBB'),(103,'N_0016','Surat persetujuan pasanga'),(104,'N_0015','Surat pernyataan dan lamp'),(105,'N_0013','Surat persetujuan dewan k'),(106,'N_0012','Buku Nikah'),(107,'N_0011','Sertifikat tanah'),(108,'N_0010','Nama KK'),(109,'N_0010','No KK'),(110,'N_0009','Anggara Dasar'),(111,'N_0008','Surat Persetujuan'),(112,'N_0007','Surat BKPM'),(113,'N_0005','Surat Domisili'),(114,'N_0003','Asli Dokumen legalisasi'),(117,'N_0055','Nama Surat Persetujuan'),(118,'N_0054','No Bukti Kepemilikan'),(119,'N_0054','Jenis Kepemilikan'),(120,'N_0053','Jumlah modal di setor'),(121,'N_0050','Pernyataan modal'),(122,'N_0049','Nama Badan Hukum'),(123,'N_0048','Jumlah kekayaan'),(125,'N_0047','Tujuan BAR'),(126,'N_0046','Tujuan BAR'),(127,'N_0043','Modal Dasar'),(130,'N_0043','Modal disetor dan ditempatkan'),(131,'N_0040','Nama'),(132,'N_0040','Jabatan'),(133,'N_0040','Jumlah Saham'),(134,'N_0040','No. HP'),(135,'N_0040','Email'),(136,'N_0042','Nama'),(137,'N_0042','NIK'),(138,'N_0042','NPWP'),(139,'N_0042','Jabatan');
+INSERT INTO `data_meta` VALUES (43,'N_0004','No TDP','',''),(47,'N_0009','Keterangan','',''),(48,'N_0008','Keterangan','',''),(49,'N_0007','Keterangan','',''),(51,'N_0006','Nama KTP','Numeric dan Text','-'),(52,'N_0006','NIK','Numeric','16'),(70,'N_0014','Informasi','',''),(72,'N_0039','Informasi','',''),(73,'N_0052','Surat pernyataan','Numeric dan Text','30'),(74,'N_0051','Surat pernyataan','',''),(78,'N_0044','Informasi','',''),(80,'N_0041','Informasi','',''),(82,'N_0038','Informasi','',''),(83,'N_0035','Informasi','',''),(84,'N_0034','Dokumen obyek wasiat','',''),(85,'N_0033','Dokumen obyek hibah','',''),(86,'N_0032','Dokumen lain','',''),(87,'N_0031','Surat ganti nama WNI','',''),(88,'N_0030','Izin lainnya','',''),(89,'N_0029','NIB','',''),(92,'N_0026','Dokumen Warmeking','',''),(93,'N_0025','Surat BAR Anggota','',''),(94,'N_0024','Fotocopy Deposito','',''),(95,'N_0023','Surat daftar hadir rapat','',''),(96,'N_0022','Nomor Induk Koperasi (NIK','',''),(97,'N_0021','Surat BAR ','',''),(98,'N_0020','Nama passpor','',''),(99,'N_0020','No Passpor','',''),(100,'N_0019','Surat Akta kelahiran','',''),(103,'N_0016','Surat persetujuan pasanga','',''),(104,'N_0015','Surat pernyataan dan lamp','',''),(105,'N_0013','Surat persetujuan dewan k','',''),(107,'N_0011','Sertifikat tanah','',''),(108,'N_0010','Nama KK','',''),(109,'N_0010','No KK','',''),(110,'N_0009','Anggara Dasar','',''),(111,'N_0008','Surat Persetujuan','',''),(112,'N_0007','Surat BKPM','',''),(113,'N_0005','Surat Domisili','',''),(114,'N_0003','Asli Dokumen legalisasi','',''),(117,'N_0055','Nama Surat Persetujuan','Numeric dan Text','100'),(119,'N_0054','Jenis Kepemilikan','Numeric dan Text','-'),(120,'N_0053','Jumlah modal di setor','',''),(121,'N_0050','Pernyataan modal','',''),(122,'N_0049','Nama Badan Hukum','',''),(123,'N_0048','Jumlah kekayaan','',''),(125,'N_0047','Tujuan BAR','',''),(126,'N_0046','Tujuan BAR','',''),(127,'N_0043','Modal Dasar','Numeric','-'),(130,'N_0043','Modal disetor dan ditempatkan','Numeric','-'),(131,'N_0040','Nama','Numeric dan Text','20'),(132,'N_0040','Jabatan','Numeric dan Text','20'),(133,'N_0040','Jumlah Saham','Numeric dan Text','20'),(134,'N_0040','No. HP','Numeric dan Text','20'),(135,'N_0040','Email','Numeric dan Text','20'),(136,'N_0042','Nama','',''),(137,'N_0042','NIK','',''),(138,'N_0042','NPWP','',''),(139,'N_0042','Jabatan','',''),(140,'N_0006','Tempat Tgl Lahir','Numeric dan Text','-'),(141,'N_0054','No Sertifikat','',''),(142,'N_0054','NIB','',''),(143,'N_0054','Surat Ukur/Gambar situasi','',''),(144,'N_0054','No Surat Ukur','',''),(145,'N_0018','Tanggal  IMB','Numeric dan Text','-'),(146,'N_0018','No IMB','Numeric dan Text','-'),(147,'N_0018','Pejabat yang mengeluarkan','Numeric dan Text','-'),(148,'N_0017','No NOP','',''),(149,'N_0012','Nama Pasangan','Numeric dan Text','-'),(150,'N_0002','Nama NPWP','Numeric dan Text','-'),(151,'N_0002','No NPWP','Numeric dan Text','-'),(152,'N_0027','Nama ','Numeric dan Text','-'),(153,'N_0027','Tanggal kematian','Numeric dan Text','-'),(154,'N_0027','No Surat Kematian','Numeric dan Text','-'),(155,'N_0027','Nama Institusi','Numeric dan Text','-'),(156,'N_0027','Tanggal surat kematian','Numeric dan Text','-'),(157,'N_0028','Tanggal Dikeluarkan','',''),(158,'N_0028','No Surat','',''),(159,'N_0028','Nama Ahli Waris','',''),(160,'N_0028','Nama','','');
 /*!40000 ALTER TABLE `data_meta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -347,7 +325,7 @@ CREATE TABLE `data_meta_berkas` (
   PRIMARY KEY (`id_data_meta_berkas`),
   KEY `nama_berkas` (`no_berkas`),
   CONSTRAINT `data_meta_berkas_ibfk_1` FOREIGN KEY (`no_berkas`) REFERENCES `data_berkas` (`no_berkas`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -356,7 +334,6 @@ CREATE TABLE `data_meta_berkas` (
 
 LOCK TABLES `data_meta_berkas` WRITE;
 /*!40000 ALTER TABLE `data_meta_berkas` DISABLE KEYS */;
-INSERT INTO `data_meta_berkas` VALUES (24,'20190726000116','P000002','N_0006','Nama KTP','bapak jaya kumar'),(25,'20190726000116','P000002','N_0006','NIK','327106230198'),(31,'20190726000118','P000001','N_0006','Nama KTP','Lukman'),(32,'20190726000118','P000001','N_0006','NIK','327106230198'),(33,'20190726000121','P000001','N_0002','No NPWP','56532823235252'),(34,'20190726000122','P000001','N_0006','Nama KTP','Maemunah'),(35,'20190726000122','P000001','N_0006','NIK','327106230198'),(36,'20190726000123','P000001','N_0043','Modal Dasar','35000'),(37,'20190726000123','P000001','N_0043','Modal disetor dan ditempatkan','10000');
 /*!40000 ALTER TABLE `data_meta_berkas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -406,7 +383,6 @@ CREATE TABLE `data_pekerjaan` (
   `status_pekerjaan` varchar(255) NOT NULL,
   `tanggal_dibuat` varchar(255) NOT NULL,
   `tanggal_selesai` varchar(255) DEFAULT NULL,
-  `tanggal_akta_pekerjaan` varchar(255) NOT NULL,
   `pembuat_pekerjaan` varchar(255) NOT NULL,
   `tanggal_proses` varchar(255) NOT NULL,
   `target_kelar` varchar(255) NOT NULL,
@@ -416,7 +392,7 @@ CREATE TABLE `data_pekerjaan` (
   KEY `no_persyaratan` (`no_jenis_pekerjaan`),
   CONSTRAINT `data_pekerjaan_ibfk_1` FOREIGN KEY (`no_client`) REFERENCES `data_client` (`no_client`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `data_pekerjaan_ibfk_2` FOREIGN KEY (`no_jenis_pekerjaan`) REFERENCES `data_jenis_pekerjaan` (`no_jenis_pekerjaan`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -425,8 +401,37 @@ CREATE TABLE `data_pekerjaan` (
 
 LOCK TABLES `data_pekerjaan` WRITE;
 /*!40000 ALTER TABLE `data_pekerjaan` DISABLE KEYS */;
-INSERT INTO `data_pekerjaan` VALUES (99,'C000003','P000001','J_0001','0012','Masuk','2019/07/26',NULL,'','MK Fadzri Patriajaya','','2019/07/31'),(100,'C000004','P000002','J_0001','0007','Masuk','2019/07/26',NULL,'','Yus Suwandari','','2019/07/27');
+INSERT INTO `data_pekerjaan` VALUES (129,'C000001','P000001','J_0001','0007','Proses','2019/08/01',NULL,'Yus Suwandari','2019/08/01','2019/08/15');
 /*!40000 ALTER TABLE `data_pekerjaan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `data_pemilik`
+--
+
+DROP TABLE IF EXISTS `data_pemilik`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `data_pemilik` (
+  `id_data_pemilik` int(11) NOT NULL AUTO_INCREMENT,
+  `no_pemilik` varchar(255) NOT NULL,
+  `no_client` varchar(255) NOT NULL,
+  `nama_pemilik` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_data_pemilik`),
+  KEY `no_client` (`no_client`),
+  KEY `no_pemilik` (`no_pemilik`),
+  CONSTRAINT `data_pemilik_ibfk_1` FOREIGN KEY (`no_client`) REFERENCES `data_client` (`no_client`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `data_pemilik`
+--
+
+LOCK TABLES `data_pemilik` WRITE;
+/*!40000 ALTER TABLE `data_pemilik` DISABLE KEYS */;
+/*!40000 ALTER TABLE `data_pemilik` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -473,7 +478,7 @@ CREATE TABLE `data_progress_pekerjaan` (
   PRIMARY KEY (`id_data_progress_pekerjaan`),
   KEY `no_pekerjaan` (`no_pekerjaan`),
   CONSTRAINT `data_progress_pekerjaan_ibfk_1` FOREIGN KEY (`no_pekerjaan`) REFERENCES `data_pekerjaan` (`no_pekerjaan`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,6 +487,7 @@ CREATE TABLE `data_progress_pekerjaan` (
 
 LOCK TABLES `data_progress_pekerjaan` WRITE;
 /*!40000 ALTER TABLE `data_progress_pekerjaan` DISABLE KEYS */;
+INSERT INTO `data_progress_pekerjaan` VALUES (7,'P000001','Dalam proses perizinan\n','2019/08/01');
 /*!40000 ALTER TABLE `data_progress_pekerjaan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -552,7 +558,7 @@ CREATE TABLE `sublevel_user` (
   PRIMARY KEY (`id_sublevel_user`),
   KEY `no_user` (`no_user`),
   CONSTRAINT `sublevel_user_ibfk_1` FOREIGN KEY (`no_user`) REFERENCES `user` (`no_user`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -561,7 +567,7 @@ CREATE TABLE `sublevel_user` (
 
 LOCK TABLES `sublevel_user` WRITE;
 /*!40000 ALTER TABLE `sublevel_user` DISABLE KEYS */;
-INSERT INTO `sublevel_user` VALUES (1,'0013','Level 3'),(5,'0012','Level 2'),(6,'0012','Level 3'),(7,'0011','Level 2'),(8,'0010','Level 2'),(9,'0009','Level 3'),(10,'0008','Level 2'),(11,'0007','Level 2'),(12,'0006','Level 2'),(13,'0005','Level 2'),(14,'0004','Level 2'),(17,'0002','Level 3'),(18,'0001','Level 3'),(19,'0001','Level 2'),(20,'0001','Level 1'),(21,'0014','Level 1'),(22,'0003','Level 4'),(23,'0001','Level 4');
+INSERT INTO `sublevel_user` VALUES (1,'0013','Level 3'),(5,'0012','Level 2'),(6,'0012','Level 3'),(7,'0011','Level 2'),(8,'0010','Level 2'),(9,'0009','Level 3'),(10,'0008','Level 2'),(11,'0007','Level 2'),(12,'0006','Level 2'),(13,'0005','Level 2'),(14,'0004','Level 2'),(17,'0002','Level 3'),(19,'0001','Level 2'),(20,'0001','Level 1'),(21,'0014','Level 1'),(22,'0003','Level 4'),(23,'0001','Level 4'),(24,'0001','Level 3');
 /*!40000 ALTER TABLE `sublevel_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -595,7 +601,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (14,'0001','admin','Admin','dedy@notaris-jakarta.com','0887487772','Super Admin','2019-07-09 10:45:36.205114','21232f297a57a5a743894a0e4a801fc3','5d24705031ed2.png','Aktif'),(20,'0002','wisnu','Wisnu Subroto N.A','yuniaryanto679@gmail.com','087877912311','User','2019-06-24 06:09:21.404327','ea6b2efbdd4255a9f1b3bbc6399b58f4','5d10691150ece.png','Aktif'),(21,'0003','dian','Siti Rizki Dianti','dian@notaris-jakarta.com','085289885222','User','2019-06-18 05:05:57.895092','21232f297a57a5a743894a0e4a801fc3',NULL,'Aktif'),(22,'0004','prima','Prima Yuddy F Y','prima@notaris-jakarta.com','085263908704','User','2019-04-01 02:39:26.162350','d8f49869c8583b77ddb82847f3f1955f',NULL,'Aktif'),(23,'0005','dini','Pratiwi S Dini','dini@notaris-jakarta.com','081273602067','User','2019-04-01 02:39:10.277360','41a8e3d62e005f880e82ef061c571cc8',NULL,'Aktif'),(24,'0006','rifka','Rifka Ramadani','rifka@notaris-jakarta.com','087739397228','User','2019-04-01 02:38:59.368236','92d4f526576c8ad74cbab94ebb239790',NULL,'Aktif'),(25,'0007','yus','Yus Suwandari','yus@notaris-jakarta.com','081280716583','User','2019-06-13 02:13:45.582460','21232f297a57a5a743894a0e4a801fc3','5d01b1598e06d.png','Aktif'),(26,'0008','esthi','Esthi Herlina','esthi@notaris-jakarta.com','081517697047','User','2019-06-12 02:12:29.674979','debac5a803a64b50f4cf2211d921e589','5d005f8da4b9d.png','Aktif'),(27,'0009','ria','haryati Ardi','ria@notaris-jakarta.com','087871555505','User','2019-04-01 02:37:53.534903','85edfaa624cbcf1cfd892d0d9336976e',NULL,'Aktif'),(29,'0010','indy','indarty','indy@notaris-jakarta.com','087876227696','User','2019-04-30 07:58:46.952971','9fbefd6f3a1c3c29e341415e7d48c386',NULL,'Aktif'),(30,'0011','fitri','Fitri Senjayani','fitri@notaris-jakarta.com','08121923365','User','2019-04-30 08:01:14.303720','1df83ea9876252776d4b1e53baebc926',NULL,'Aktif'),(31,'0012','fadzri','MK Fadzri Patriajaya','fadzri@notaris-jakarta.com','087788105424','User','2019-07-25 09:25:12.331070','21232f297a57a5a743894a0e4a801fc3','5d39757850b3c.png','Aktif'),(32,'0013','rohmad300','agus rohmad','agusrohmad300@gmail.com','081806446192','User','2019-05-21 08:14:40.720325','21232f297a57a5a743894a0e4a801fc3','5cd8e0ff1ea56.png','Aktif'),(33,'0014','admin2','Dewantari Handayani SH.MPA','dewantari@notaris-jakarta.com','-','User','2019-06-18 03:52:20.702496','c84258e9c39059a89ab77d846ddab909',NULL,'Aktif');
+INSERT INTO `user` VALUES (14,'0001','admin','Admin','dedy@notaris-jakarta.com','0887487772','Super Admin','2019-07-09 10:45:36.205114','21232f297a57a5a743894a0e4a801fc3','5d24705031ed2.png','Aktif'),(20,'0002','wisnu','Wisnu Subroto N.A','yuniaryanto679@gmail.com','087877912311','User','2019-06-24 06:09:21.404327','ea6b2efbdd4255a9f1b3bbc6399b58f4','5d10691150ece.png','Aktif'),(21,'0003','dian','Siti Rizki Dianti','dian@notaris-jakarta.com','085289885222','User','2019-06-18 05:05:57.895092','21232f297a57a5a743894a0e4a801fc3',NULL,'Aktif'),(22,'0004','prima','Prima Yuddy F Y','prima@notaris-jakarta.com','085263908704','User','2019-04-01 02:39:26.162350','d8f49869c8583b77ddb82847f3f1955f',NULL,'Aktif'),(23,'0005','dini','Pratiwi S Dini','dini@notaris-jakarta.com','081273602067','User','2019-04-01 02:39:10.277360','41a8e3d62e005f880e82ef061c571cc8',NULL,'Aktif'),(24,'0006','rifka','Rifka Ramadani','rifka@notaris-jakarta.com','087739397228','User','2019-04-01 02:38:59.368236','92d4f526576c8ad74cbab94ebb239790',NULL,'Aktif'),(25,'0007','yus','Yus Suwandari','yus@notaris-jakarta.com','081280716583','User','2019-06-13 02:13:45.582460','21232f297a57a5a743894a0e4a801fc3','5d01b1598e06d.png','Aktif'),(26,'0008','esthi','Esthi Herlina','esthi@notaris-jakarta.com','081517697047','User','2019-06-12 02:12:29.674979','debac5a803a64b50f4cf2211d921e589','5d005f8da4b9d.png','Aktif'),(27,'0009','ria','haryati Ardi','ria@notaris-jakarta.com','087871555505','User','2019-04-01 02:37:53.534903','85edfaa624cbcf1cfd892d0d9336976e',NULL,'Aktif'),(29,'0010','indy','indarty','indy@notaris-jakarta.com','087876227696','User','2019-04-30 07:58:46.952971','9fbefd6f3a1c3c29e341415e7d48c386',NULL,'Aktif'),(30,'0011','fitri','Fitri Senjayani','fitri@notaris-jakarta.com','08121923365','User','2019-04-30 08:01:14.303720','1df83ea9876252776d4b1e53baebc926',NULL,'Aktif'),(31,'0012','fadzri','MK Fadzri Patriajaya','fadzri@notaris-jakarta.com','087788105424','User','2019-07-30 04:13:48.810816','21232f297a57a5a743894a0e4a801fc3','5d3fc3fcc5dbf.png','Aktif'),(32,'0013','rohmad300','agus rohmad','agusrohmad300@gmail.com','081806446192','User','2019-05-21 08:14:40.720325','21232f297a57a5a743894a0e4a801fc3','5cd8e0ff1ea56.png','Aktif'),(33,'0014','admin2','Dewantari Handayani SH.MPA','dewantari@notaris-jakarta.com','-','User','2019-06-18 03:52:20.702496','c84258e9c39059a89ab77d846ddab909',NULL,'Aktif');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -609,4 +615,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-26 18:46:15
+-- Dump completed on 2019-08-05 19:22:14
