@@ -6,32 +6,102 @@
 <?php $static = $query->row_array(); ?>    
 <div class="container-fluid">
 <div class="card-header mt-2 mb-2 text-center">
-Lengkapi persyaratan dokumen
+Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span>
 </div>
 
 <div class="container">
 <div class="row">
-<div class="col-md-7 card">
-<div class="text-center card"><b>Dokumen Penunjang yang harus direkam <br> <?php echo $static['nama_jenis'] ?></b></div>
+<div class="col-md-4 card">
+<div class="text-center card-footer"><b>Tentukan Pemilik Dokumen </b></div>
 <hr>    
-<?php
-foreach ($query->result_array() as $d){ ?>
-<div class="row">
-<div class="col card-header"><?php echo $d['nama_dokumen'] ?></div>    
-<div class="card-header col-md-3"><button class="btn btn-block btn-dark m-1 btn-sm" onclick="tampil_modal_upload('<?php echo $d['no_pekerjaan'] ?>','<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_client'] ?>')"> Rekam Data <span class="fa fa-eye"></span> </button></div>   
-</div>
-<?php } ?>
+<label>Jenis Pemilik</label> 
+<select onchange="tentukan_jenis()" class="form-control tentukan_jenis">
+<option value="null">--- Tentukan Jenis Pemilik ---</option>    
+<option value="Badan Hukum">Badan Hukum</option>    
+<option Value="Perorangan">Perorangan</option>    
+</select>
 
+<label>Cari Nama <span class="jenis_pemilik"></span></label>
+<div class="input-group ">
+    <input type="text" id="cari_client" name="nama_client" class="form-control nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
+<div class="input-group-append">
+<button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+</div>
+</div>
+
+
+<label>No Client</label>
+<input type="text" id="no_client" class="form-control" readonly="">
+<hr>
+<button class="btn btn-dark btn-sm" onclick="buat_perekaman();">Buat Perekaman</button>
 </div>
 <div class="col">
-    <div class="text-center card"><b>Nama Dokumen yang sudah direkam <br> <?php echo $static['nama_client'] ?></b></div>
-<hr>    
-    
-<div class="syarat_telah_dilampirkan">
+<div class="text-center card-footer"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya <br> </b></div>
+<hr>        
+<div class="data_client">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
+
+<div class="modal fade" id="modal_tambah_client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-body">
+<form  id="fileclient" method="post" action="<?php echo base_url('User2/buat_client') ?>">
+    
+<label>Contact Person</label>
+<input type="text" name="contact_person" class="form-control contact_person required" accept="text/plain">
+
+<label>No Telepon</label>
+<input type="number" name="no_tlp"  class="form-control contact_number required" accept="text/plain">
+
+<label>Pilih Jenis client</label>
+<select name="jenis" id="pilih_jenis" class="form-control  required" accept="text/plain">
+<option ></option>
+<option value="Perorangan">Perorangan</option>
+<option value="Badan Hukum">Badan Hukum</option>	
+</select>
+
+<div id="form_badan_hukum">
+<label  id="label_nama_perorangan">Nama Perorangan</label>
+<label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
+<input type="text" name="badan_hukum" id="badan_hukum" class="form-control required"  accept="text/plain">
+</div>
+
+<div id="form_alamat_hukum">
+<label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
+<label  id="label_alamat_perorangan">Alamat Perorangan</label>
+<textarea rows="4" id="alamat_badan_hukum" class="form-control required" required="" accept="text/plain"></textarea>
+</div>
+
+    
+</div>
+<div class="card-footer">
+<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
+</form>
 </div>
 </div>
+</div>
+</div> 
+
+
+<div class="modal fade" id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data Perekaman Client<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body data_perekaman_user">
+
+    
 </div>
 </div>
 </div>
@@ -77,8 +147,148 @@ foreach ($query->result_array() as $d){ ?>
 </div>
 </div>
 </div>
-
 <script type="text/javascript">
+$(document).ready(function(){
+$(".add_client").click(function(){
+$('#modal_tambah_client').modal('show');   
+});
+
+
+});    
+    
+    
+$("#pilih_jenis").on("change",function(){
+var client = $("#pilih_jenis option:selected").text();
+if(client == "Perorangan"){
+$("#form_client").show(100);
+$("#label_alamat_perorangan,#label_nama_perorangan").fadeIn(100);
+$("#label_alamat_hukum,#label_nama_hukum").fadeOut(100);
+}else if(client == "Badan Hukum"){
+$("#form_client").show(100);
+$("#label_alamat_hukum,#label_nama_hukum").fadeIn(100);
+$("#label_alamat_perorangan,#label_nama_perorangan").fadeOut(100);
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated tada'
+});
+
+Toast.fire({
+type: 'warning',
+title: 'Silahkan pilih jenis client terlebih dahulu.'
+})
+}
+});    
+    
+    
+function data_perekaman_user(no_client){
+var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
+var no_pekerjaan             = "<?php echo $this->uri->segment(3) ?>";
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/data_perekaman_user') ?>",
+success:function(data){
+$('#data_perekaman_user').modal('show');
+$('.data_perekaman_user').html(data);
+}
+});
+}    
+    
+function response(data){
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});    
+}    
+
+$(function(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$("#cari_client").autocomplete({
+minLength:0,
+delay:0,
+source: function( request, response ) {
+$.ajax({
+url: "<?php echo base_url('User2/cari_nama_client') ?>",
+method:'post',
+data: {
+token:token,  
+term: request.term,
+jenis_pemilik: $(".tentukan_jenis option:selected").val()
+},success: function( data ) {
+var d = JSON.parse(data);   
+response(d);
+}
+});
+},select:function(event, ui){
+$("#no_client").val(ui.item.no_client);
+
+}
+
+});
+}); 
+
+
+function buat_perekaman(){
+var no_client       =  $("#no_client").val();
+var no_pekerjaan    =  "<?php echo $this->uri->segment(3) ?>";
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/buat_pemilik_perekaman') ?>",
+success:function(data){
+response(data);
+tampilkan_data_client();
+$(".form-control").val("")
+}
+});
+}
+
+function tampilkan_data_client(){
+var no_pekerjaan    =  "<?php echo $this->uri->segment(3) ?>";
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/tampilkan_data_client') ?>",
+success:function(data){
+$(".data_client").html(data);
+}
+});
+
+}
+ 
+function tentukan_jenis(){
+var jenis = $(".tentukan_jenis option:selected").val();
+if(jenis != 'null'){
+$("#cari_client").attr("readonly",false);
+$("#cari_client").val("")
+$(".jenis_pemilik").html(jenis);
+}else{
+$("#cari_client").attr("readonly",true); 
+$("#cari_client").val("")
+$(".jenis_pemilik").html("");
+}
+
+}    
+    
+    
 function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -93,66 +303,42 @@ $('#data_perekaman').modal('show');
 });
 }
 
+function hapus_pemilik(no_pemilik){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pemilik="+no_pemilik,
+url:"<?php echo base_url('User2/hapus_pemilik') ?>",
+success:function(data){
+response(data);
+refresh();
+}
 
+});
+}
 
 
 function refresh(){
-persyaratan_telah_dilampirkan();
+tampilkan_data_client();
 }
 
-function hapus_berkas_persyaratan(id_data_berkas,no_nama_dokumen,no_pekerjaan){
+function hapus_berkas_persyaratan(id_data_berkas,no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&id_data_berkas="+id_data_berkas,
 url:"<?php echo base_url('User2/hapus_berkas_persyaratan') ?>",
 success:function(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
+data_perekaman_user(no_client);    
+response(data);
 lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
-persyaratan_telah_dilampirkan();    
-}
-});    
-}
-
-function hapus_berkas_informasi(no_pekerjaan,id_data_informasi){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&id_data_informasi_pekerjaan="+id_data_informasi,
-url:"<?php echo base_url('User2/hapus_berkas_informasi') ?>",
-success:function(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
+persyaratan_telah_dilampirkan();
 refresh();
-
 }
 });    
 }
+
+
 
 
 function persyaratan_telah_dilampirkan(){
@@ -220,49 +406,6 @@ var inputQuantity = [];
 
 }
 
-function simpan_persyaratan(){
-
-var file_siap_upload  = $("#file"+id_data_persyaratan).get(0).files[0];
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-
-formData = new FormData();
-formData.append('token',token);         
-formData.append('file',file_siap_upload);
-formData.append('no_jenis',no_jenis);
-formData.append('nama_jenis',nama_jenis);
-
-$.ajax({
-url        : '<?php echo base_url('User2/simpan_file_persyaratan') ?>',
-type       : 'POST',
-contentType: false,
-cache      : false,
-processData: false,
-data       : formData,
-xhr        : function (){
-var jqXHR = null;
-if ( window.ActiveXObject ){
-jqXHR = new window.ActiveXObject( "Microsoft.XMLHTTP" );
-}else{
-jqXHR = new window.XMLHttpRequest();
-}
-jqXHR.upload.addEventListener( "progress", function ( evt ){
-if ( evt.lengthComputable ){
-var percentComplete = Math.round( (evt.loaded * 100) / evt.total );
-$("#upload_perizinan_progress"+id).attr('style',  'width:'+percentComplete+'%');
-}
-}, false );
-jqXHR.addEventListener( "progress", function ( evt ){
-if ( evt.lengthComputable ){
-var percentComplete = Math.round( (evt.loaded * 100) / evt.total );
-}
-}, false );
-return jqXHR;
-},
-success    : function ( data ){
-}
-});
-}    
-
 function lanjutkan_proses_perizinan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -270,7 +413,7 @@ type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/lanjutkan_proses_perizinan') ?>",
 success:function(data){
-
+refresh();
 var r = JSON.parse(data);
 const Toast = Swal.mixin({
 toast: true,
@@ -339,8 +482,47 @@ contentType: false,
 type: form.method,
 data: formdata,
 success:function(data){
-    
+data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
+response(data);
+refresh();
+}
+
+});
+return false; 
+}
+});
+
+
+
+$("#fileclient").submit(function(e) {
+e.preventDefault();
+$.validator.messages.required = '';
+}).validate({
+highlight: function (element, errorClass) {
+$(element).closest('.form-control').addClass('is-invalid');
+},
+unhighlight: function (element, errorClass) {
+$(element).closest(".form-control").removeClass("is-invalid");
+},    
+submitHandler: function(form) {
+$(".simpan_client").attr("disabled", true);
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+formData = new FormData();
+formData.append('token',token);
+formData.append('jenis_client',$("#pilih_jenis option:selected").text());
+formData.append('badan_hukum',$("#badan_hukum").val()),
+formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
+formData.append('contact_person',$(".contact_person").val()),
+formData.append('contact_number',$(".contact_number").val()),
+$.ajax({
+url: form.action,
+processData: false,
+contentType: false,
+type: form.method,
+data: formData,
+success:function(data){
+$('#modal_tambah_client').modal('hide');       
 var r = JSON.parse(data);
 const Toast = Swal.mixin({
 toast: true,
@@ -350,20 +532,20 @@ timer: 3000,
 animation: false,
 customClass: 'animated bounceInDown'
 });
-
 Toast.fire({
 type: r.status,
 title: r.pesan
 });
-
+$(".simpan_client").removeAttr("disabled", true);
 }
-
 });
 return false; 
 }
 });
 
-
 </script>
+
+
+
 </body>
 

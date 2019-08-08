@@ -31,12 +31,8 @@ Lengkapi pekerjaan <?php echo $static['nama_client'] ?>
 </div>
 
 <div class="tab-pane card container-fluid" id="persyaratan">
-<?php  $this->load->view('user2/V_dokumen_persyaratan') ?>       
+<?php $this->load->view('user2/V_dokumen_persyaratan') ?>       
 </div>
-    
-    
-    
-
 </div>    
 </div>    
 </div>

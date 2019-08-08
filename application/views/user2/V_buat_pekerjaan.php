@@ -10,20 +10,20 @@
 <div class="row  p-3" >
 <div class="col-md-6">
 <label>Jenis Pekerjaan</label>
-<input type="text" name="jenis_pekerjaan"  id="jenis_pekerjaan" class="form-control required"  accept="text/plain">
+<input type="text" name="jenis_pekerjaan"  id="jenis_pekerjaan" class="form-control form-control-sm required"  accept="text/plain">
 <input type="hidden" name="id_jenis_pekerjaan" readonly="" id="id_jenis_pekerjaan" class="form-control required"  accept="text/plain">
 <label>Target selesai</label>
-<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control required"  accept="text/plain">
+<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
 <label>Contact Person</label>
-<input type="text" class="form-control required" id="contact_person" name="contact_person required" accept="text/plain">
+<input type="text" class="form-control form-control-sm required" id="contact_person" name="contact_person required" accept="text/plain">
 
 <label>Contact TLP/HP</label>
-<input type="number" class="form-control required" id="contact_number" name="contact_number required" accept="text/plain">
+<input type="number" class="form-control form-control-sm required" id="contact_number" name="contact_number required" accept="text/plain">
 
 </div>
 <div class="col ">
 <label>Pilih Jenis client</label>
-<select name="jenis" id="pilih_jenis" class="form-control required" accept="text/plain">
+<select name="jenis" id="pilih_jenis" class="form-control form-control-sm required" accept="text/plain">
 <option>-- Klik untuk melihat plihan --</option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
@@ -32,13 +32,13 @@
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" name="badan_hukum" id="badan_hukum" class="form-control required"  accept="text/plain">
+<input type="text" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
 </div>
 
 <div id="form_alamat_hukum">
 <label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
 <label  id="label_alamat_perorangan">Alamat Perorangan</label>
-<textarea rows="4" id="alamat_badan_hukum" class="form-control required" required="" accept="text/plain"></textarea>
+<textarea rows="4" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
 
 </div>
@@ -48,12 +48,13 @@
     </div>
 </form>
 
-    </div>
-</div>
-</div>    
 </div>
 </div>
 </div>    
+</div>
+</div>
+</div>
+
 <script type="text/javascript">
 $("#pilih_jenis").on("change",function(){
 var client = $("#pilih_jenis option:selected").text();

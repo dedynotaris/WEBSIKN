@@ -282,32 +282,36 @@ echo $this->M_dashboard->json_data_pekerjaan();
 }
 
 public function data_dokumen(){
-
 $query = $this->db->get_where('nama_dokumen',array('id_nama_dokumen'=>$this->input->post('id_nama_dokumen')))->row_array();
 
-$data = array(
-'id_nama_dokumen' =>$query['id_nama_dokumen'],    
-'no_nama_dokumen' =>$query['no_nama_dokumen'],   
-'nama_dokumen'    =>$query['nama_dokumen'],
-);
+echo '<input type="hidden" class="id_nama_dokumen_edit form-control" value="'.$query['id_nama_dokumen'].'">
+<label>No Nama Dokumen</label>    
+<input type="text" class="no_nama_dokumen_edit  form-control" value="'.$query['no_nama_dokumen'].'">
 
-echo json_encode($data);
+<label>Nama Dokumen</label>    
+<input type="text" class="nama_dokumen_edit form-control" value="'.$query['nama_dokumen'].'">
+
+<label>Jenis dokumen badan hukum</label>
+<input value="Badan Hukum" name="badan_hukum" type="checkbox"'; if($query['badan_hukum'] == 'Badan Hukum' ){ echo'checked '; } echo 'class="form-check badan_hukum">
+
+<label>Jenis dokumen perorangan</label>
+<input value="Perorangan" name="perorangan" type="checkbox"'; if($query['perorangan'] == 'Perorangan'){ echo'checked '; } echo'class="form-check perorangan">
+';
 
 }
 
 public function data_pekerjaan(){
 if($this->input->post()){
 $input = $this->input->post();    
-
 $query = $this->db->get_where('data_jenis_pekerjaan',array('id_jenis_pekerjaan'=>$input['id_jenis_pekerjaan']))->row_array();
+
 $data = array(
-'no_jenis_pekerjaan' =>$query['no_jenis_pekerjaan'],
-'pekerjaan'          =>$query['pekerjaan'],
-'nama_jenis'         =>$query['nama_jenis'],
+'no_jenis_pekerjaan' => $query['no_jenis_pekerjaan'],
+'pekerjaan'          => $query['pekerjaan'],
+'nama_jenis'         => $query['nama_jenis'],
 );    
+
 echo json_encode($data);
-
-
 }else{
 redirect(404);    
 }
@@ -346,6 +350,8 @@ $data = array(
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
 'nama_dokumen'      => $input['nama_dokumen'],
 'pembuat'           => $this->session->userdata('nama_lengkap'),   
+'badan_hukum'       => $input['badan_hukum'],
+'perorangan'        => $input['perorangan']   
 );
 $this->db->update('nama_dokumen',$data,array('id_nama_dokumen'=>$input['id_nama_dokumen']));
 
@@ -906,7 +912,45 @@ echo json_encode($status);
 redirect(404);    
 }    
 }
+public function create_client(){
+if($this->input->post()){
+$data = $this->input->post();
 
+$h_client = $this->M_user2->data_client()->num_rows()+1;
+
+$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+
+$data_client = array(
+'no_client'                 => $no_client,    
+'jenis_client'              => ucwords($data['jenis_client']),    
+'nama_client'               => strtoupper($data['badan_hukum']),
+'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
+'tanggal_daftar'            => date('Y/m/d'),    
+'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
+'no_user'                   => $this->session->userdata('no_user'), 
+'nama_folder'               =>"Dok".$no_client,
+'contact_person'            => ucwords($data['contact_person']),    
+'contact_number'            => ucwords($data['contact_number']),    
+);    
+
+
+$this->db->insert('data_client',$data_client);
+
+if(!file_exists("berkas/"."Dok".$no_client)){
+mkdir("berkas/"."Dok".$no_client,0777);
+}
+
+
+$status = array(
+"status"     => "success",
+"pesan"      => "Client Berhasil ditambahkan"    
+);
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}
+}
 }
 
 

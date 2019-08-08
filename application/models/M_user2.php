@@ -33,6 +33,17 @@ if($query->num_rows() >0 ){
 return $query->result();
 }
 }
+public function cari_jenis_client($input){
+$this->db->from("data_client");
+$this->db->limit(15);
+$this->db->where('data_client.jenis_client',$input['jenis_pemilik']);
+$array = array('nama_client' => $input['term']);
+$this->db->like($array);
+$query = $this->db->get();
+if($query->num_rows() >0 ){
+return $query->result();
+}
+}
 
 
 public function hitung_pekerjaan(){
@@ -239,10 +250,10 @@ return $query;
 public function data_form_persyaratan($no_pekerjaan,$id_data_persyaratan){
 
 $this->db->select('data_persyaratan_pekerjaan.nama_dokumen,'
-        . 'data_persyaratan_pekerjaan.no_nama_dokumen,'
-        . 'data_client.nama_folder,'
-        . 'data_client.no_client,'
-        . 'data_pekerjaan.no_pekerjaan');
+                . 'data_persyaratan_pekerjaan.no_nama_dokumen,'
+                . 'data_client.nama_folder,'
+                . 'data_client.no_client,'
+                . 'data_pekerjaan.no_pekerjaan');
 $this->db->from('data_persyaratan_pekerjaan');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_persyaratan_pekerjaan.no_pekerjaan_syarat');
 $this->db->join('data_client', 'data_client.no_client = data_persyaratan_pekerjaan.no_client');
@@ -274,7 +285,7 @@ return $query;
 }
 
 
-public function nama_persyaratan($no_pekerjaan){
+public function data_persyaratan($no_pekerjaan){
 $this->db->select('nama_dokumen.nama_dokumen,'
         . 'nama_dokumen.no_nama_dokumen,'
         . 'data_client.nama_client,'
@@ -288,6 +299,30 @@ $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+
+$query = $this->db->get();  
+return $query;
+}
+public function nama_persyaratan($no_pekerjaan,$jenis_client){
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_persyaratan.no_nama_dokumen');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+if($jenis_client == "Badan Hukum"){
+$this->db->where('nama_dokumen.badan_hukum',$jenis_client);    
+}else if($jenis_client == "Perorangan"){
+$this->db->where('nama_dokumen.perorangan',$jenis_client);        
+}
+
 $query = $this->db->get();  
 return $query;
 }
@@ -303,7 +338,7 @@ $query = $this->db->get();
 return $query;
 }
 
-public function data_telah_dilampirkan($no_pekerjaan){
+public function data_telah_dilampirkan($no_client){
 $this->db->select('data_client.nama_folder,'
         . 'data_client.no_client,'
         . 'data_pekerjaan.no_pekerjaan,'
@@ -316,8 +351,7 @@ $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
-$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
-$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
+$this->db->where('data_berkas.no_client',$no_client);
 $this->db->group_by('nama_dokumen.no_nama_dokumen');
 $query = $this->db->get();  
 return $query;
@@ -389,7 +423,8 @@ $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_berkas.no_berkas,"
                 . "data_berkas.id_data_berkas,"
                 . "data_meta_berkas.no_nama_dokumen,"
-                 . "data_meta_berkas.no_pekerjaan");
+                 . "data_meta_berkas.no_pekerjaan,"
+        . "data_berkas.no_client");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');
@@ -440,6 +475,25 @@ $this->db->group_by('user.no_user');
 $query= $this->db->get();    
 
 return $query;
+}
+
+public function data_pemilik(){
+         $this->db->limit(1);
+         $this->db->order_by('data_pemilik.id_data_pemilik','ASC');
+$query = $this->db->get_where('data_pemilik');
+return $query;
+}
+
+public function data_pemilik_where($no_pekerjaan){
+$this->db->select('data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_pemilik.no_pemilik');    
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->where('data_pemilik.no_pekerjaan',$no_pekerjaan);
+$query= $this->db->get();    
+return $query;
+
 }
 }
 ?>

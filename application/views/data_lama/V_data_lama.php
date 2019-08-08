@@ -10,8 +10,6 @@
 
 <div class="row">
 <div class="col-md-6 mx-auto">
-
-
 <label>Nama client</label>
 <div class="input-group ">
     <input type="text" name="nama_client" class="form-control nama_client required" accept="text/plain" aria-describedby="basic-addon2">

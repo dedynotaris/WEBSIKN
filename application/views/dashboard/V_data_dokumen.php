@@ -42,7 +42,7 @@
 </button>
 </div>
 <div class="modal-body">
-    <input type="hidden" class="no_nama_dokumen">
+    <input type="hidden" class="no_nama_dokumen ">
     <label>Masukan Nama Meta</label>
     <input type="text" class="form-control nama_meta">    
 </div>
@@ -77,15 +77,8 @@
 <div class="modal fade bd-example-modal-lg" id="edit_dokumen" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
 <div class="modal-content">
-<div class="modal-body">
-    <input type="hidden" class="id_nama_dokumen_edit form-control" value="">
-<label>No Nama Dokumen</label>    
-<input type="text" class="no_nama_dokumen_edit  form-control" value="">
-
-<label>Nama Dokumen</label>    
-<input type="text" class="nama_dokumen_edit form-control" value="">
-
-
+<div class="modal-body edit_dokumen">
+   
 </div>
 <div class="modal-footer">
 <button class="btn btn-success btn-sm update_nama_dokumen"> Update </button>    
@@ -231,14 +224,13 @@ type:"post",
 url :"<?php echo base_url('Dashboard/data_dokumen') ?>",
 data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
 success:function(data){
-var r = JSON.parse(data);    
-$(".nama_dokumen_edit").val(r.nama_dokumen);
-$(".no_nama_dokumen_edit").val(r.no_nama_dokumen);
+$('#edit_dokumen').modal('show');
+$('.edit_dokumen').html(data);
+
+$(".id_nama_dokumen_edit").val(id_nama_dokumen);
 }
 });
 
-$('#edit_dokumen').modal('show');
-$(".id_nama_dokumen_edit").val(id_nama_dokumen);
 }
 
 
@@ -291,14 +283,16 @@ $(document).ready(function(){
 
 $(".update_nama_dokumen").click(function(){
 var id_nama_dokumen     = $(".id_nama_dokumen_edit").val();
-var no_nama_dokumen  = $(".no_nama_dokumen_edit").val();
+var no_nama_dokumen     = $(".no_nama_dokumen_edit").val();
 var nama_dokumen        = $(".nama_dokumen_edit").val();
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
+var badan_hukum         = $("input[name='badan_hukum']:checked").val();
+var perorangan          = $("input[name='perorangan']:checked").val();
+var token               = "<?php echo $this->security->get_csrf_hash() ?>";    
 
 
 $.ajax({
 type:"post",
-data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen+"&nama_dokumen="+nama_dokumen+"&no_nama_dokumen="+no_nama_dokumen,
+data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen+"&nama_dokumen="+nama_dokumen+"&no_nama_dokumen="+no_nama_dokumen+"&badan_hukum="+badan_hukum+"&perorangan="+perorangan,
 url:"<?php echo base_url('Dashboard/update_nama_dokumen') ?>",
 success:function(data){
 var r =JSON.parse(data);    
