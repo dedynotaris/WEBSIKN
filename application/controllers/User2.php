@@ -306,7 +306,7 @@ $data_berkas = array(
 'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
 'nama_berkas'       => $lampiran,
-'Pengupload'        => $this->session->userdata('nama_lengkap'),
+'Pengupload'        => $this->session->userdata('no_user'),
 'tanggal_upload'    => date('Y/m/d' ),  
 );    
 
@@ -381,9 +381,11 @@ foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
-<button onclick=hapus_berkas_persyaratan("'.$d['id_data_berkas'].'","'.$d['no_nama_dokumen'].'","'.$d['no_pekerjaan'].'","'.$d['no_client'].'"); class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>
-</td>';
+.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>';
+if($d['pengupload'] == $this->session->userdata('no_user')){
+echo ' || <button onclick=hapus_berkas_persyaratan("'.$d['id_data_berkas'].'","'.$d['no_nama_dokumen'].'","'.$d['no_pekerjaan'].'","'.$d['no_client'].'"); class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>';
+}
+        echo '</td>';
 echo "</tr>";
     
     
@@ -396,120 +398,11 @@ echo"</table>";
 redirect(404);    
 }    
 }
-public function simpan_perizinan(){
-if($this->input->post()){
-$input = $this->input->post();
-$cek_dokumen = $this->db->get_where('data_berkas_perizinan',array('no_nama_dokumen'=>$input['no_nama_dokumen'],'no_pekerjaan'=>base64_decode($input['no_pekerjaan'])));
-if($cek_dokumen->num_rows() == 1){
-$status = array(
-"status"     => "error",
-"pesan"      => "Tidak boleh lebih dari satu nama dokumen perizinan dalam satu pekerjaan"    
-);
-    
-}else{    
-                  $this->db->limit(1);
-                  $this->db->order_by('data_berkas_perizinan.id_perizinan','DESC');
-$total_berkas   = $this->db->get('data_berkas_perizinan')->row_array();
 
-$no_berkas_perizinan = "PRZ".str_pad($total_berkas['id_perizinan'],6,"0",STR_PAD_LEFT);
 
-$data = array(
-'no_berkas_perizinan'      => $no_berkas_perizinan,  
-'no_nama_dokumen'          => $input['no_nama_dokumen'],
-'no_pekerjaan'             => base64_decode($input['no_pekerjaan']),
-'no_user_perizinan'        => NULL,
-'no_user_penugas'          => $this->session->userdata('no_user'),
-'status_lihat'             =>NULL,
-'status_berkas'            =>NULL,
-'target_selesai_perizinan' =>NULL    
-);
 
-$this->M_user2->simpan_perizinan($data);
 
-$status = array(
-"status"     => "success",
-"pesan"      => "Perizinan berhasil ditambahkan"    
-);
-}
 
-echo json_encode($status);
-
-}else{
-redirect(404);    
-}
-    
-}
-
-public function form_perizinan(){
-if($this->input->post()){
-$data = $this->M_user2->data_perizinan($this->input->post('no_pekerjaan'));
-$data_user = $this->M_user2->data_user_perizinan('Level 3');
-
-echo "<div class='row'>"
-."<table class='table table-bordered table-sm  table-hover table-striped'>"
-."<tr>"
-."<th class='text-center'>Nama File Perizinan</th>"
-."<th class='text-center'>Status perizinan</th>"
-."<th class='text-center'>Target selesai</th>"
-."<th class='text-center'>Pengurus file </th>"
-."<th class='text-center'>Aksi </th>"
-."</tr>";
-foreach ($data->result_array() as $form){
-echo "<tr>";
-echo  "<td>".$form['nama_dokumen']."</td>";
-
-echo "<td class='text-center'>".$form['status_berkas']." </td>"
-. "<td>".$form['target_selesai_perizinan']."</td>"
-. "<td>"
-."<select onchange=tentukan_pengurus('".$form['no_berkas_perizinan']."'); disabled class='form-control tentukan_pengurus".$form['no_berkas_perizinan']."'>"
-."<option value ='".$form['no_user']."'>".$form['nama_lengkap']."</option>";
-foreach ($data_user->result_array() as $user){
-echo "<option value='".$user['no_user']."'>".$user['nama_lengkap']."</option>";
-}
-echo "<select></td>";
-
-echo "<td>"
-."<select onchange=option_aksi('".$form['no_berkas_perizinan']."','".$form['no_nama_dokumen']."','".$form['no_pekerjaan']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
-."<option>-- Klik untuk lihat menu --</option>"
-."<option value='1'>Hapus Syarat</option>"
-."<option value='2'>Alihkan Tugas</option>"
-."<option value='3'>Lihat laporan</option>"
-."<option value='4'>Lihat Rekaman Data</option>"
-."<select></td>"
-
-. "<tr>";
-}
-echo "</div>";    
- }else{
-redirect(404);    
-}
-}
-
-public function hapus_syarat(){
-if($this->input->post()){
-$this->db->delete('data_berkas_perizinan',array('no_berkas_perizinan'=>$this->input->post('no_berkas_perizinan')));    
-}else{
-redirect(404);    
-}    
-}
-
-public function simpan_pekerjaan_user(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data = array(
-    'no_user_perizinan'  => $input['no_user'],
-    'tanggal_penugasan'  => date('Y/m/d'),
-    'status_berkas'      => 'Masuk',
-    'status_lihat'       => NULL
-);
-
-$this->db->update('data_berkas_perizinan',$data,array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
-}else{
-redirect(404);    
-} 
-    
-}
 
 public function lanjutkan_proses_perizinan(){
 if($this->input->post()){
@@ -524,9 +417,7 @@ $data = array(
 $this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 
 $keterangan = $this->session->userdata('nama_lengkap')." Memproses perizinan ".$histori['pekerjaan']." client ". $histori['nama_client'];
-
 $this->histori($keterangan);
-
 $status = array(
 "status"     => "success",
 "pesan"      => "Perizinan berhasil diproses"    
@@ -1057,23 +948,46 @@ public function tampilkan_data_client(){
 if($this->input->post()){
 $input = $this->input->post();
 $data = $this->M_user2->data_pemilik_where(base64_decode($input['no_pekerjaan']));
-echo "<table class='table table-sm table-bordered table-striped'>";
-echo "<thead>"
-. "<tr>"
-. "<td>Nama Hukum/Perorangan </td>"
-. "<td>Jumlah Dokumen Terekam</td>"
-. "<td >Aksi</td>"
-. "</tr>"
-. "</thead>";
+echo "<div class='container'><div class='row'>"
+. "<div class='col-md-6 card-header'>Nama Badan Hukum / Perorangan</div>"
+. "<div class='col card-header'>Pembuat client</div>"
+. "<div class='col card-header'>Data Terekam</div>"
+. "<div class='col-md-1 card-header'>Aksi</div>"
+. "</div>";
 foreach ($data->result_array() as $d){
-    echo "<tr>"
-    . "<td>".$d['nama_client']."</td>"
-    . "<td><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-dark btn-sm'>Data Terekam ".$this->db->get_where('data_berkas',array('no_client'=>$d['no_client']))->num_rows()." <span class='fa fa-eye'></span></button></td>"
-    . "<td><button onclick = hapus_pemilik('".$d['no_pemilik']."'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></td>"
-    . "</tr>";
+echo "<div class='row'>"
+. "<div class='col-md-6 mt-2'>".$d['nama_client']."</div>"
+. "<div class='col mt-2'>".$d['pembuat_client']."</div>"
+. "<div class='col mt-2'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-dark btn-sm'>Data Terekam ".$this->db->get_where('data_berkas',array('no_client'=>$d['no_client']))->num_rows()." <span class='fa fa-eye'></span></button></div>"
+. "<div class='col-md-1 mt-2'><button onclick = hapus_pemilik('".$d['no_pemilik']."'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></div>"
+. "</div>";     
 }
-echo "</table>";
-
+echo "</div>";
+}else{
+redirect(404);    
+}    
+}
+public function tampilkan_data_perizinan(){
+if($this->input->post()){
+$input = $this->input->post();
+$data = $this->M_user2->data_pemilik_where(base64_decode($input['no_pekerjaan']));
+echo "<div class='container'><div class='row text-center'>"
+. "<div class='col-md-5 card-header'>Nama Badan Hukum / Perorangan</div>"
+. "<div class='col card-header'>Pembuat client</div>"
+. "<div class='col text-center card-header'>Data Terekam</div>"
+. "<div class='col text-center card-header'>Perizinan</div>"
+. "<div class='col-md-1 card-header'>Aksi</div>"
+. "</div>";
+foreach ($data->result_array() as $d){
+echo "<div class='row'>"
+. "<div class='col-md-5 mt-2'>".$d['nama_client']."</div>"
+. "<div class='col mt-2'>".$d['pembuat_client']."</div>"
+. "<div class='col mt-2 text-center'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-dark btn-sm'>Data Terekam ".$this->db->get_where('data_berkas',array('no_client'=>$d['no_client']))->num_rows()." <span class='fa fa-eye'></span></button></div>"
+. "<div class='col mt-2 text-center'><button onclick=buat_perizinan('".$input['no_pekerjaan']."','".$d['no_client']."','".$d['no_pemilik']."'); class='btn btn-block btn-dark btn-sm'>Buat Perizinan  <span class='fa fa-plus'></span></button></div>"
+. "<div class='col-md-1 mt-2'><button onclick = hapus_pemilik('".$d['no_pemilik']."'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></div>"
+. "</div>";     
+}
+echo "</div>";
 }else{
 redirect(404);    
 }    
@@ -1096,13 +1010,12 @@ public function data_perekaman_user(){
 if($this->input->post()){
 $input = $this->input->post();    
 $data_berkas  = $this->M_user2->data_telah_dilampirkan($input['no_client']);
-  
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 
 $data_persyaratan = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
 echo "<div class='row'>";
 echo "<div class='col text-center'>"
-. "<div class='card-header'><b>Nama Dokumem yang harus direkam</b></div><hr>";
+. "<b>Nama Dokumem yang harus direkam</b><hr>";
 foreach ($data_persyaratan->result_array() as $nama_dokumen){
 echo "<div class='row'>";
 echo "<div class='col text-left card-footer'>";
@@ -1114,15 +1027,14 @@ echo"</div>";
 echo"</div>";
 }
 echo"</div>";
-
 echo "<div class='col text-center'>"
-."<div class='card-header'><b>Nama Dokumem yang sudah direkam</b></div><hr>";
+."<b>Nama Dokumem yang sudah direkam</b><hr>";
 
 foreach ($data_berkas->result_array() as $u){  
 echo'<div class="card m-1">
 <div class="row">
-<div class="col card-header">'.$u['nama_dokumen'].'</div> 
-<div class="col-md-4 card-header text-right">
+<div class="col ">'.$u['nama_dokumen'].'</div> 
+<div class="col-md-4  text-right">
 <button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
 echo "</div>    
 </div>
@@ -1175,4 +1087,139 @@ echo json_encode($status);
 }else{
 redirect(404);    
 }}
+
+public function modal_buat_perizinan(){
+if($this->input->post()){
+$input = $this->input->post();
+$data_user = $this->M_user2->data_user_perizinan('Level 3');
+$data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
+$data_persyaratan = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
+$data = $this->M_user2->data_perizinan($input['no_pekerjaan'],$input['no_client']);
+
+echo "<div class='row card-header'>"
+. "<div class='col'><label>Nama Dokumen</label>"
+        . "<select class='form-control data_nama_dokumen form-control-sm'>";
+        foreach ($data_persyaratan->result_array() as $p){        
+        echo "<option value=".$p['no_nama_dokumen'].">".$p['nama_dokumen']."</option>";
+        }                
+        echo "</select>"
+        . "</div>"
+. "<div class='col'><label>Nama Petugas</label>"
+        . "<select class='form-control data_nama_petugas form-control-sm'>";
+       foreach ($data_user->result_array() as $u){        
+        echo "<option value=".$u['no_user'].">".$u['nama_lengkap']."</option>";
+        }                
+        
+        echo  "</select>"
+        . "</div>"
+        . "<div class='col'><label>Aksi</label>"
+        . "<button onclick=simpan_perizinan('".base64_decode($input['no_pekerjaan'])."','".$input['no_client']."'); class='btn btn-sm btn-dark btn-block'>Buat Perizinan <span class='fa fa-save'></span></button>"
+        . "</div>"
+. "</div><hr>";
+   
+
+echo "<div class='row card-header'>"
+        . "<div class='col-md-4'>Nama File Perizinan</div>"
+        . "<div class='col-md-1'>Status</div>"
+        . "<div class='col-md-2'>Target selesai</div>"
+        . "<div class='col-md-2'>Pengurus</div>"
+        . "<div class='col-md-3 text-center'>Aksi</div>"
+        . "</div>";
+
+
+foreach ($data->result_array() as $form){
+echo "<div class='row'>"
+    . "<div class='col-md-4 mt-2'>".$form['nama_dokumen']."</div>"
+    . "<div class='col-md-1 mt-2'>".$form['status_berkas']."</div>"
+    . "<div class='col-md-2 mt-2'>".$form['target_selesai_perizinan']."</div>"
+    . "<div class='col-md-2 mt-2'>".$form['nama_lengkap']."</div>"
+    . "<div class='col-md-3 mt-2'><select onchange=option_aksi('".$form['no_berkas_perizinan']."','".$form['no_nama_dokumen']."','".$input['no_pekerjaan']."','".$input['no_client']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
+."<option>-- Klik untuk lihat menu --</option>"
+."<option value='1'>Hapus Syarat</option>"
+."<option value='2'>Alihkan Tugas</option>"
+."<option value='3'>Lihat laporan</option>"
+."<option value='4'>Lihat Rekaman Data</option>"
+."<select></div>"
+    . "</div>";
+    
+}
+        
+}else{
+redirect(404);    
+}    
+}
+public function simpan_perizinan(){
+if($this->input->post()){
+$input = $this->input->post();
+$cek_dokumen = $this->db->get_where('data_berkas_perizinan',array('no_nama_dokumen'=>$input['no_nama_dokumen'],'no_pekerjaan'=>$input['no_pekerjaan'],'no_client'=>$input['no_client']));
+if($cek_dokumen->num_rows() == 1){
+$status = array(
+"status"     => "error",
+"pesan"      => "Tidak boleh lebih dari satu nama dokumen perizinan dalam satu pekerjaan"    
+);
+    
+}else{    
+                        $this->db->limit(1);
+                        $this->db->order_by('data_berkas_perizinan.id_perizinan','DESC');
+$total_berkas           = $this->db->get('data_berkas_perizinan')->row_array();
+$no_berkas_perizinan    = "PRZ".str_pad($total_berkas['id_perizinan'],6,"0",STR_PAD_LEFT);
+
+$data = array(
+'no_berkas_perizinan'      => $no_berkas_perizinan,  
+'no_nama_dokumen'          => $input['no_nama_dokumen'],
+'no_pekerjaan'             => $input['no_pekerjaan'],
+'no_client'                => $input['no_client'],   
+'no_user_perizinan'        => $input['no_petugas'],
+'no_user_penugas'          => $this->session->userdata('no_user'),
+'status_lihat'             =>NULL,
+'status_berkas'            =>NULL,
+'target_selesai_perizinan' =>NULL    
+);
+
+$this->M_user2->simpan_perizinan($data);
+$status = array(
+"status"     => "success",
+"pesan"      => "Perizinan berhasil ditambahkan"    
+);
+}
+echo json_encode($status);
+}else{
+redirect(404);    
+}
+    
+}
+public function hapus_syarat(){
+if($this->input->post()){
+$this->db->delete('data_berkas_perizinan',array('no_berkas_perizinan'=>$this->input->post('no_berkas_perizinan')));    
+}else{
+redirect(404);    
+}    
+}
+public function modal_alihkan_tugas(){
+$input = $this->input->post();
+$data_user = $this->M_user2->data_user_perizinan('Level 3');
+
+echo "<label>Alihkan Tugas</label>"
+. "<select onchange=tentukan_pengurus('".$input['no_berkas_perizinan']."'); class='form-control tentukan_pengurus".$input['no_berkas_perizinan']." data_nama_dokumen form-control-sm'>";
+foreach ($data_user->result_array() as $u){        
+echo "<option value=".$u['no_user'].">".$u['nama_lengkap']."</option>";
+}                
+echo "</select>";
+
+}
+public function simpan_pekerjaan_user(){
+if($this->input->post()){
+$input = $this->input->post();
+$data = array(
+    'no_user_perizinan'  => $input['no_user'],
+    'tanggal_penugasan'  => date('Y/m/d'),
+    'status_berkas'      => 'Masuk',
+    'status_lihat'       => NULL
+);
+$this->db->update('data_berkas_perizinan',$data,array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
+}else{
+redirect(404);    
+} 
+    
+}
 }

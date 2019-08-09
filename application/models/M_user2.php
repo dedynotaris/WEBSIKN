@@ -421,6 +421,7 @@ public function data_perekaman2($no_nama_dokumen,$no_pekerjaan){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
+                ."data_berkas.pengupload,"
                 . "data_berkas.id_data_berkas,"
                 . "data_meta_berkas.no_nama_dokumen,"
                  . "data_meta_berkas.no_pekerjaan,"
@@ -438,12 +439,18 @@ public function simpan_perizinan($data){
 $this->db->insert('data_berkas_perizinan',$data);    
     
 }
-public function data_perizinan($no_pekerjaan){
-$this->db->select("*");
+public function data_perizinan($no_pekerjaan,$no_client){
+$this->db->select("nama_dokumen.nama_dokumen,"
+        . "data_berkas_perizinan.no_berkas_perizinan,"
+        ."data_berkas_perizinan.status_berkas,"
+        ."data_berkas_perizinan.no_nama_dokumen,"
+        ."data_berkas_perizinan.target_selesai_perizinan,"
+        . "user.nama_lengkap");
 $this->db->from('data_berkas_perizinan');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
 $this->db->join('user', 'user.no_user = data_berkas_perizinan.no_user_perizinan','left');
 $this->db->where('data_berkas_perizinan.no_pekerjaan',base64_decode($no_pekerjaan));
+$this->db->where('data_berkas_perizinan.no_client',$no_client);
 $query = $this->db->get();  
 return $query;
     
@@ -487,6 +494,7 @@ return $query;
 public function data_pemilik_where($no_pekerjaan){
 $this->db->select('data_client.nama_client,'
         . 'data_client.no_client,'
+        . 'data_client.pembuat_client,'
         . 'data_pemilik.no_pemilik');    
 $this->db->from('data_pemilik');
 $this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');

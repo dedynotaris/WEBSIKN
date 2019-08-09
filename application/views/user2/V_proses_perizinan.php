@@ -13,9 +13,7 @@ Lengkapi pekerjaan <?php echo $static['nama_client'] ?>
 <li class="nav-item">
 <a class="nav-link active" data-toggle="tab" href="#utama"> Dokumen Utama <i class="fas fa-file"></i></a>
 </li>
-<li class="nav-item ml-1">
-<a class="nav-link " data-toggle="tab" href="#perizinan"> Dokumen perizinan <i class="fas fa-file-word"></i></a>
-</li>
+
 <li class="nav-item ml-1">
 <a class="nav-link" data-toggle="tab" href="#persyaratan"> Dokumen penunjang <i class="fas fa-file"></i></a>
 </li>
@@ -24,10 +22,6 @@ Lengkapi pekerjaan <?php echo $static['nama_client'] ?>
 <div class="tab-content">
 <div class="tab-pane  active" id="utama">
 <?php $this->load->view('user2/V_dokumen_utama') ?>   
-</div>
-
-<div class="tab-pane " id="perizinan">
-<?php $this->load->view('user2/V_dokumen_perizinan') ?>   
 </div>
 
 <div class="tab-pane" id="persyaratan">
