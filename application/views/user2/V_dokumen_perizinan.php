@@ -59,6 +59,8 @@ $(".file_perizinan").prop('selectedIndex',0);
 function refresh(){
 form_perizinan();
 persyaratan_telah_dilampirkan();
+tampilkan_data_client();
+
 }
 
 function form_perizinan(){

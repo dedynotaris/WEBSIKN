@@ -24,7 +24,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 
 <label>Cari Nama <span class="jenis_pemilik"></span></label>
 <div class="input-group ">
-    <input type="text" id="cari_client" name="nama_client" class="form-control nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
+    <input type="text" id="cari_client" name="nama_client" class="form-control perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
 <button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
@@ -32,7 +32,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 
 
 <label>No Client</label>
-<input type="text" id="no_client" class="form-control" readonly="">
+<input type="text" id="no_client" class="form-control perekaman" readonly="">
 <hr>
 <button class="btn btn-dark btn-sm" onclick="buat_perekaman();">Buat Perekaman</button>
 </div>
@@ -70,7 +70,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" name="badan_hukum" id="badan_hukum" class="form-control required"  accept="text/plain">
+<input type="text" name="badan_hukum" id="badan_hukum" class="form-control  required"  accept="text/plain">
 </div>
 
 <div id="form_alamat_hukum">
@@ -255,7 +255,7 @@ url:"<?php echo base_url('User2/buat_pemilik_perekaman') ?>",
 success:function(data){
 response(data);
 tampilkan_data_client();
-$(".form-control").val("")
+$(".perekaman").val("")
 }
 });
 }

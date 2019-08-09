@@ -4,7 +4,6 @@ Lengkapi persyaratan dokumen
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span>
 </div>
 
-<div class="container">
 <div class="row">
 <div class="col-md-4 card">
 <div class="text-center card-footer"><b>Tentukan Pemilik Dokumen </b></div>
@@ -15,10 +14,18 @@ Lengkapi persyaratan dokumen
 <option value="Badan Hukum">Badan Hukum</option>    
 <option Value="Perorangan">Perorangan</option>    
 </select>
+
 <label>Cari Nama <span class="jenis_pemilik"></span></label>
-<input type="text" id="cari_client" class="form-control" readonly="">
+<div class="input-group ">
+    <input type="text" id="cari_client" name="nama_client" class="form-control perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
+<div class="input-group-append">
+<button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+</div>
+</div>
+
+
 <label>No Client</label>
-<input type="text" id="no_client" class="form-control" readonly="">
+<input type="text" id="no_client" class="form-control perekaman" readonly="">
 <hr>
 <button class="btn btn-dark btn-sm" onclick="buat_perekaman();">Buat Perekaman</button>
 </div>
@@ -30,11 +37,48 @@ Lengkapi persyaratan dokumen
 </div>
 </div>
 </div>
+
+
+<div class="modal fade" id="modal_tambah_client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-body">
+<form  id="fileclient" method="post" action="<?php echo base_url('User2/buat_client') ?>">
+    
+<label>Contact Person</label>
+<input type="text" name="contact_person" class="form-control contact_person required" accept="text/plain">
+
+<label>No Telepon</label>
+<input type="number" name="no_tlp"  class="form-control contact_number required" accept="text/plain">
+
+<label>Pilih Jenis client</label>
+<select name="jenis" id="pilih_jenis" class="form-control  required" accept="text/plain">
+<option ></option>
+<option value="Perorangan">Perorangan</option>
+<option value="Badan Hukum">Badan Hukum</option>	
+</select>
+
+<div id="form_badan_hukum">
+<label  id="label_nama_perorangan">Nama Perorangan</label>
+<label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
+<input type="text" name="badan_hukum" id="badan_hukum" class="form-control  required"  accept="text/plain">
+</div>
+
+<div id="form_alamat_hukum">
+<label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
+<label  id="label_alamat_perorangan">Alamat Perorangan</label>
+<textarea rows="4" id="alamat_badan_hukum" class="form-control required" required="" accept="text/plain"></textarea>
+</div>
+
+    
+</div>
+<div class="card-footer">
+<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
+</form>
 </div>
 </div>
-
-
-
+</div>
+</div> 
 
 
 <div class="modal fade" id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -95,6 +139,43 @@ Lengkapi persyaratan dokumen
 </div>
 </div>
 <script type="text/javascript">
+$(document).ready(function(){
+$(".add_client").click(function(){
+$('#modal_tambah_client').modal('show');   
+});
+
+
+});    
+    
+    
+$("#pilih_jenis").on("change",function(){
+var client = $("#pilih_jenis option:selected").text();
+if(client == "Perorangan"){
+$("#form_client").show(100);
+$("#label_alamat_perorangan,#label_nama_perorangan").fadeIn(100);
+$("#label_alamat_hukum,#label_nama_hukum").fadeOut(100);
+}else if(client == "Badan Hukum"){
+$("#form_client").show(100);
+$("#label_alamat_hukum,#label_nama_hukum").fadeIn(100);
+$("#label_alamat_perorangan,#label_nama_perorangan").fadeOut(100);
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated tada'
+});
+
+Toast.fire({
+type: 'warning',
+title: 'Silahkan pilih jenis client terlebih dahulu.'
+})
+}
+});    
+    
+    
 function data_perekaman_user(no_client){
 var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
 var no_pekerjaan             = "<?php echo $this->uri->segment(3) ?>";
@@ -165,7 +246,7 @@ url:"<?php echo base_url('User2/buat_pemilik_perekaman') ?>",
 success:function(data){
 response(data);
 tampilkan_data_client();
-$(".form-control").val("")
+$(".perekaman").val("")
 }
 });
 }
@@ -228,9 +309,6 @@ refresh();
 }
 
 
-function refresh(){
-tampilkan_data_client();
-}
 
 function hapus_berkas_persyaratan(id_data_berkas,no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -403,5 +481,54 @@ return false;
 }
 });
 
+
+
+$("#fileclient").submit(function(e) {
+e.preventDefault();
+$.validator.messages.required = '';
+}).validate({
+highlight: function (element, errorClass) {
+$(element).closest('.form-control').addClass('is-invalid');
+},
+unhighlight: function (element, errorClass) {
+$(element).closest(".form-control").removeClass("is-invalid");
+},    
+submitHandler: function(form) {
+$(".simpan_client").attr("disabled", true);
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+formData = new FormData();
+formData.append('token',token);
+formData.append('jenis_client',$("#pilih_jenis option:selected").text());
+formData.append('badan_hukum',$("#badan_hukum").val()),
+formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
+formData.append('contact_person',$(".contact_person").val()),
+formData.append('contact_number',$(".contact_number").val()),
+$.ajax({
+url: form.action,
+processData: false,
+contentType: false,
+type: form.method,
+data: formData,
+success:function(data){
+$('#modal_tambah_client').modal('hide');       
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+$(".simpan_client").removeAttr("disabled", true);
+}
+});
+return false; 
+}
+});
 
 </script>

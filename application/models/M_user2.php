@@ -479,7 +479,7 @@ return $query;
 
 public function data_pemilik(){
          $this->db->limit(1);
-         $this->db->order_by('data_pemilik.id_data_pemilik','ASC');
+         $this->db->order_by('data_pemilik.id_data_pemilik','DESC');
 $query = $this->db->get_where('data_pemilik');
 return $query;
 }

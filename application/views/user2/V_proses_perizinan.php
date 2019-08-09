@@ -22,15 +22,15 @@ Lengkapi pekerjaan <?php echo $static['nama_client'] ?>
 </ul>    
 
 <div class="tab-content">
-<div class="tab-pane card container-fluid active" id="utama">
+<div class="tab-pane  active" id="utama">
 <?php $this->load->view('user2/V_dokumen_utama') ?>   
 </div>
 
-<div class="tab-pane card container-fluid " id="perizinan">
+<div class="tab-pane " id="perizinan">
 <?php $this->load->view('user2/V_dokumen_perizinan') ?>   
 </div>
 
-<div class="tab-pane card container-fluid" id="persyaratan">
+<div class="tab-pane" id="persyaratan">
 <?php $this->load->view('user2/V_dokumen_persyaratan') ?>       
 </div>
 </div>    
