@@ -404,7 +404,7 @@ $query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_doku
 return $query;
 }
 
-public function data_perekaman($no_nama_dokumen,$no_pekerjaan){
+public function data_perekaman($no_nama_dokumen,$no_pekerjaan,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas");
@@ -413,11 +413,12 @@ $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
 $this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_berkas.no_client',$no_client);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;
 }
-public function data_perekaman2($no_nama_dokumen,$no_pekerjaan){
+public function data_perekaman2($no_nama_dokumen,$no_pekerjaan,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
@@ -430,6 +431,7 @@ $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');
 $this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_berkas.no_client',$no_client);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;
@@ -445,12 +447,15 @@ $this->db->select("nama_dokumen.nama_dokumen,"
         ."data_berkas_perizinan.status_berkas,"
         ."data_berkas_perizinan.no_nama_dokumen,"
         ."data_berkas_perizinan.target_selesai_perizinan,"
+        . "data_pemilik.no_pemilik,"
         . "user.nama_lengkap");
 $this->db->from('data_berkas_perizinan');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
+$this->db->join('data_pemilik', 'data_pemilik.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
 $this->db->join('user', 'user.no_user = data_berkas_perizinan.no_user_perizinan','left');
 $this->db->where('data_berkas_perizinan.no_pekerjaan',base64_decode($no_pekerjaan));
 $this->db->where('data_berkas_perizinan.no_client',$no_client);
+$this->db->where('data_pemilik.no_client',$no_client);
 $query = $this->db->get();  
 return $query;
     
@@ -461,6 +466,7 @@ $this->db->from('sublevel_user');
 $this->db->join('user', 'user.no_user = sublevel_user.no_user');
 $this->db->group_by('sublevel_user.no_user');
 $this->db->where('sublevel_user.sublevel',$level);
+$this->db->where('user.level','User');
 $query = $this->db->get();  
 return $query;
 }

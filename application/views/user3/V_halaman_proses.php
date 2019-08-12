@@ -11,23 +11,31 @@ Data perizinan yang perlu diproses
 <table class="table table-hover table-striped table-sm table-bordered text-center">
 <tr>
 <th>Nama client</th>
-<th>Nama Tugas</th>
-<th>Dari</th>
+<th>Nama Dokumen</th>
+<th>Pemilik dokumen</th>
+<th>Tugas Dari</th>
 <th class="text-center">Target selesai perizinan</th>
 <th>Aksi</th>
 </tr>
-
 <?php foreach ($data_tugas->result_array() as    $data){  ?>
 <tr>
 <td><?php echo $data['nama_client'] ?></td>
 <td><?php echo $data['nama_dokumen'] ?></td>
+<td><?php 
+$this->db->select('data_client.nama_client');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->where('data_pemilik.no_pemilik',$data['no_pemilik']);
+$pemilik = $this->db->get()->row_array();
+echo $pemilik['nama_client'];
+ ?></td>
 <td><?php echo $data['nama_lengkap'] ?></td>
 <td class="text-center"><?php echo $data['target_selesai_perizinan'] ?></td>
 <td>
-<select onchange="aksi_option('<?php echo $data['no_pekerjaan'] ?>','<?php echo $data['no_berkas_perizinan'] ?>','<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_client'] ?>');" class="form-control data_option<?php echo $data['no_berkas_perizinan'] ?>">
+<select onchange="aksi_option('<?php echo $data['no_pekerjaan'] ?>','<?php echo $data['no_berkas_perizinan'] ?>','<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_client'] ?>','<?php echo $data['no_pemilik'] ?>');" class="form-control data_option<?php echo $data['no_berkas_perizinan'] ?>">
 <option value="1">-- Klik untuk lihat menu --</option>
 <option value="2">Buat Laporan</option>
-<option value="3">Lihat Persyaratan</option>
+<option value="3">Dokumen Pemilik</option>
 <option value="4">Rekam Data</option>
 <option value="5">Selesaikan Perizinan</option>
 </select>    
@@ -41,7 +49,6 @@ Data perizinan yang perlu diproses
 </div>
 
 <!-------------------modal laporan--------------------->
-
 <div class="modal fade" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
@@ -52,7 +59,6 @@ Data perizinan yang perlu diproses
 </button>
 </div>
 <div class="modal-body">
-
 <input type="hidden" value="" id="no_pekerjaan">
 <input type="hidden" value="" id="no_berkas_perizinan">
 <textarea id="laporan"class="form-control" placeholder="masukan progress pekerjaan"></textarea>
@@ -128,7 +134,7 @@ Data perizinan yang perlu diproses
 
 
 <script type="text/javascript">
-function aksi_option(no_pekerjaan,no_berkas_perizinan,no_nama_dokumen,no_client){
+function aksi_option(no_pekerjaan,no_berkas_perizinan,no_nama_dokumen,no_client,no_pemilik){
 var aksi_option = $(".data_option"+no_berkas_perizinan+" option:selected").val();
 if(aksi_option == 1){
 $(".data_option"+no_berkas_perizinan).val("-- Klik untuk lihat menu --");
@@ -137,7 +143,7 @@ $('#modal_laporan').modal('show');
 $("#no_pekerjaan").val(no_pekerjaan);
 $("#no_berkas_perizinan").val(no_berkas_perizinan);
 }else if(aksi_option == 3){
-form_lihat_persyaratan(no_pekerjaan);    
+form_lihat_persyaratan(no_pekerjaan,no_pemilik);    
 }else if(aksi_option == 4){
 form_rekam_data(no_nama_dokumen,no_pekerjaan,no_client);
 }else if(aksi_option == 5){
@@ -190,12 +196,12 @@ window.location.href="<?php echo base_url('User3/Halaman_proses') ?>";
 });    
 }
 
-function form_lihat_persyaratan(no_pekerjaan){
+function form_lihat_persyaratan(no_pekerjaan,no_pemilik){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User3/lihat_persyaratan') ?>",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_pemilik="+no_pemilik,
 success:function(data){
 $(".tampilkan_data").html(data);
 $('#modal_data').modal('show');
@@ -281,11 +287,11 @@ $("#laporan").val("")
 }); 
 });
 
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_pemilik){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_pemilik="+no_pemilik,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    

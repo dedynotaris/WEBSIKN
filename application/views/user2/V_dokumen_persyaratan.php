@@ -206,11 +206,11 @@ $(".data_laporan").html(data);
 });
 }
 
-function alihkan_tugas(no_berkas_perizinan){
+function alihkan_tugas(no_berkas_perizinan,no_pekerjaan,no_client,no_pemilik){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client+"&no_pemilik="+no_pemilik,
 url:"<?php echo base_url('User2/modal_alihkan_tugas') ?>",
 success:function(data){
 $('#modal_alihkan_tugas').modal('show');
@@ -219,12 +219,12 @@ $(".modal_alihkan_tugas").html(data);
 });
 }
     
-function option_aksi(no_berkas_perizinan,no_nama_dokumen,no_pekerjaan,no_client){
+function option_aksi(no_berkas_perizinan,no_nama_dokumen,no_pekerjaan,no_client,no_pemilik){
 var val = $(".option_aksi"+no_berkas_perizinan).val();
 if(val == 1){
 hapus_syarat(no_berkas_perizinan,no_pekerjaan,no_client);    
 }else if(val == 2){
-alihkan_tugas(no_berkas_perizinan,no_pekerjaan,);
+alihkan_tugas(no_berkas_perizinan,no_pekerjaan,no_client,no_pemilik);
 }else if(val == 3){
 lihat_progress_perizinan(no_berkas_perizinan);
 }else if(val == 4){
@@ -283,7 +283,7 @@ title: 'Silahkan pilih jenis client terlebih dahulu.'
 }
 });    
 
-function simpan_perizinan(no_pekerjaan,no_client){
+function simpan_perizinan(no_pekerjaan,no_client,no_pemilik){
 var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
 var no_petugas               = $(".data_nama_petugas option:selected").val();
 var no_dokumen               = $(".data_nama_dokumen option:selected").val();
@@ -291,20 +291,20 @@ var no_dokumen               = $(".data_nama_dokumen option:selected").val();
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/simpan_perizinan') ?>",
-data:"token="+token+"&no_petugas="+no_petugas+"&no_nama_dokumen="+no_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
+data:"token="+token+"&no_petugas="+no_petugas+"&no_nama_dokumen="+no_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client+"&no_pemilik="+no_pemilik,
 success:function(data){
 response(data);
-buat_perizinan('<?php echo $this->uri->segment(3) ?>',no_client);    
+buat_perizinan('<?php echo $this->uri->segment(3) ?>',no_client,no_pemilik);    
 }
 });
 
 }
 
-function buat_perizinan(no_pekerjaan,no_client){
+function buat_perizinan(no_pekerjaan,no_client,no_pemilik){
 var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_client="+no_client+'&no_pekerjaan='+no_pekerjaan,
+data:"token="+token+"&no_client="+no_client+'&no_pekerjaan='+no_pekerjaan+"&no_pemilik="+no_pemilik,
 url:"<?php echo base_url('User2/modal_buat_perizinan') ?>",
 success:function(data){
 $(".modal_buat_perizinan").html(data);    
@@ -394,7 +394,7 @@ $(".perekaman").val("")
 }
 
 
-function tentukan_pengurus(no_berkas_perizinan,no_pekerjaan,no_client){
+function tentukan_pengurus(no_berkas_perizinan,no_pekerjaan,no_client,no_pemilik){
 var no_user  = $(".tentukan_pengurus"+no_berkas_perizinan+" option:selected").val();
 var token     = "<?php echo $this->security->get_csrf_hash() ?>";
 if(no_user !=''){
@@ -403,7 +403,7 @@ type:"post",
 url:"<?php echo base_url('User2/simpan_pekerjaan_user') ?>",
 data:"token="+token+"&no_user="+no_user+"&no_berkas_perizinan="+no_berkas_perizinan,
 success:function(data){
-buat_perizinan("<?php echo $this->uri->segment(3) ?>",no_client);    
+buat_perizinan("<?php echo $this->uri->segment(3) ?>",no_client,no_pemilik);    
 }
 });
 }else{
@@ -451,11 +451,11 @@ $(".jenis_pemilik").html("");
 }    
     
     
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
 url:"<?php echo base_url('User2/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    

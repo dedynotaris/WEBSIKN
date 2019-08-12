@@ -358,8 +358,8 @@ echo "</div>
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
-$query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_client']);
+$query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_client']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
@@ -1035,7 +1035,7 @@ echo'<div class="card m-1">
 <div class="row">
 <div class="col ">'.$u['nama_dokumen'].'</div> 
 <div class="col-md-4  text-right">
-<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
+<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'","'.$input['no_client'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
 echo "</div>    
 </div>
 </div>";
@@ -1095,7 +1095,6 @@ $data_user = $this->M_user2->data_user_perizinan('Level 3');
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 $data_persyaratan = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
 $data = $this->M_user2->data_perizinan($input['no_pekerjaan'],$input['no_client']);
-
 echo "<div class='row card-header'>"
 . "<div class='col'><label>Nama Dokumen</label>"
         . "<select class='form-control data_nama_dokumen form-control-sm'>";
@@ -1113,7 +1112,7 @@ echo "<div class='row card-header'>"
         echo  "</select>"
         . "</div>"
         . "<div class='col'><label>Aksi</label>"
-        . "<button onclick=simpan_perizinan('".base64_decode($input['no_pekerjaan'])."','".$input['no_client']."'); class='btn btn-sm btn-dark btn-block'>Buat Perizinan <span class='fa fa-save'></span></button>"
+        . "<button onclick=simpan_perizinan('".base64_decode($input['no_pekerjaan'])."','".$input['no_client']."','".$input['no_pemilik']."'); class='btn btn-sm btn-dark btn-block'>Buat Perizinan <span class='fa fa-save'></span></button>"
         . "</div>"
 . "</div><hr>";
    
@@ -1133,7 +1132,7 @@ echo "<div class='row'>"
     . "<div class='col-md-1 mt-2'>".$form['status_berkas']."</div>"
     . "<div class='col-md-2 mt-2'>".$form['target_selesai_perizinan']."</div>"
     . "<div class='col-md-2 mt-2'>".$form['nama_lengkap']."</div>"
-    . "<div class='col-md-3 mt-2'><select onchange=option_aksi('".$form['no_berkas_perizinan']."','".$form['no_nama_dokumen']."','".$input['no_pekerjaan']."','".$input['no_client']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
+    . "<div class='col-md-3 mt-2'><select onchange=option_aksi('".$form['no_berkas_perizinan']."','".$form['no_nama_dokumen']."','".$input['no_pekerjaan']."','".$input['no_client']."','".$form['no_pemilik']."') class='form-control option_aksi".$form['no_berkas_perizinan']." '>"
 ."<option>-- Klik untuk lihat menu --</option>"
 ."<option value='1'>Hapus Syarat</option>"
 ."<option value='2'>Alihkan Tugas</option>"
@@ -1169,10 +1168,12 @@ $data = array(
 'no_nama_dokumen'          => $input['no_nama_dokumen'],
 'no_pekerjaan'             => $input['no_pekerjaan'],
 'no_client'                => $input['no_client'],   
+'no_pemilik'               => $input['no_pemilik'],   
 'no_user_perizinan'        => $input['no_petugas'],
 'no_user_penugas'          => $this->session->userdata('no_user'),
+'tanggal_penugasan'        => date('Y/m/d'),    
 'status_lihat'             =>NULL,
-'status_berkas'            =>NULL,
+'status_berkas'            =>'Masuk',
 'target_selesai_perizinan' =>NULL    
 );
 
@@ -1200,7 +1201,7 @@ $input = $this->input->post();
 $data_user = $this->M_user2->data_user_perizinan('Level 3');
 
 echo "<label>Alihkan Tugas</label>"
-. "<select onchange=tentukan_pengurus('".$input['no_berkas_perizinan']."'); class='form-control tentukan_pengurus".$input['no_berkas_perizinan']." data_nama_dokumen form-control-sm'>";
+. "<select onchange=tentukan_pengurus('".$input['no_berkas_perizinan']."','".$input['no_pekerjaan']."','".$input['no_client']."','".$input['no_pemilik']."'); class='form-control tentukan_pengurus".$input['no_berkas_perizinan']." data_nama_dokumen form-control-sm'>";
 foreach ($data_user->result_array() as $u){        
 echo "<option value=".$u['no_user'].">".$u['nama_lengkap']."</option>";
 }                

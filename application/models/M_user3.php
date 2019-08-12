@@ -2,12 +2,23 @@
 class M_user3 extends CI_Model{
 public function data_tugas($status){
 
-$this->db->select('*');
+$this->db->select('data_client.nama_client,'
+        . 'nama_dokumen.nama_dokumen,'
+        . 'data_client.nama_client,'
+        . 'user.nama_lengkap,'
+        . 'data_berkas_perizinan.tanggal_penugasan,'
+        . 'data_berkas_perizinan.target_selesai_perizinan,'
+        . 'data_berkas_perizinan.no_berkas_perizinan,'
+        . 'data_berkas_perizinan.no_pekerjaan,'
+        . 'data_berkas_perizinan.no_client,'
+        . 'data_berkas_perizinan.no_nama_dokumen,'
+        . 'data_pemilik.no_pemilik');
 $this->db->from('data_berkas_perizinan');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
-$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('user', 'user.no_user = data_berkas_perizinan.no_user_penugas');
+$this->db->join('data_pemilik', 'data_pemilik.no_pemilik = data_berkas_perizinan.no_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->order_by('data_berkas_perizinan.id_perizinan','DESC');
 $this->db->where('data_berkas_perizinan.status_berkas',$status);
 $this->db->where('data_berkas_perizinan.no_user_perizinan',$this->session->userdata('no_user'));
@@ -74,42 +85,44 @@ $query = $this->db->get();
 return $query;
 }
 
-public function data_persyaratan($no_pekerjaan){
+public function data_persyaratan($no_pemilik){
 $this->db->select('*');
-$this->db->from('data_berkas');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->from('data_pemilik');
+$this->db->join('data_client','data_client.no_client = data_pemilik.no_client');
+$this->db->join('data_berkas','data_berkas.no_client = data_client.no_client');
+$this->db->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->db->group_by('data_berkas.no_nama_dokumen');
-$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_pemilik.no_pemilik',$no_pemilik);
 $query = $this->db->get();
-return $query;
-    
+return $query;    
 }
 
-
-public function data_perekaman($no_nama_dokumen,$no_pekerjaan){
+public function data_perekaman($no_nama_dokumen,$no_pekerjaan,$no_pemilik){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas");
-$this->db->from('data_berkas');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->join('data_berkas', 'data_berkas.no_client = data_client.no_client');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
-$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_pemilik.no_pemilik',$no_pemilik);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;
 }
-public function data_perekaman2($no_nama_dokumen,$no_pekerjaan){
+public function data_perekaman2($no_nama_dokumen,$no_pekerjaan,$no_pemilik){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
-                . "data_berkas.id_data_berkas,"
-                . "data_meta_berkas.no_nama_dokumen,"
-                 . "data_meta_berkas.no_pekerjaan");
-$this->db->from('data_berkas');
-$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
-$this->db->group_by('data_berkas.no_berkas');
-$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+        . "data_berkas.id_data_berkas");
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->join('data_berkas', 'data_berkas.no_client = data_pemilik.no_client');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
+$this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
+$this->db->where('data_pemilik.no_pemilik',$no_pemilik);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;

@@ -13,7 +13,6 @@ $this->load->library('upload');
 if($this->session->userdata('sublevel')  != 'Level 3' ){
 redirect(base_url('Menu'));
 }
-
 }
 
 public function index(){
@@ -76,12 +75,11 @@ $this->load->view('user3/V_halaman_proses',['data_tugas'=>$data_tugas]);
 
 
 
-public function halaman_selesai(){
-  
+public function halaman_selesai(){ 
 $this->load->view('umum/V_header');
-$this->load->view('user3/V_halaman_selesai');
-    
+$this->load->view('user3/V_halaman_selesai');  
 }
+
 public function json_data_perizinan_selesai(){
 echo $this->M_user3->json_data_perizinan_selesai();       
 }
@@ -91,7 +89,8 @@ echo $this->M_user3->json_data_perizinan_selesai();
 public function lihat_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
-$data = $this->M_user3->data_persyaratan($input['no_pekerjaan']);
+
+$data = $this->M_user3->data_persyaratan($input['no_pemilik']);
 
 echo "<table class='table text-center table-sm table-bordered table-striped'>"
 . "<thead>"
@@ -103,7 +102,7 @@ echo "<table class='table text-center table-sm table-bordered table-striped'>"
 foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$d['nama_dokumen']."</td>"
-    . "<td><button onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."'); class='btn btn-dark btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
+    . "<td><button onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$input['no_pemilik']."'); class='btn btn-dark btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
     . "</tr>";  
 }
 
@@ -445,8 +444,9 @@ echo print_r($this->session->userdata());
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
-$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
+
+$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_pemilik']);
+$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_pemilik']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>

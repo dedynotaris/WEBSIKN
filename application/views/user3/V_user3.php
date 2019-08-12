@@ -17,16 +17,23 @@ Data perizinan yang perlu dikerjakan
 <tr>
 <th>Nama client</th>
 <th>Nama Tugas</th>
-<th>Dari</th>
+<th>Pemilik dokumen</th>
+<th>Tugas Dari</th>
 <th>Tanggal penugasan</th>
 <th>Aksi</th>
 </tr>
-
-
 <?php foreach ($data_tugas->result_array() as    $data){  ?>
 <tr>
 <td><?php echo $data['nama_client'] ?></td>
 <td id="nama_file<?php echo $data['no_berkas_perizinan']?>"><?php echo $data['nama_dokumen'] ?></td>
+<td><?php 
+$this->db->select('data_client.nama_client');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->where('data_pemilik.no_pemilik',$data['no_pemilik']);
+$pemilik = $this->db->get()->row_array();
+echo $pemilik['nama_client'];
+ ?></td>
 <td ><?php echo $data['nama_lengkap'] ?></td>
 <td><?php echo $data['tanggal_penugasan'] ?></td>
 <td>
