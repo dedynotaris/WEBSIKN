@@ -3,12 +3,12 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user3'); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 mb-2 text-center">
-Data perizinan yang perlu diproses
-</div>    
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
+</div>   
 <div class="row">
 <div class="col">    
-<table class="table table-hover table-striped table-sm table-bordered text-center">
+<table class="table text-theme1 table-hover table-striped table-sm table-bordered text-center">
 <tr>
 <th>Nama client</th>
 <th>Nama Dokumen</th>
@@ -291,7 +291,7 @@ function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_pemilik){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_pemilik="+no_pemilik,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pemilik="+no_pemilik,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    

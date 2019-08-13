@@ -3,12 +3,12 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <div class="container-fluid">
-<div class="card-header mt-2 text-center">
-Daftar pekerjaan yang sudah anda kerjakan
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1">Pekerjaan Selesai<br><span class="fa-2x fab fa-font-awesome-flag"></span></h5>
 </div>    
 <div class="row p-2">
 <div class="col ">    
-<table style="width:100%;" id="data_pekerjaan_selesai" class="table text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_pekerjaan_selesai" class="table text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no pekerjaan</th>

@@ -441,7 +441,7 @@ $this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=> base64_decode($i
 
 $status = array(
 "status"     => "success",
-"pesan"      => "Perizinan berhasil diproses"    
+"pesan"      => "Perizinan berhasil diselesaikan"    
 );
 echo json_encode($status);
 
@@ -1220,7 +1220,15 @@ $data = array(
 $this->db->update('data_berkas_perizinan',$data,array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 }else{
 redirect(404);    
-} 
+}
     
 }
+public function data_pencarian(){
+echo '[{"name": "Afghanistan", "code": "AF"}, 
+  {"name": "Aland Islands", "code": "AX"}, 
+  {"name": "Albania", "code": "AL"}, 
+  {"name": "Algeria", "code": "DZ"}, 
+  {"name": "American Samoa", "code": "AS"}] ';
+}
+
 }

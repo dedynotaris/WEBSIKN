@@ -5,12 +5,15 @@
 <?php $static = $data_client->row_array(); ?>   
 <div class="container-fluid mt-2"></div>
 <div class="col ">
-<div class="card-header mb-1  text-center" >Data seluruh berkas <?php echo $static['nama_client'] ?></div>
+<div class="mt-2   text-center  ">
+    <h5 align="center " class="text-theme1">Data Berkas <?php echo  $static['nama_client'] ?><br><span class="fa-2x fas fa-list-alt"></span></h5>
+</div>
 
-<table style="width:100%;" id="data_berkas" class="table text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_berkas" class="table  text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
@@ -83,6 +86,7 @@ columns: [
 "orderable": false
 },
 {"data": "no_client"},
+{"data": "nama_client"},
 {"data": "nama_file"},
 {"data": "view"}
 
@@ -105,11 +109,11 @@ window.location.href="<?php echo base_url('User3/download_berkas/') ?>"+id_data_
 
 
 
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
 url:"<?php echo base_url('User2/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    

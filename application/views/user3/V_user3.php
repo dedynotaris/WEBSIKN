@@ -3,18 +3,18 @@
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/V_navbar_user3'); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 mb-2 text-center">
-Data perizinan yang perlu dikerjakan
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1">Data Perizinan masuk<br><span class="fa-2x far fa-share-square"></span></h5>
 </div>
 <div class="row ">
 <div class="col">    
 <?php if($data_tugas->num_rows() == 0){ ?>
-<h5 class="text-center">Data perizinan yang perlu dikerjakan belum tersedia <br>
-<span class="fa fa-sticky-note fa-3x"></span>
+<h5 class="text-center text-theme1">Data perizinan yang masuk belum tersedia <br>
 </h5>
 <?php } else{ ?> 
-<table class="table table-hover table-sm table-bordered text-center table-striped ">
+<table class="table mt-2 text-theme1 table-hover table-sm table-bordered text-center table-striped ">
 <tr>
+    <th>No</th>    
 <th>Nama client</th>
 <th>Nama Tugas</th>
 <th>Pemilik dokumen</th>
@@ -22,8 +22,9 @@ Data perizinan yang perlu dikerjakan
 <th>Tanggal penugasan</th>
 <th>Aksi</th>
 </tr>
-<?php foreach ($data_tugas->result_array() as    $data){  ?>
+<?php $no=1; foreach ($data_tugas->result_array() as    $data){  ?>
 <tr>
+<td><?php echo $no++ ?></td>    
 <td><?php echo $data['nama_client'] ?></td>
 <td id="nama_file<?php echo $data['no_berkas_perizinan']?>"><?php echo $data['nama_dokumen'] ?></td>
 <td><?php 
@@ -37,11 +38,11 @@ echo $pemilik['nama_client'];
 <td ><?php echo $data['nama_lengkap'] ?></td>
 <td><?php echo $data['tanggal_penugasan'] ?></td>
 <td>
-<select onchange="aksi_option('<?php echo $data['no_pekerjaan'] ?>','<?php echo $data['no_berkas_perizinan'] ?>');" class="form-control data_option<?php echo $data['no_berkas_perizinan'] ?>">
+<select onchange="aksi_option('<?php echo $data['no_pekerjaan'] ?>','<?php echo $data['no_berkas_perizinan'] ?>','<?php echo $data['no_pemilik'] ?>');" class="form-control data_option<?php echo $data['no_berkas_perizinan'] ?>">
 <option>-- Klik untuk lihat menu --</option>
 <option value="1">Terima Tugas</option>
 <option value="2">Tolak Tugas</option>
-<option value="3">Lihat Persyaratan</option>
+<option value="3">Dokumen Pemilik</option>
 </select>    
 </td>
 </tr>
@@ -136,11 +137,11 @@ overflow-y: visible;
 </body>
 
 <script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_pemilik){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_pemilik="+no_pemilik,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    
@@ -204,7 +205,7 @@ title: "Alasan penolakan belum diberikan"
 
 
 
-function aksi_option(no_pekerjaan,no_berkas_perizinan){
+function aksi_option(no_pekerjaan,no_berkas_perizinan,no_pemilik){
 var aksi_option = $(".data_option"+no_berkas_perizinan+" option:selected").val();
 if(aksi_option == 1){
 proses_perizinan(no_berkas_perizinan);   
@@ -216,7 +217,7 @@ $(".no_berkas_perizinan").val(no_berkas_perizinan);
 $(".no_pekerjaan").val(no_pekerjaan);
 
 }else if(aksi_option == 3){
-lihat_persyaratan(no_pekerjaan);    
+lihat_persyaratan(no_pekerjaan,no_pemilik);    
 }
 $(".data_option"+no_berkas_perizinan).val("-- Klik untuk lihat menu --");
 }
@@ -281,12 +282,12 @@ window.location.href = "<?php echo base_url('User3/halaman_proses'); ?>";
 });
 }
 
-function lihat_persyaratan(no_pekerjaan){
+function lihat_persyaratan(no_pekerjaan,no_pemilik){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User3/lihat_persyaratan') ?>",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_pemilik="+no_pemilik,
 success:function(data){
 $(".lihat_syarat").html(data);
 $('#modal_lihatpersyaratan').modal('show');

@@ -3,19 +3,18 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <div class="container-fluid">
-<div class="card-header mt-2 text-center">
-Pekejaan masuk
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1">Pekerjaan Masuk<br><span class="fa-2x far fa-share-square"></span></h5>
 </div>
 
-<div class="row">    
+<div class="row te">    
 <div class="col mt-2">
 <?php if($query->num_rows() == 0){ ?>    
-    <h5 class="text-center">Pekerjaan yang baru masuk belum tersedia<br>
-        <span class="fa fa-folder-open fa-3x"></span>
+    <h5 class="text-center text-theme1">Pekerjaan yang baru masuk belum tersedia<br>
     </h5>
     
 <?php } else { ?>
-<table class="table table-hover table-bordered table-sm text-center table-striped ">
+<table class="table text-theme1 table-hover table-bordered table-sm text-center table-striped ">
 <tr>
 <th>Nama client</th>
 <th>Jenis Pekerjaan</th>

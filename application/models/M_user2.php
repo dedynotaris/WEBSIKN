@@ -67,12 +67,14 @@ $this->datatables->select('id_data_berkas,'
 .'data_berkas.no_nama_dokumen as no_nama_dokumen,'
 .'nama_dokumen.nama_dokumen as nama_file,'
 .'data_berkas.pengupload as pengupload,'
+. 'data_client.nama_client as nama_client'
 );
 $this->datatables->from('data_berkas');
 $this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
 $this->datatables->group_by('data_berkas.no_nama_dokumen');
 $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
-$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_data_perekaman('$1','$2'); >Lihat data <i class='fa fa-eye'></i></button>",'no_nama_dokumen,no_pekerjaan');
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_data_perekaman('$1','$2','$3'); >Lihat data <i class='fa fa-eye'></i></button>",'no_nama_dokumen,no_pekerjaan,no_client');
 return $this->datatables->generate();
 }
 

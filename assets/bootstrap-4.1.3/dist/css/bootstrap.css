@@ -2485,7 +2485,7 @@ fieldset:disabled a.btn {
 
 .btn-success {
   color: #fff;
-  background-color:#DAA520;
+  background-color:#2F4F4F;
   border-color: #DAA520;
 }
 
@@ -2497,7 +2497,7 @@ fieldset:disabled a.btn {
 
 .btn-success:hover {
   color: #fff;
-  background-color: #DAA520;
+  background-color:  #116466 !important;;
   border-color: #DAA520;
 }
 
@@ -10063,4 +10063,8 @@ animation: Gradient 15s ease infinite;
 .link {
     color:#fff;
   text-decoration:none; 
+}
+
+.text-theme1{
+color:#2F4F4F;    
 }

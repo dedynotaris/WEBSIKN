@@ -29,9 +29,10 @@
 <script src="<?php echo base_url() ?>assets/bootstrap-4.1.3/js/dist/util.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/toast/build/toastr.min.js" type="text/javascript"></script>
 <link href="<?php echo base_url() ?>assets/toast/build/toastr.min.css" rel="stylesheet" type="text/css"/>
-<script src="<?php echo base_url() ?>assets/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script src="<?php echo base_url() ?>assets/jquery/list.min.js" type="text/javascript"></script>
+<link href="<?php echo base_url() ?>assets/EasyAutocomplete-1.3.5/easy-autocomplete.css" rel="stylesheet" type="text/css"/>
+<script src="<?php echo base_url() ?>assets/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js" type="text/javascript"></script>
 </head> 
+
 <script type="text/javascript">
 jQuery( document ).ajaxStart(function() {
 NProgress.start();
@@ -59,4 +60,3 @@ console.log(data);
 
 });
 </script>
-

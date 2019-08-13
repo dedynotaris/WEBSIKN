@@ -445,8 +445,8 @@ public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
 
-$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_pemilik']);
-$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_pemilik']);
+$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_pemilik']);
+$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_pemilik']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>

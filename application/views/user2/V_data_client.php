@@ -2,14 +2,14 @@
 <?php  $this->load->view('umum/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
-<div class="container-fluid">
+<div class="container-fluid  text-theme1"> 
 <div class="card p-2 mt-2">
 
 <div class="row">
 <div class="col">
 <h5 align="center"><i class="fa fa-3x fa-user-tie"></i><br>Data client yang telah anda kerjakan</h5>
 
-<table style="width:100%;" id="data_client" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_client" class="table  text-theme1 table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>

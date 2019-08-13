@@ -568,34 +568,6 @@ var inputQuantity = [];
 
 }
 
-function lanjutkan_proses_perizinan(no_pekerjaan){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/lanjutkan_proses_perizinan') ?>",
-success:function(data){
-refresh();
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function() {
-window.location.href = "<?php echo base_url('User2/pekerjaan_proses/'); ?>";
-});
-
-}
-});
-}
 
 function download(id_data_berkas){
 window.location.href="<?php echo base_url('User2/download_berkas/') ?>"+id_data_berkas;
@@ -704,6 +676,35 @@ $(".simpan_client").removeAttr("disabled", true);
 return false; 
 }
 });
+function update_selesaikan_pekerjaan(no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/update_selesaikan_pekerjaan') ?>",
+success:function(data){
+refresh();
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 2000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+}).then(function() {
+window.location.href = "<?php echo base_url('User2/pekerjaan_proses/'); ?>";
+});
+
+}
+});
+}
+
 
 </script>
 

@@ -3,12 +3,11 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user3'); ?>
 <div class="container-fluid">
-<div class="card-header mt-2 mb-2 text-center">
-Data perizinan yang selesai dikerjakan
-</div>
-<div class="row">
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1">Perizinan Selesai<br><span class="fa-2x fab fa-font-awesome-flag"></span></h5>
+</div><div class="row">
     <div class="col">
-<table style="width:100%;" id="data_selesai" class="table table-striped table-condensed table-xs table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_selesai" class="table text-theme1 table-striped table-condensed table-xs table-bordered  table-hover table-sm"><thead>
 <th align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Jenis pekerjaan</th>

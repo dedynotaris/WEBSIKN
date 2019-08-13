@@ -97,7 +97,7 @@ $query = $this->db->get();
 return $query;    
 }
 
-public function data_perekaman($no_nama_dokumen,$no_pekerjaan,$no_pemilik){
+public function data_perekaman($no_nama_dokumen,$no_pemilik){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas");
@@ -112,7 +112,7 @@ $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;
 }
-public function data_perekaman2($no_nama_dokumen,$no_pekerjaan,$no_pemilik){
+public function data_perekaman2($no_nama_dokumen,$no_pemilik){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
