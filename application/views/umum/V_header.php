@@ -60,3 +60,58 @@ console.log(data);
 
 });
 </script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+    
+var options = {
+
+  url: function(kata_kunci) {
+    return "<?php echo base_url('User2/data_pencarian') ?>";
+  },
+          list: {
+		onChooseEvent: function(value) {
+    var no_client = $("#pencarian").getSelectedItemData().no_client;
+    
+   window.location.href="<?php echo base_url('User2/cari_file/') ?>"+btoa(no_client);
+    }	
+	},
+   template: {
+    type: "custom",
+    method: function(value, item) {
+      return item.nama_meta+" : "+item.value_meta+"<br>"+value;
+    }
+  },
+
+  getValue: function(element) {
+    return element.nama_client;
+    $("#no_client").val(element.no_client);
+    },
+          
+  ajaxSettings: {
+    dataType: "json",
+    method: "POST",
+    data: {
+      token   : token
+    }
+  },
+
+  preparePostData: function(data) {
+    data.kata_kunci = $("#pencarian").val();
+    return data;
+  }
+
+};
+$("#pencarian").easyAutocomplete(options);    
+
+
+
+
+/*$("#pencarian").on("change",function(){
+
+});*/
+
+});    
+</script>

@@ -9,6 +9,7 @@
 
 .easy-autocomplete {
   position: relative;
+  width: 85%;
 }
 .easy-autocomplete input {
   display: block;
@@ -252,10 +253,11 @@
   left: 0;
   position: absolute;
   width: 100%;
-  z-index: 2;
+  z-index: 9999;
 }
 .easy-autocomplete-container ul {
   background: none repeat scroll 0 0 #ffffff;
+  color: #2F4F4F ;
   border-top: 1px dotted #ccc;
   display: none;
   margin-top: 0;

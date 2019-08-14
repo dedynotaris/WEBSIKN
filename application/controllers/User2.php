@@ -526,16 +526,14 @@ redirect(404);
 }
 
 public function cari_file(){
-if($this->input->post()){
-$input = $this->input->post();
-$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input['cari_dokumen']);
+$no_client = base64_decode($this->uri->segment(3));
 
-$this->load->view('umum/V_header');
-$this->load->view('user2/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran]);
+//$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input['cari_dokumen']);
 
-}else{
-redirect(404);    
-}    
+echo $no_client;
+//$this->load->view('umum/V_header');
+//$this->load->view('user2/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran]);
+
 }
 
 
@@ -1224,11 +1222,33 @@ redirect(404);
     
 }
 public function data_pencarian(){
-echo '[{"name": "Afghanistan", "code": "AF"}, 
-  {"name": "Aland Islands", "code": "AX"}, 
-  {"name": "Albania", "code": "AL"}, 
-  {"name": "Algeria", "code": "DZ"}, 
-  {"name": "American Samoa", "code": "AS"}] ';
+if($this->input->post()){
+$input = $this->input->post();
+$data  = $this->M_user2->cari_lampiran($input['kata_kunci']);
+if($data->num_rows() == 0){
+
+$json[] = array(
+'nama_meta'        =>"notfound",
+'value_meta'       =>"notfound",
+'nama_client'      =>"not_found"
+);
+    
+}else{
+foreach ($data->result_array()as $d){
+$json[] = array(
+'nama_meta'        =>$d['nama_meta'],
+'value_meta'       =>$d['value_meta'],
+'nama_client'      =>$d['nama_client'],
+'no_client'        =>$d['no_client']
+    
+);
+}
+}
+echo json_encode($json);
+    
+}else{
+redirect(404);    
+} 
 }
 
 }
