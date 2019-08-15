@@ -358,8 +358,8 @@ echo "</div>
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_client']);
-$query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan'],$input['no_client']);
+$query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
+$query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
@@ -528,7 +528,7 @@ redirect(404);
 public function cari_file(){
 $no_client = base64_decode($this->uri->segment(3));
 
-$data_file = $this->M_user2->data_berkas_client_where($no_client);
+$data_file  = $this->M_user2->data_berkas_client_where($no_client);
 
 $this->load->view('umum/V_header');
 $this->load->view('user2/V_pencarian',['data'=>$data_file]);
@@ -622,9 +622,10 @@ echo print_r($error);
 
 $data = array(
 'nama_file'    =>$this->upload->data('file_name'),
-'nama_berkas'  =>$input['nama_file'],
+'nama_berkas'  =>$input['jenis']." " .$data_pekerjaan['nama_client']." ".$data_pekerjaan['nama_jenis'],
 'no_pekerjaan' =>$data_pekerjaan['no_pekerjaan'],
 'waktu'        =>date('Y/m/d'),
+'tanggal_akta' =>$input['tanggal_akta'],   
 'jenis'        =>$input['jenis'],    
 );
 
@@ -1223,31 +1224,61 @@ redirect(404);
 public function data_pencarian(){
 if($this->input->post()){
 $input = $this->input->post();
-$data  = $this->M_user2->cari_lampiran($input['kata_kunci']);
-if($data->num_rows() == 0){
+$data_dokumen         = $this->M_user2->pencarian_data_dokumen($input['kata_kunci']);
+$data_client          = $this->M_user2->pencarian_data_client($input['kata_kunci']);
+$dokumen_utama        = $this->M_user2->pencarian_data_dokumen_utama($input['kata_kunci']);
 
-$json[] = array(
-'nama_meta'        =>"notfound",
-'value_meta'       =>"notfound",
-'nama_client'      =>"not_found"
+if($data_dokumen->num_rows() == 0){
+$json_data_dokumen[] = array(
+"Tidak ditemukan data dokumen"    
 );
     
+}else{   
+foreach ($data_dokumen->result_array()as $d){
+$json_data_dokumen[] = array(
+$d['nama_meta']." : ".$d['value_meta']
+);
+}
+}
+
+if($data_client->num_rows() == 0){
+$json_data_client[] = array(
+"Tidak ditemukan data client"
+);    
 }else{
-foreach ($data->result_array()as $d){
-$json[] = array(
-'nama_meta'        =>$d['nama_meta'],
-'value_meta'       =>$d['value_meta'],
-'nama_client'      =>$d['nama_client'],
-'no_client'        =>$d['no_client']
-    
+foreach ($data_client->result_array()as $data_client){
+$json_data_client[] = array(
+$data_client['nama_client']    
 );
 }
 }
-echo json_encode($json);
-    
+
+if($dokumen_utama->num_rows() == 0){
+$data_dokumen_utama[] = array(
+"Tidak ditemukan dokumen utama"
+);    
+}else{
+foreach ($dokumen_utama->result_array()as $dokut){
+$data_dokumen_utama[] = array(
+$dokut['nama_berkas']." ".$dokut['tanggal_akta']    
+);
+}
+
+}
+
+$data = array(
+ 'data_dokumen'         => $json_data_dokumen,
+ 'data_client'          => $json_data_client,  
+ 'data_dokumen_utama'   => $data_dokumen_utama   
+);
+
+
+echo json_encode($data);
+
 }else{
 redirect(404);    
-} 
+}
+
 }
 
 }

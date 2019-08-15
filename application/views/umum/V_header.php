@@ -64,33 +64,13 @@ console.log(data);
 
 <script type="text/javascript">
 $(document).ready(function(){
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-    
-var options = {
-
-  url: function(kata_kunci) {
+ var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+  
+ var options = {
+    url: function(kata_kunci) {
     return "<?php echo base_url('User2/data_pencarian') ?>";
   },
-          list: {
-		onChooseEvent: function(value) {
-    var no_client = $("#pencarian").getSelectedItemData().no_client;
-    
-   window.location.href="<?php echo base_url('User2/cari_file/') ?>"+btoa(no_client);
-    }	
-	},
-   template: {
-    type: "custom",
-    method: function(value, item) {
-      return item.nama_meta+" : "+item.value_meta+"<br>"+value;
-    }
-  },
-
-  getValue: function(element) {
-    return element.nama_client;
-    $("#no_client").val(element.no_client);
-    },
-          
-  ajaxSettings: {
+   ajaxSettings: {
     dataType: "json",
     method: "POST",
     data: {
@@ -101,17 +81,42 @@ var options = {
   preparePostData: function(data) {
     data.kata_kunci = $("#pencarian").val();
     return data;
-  }
+  },
+          list: {
+		onChooseEvent: function(value) {
+    var kata_kunci = $("#pencarian").val();
+    
+    alert(kata_kunci);
+   //window.location.href="<?php echo base_url('User2/cari_file/') ?>"+btoa(no_client);
+    },showAnimation: {
+			type: "fade", //normal|slide|fade
+			time: 400,
+			callback: function() {}
+		},
+
+		hideAnimation: {
+			type: "slide", //normal|slide|fade
+			time: 400,
+			callback: function() {}
+		}	
+	},
+    categories: [
+        {  
+            listLocation: "data_dokumen",
+            header: "<div>Hasil Pencarian Data Dokumen Penunjang</div>"
+        },{  
+            listLocation: "data_dokumen_utama",
+            header: "<div>Hasil Pencarian Data Dokumen Utama</div>"
+        }, 
+        {  
+            listLocation: "data_client",
+            header: "<div > Hasil Pencarian Data Client</div>"
+        }
+    ]
 
 };
-$("#pencarian").easyAutocomplete(options);    
 
-
-
-
-/*$("#pencarian").on("change",function(){
-
-});*/
-
+$("#pencarian").easyAutocomplete(options);
+ 
 });    
 </script>

@@ -1,15 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-theme border-bottom">
 <div class="row col-md-12 align-items-center">
-<div class="col-md-2">
+<div class="col-xs-2">
 <button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> Menu</button>
-<button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
 </div>
         
-<div class="col-md-7 mx-auto ">
+<div class="col mx-auto ">
 <div class="input-group">
-<input type="text" id="pencarian" class="form-control" placeholder="Cari Dokumen ..." aria-label="Recipient's username" aria-describedby="button-addon2">
+<input type="text" id="pencarian" class="form-control" placeholder="Cari Dokumen, Client, dan Akta" aria-label="Recipient's username" aria-describedby="button-addon2">
   <div class="input-group-append">
       <button class="btn btn-success" type="button" id="button-addon2"><span class="fa fa-search"</button>
   </div>
@@ -18,7 +15,9 @@
 
 </div>
 
-<div class="col-md-3 float-right">
+<div class="col-xs-2 float-right"><button class="navbar-toggler float-md-right float-xs-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
 <li class="nav-item active">

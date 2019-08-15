@@ -271,25 +271,7 @@ $query       = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nam
 return $query; 
 }
 
-public function cari_lampiran($input){
-$this->db->select('data_meta_berkas.nama_meta,'
-        . 'data_meta_berkas.value_meta,'
-        . 'data_client.nama_client,'
-        . 'data_client.no_client');
-$this->db->from('data_meta_berkas');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
-$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
-$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
-$this->db->group_by('data_meta_berkas.no_berkas');
 
-$this->db->like('data_meta_berkas.value_meta',$input);
-$this->db->or_like('data_client.nama_client',$input);
-$this->db->or_like('data_meta_berkas.nama_meta',$input);
-
-$query = $this->db->get();
-return $query;
-}
 
 
 public function data_persyaratan($no_pekerjaan){
@@ -337,8 +319,11 @@ return $query;
 public function data_pekerjaan($no_pekerjaan){
 $this->db->select('data_client.nama_folder,'
         . 'data_client.no_client,'
-        . 'data_pekerjaan.no_pekerjaan');
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_client.nama_client');
 $this->db->from('data_pekerjaan');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
 $query = $this->db->get();  
@@ -411,7 +396,7 @@ $query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_doku
 return $query;
 }
 
-public function data_perekaman($no_nama_dokumen,$no_pekerjaan,$no_client){
+public function data_perekaman($no_nama_dokumen,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas");
@@ -419,17 +404,17 @@ $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
-$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
 $this->db->where('data_berkas.no_client',$no_client);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
 return $query;
 }
-public function data_perekaman2($no_nama_dokumen,$no_pekerjaan,$no_client){
+public function data_perekaman2($no_nama_dokumen,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
                 ."data_berkas.pengupload,"
+                ."data_berkas.tanggal_upload,"
                 . "data_berkas.id_data_berkas,"
                 . "data_meta_berkas.no_nama_dokumen,"
                  . "data_meta_berkas.no_pekerjaan,"
@@ -437,7 +422,6 @@ $this->db->select("data_meta_berkas.nama_meta,"
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');
-$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
 $this->db->where('data_berkas.no_client',$no_client);
 $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
 $query = $this->db->get();  
@@ -522,10 +506,52 @@ $this->db->select('*');
 $this->db->from('data_berkas');
 $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->group_by('data_berkas.no_nama_dokumen');
 $this->db->where('data_berkas.no_client',$no_client);
 $query= $this->db->get();    
 return $query;    
 }
 
+
+public function pencarian_data_client($input){
+$this->db->select('data_client.nama_client,'
+        . 'data_client.no_client');
+$this->db->from('data_client');
+$this->db->like('data_client.nama_client',$input);
+$query = $this->db->get();
+return $query;
+}
+
+public function pencarian_data_dokumen($input){
+$this->db->select('data_meta_berkas.nama_meta,'
+        . 'data_meta_berkas.value_meta,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client');
+$this->db->from('data_meta_berkas');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
+$this->db->group_by('data_meta_berkas.no_berkas');
+
+$this->db->like('data_meta_berkas.value_meta',$input);
+$this->db->or_like('data_meta_berkas.nama_meta',$input);
+
+$query = $this->db->get();
+return $query;
+}
+
+public function pencarian_data_dokumen_utama($input){
+$this->db->select('data_dokumen_utama.nama_berkas,'
+        . 'data_dokumen_utama.tanggal_akta');
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+
+$this->db->like('data_dokumen_utama.nama_berkas',$input);
+
+$query = $this->db->get();
+return $query;
+}
 }
 ?>

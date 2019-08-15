@@ -1,5 +1,5 @@
    
-<div class="container mt-2">
+<div class="container mt-2 text-theme1">
 <div class="row">
 <div class="col">
 <div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-right "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>

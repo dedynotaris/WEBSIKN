@@ -9,7 +9,7 @@
 
 .easy-autocomplete {
   position: relative;
-  width: 85%;
+  width: 90%;
 }
 .easy-autocomplete input {
   display: block;
@@ -298,7 +298,10 @@
 }
 .easy-autocomplete-container ul .eac-category {
   font-color: #aaa;
+  background-color: #116466 !important;
+  color:#fff;
   font-style: italic;
+  text-align: center;
 }
 
 .eac-description .eac-item span {

@@ -24,7 +24,40 @@
 
     <div id="collapse<?php echo $data_berkas['id_data_berkas'] ?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+         <?php 
+         
+$query     = $this->M_user2->data_perekaman($data_berkas['no_nama_dokumen'],$data_berkas['no_client']);
+         $query2     = $this->M_user2->data_perekaman2($data_berkas['no_nama_dokumen'],$data_berkas['no_client']);
+        
+         echo "<div class=''>";
+echo "<div class='row mb-1'>";
+foreach ($query->result_array() as $d){
+echo "<div class='col border '>".$d['nama_meta']."</div>";
+}
+echo "<div class='col border '>Tanggal Input</div>";
+echo "<div class='col-md-2  border text-center'>Aksi</div>";
+echo "</div>";
+
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<div class='row mb-3'>";
+
+foreach ($b->result_array() as $i){
+echo "<div class='col border p-2'>".$i['value_meta']."</div>";    
+}
+echo "<div class='col border p-2'>".$d['tanggal_upload']."</div>";    
+
+echo '<div class="col-md-2 p-2 border text-center">'
+.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')">Download berkas <span class="fa fa-download"></span></button>';
+echo '</div>';
+echo "</div>";
+    
+    
+}
+
+
+echo"</div>";  
+         ?>
       </div>
     </div>
   </div>

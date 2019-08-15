@@ -154,9 +154,10 @@ $("#id_jenis_pekerjaan,#id_jenis_akta_pekerjaan").val(ui.item.no_jenis_pekerjaan
 });
 
 $(function() {
-$("input[name='target_kelar']").datepicker({ minDate:0,dateFormat: 'yy/mm/dd'
+$("input[name='target_kelar']").datepicker({
+  minDate:0,
+  dateFormat: 'yy/mm/dd',
 });
-
 });
 </script>
 </div>
