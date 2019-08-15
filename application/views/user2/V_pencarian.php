@@ -2,72 +2,43 @@
 <?php  $this->load->view('umum/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
-<div class="container-fluid mt-2">
-		
+<div class="container-fluid mt-2 text-theme1">   
+ <div id="accordion">
+ 
+<?php foreach ($data->result_array() as $data_berkas){ ?>
+     <div class="card">
+    <div class="card-header" id="<?php echo $data_berkas['id_data_berkas'] ?>">
+        <div class="row">
+            <div class="col">
+              <?php echo $data_berkas['nama_dokumen'] ?>  
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-success btn-sm" data-toggle="collapse" data-target="#collapse<?php echo $data_berkas['id_data_berkas'] ?>" aria-expanded="true" aria-controls="collapseOne">
+                    Lihat Data <span class="fa fa-arrow-down"></span>
+        </button>
+            </div>
+        </div>
+        
+   
+    </div>
 
-<table class="table table-sm table-bordered table-striped table-condensed">
-        <tr>
-            <td>No</td>  
-            <td>Jenis Lampiran</td>  
-            <td>Aksi</td>  
-        </tr>   
-<?php $h=1; foreach ($dalam_bentuk_lampiran->result_array() as $lampiran){ ?>
-        <tr>
-            <td> <?php echo $h++ ?></td>
-            <td><?php echo str_replace("_"," ",$lampiran['nama_meta']) ?> : <?php echo $lampiran['value_meta'] ?></td>
-            <td class="text-center">
-                <button onclick="download_berkas('<?php echo $lampiran['id_data_berkas'] ?>')" class="btn btn-sm btn-success">Download Lampiran <span class="fa fa-download"></span></button> 
-            
-            </td> 
-             
-        </tr>
-<?php } ?>
-</table>
-    
-</div>
-</div>
-    
-    
-    
-    
-<script type="text/javascript">
-function download_berkas(id_data_berkas){
-window.location.href="<?php echo base_url('User2/download_berkas/') ?>"+id_data_berkas;
-}
-
-function download_berkas_informasi(id_data_berkas_informasi){
-window.location.href="<?php echo base_url('User2/download_berkas_informasi/') ?>"+id_data_berkas_informasi;
-}
-
-function lihat_informasi(id_data_berkas_informasi){
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
-
-$.ajax({
-type:"post",
-url:"<?php echo base_url('User2/lihat_informasi')?>",
-data:"token="+token+"&id_data_informasi_pekerjaan="+id_data_berkas_informasi,
-success:function(data){
-$('#modal_informasi').modal('show');
-$(".data_informasi").html(data);
-
-}
-});    
-}
-
-</script> 
-
-</div>
-<div class="modal fade" id="modal_informasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-body data_informasi">
-       
+    <div id="collapse<?php echo $data_berkas['id_data_berkas'] ?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
       </div>
-      
     </div>
   </div>
+<?php } ?>
+    
+
+ 
 </div>
+    
+</div>
+</div>
+    
+    
+    
+    
 
-
-</body>
 </html>

@@ -528,11 +528,10 @@ redirect(404);
 public function cari_file(){
 $no_client = base64_decode($this->uri->segment(3));
 
-//$dalam_bentuk_lampiran  = $this->M_user2->cari_lampiran($input['cari_dokumen']);
+$data_file = $this->M_user2->data_berkas_client_where($no_client);
 
-echo $no_client;
-//$this->load->view('umum/V_header');
-//$this->load->view('user2/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran]);
+$this->load->view('umum/V_header');
+$this->load->view('user2/V_pencarian',['data'=>$data_file]);
 
 }
 

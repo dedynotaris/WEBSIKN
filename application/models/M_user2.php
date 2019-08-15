@@ -516,5 +516,16 @@ $query= $this->db->get();
 return $query;
 
 }
+
+public function data_berkas_client_where($no_client){
+$this->db->select('*');    
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.no_client',$no_client);
+$query= $this->db->get();    
+return $query;    
+}
+
 }
 ?>
