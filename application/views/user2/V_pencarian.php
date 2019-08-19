@@ -2,76 +2,40 @@
 <?php  $this->load->view('umum/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
-<div class="container-fluid mt-2 text-theme1">   
- <div id="accordion">
- 
-<?php foreach ($data->result_array() as $data_berkas){ ?>
-     <div class="card">
-    <div class="card-header" id="<?php echo $data_berkas['id_data_berkas'] ?>">
-        <div class="row">
-            <div class="col">
-              <?php echo $data_berkas['nama_dokumen'] ?>  
-            </div>
-            <div class="col text-right">
-                <button class="btn btn-success btn-sm" data-toggle="collapse" data-target="#collapse<?php echo $data_berkas['id_data_berkas'] ?>" aria-expanded="true" aria-controls="collapseOne">
-                    Lihat Data <span class="fa fa-arrow-down"></span>
-        </button>
-            </div>
-        </div>
-        
-   
-    </div>
+<div class="container-fluid mt-2 text-theme1">
+<ul class="nav nav-tabs">
+<li class="nav-item">
+<a class="nav-link active" data-toggle="tab" href="#dokumen">Hasil Pencarian Dokumen <?php echo $data_dokumen->num_rows(); ?> </a>
+</li>
 
-    <div id="collapse<?php echo $data_berkas['id_data_berkas'] ?>" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-      <div class="card-body">
-         <?php 
-         
-$query     = $this->M_user2->data_perekaman($data_berkas['no_nama_dokumen'],$data_berkas['no_client']);
-         $query2     = $this->M_user2->data_perekaman2($data_berkas['no_nama_dokumen'],$data_berkas['no_client']);
-        
-         echo "<div class=''>";
-echo "<div class='row mb-1'>";
-foreach ($query->result_array() as $d){
-echo "<div class='col border '>".$d['nama_meta']."</div>";
-}
-echo "<div class='col border '>Tanggal Input</div>";
-echo "<div class='col-md-2  border text-center'>Aksi</div>";
-echo "</div>";
+<li class="nav-item ml-1">
+<a class="nav-link" data-toggle="tab" href="#utama">Hasil Pencarian Dokumen Utama  <?php echo $data_dokumen_utama->num_rows(); ?>    </a>
+</li>
+<li class="nav-item ml-1">
+<a class="nav-link" data-toggle="tab" href="#client">Hasil Pencarian Client <?php echo $data_client->num_rows(); ?>    </a>
+</li>
 
-foreach ($query2->result_array() as $d){
-$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
-echo "<div class='row mb-3'>";
+</ul>    
 
-foreach ($b->result_array() as $i){
-echo "<div class='col border p-2'>".$i['value_meta']."</div>";    
-}
-echo "<div class='col border p-2'>".$d['tanggal_upload']."</div>";    
-
-echo '<div class="col-md-2 p-2 border text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')">Download berkas <span class="fa fa-download"></span></button>';
-echo '</div>';
-echo "</div>";
+<div class="tab-content">
+<div class="tab-pane  active" id="dokumen">
+<?php echo print_r($data_dokumen->result_array()) ?>    
     
-    
-}
-
-
-echo"</div>";  
-         ?>
-      </div>
-    </div>
-  </div>
-<?php } ?>
-    
-
- 
 </div>
+
+<div class="tab-pane" id="utama">
+<?php echo print_r($data_dokumen_utama->result_array()) ?>    
+</div>
+
+    
+<div class="tab-pane" id="client">
+<?php echo print_r($data_client->result_array()) ?>    
+</div>
+
+</div>    
+    
+
     
 </div>
 </div>
-    
-    
-    
-    
-
 </html>

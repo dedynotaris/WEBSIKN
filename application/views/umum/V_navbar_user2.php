@@ -1,18 +1,23 @@
+<style>
+form {
+    display: contents;
+}    
+</style>    
 <nav class="navbar navbar-expand-lg navbar-light bg-theme border-bottom">
 <div class="row col-md-12 align-items-center">
 <div class="col-xs-2">
 <button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> Menu</button>
 </div>
-        
 <div class="col mx-auto ">
 <div class="input-group">
-<input type="text" id="pencarian" class="form-control" placeholder="Cari Dokumen, Client, dan Akta" aria-label="Recipient's username" aria-describedby="button-addon2">
+    <form id="button_cari" action="<?php echo base_url($this->uri->segment(1)."/cari_file/") ?>" method="post" >       
+        <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
+<input type="text" name="kata_kunci" id="pencarian" class="form-control" placeholder="Cari Dokumen, Client, dan Akta" aria-label="Recipient's username" aria-describedby="button-addon2">
   <div class="input-group-append">
-      <button class="btn btn-success" type="button" id="button-addon2"><span class="fa fa-search"</button>
-  </div>
+      <button   class="btn btn-success" type="submit" ><span class="fa fa-search"</button>
+  </form>
 </div>
-
-
+</div>
 </div>
 
 <div class="col-xs-2 float-right"><button class="navbar-toggler float-md-right float-xs-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

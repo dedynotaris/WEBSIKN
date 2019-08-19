@@ -83,12 +83,10 @@ $(document).ready(function(){
     return data;
   },
           list: {
-		onChooseEvent: function(value) {
+		onChooseEvent: function(value,data) {
     var kata_kunci = $("#pencarian").val();
-    
-    alert(kata_kunci);
-   //window.location.href="<?php echo base_url('User2/cari_file/') ?>"+btoa(no_client);
-    },showAnimation: {
+    $('#button_cari').submit();
+},showAnimation: {
 			type: "fade", //normal|slide|fade
 			time: 400,
 			callback: function() {}

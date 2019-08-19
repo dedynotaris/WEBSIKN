@@ -526,12 +526,17 @@ redirect(404);
 }
 
 public function cari_file(){
-$no_client = base64_decode($this->uri->segment(3));
+$kata_kunci = $this->input->post('kata_kunci');
 
-$data_file  = $this->M_user2->data_berkas_client_where($no_client);
+
+$data_dokumen           = $this->M_user2->pencarian_data_dokumen($kata_kunci);
+
+$data_dokumen_utama     = $this->M_user2->pencarian_data_dokumen_utama($kata_kunci);
+
+$data_client            = $this->M_user2->pencarian_data_client($kata_kunci);
 
 $this->load->view('umum/V_header');
-$this->load->view('user2/V_pencarian',['data'=>$data_file]);
+$this->load->view('user2/V_pencarian',['data_dokumen'=>$data_dokumen,'data_dokumen_utama'=>$data_dokumen_utama,'data_client'=>$data_client]);
 
 }
 
@@ -1235,8 +1240,8 @@ $json_data_dokumen[] = array(
     
 }else{   
 foreach ($data_dokumen->result_array()as $d){
-$json_data_dokumen[] = array(
-$d['nama_meta']." : ".$d['value_meta']
+$json_data_dokumen[] = array(    
+$d['value_meta']
 );
 }
 }
@@ -1260,7 +1265,7 @@ $data_dokumen_utama[] = array(
 }else{
 foreach ($dokumen_utama->result_array()as $dokut){
 $data_dokumen_utama[] = array(
-$dokut['nama_berkas']." ".$dokut['tanggal_akta']    
+$dokut['nama_berkas']    
 );
 }
 
