@@ -68,7 +68,7 @@ $(document).ready(function(){
   
  var options = {
     url: function(kata_kunci) {
-    return "<?php echo base_url('User2/data_pencarian') ?>";
+    return "<?php echo base_url($this->uri->segment(1).'/data_pencarian') ?>";
   },
    ajaxSettings: {
     dataType: "json",

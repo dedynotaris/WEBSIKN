@@ -3,24 +3,25 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_data_lama'); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 mb-2 text-center ">
-<h5 align="center">Tentukan Nama Client Dan Jenis Pekerjaan</h5>
+    <div class="col-md-6 mx-auto">
+    <div class="mt-4 card mx-auto ">    
+    
+<div class=" card-header ">
+<h5 align="center " class="text-theme1">Buat Berkas Arsip<br><span class="fa-2x fas fa-pencil-alt"></span></h5>
 </div>
+<div class="card-body">    
 <form  id="file_lama" method="post" action="<?php echo base_url('Data_lama/simpan_pekerjaan_arsip') ?>">
-
-<div class="row">
-<div class="col-md-6 mx-auto">
 <label>Nama client</label>
 <div class="input-group ">
-    <input type="text" name="nama_client" class="form-control nama_client required" accept="text/plain" aria-describedby="basic-addon2">
+    <input type="text" placeholder="nama client" name="nama_client" class="form-control form-control-sm nama_client required" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
-<button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+<button class="btn btn-sm btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
 </div>
-<input type="hidden" name="no_client" readonly="" class="form-control no_client required" accept="text/plain">
+<input type="hidden" name="no_client" readonly="" class="form-control form-control-sm no_client required" accept="text/plain">
 <label>Nama Notaris</label>
-<select class="form-control nama_notaris required" accept="text/plain">
-    <option></option>    
+<select class="form-control form-control-sm nama_notaris required" accept="text/plain">
+    <option>--- Pilih Nama Notaris ---</option>    
 <?php 
 foreach ($nama_notaris->result_array() as $nama){
 echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";    
@@ -30,15 +31,21 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 </select>
 
 <label>Nama Pekerjaan</label>
-<input type="text" name="jenis_pekerjaan" class="form-control jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
-<input type="hidden" name="no_jenis_pekerjaan" class="form-control no_jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
-<label>&nbsp;</label>
-<button type="submit" class="btn btn-dark btn-md btn-block">Simpan File <span class="fa fa-save"></span></button>
+<input type="text" placeholder="Nama Pekerjaan" name="jenis_pekerjaan" class="form-control form-control-sm jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
+<input type="hidden" name="no_jenis_pekerjaan" class="form-control form-control-sm no_jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
 </div>
-</div>    
+        <div class="card-footer">
+            <button type="submit" class="btn btn-dark btn-sm btn-md btn-block">Buat Arsip <span class="fa fa-save"></span></button>
+
+        </div>
+    
+    </div>
+        
 
 </form>
 </div>
+</div>    
+</div>    
 </div>
 
 <div class="modal fade" id="modal_tambah_client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -48,13 +55,13 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 <form  id="fileForm" method="post" action="<?php echo base_url('Data_lama/create_client') ?>">
     
 <label>Contact Person</label>
-<input type="text" name="contact_person" class="form-control contact_person required" accept="text/plain">
+<input type="text" name="contact_person" class="form-control form-control-sm contact_person required" accept="text/plain">
 
 <label>No Telepon</label>
-<input type="number" name="no_tlp"  class="form-control contact_number required" accept="text/plain">
+<input type="number" name="no_tlp"  class="form-control form-control-sm contact_number required" accept="text/plain">
 
 <label>Pilih Jenis client</label>
-<select name="jenis" id="pilih_jenis" class="form-control  required" accept="text/plain">
+<select name="jenis" id="pilih_jenis" class="form-control form-control-sm  required" accept="text/plain">
 <option ></option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
@@ -63,13 +70,13 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" name="badan_hukum" id="badan_hukum" class="form-control required"  accept="text/plain">
+<input type="text" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
 </div>
 
 <div id="form_alamat_hukum">
 <label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
 <label  id="label_alamat_perorangan">Alamat Perorangan</label>
-<textarea rows="4" id="alamat_badan_hukum" class="form-control required" required="" accept="text/plain"></textarea>
+<textarea rows="4" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
 
     

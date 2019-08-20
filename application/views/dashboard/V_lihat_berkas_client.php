@@ -12,7 +12,6 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >jenis berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >pengupload</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
@@ -67,7 +66,6 @@ columns: [
 },
 {"data": "no_client"},
 {"data": "nama_file"},
-{"data": "status_berkas"},
 {"data": "pengupload"},
 {"data": "view"}
 
@@ -84,9 +82,6 @@ $('td:eq(0)', row).html(index);
 });
 });
 
-function download_berkas(id_data_berkas){
-window.location.href="<?php echo base_url('User3/download_berkas/') ?>"+id_data_berkas;
-}
 
 </script>    
     

@@ -174,7 +174,78 @@ redirect(404);
 }
 
 }
+public function cari_file(){
+$kata_kunci = $this->input->post('kata_kunci');
 
 
+$data_dokumen           = $this->M_resepsionis->pencarian_data_dokumen($kata_kunci);
+
+$data_dokumen_utama     = $this->M_resepsionis->pencarian_data_dokumen_utama($kata_kunci);
+
+$data_client            = $this->M_resepsionis->pencarian_data_client($kata_kunci);
+
+$this->load->view('umum/V_header');
+$this->load->view('resepsionis/V_pencarian',['data_dokumen'=>$data_dokumen,'data_dokumen_utama'=>$data_dokumen_utama,'data_client'=>$data_client]);
+
+}
+public function data_pencarian(){
+if($this->input->post()){
+$input = $this->input->post();
+$data_dokumen         = $this->M_resepsionis->pencarian_data_dokumen($input['kata_kunci']);
+$data_client          = $this->M_resepsionis->pencarian_data_client($input['kata_kunci']);
+$dokumen_utama        = $this->M_resepsionis->pencarian_data_dokumen_utama($input['kata_kunci']);
+
+if($data_dokumen->num_rows() == 0){
+$json_data_dokumen[] = array(
+"Tidak ditemukan data dokumen"    
+);
+    
+}else{   
+foreach ($data_dokumen->result_array()as $d){
+$json_data_dokumen[] = array(    
+$d['value_meta']
+);
+}
+}
+
+if($data_client->num_rows() == 0){
+$json_data_client[] = array(
+"Tidak ditemukan data client"
+);    
+}else{
+foreach ($data_client->result_array()as $data_client){
+$json_data_client[] = array(
+$data_client['nama_client']    
+);
+}
+}
+
+if($dokumen_utama->num_rows() == 0){
+$data_dokumen_utama[] = array(
+"Tidak ditemukan dokumen utama"
+);    
+}else{
+foreach ($dokumen_utama->result_array()as $dokut){
+$data_dokumen_utama[] = array(
+$dokut['nama_berkas']    
+);
+}
+
+}
+
+$data = array(
+ 'data_dokumen'         => $json_data_dokumen,
+ 'data_client'          => $json_data_client,  
+ 'data_dokumen_utama'   => $data_dokumen_utama   
+);
+
+
+echo json_encode($data);
+
+}else{
+redirect(404);    
+}
+
+}
     
 }

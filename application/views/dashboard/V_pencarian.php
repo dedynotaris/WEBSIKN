@@ -1,124 +1,104 @@
 <body>
-
-    <?php  $this->load->view('umum/V_sidebar'); ?>
+<?php  $this->load->view('umum/V_sidebar'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
-<div class="container-fluid mt-2">
-		
-<ul id="clothing-nav" class="nav nav-tabs" role="tablist">
-	
+<div class="container-fluid mt-2 text-theme1">
+<ul class="nav nav-tabs">
 <li class="nav-item">
-<a class="nav-link active" href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Dalam bentuk lampiran ( <?php echo $dalam_bentuk_lampiran->num_rows(); ?> ) Ditampilkan</a>
+<a class="nav-link active" data-toggle="tab" href="#dokumen">Hasil Pencarian Dokumen <?php echo $data_dokumen->num_rows(); ?> </a>
 </li>
 
 <li class="nav-item ml-1">
-<a class="nav-link" href="#hats" role="tab" id="hats-tab" data-toggle="tab" aria-controls="hats">Dalam bentuk informasi ( <?php echo $dalam_bentuk_informasi->num_rows(); ?> ) Ditampilkan</a>
+<a class="nav-link" data-toggle="tab" href="#utama">Hasil Pencarian Dokumen Utama  <?php echo $data_dokumen_utama->num_rows(); ?>    </a>
+</li>
+<li class="nav-item ml-1">
+<a class="nav-link" data-toggle="tab" href="#client">Hasil Pencarian Client <?php echo $data_client->num_rows(); ?>    </a>
 </li>
 
+</ul>    
 
-
-</ul>
-
-<div id="clothing-nav-content" class="tab-content">
-
-<div role="tabpanel" class="tab-pane fade show active" id="home" aria-labelledby="home-tab">
-<?php if($dalam_bentuk_lampiran->num_rows() == 0){ ?>
-   
-      <h3 class="text-center mt-2">Hasil pencarian lampiran tidak ditemukan <br><span class="fa fa-folder-open fa-4x"></span></h3>    
-  
-    
-<?php }else{?>
-<table class="table table-sm table-bordered table-striped table-condensed">
-        <tr>
-            <td>No</td>  
-            <td>Jenis Lampiran</td>  
-            <td>Aksi</td>  
-        </tr>   
-<?php $h=1; foreach ($dalam_bentuk_lampiran->result_array() as $lampiran){ ?>
-        <tr>
-            <td> <?php echo $h++ ?></td>
-            <td><?php echo str_replace("_"," ",$lampiran['nama_meta']) ?> : <?php echo $lampiran['value_meta'] ?></td>
-            <td class="text-center">
-                <button onclick="download_berkas('<?php echo $lampiran['id_data_berkas'] ?>')" class="btn btn-sm btn-success">Download Lampiran <span class="fa fa-download"></span></button> 
-            
-            </td> 
-             
-        </tr>
-<?php } ?>
-</table>
-<?php } ?>
-    
-</div>
-
-<div role="tabpanel" class="tab-pane fade" id="hats" aria-labelledby="hats-tab">
-<?php if($dalam_bentuk_informasi->num_rows() == 0){ ?>
-    <h3 class="text-center mt-2">Hasil pencarian informasi tidak ditemukan <br><span class="fa fa-folder-open fa-4x"></span></h3>    
-<?php }else{  ?>
-    <table class="table table-sm table-bordered table-striped table-condensed">
-        <tr>
-            <td>No</td>  
-            <td>Jenis Informasi</td>  
-            <td>Aksi</td>  
-        </tr>   
-<?php $h=1; foreach ($dalam_bentuk_informasi->result_array() as $informasi){ ?>
-        <tr>
-            <td> <?php echo $h++ ?></td>
-            <td> <?php echo $informasi['nama_informasi'] ?></td>
-            <td class="text-center">
-                <button onclick="lihat_informasi('<?php echo $informasi['id_data_informasi_pekerjaan'] ?>')"  class="btn btn-sm btn-success">Lihat Informasi <span class="fa fa-list-alt"></span></button> 
-            <?php if($informasi['lampiran'] !=''){ ?>
-                <button onclick="download_berkas_informasi('<?php echo $informasi['id_data_informasi_pekerjaan'] ?>')" class="btn btn-sm btn-success">Download Lampiran <span class="fa fa-download"></span></button> 
-            
-            <?php } ?>
-            </td> 
-             
-        </tr>
-<?php } ?>
-</table>    
-<?php }?>
-</div>
-</div>
-    
-    
-    
-    
-<script type="text/javascript">
-function download_berkas(id_data_berkas){
-window.location.href="<?php echo base_url('Dashboard/download_berkas/') ?>"+id_data_berkas;
-}
-
-function download_berkas_informasi(id_data_berkas_informasi){
-window.location.href="<?php echo base_url('Dashboard/download_berkas_informasi/') ?>"+id_data_berkas_informasi;
-}
-
-function lihat_informasi(id_data_berkas_informasi){
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
-
-$.ajax({
-type:"post",
-url:"<?php echo base_url('Dashboard/lihat_informasi')?>",
-data:"token="+token+"&id_data_informasi_pekerjaan="+id_data_berkas_informasi,
-success:function(data){
-$('#modal_informasi').modal('show');
-$(".data_informasi").html(data);
-
-}
-});    
-}
-
-</script> 
-
-</div>
-<div class="modal fade" id="modal_informasi" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-body data_informasi">
+<div class="tab-content">
+<div class="tab-pane  active " id="dokumen">
+    <div class="container-fluid overflow-auto " style="max-height:1000px;">
+        <?php if($data_dokumen->num_rows() != 0){ ?>
+    <div class="row card-header rounded">
+            <div class="col">Nama client</div>
+            <div class="col">Nama Dokumen</div>
+            <div class="col">Hasil</div>
+            <div class="col-sm-2">Aksi</div>
        
-      </div>
-      
-    </div>
-  </div>
+        </div>   
+        
+ <?php foreach ($data_dokumen->result_array() as $dokumen){
+echo "<div class='row mt-1 rounded card-header'>";
+echo "<div class='col'>".$dokumen['nama_client']."</div>"
+    ."<div class='col'>".$dokumen['nama_dokumen']."</div>"
+    ."<div class='col'>".$dokumen['nama_meta'].": ".$dokumen['value_meta']."</div>"
+    . "<div class='col-sm-2'>"
+    . "<button class='btn  col-md-6 btn-success btn-sm'><span class='fa fa-download'></span></button>"
+    . "<button class='btn   col-md-5 ml-1 btn-success btn-sm'><span class='fa fa-eye'></span></button>"
+    . "</div>"   
+    . "</div>";    
+}
+        }
+?>
+</div>    
+</div>
+
+<div class="tab-pane " id="utama"> 
+    <div class="container-fluid overflow-auto " style="max-height:1000px;">
+    <?php if($data_dokumen_utama->num_rows() != 0){ ?>
+
+        <div class="row card-header rounded">
+            <div class="col">Nama Berkas</div>
+            <div class="col-sm-2">Tanggal akta</div>
+            <div class="col-sm-2 text-center">Aksi</div>
+        </div>   
+    
+   
+<?php foreach ($data_dokumen_utama->result_array() as $utama){
+echo "<div class='row mt-1 card-header rounded'>"
+    . "<div class='col'>".$utama['nama_berkas']."</div>"
+    ."<div class='col-sm-2'>".$utama['tanggal_akta']."</div>"
+    . "<div class='col-sm-2 text-center'>"
+    . "<button class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
+    . "</div>"
+        . "</div>";    
+}
+    }
+?>
 </div>
     
-</body>
+</div>
+
+    
+<div class="tab-pane" id="client">
+  <div class="container-fluid overflow-auto " style="max-height:1000px;">
+  
+<?php if($data_client->num_rows() != 0){ ?>
+      <div class="row card-header rounded">
+            <div class="col">Nama Client</div>
+            <div class="col-sm-2 text-center">Aksi</div>
+        </div>   
+      
+      
+     <?php foreach ($data_client->result_array() as $client){ 
+       echo "<div class='row card-header rounded mt-1'>"
+    . "<div class='col'>".$client['nama_client']."</div>"
+    . "<div class='col-sm-2'>"
+    . "<button class='btn  bt-block btn-success btn-sm'> Lihat berkas <span class='fa fa-eye'></span></button>"
+    . "</div>"
+    . "</div>";
+      
+      }
+}?>
+      
+      
+</div>
+</div>    
+    
+
+    
+</div>
+</div>
 </html>

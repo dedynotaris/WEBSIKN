@@ -1,7 +1,7 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_user1'); ?>
+<?php  $this->load->view('umum/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user1'); ?>
+<?php  $this->load->view('umum/V_navbar_data_lama'); ?>
 <div class="container-fluid mt-2 text-theme1">
 <ul class="nav nav-tabs">
 <li class="nav-item">

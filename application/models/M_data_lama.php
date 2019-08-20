@@ -26,6 +26,8 @@ return $query->result();
 }
 }
 
+
+
 public function data_client(){
 $query = $this->db->get('data_client');
 
@@ -65,7 +67,7 @@ $this->datatables->from('data_pekerjaan');
 $this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->join('user', 'user.no_user = data_pekerjaan.no_user');
 $this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
-$this->datatables->add_column('view','<a href="'.base_url('Data_lama/rekam_data/$1').'"><button  class="btn btn-sm btn-dark">Rekam Data <span class="fa fa-eye"></span></button></a>','base64_encode(no_pekerjaan)');
+$this->datatables->add_column('view','<a href="'.base_url('Data_lama/rekam_data/$1').'"><button  class="btn btn-sm btn-dark">Rekam Data <span class="fa fa-pencil-alt"></span></button></a>','base64_encode(no_pekerjaan)');
 return $this->datatables->generate();
 }
 
@@ -110,11 +112,15 @@ public function total_berkas(){
         $query = $this->db->get();
         return $query;    
 }
+
 public function data_pekerjaan($no_pekerjaan){
 $this->db->select('data_client.nama_folder,'
         . 'data_client.no_client,'
-        . 'data_pekerjaan.no_pekerjaan');
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_client.nama_client');
 $this->db->from('data_pekerjaan');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
 $query = $this->db->get();  
@@ -170,6 +176,24 @@ $query = $this->db->get();
 return $query;
 }
 
+
+
+
+public function data_pekerjaan_proses($no_pekerjaan){
+
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_client.nama_client');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
+$this->db->where('data_pekerjaan.no_pekerjaan',base64_decode($no_pekerjaan));
+$query = $this->db->get();   
+return $query;
+}
+
 public function dokumen_utama($no_pekerjaan){
 $this->db->select("*");
 $this->db->from('data_dokumen_utama');
@@ -180,6 +204,36 @@ $query = $this->db->get();
 return $query;    
 }
 
+public function data_persyaratan($no_pekerjaan){
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_persyaratan.no_nama_dokumen');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+
+$query = $this->db->get();  
+return $query;
+}
+public function data_pemilik_where($no_pekerjaan){
+$this->db->select('data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_client.pembuat_client,'
+        . 'data_pemilik.no_pemilik');    
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->where('data_pemilik.no_pekerjaan',$no_pekerjaan);
+$query= $this->db->get();    
+return $query;
+
+}
 
 }
 ?>

@@ -526,7 +526,8 @@ public function pencarian_data_dokumen($input){
 $this->db->select('data_meta_berkas.nama_meta,'
         . 'data_meta_berkas.value_meta,'
         . 'data_client.nama_client,'
-        . 'data_client.no_client');
+        . 'data_client.no_client,'
+        . 'nama_dokumen.nama_dokumen');
 $this->db->from('data_meta_berkas');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
 $this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
@@ -543,7 +544,8 @@ return $query;
 
 public function pencarian_data_dokumen_utama($input){
 $this->db->select('data_dokumen_utama.nama_berkas,'
-        . 'data_dokumen_utama.tanggal_akta');
+        . 'data_dokumen_utama.tanggal_akta,'
+        . 'data_client.nama_client');
 $this->db->from('data_dokumen_utama');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');

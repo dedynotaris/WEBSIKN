@@ -4,12 +4,11 @@
 <?php  $this->load->view('umum/V_navbar_data_lama'); ?>
     
 <div class="container-fluid ">
-<div class="card-header mb-2 mt-2 text-center ">
-<h5 align="center">Seluruh Data Arsip</h5>
+<div class="mt-2  text-center  ">
+    <h5 align="center " class="text-theme1"> Seluruh data arsip<br><span class="fa-2x fas fa-list-alt"></span></h5>
 </div>
-
-<div class="row">
-<div class="col">
+<div class="row ">
+<div class="col card-header rounded">
     <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>

@@ -632,20 +632,7 @@ redirect(404);
 }
 
 
-public function cari_file(){
-if($this->input->post()){
-$input = $this->input->post();
-$dalam_bentuk_lampiran  = $this->M_dashboard->cari_lampiran($input);
-$dalam_bentuk_informasi = $this->M_dashboard->cari_informasi($input);
 
-$this->load->view('umum/V_header');
-$this->load->view('dashboard/V_pencarian',['dalam_bentuk_lampiran'=>$dalam_bentuk_lampiran,'dalam_bentuk_informasi'=>$dalam_bentuk_informasi]);
-
-
-}else{
-redirect(404);    
-}    
-}
 public function data_berkas(){
 $this->load->view('umum/V_header');
 $this->load->view('dashboard/V_data_berkas');
@@ -912,45 +899,126 @@ echo json_encode($status);
 redirect(404);    
 }    
 }
-public function create_client(){
-if($this->input->post()){
-$data = $this->input->post();
 
-$h_client = $this->M_user2->data_client()->num_rows()+1;
+public function pencarian_data_client($input){
+$this->db->select('data_client.nama_client,'
+        . 'data_client.no_client');
+$this->db->from('data_client');
+$this->db->like('data_client.nama_client',$input);
+$query = $this->db->get();
+return $query;
+}
 
-$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+public function pencarian_data_dokumen($input){
+$this->db->select('data_meta_berkas.nama_meta,'
+        . 'data_meta_berkas.value_meta,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_meta_berkas');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
+$this->db->group_by('data_meta_berkas.no_berkas');
 
-$data_client = array(
-'no_client'                 => $no_client,    
-'jenis_client'              => ucwords($data['jenis_client']),    
-'nama_client'               => strtoupper($data['badan_hukum']),
-'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
-'tanggal_daftar'            => date('Y/m/d'),    
-'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
-'no_user'                   => $this->session->userdata('no_user'), 
-'nama_folder'               =>"Dok".$no_client,
-'contact_person'            => ucwords($data['contact_person']),    
-'contact_number'            => ucwords($data['contact_number']),    
-);    
+$this->db->like('data_meta_berkas.value_meta',$input);
+$this->db->or_like('data_meta_berkas.nama_meta',$input);
 
+$query = $this->db->get();
+return $query;
+}
 
-$this->db->insert('data_client',$data_client);
+public function pencarian_data_dokumen_utama($input){
+$this->db->select('data_dokumen_utama.nama_berkas,'
+        . 'data_dokumen_utama.tanggal_akta,'
+        . 'data_client.nama_client');
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 
-if(!file_exists("berkas/"."Dok".$no_client)){
-mkdir("berkas/"."Dok".$no_client,0777);
+$this->db->like('data_dokumen_utama.nama_berkas',$input);
+
+$query = $this->db->get();
+return $query;
 }
 
 
-$status = array(
-"status"     => "success",
-"pesan"      => "Client Berhasil ditambahkan"    
+public function cari_file(){
+$kata_kunci = $this->input->post('kata_kunci');
+
+
+$data_dokumen           = $this->M_dashboard->pencarian_data_dokumen($kata_kunci);
+
+$data_dokumen_utama     = $this->M_dashboard->pencarian_data_dokumen_utama($kata_kunci);
+
+$data_client            = $this->M_dashboard->pencarian_data_client($kata_kunci);
+
+$this->load->view('umum/V_header');
+$this->load->view('dashboard/V_pencarian',['data_dokumen'=>$data_dokumen,'data_dokumen_utama'=>$data_dokumen_utama,'data_client'=>$data_client]);
+
+}
+
+public function data_pencarian(){
+if($this->input->post()){
+$input = $this->input->post();
+$data_dokumen         = $this->M_dashboard->pencarian_data_dokumen($input['kata_kunci']);
+$data_client          = $this->M_dashboard->pencarian_data_client($input['kata_kunci']);
+$dokumen_utama        = $this->M_dashboard->pencarian_data_dokumen_utama($input['kata_kunci']);
+
+if($data_dokumen->num_rows() == 0){
+$json_data_dokumen[] = array(
+"Tidak ditemukan data dokumen"    
 );
-echo json_encode($status);
+    
+}else{   
+foreach ($data_dokumen->result_array()as $d){
+$json_data_dokumen[] = array(    
+$d['value_meta']
+);
+}
+}
+
+if($data_client->num_rows() == 0){
+$json_data_client[] = array(
+"Tidak ditemukan data client"
+);    
+}else{
+foreach ($data_client->result_array()as $data_client){
+$json_data_client[] = array(
+$data_client['nama_client']    
+);
+}
+}
+
+if($dokumen_utama->num_rows() == 0){
+$data_dokumen_utama[] = array(
+"Tidak ditemukan dokumen utama"
+);    
+}else{
+foreach ($dokumen_utama->result_array()as $dokut){
+$data_dokumen_utama[] = array(
+$dokut['nama_berkas']    
+);
+}
+
+}
+
+$data = array(
+ 'data_dokumen'         => $json_data_dokumen,
+ 'data_client'          => $json_data_client,  
+ 'data_dokumen_utama'   => $data_dokumen_utama   
+);
+
+
+echo json_encode($data);
 
 }else{
 redirect(404);    
 }
+
 }
+
 }
 
 
