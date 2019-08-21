@@ -279,11 +279,10 @@ $total_berkas = $this->M_user2->total_berkas()->row_array();
 
 $no_berkas = date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
-$static = $this->M_user2->data_pekerjaan($input['no_pekerjaan'])->row_array();
-
+$data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 
 if(!empty($_FILES['file_berkas'])){
-$config['upload_path']          = './berkas/'.$static['nama_folder'];
+$config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
 $this->upload->initialize($config);    
@@ -381,7 +380,7 @@ foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>';
+.'<button class="btn btn-success btn-sm" onclick=cek_download_berkas("'. base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>';
 if($d['pengupload'] == $this->session->userdata('no_user')){
 echo ' || <button onclick=hapus_berkas_persyaratan("'.$d['id_data_berkas'].'","'.$d['no_nama_dokumen'].'","'.$d['no_pekerjaan'].'","'.$d['no_client'].'"); class="btn btn-danger btn-sm"><span class="fa fa-trash"></span></button>';
 }
@@ -490,8 +489,18 @@ force_download($data['nama_dokumen'].".".$info->getExtension(), file_get_content
 }
 
 
-public function download_utama(){
-$data = $this->db->get_where('data_dokumen_utama',array('id_data_dokumen_utama'=>$this->uri->segment(3)))->row_array();    
+public function download_utama($id_data_dokumen_utama){
+
+$this->db->select('data_dokumen_utama.nama_file,'
+        . 'data_client.nama_folder,'
+        . 'data_dokumen_utama.nama_berkas');    
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('id_data_dokumen_utama',base64_decode($id_data_dokumen_utama));
+$data= $this->db->get()->row_array();    
+
+
 $file_path = "./berkas/".$data['nama_folder']."/".$data['nama_file']; 
 $info = new SplFileInfo($data['nama_file']);
 force_download($data['nama_berkas'].".".$info->getExtension(), file_get_contents($file_path));
@@ -1034,11 +1043,11 @@ echo "<div class='col text-center'>"
 ."<b>Nama Dokumem yang sudah direkam</b><hr>";
 
 foreach ($data_berkas->result_array() as $u){  
-echo'<div class="card m-1">
+echo'<div class=" m-1">
 <div class="row">
 <div class="col ">'.$u['nama_dokumen'].'</div> 
 <div class="col-md-4  text-right">
-<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'","'.$input['no_client'].'") class="btn btn-sm btn-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
+<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'","'.$input['no_client'].'") class="btn btn-sm btn-outline-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
 echo "</div>    
 </div>
 </div>";
@@ -1283,7 +1292,102 @@ echo json_encode($data);
 }else{
 redirect(404);    
 }
+}
+
+public function cek_download_berkas(){
+if($this->input->post()){
+$input =  $this->input->post();    
+$this->db->select('data_berkas.nama_berkas,'
+        . 'data_client.nama_folder');    
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->where('data_berkas.no_berkas', base64_decode($input['no_berkas']));
+$query= $this->db->get()->row_array();    
+
+if($query['nama_berkas'] == NULL){
+$status = array(
+"status"     => "warning",
+"pesan"      => "Lampiran file tidak dimasukan hanya meta data"    
+);    
+}else if(!file_exists('./berkas/'.$query['nama_folder']."/".$query['nama_berkas'])){
+$status = array(
+"status"     => "error",
+"pesan"      => "File tidak tersedia"    
+);      
+}else{
+$status = array(
+"status"     => "success",
+);      
+}
+
+echo json_encode($status);
+}else{
+redirect(404);    
+}
 
 }
 
+
+public function data_perekaman_pencarian(){
+if($this->input->post()){
+$input = $this->input->post();
+$query     = $this->M_user2->data_perekaman(base64_decode($input['no_nama_dokumen']),base64_decode($input['no_client']));
+$query2     = $this->M_user2->data_perekaman2(base64_decode($input['no_nama_dokumen']),base64_decode($input['no_client']));
+
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr>";
+foreach ($query->result_array() as $d){
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr>";
+
+foreach ($b->result_array() as $i){
+echo "<td>".$i['value_meta']."</td>";    
+}
+
+        echo '</td>';
+echo "</tr>";
+    
+    
+}
+echo "</tbody>";
+
+
+echo"</table>";   
+}else{
+redirect(404);    
+}
+}
+
+public function data_perekaman_user_client(){
+if($this->input->post()){
+$input = $this->input->post();    
+
+$data_berkas  = $this->M_user2->data_telah_dilampirkan(base64_decode($input['no_client']));
+foreach ($data_berkas->result_array() as $u){  
+echo'<div class=" m-1">
+<div class="row">
+<div class="col ">'.$u['nama_dokumen'].'</div> 
+<div class="col-md-4  text-right">
+<button type="button" onclick=lihat_meta_berkas("'.base64_encode($u['no_nama_dokumen']).'","'.$input['no_client'].'") class="btn btn-sm btn-outline-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
+echo "</div>    
+</div>
+</div>";
+}
+
+
+}
+else{
+redirect(404);    
+}
+
+}
 }

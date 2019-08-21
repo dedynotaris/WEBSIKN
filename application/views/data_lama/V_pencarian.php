@@ -35,8 +35,8 @@ echo "<div class='col'>".$dokumen['nama_client']."</div>"
     ."<div class='col'>".$dokumen['nama_dokumen']."</div>"
     ."<div class='col'>".$dokumen['nama_meta'].": ".$dokumen['value_meta']."</div>"
     . "<div class='col-sm-2'>"
-    . "<button class='btn  col-md-6 btn-success btn-sm'><span class='fa fa-download'></span></button>"
-    . "<button class='btn   col-md-5 ml-1 btn-success btn-sm'><span class='fa fa-eye'></span></button>"
+    . "<button onclick=cek_download_berkas('".base64_encode($dokumen['no_berkas'])."'); class='btn btn-outline-success col-md-6 btn-sm'><span class='fa fa-download'></span></button>"
+    . "<button onclick=lihat_meta_berkas('".base64_encode($dokumen['no_nama_dokumen'])."','". base64_encode($dokumen['no_client'])."'); class='btn btn-outline-success  col-md-5 ml-1  btn-sm'><span class='fa fa-eye'></span></button>"
     . "</div>"   
     . "</div>";    
 }
@@ -59,11 +59,11 @@ echo "<div class='col'>".$dokumen['nama_client']."</div>"
 <?php foreach ($data_dokumen_utama->result_array() as $utama){
 echo "<div class='row mt-1 card-header rounded'>"
     . "<div class='col'>".$utama['nama_berkas']."</div>"
-    ."<div class='col-sm-2'>".$utama['tanggal_akta']."</div>"
+    . "<div class='col-sm-2'>".$utama['tanggal_akta']."</div>"
     . "<div class='col-sm-2 text-center'>"
-    . "<button class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
+    . "<button onclick=download_utama('".base64_encode($utama['id_data_dokumen_utama'])."') class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
     . "</div>"
-        . "</div>";    
+     . "</div>";    
 }
     }
 ?>
@@ -86,7 +86,7 @@ echo "<div class='row mt-1 card-header rounded'>"
        echo "<div class='row card-header rounded mt-1'>"
     . "<div class='col'>".$client['nama_client']."</div>"
     . "<div class='col-sm-2'>"
-    . "<button class='btn  bt-block btn-success btn-sm'> Lihat berkas <span class='fa fa-eye'></span></button>"
+    . "<button onclick=lihat_berkas_client('".base64_encode($client['no_client'])."'); class='btn  bt-block btn-success btn-sm'> Lihat berkas <span class='fa fa-eye'></span></button>"
     . "</div>"
     . "</div>";
       
@@ -96,9 +96,88 @@ echo "<div class='row mt-1 card-header rounded'>"
       
 </div>
 </div>    
+</div>
+</div>
+<!------------------modal data perekaman------------->
+<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body data_perekaman">
+</div>
+</div>
+</div>
+</div>    
+    
+<script type="text/javascript">
+function cek_download_berkas(no_berkas){
+
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_berkas="+no_berkas,
+url:"<?php echo base_url('Data_lama/cek_download_berkas') ?>",
+success:function(data){
+var r = JSON.parse(data);
+if(r.status == 'success'){
+window.location.href = '<?php echo base_url('Data_lama/download_berkas/') ?>'+no_berkas;   
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated tada'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+}
+}
+});
+}
+
+function lihat_meta_berkas(no_nama_dokumen,no_client){
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
+url:"<?php echo base_url('Data_lama/data_perekaman_pencarian') ?>",
+success:function(data){
+  
+$('#data_perekaman').modal('show');  
+$(".data_perekaman").html(data);
+}
+});
+}
+function download_utama(id){
+window.location.href="<?php echo base_url('Data_lama/download_utama/'); ?>"+id 
+}
+
+function lihat_berkas_client(no_client){   
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client,
+url:"<?php echo base_url('Data_lama/data_perekaman_user_client') ?>",
+success:function(data){ 
+$('#data_perekaman').modal('show');  
+$(".data_perekaman").html(data);
+}
+});
+}    
     
 
+
+</script>        
+        
     
-</div>
-</div>
 </html>

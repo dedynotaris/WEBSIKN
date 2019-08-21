@@ -19,7 +19,7 @@
 <input type="password" class="form-control" id="password" placeholder="password . . .">
         </div>
     <div class="card-footer" style=" background-color: #2f4f4f; border: 1 px #2f4f4f;">        
-<button class="btn btn-md btn-success btn-block" id="proses_login">Sign in <i class="fa fa-key"></i></button>
+<button class="btn btn-md btn-outline-warning btn-block" id="proses_login">Sign in <i class="fa fa-key"></i></button>
 </div>    
 </div>    
 
