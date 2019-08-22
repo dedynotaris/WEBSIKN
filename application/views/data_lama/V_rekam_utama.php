@@ -80,7 +80,7 @@ var val = $(".data_aksi"+id_data_dokumen_utama+" option:selected").val();
 if (val == 1){
 hapus_utama(id_data_dokumen_utama);
 }else if(val == 2){
-window.location.href="<?php echo base_url('Data_lama/download_utama/') ?>"+id_data_dokumen_utama;
+window.location.href="<?php echo base_url('Data_lama/download_utama/') ?>"+btoa(id_data_dokumen_utama);
 }
 $(".data_aksi"+id_data_dokumen_utama).val("-- Klik untuk lihat menu --");       
 }    

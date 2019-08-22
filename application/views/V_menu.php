@@ -28,8 +28,10 @@ Pilihan
         <div class="col"><p><h3 style="color:#FF8C00;">Selamat Datang <?php echo $this->session->userdata("nama_lengkap"); ?></h3>Aplikasi Management Tempat penyimpanan dokumen  untuk mempermudah anda dalam mengelola dan mencari dokumen </p></div>
     </div>
     <br><br>
+    <?php $status_app = $status_aplikasi->row_array(); ?>
     <div class="row text-center mt-2 " >
-        
+      
+        <?php if($status_app['app_workflow'] == "on"){ ?>
         <div class="col-md-2 mt-4 mx-auto">
             <a class="menu_utama" onclick="check_akses('Level 2','User2');"> 
             <span class="fa fa-folder fa-5x"></span><br>Dokumen Utama
@@ -41,35 +43,43 @@ Pilihan
             <span class="fa fa-folder-plus fa-5x"></span><br>Dokumen Penunjang
         </a>
         </div>   
-        
+      <?php } ?>
        
         
+        <?php if($status_app['app_resepsionis'] == "on"){ ?>
         <div class="col-md-2 mt-4 mx-auto">
         <a class="menu_utama" onclick="check_akses('Level 4','Resepsionis');"> 
             <span class="fa fa-address-book fa-5x"></span><br>Receptionist
          </a>    
        </div>
+       <?php } ?>
         
-          <div class="col-md-2 mt-4 mx-auto">
+        <?php if($status_app['app_managemen'] == "on"){ ?>
+        <div class="col-md-2 mt-4 mx-auto">
         <a  class="menu_utama" onclick="check_akses('Username','Data_lama');"> 
-            <span class="fa fa-upload fa-5x"></span><br>Data lama
+            <span class="fa fa-upload fa-5x"></span><br>Data Arsip
         </a>    
         </div>
+       <?php } ?>
+        
        
-         <div class="col-md-2 mt-4 mx-auto">
+         <?php if($status_app['app_admin'] == "on"){ ?>
+        <div class="col-md-2 mt-4 mx-auto">
         <a class="menu_utama" onclick="check_akses('Level 1','User1');"> 
             <span class="fa fa-user-cog fa-5x"></span><br>Admin
          </a>    
        </div>
+       <?php } ?>
          
-        
+       <?php if($this->session->userdata('level') == "Super Admin"){ ?>  
         <div class="col-md-2 mt-4 mx-auto">
         <a  class="menu_utama" onclick="check_akses('Admin','Dashboard');"> 
             <span class="fa fa-cogs fa-5x"></span><br>Setting
         </a>    
         </div>
+       <?php } ?>
         
-         
+      
     </div>
  </div>
 

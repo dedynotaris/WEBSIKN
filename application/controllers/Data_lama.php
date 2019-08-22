@@ -204,8 +204,8 @@ echo "</div>
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_data_lama->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
-$query2     = $this->M_data_lama->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query     = $this->M_data_lama->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
+$query2     = $this->M_data_lama->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
@@ -227,7 +227,7 @@ foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
+.'<button class="btn btn-success btn-sm" onclick=cek_download("'.base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>
 </td>';
 echo "</tr>";
     
@@ -598,6 +598,91 @@ $file_path = "./berkas/".$data['nama_folder']."/".$data['nama_file'];
 $info = new SplFileInfo($data['nama_file']);
 force_download($data['nama_berkas'].".".$info->getExtension(), file_get_contents($file_path));
 }
+
+
+public function data_perekaman_user(){
+if($this->input->post()){
+$input = $this->input->post();    
+$data_berkas  = $this->M_data_lama->data_telah_dilampirkan($input['no_client']);
+$data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
+
+$data_persyaratan = $this->M_data_lama->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
+echo "<div class='row'>";
+echo "<div class='col text-center'>"
+. "<b>Nama Dokumem yang harus direkam</b><hr>";
+foreach ($data_persyaratan->result_array() as $nama_dokumen){
+echo "<div class='row'>";
+echo "<div class='col text-left card-footer'>";
+echo $nama_dokumen['nama_dokumen'];
+echo"</div>";
+echo "<div class='col-md-4 text-left card-footer'>";
+echo '<button class="btn btn-block btn-dark m-1 btn-sm" onclick=tampil_modal_upload("'.$nama_dokumen['no_pekerjaan'].'","'.$nama_dokumen['no_nama_dokumen'].'","'.$input['no_client'].'");> Rekam Data <span class="fa fa-eye"></span> </button>';
+echo"</div>";
+echo"</div>";
+}
+echo"</div>";
+echo "<div class='col text-center'>"
+."<b>Nama Dokumem yang sudah direkam</b><hr>";
+
+foreach ($data_berkas->result_array() as $u){  
+echo'<div class=" m-1">
+<div class="row">
+<div class="col ">'.$u['nama_dokumen'].'</div> 
+<div class="col-md-4  text-right">
+<button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'","'.$input['no_client'].'") class="btn btn-sm btn-outline-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
+echo "</div>    
+</div>
+</div>";
+}
+
+echo"</div>";
+}else{
+redirect(404);    
+}    
+}
+
+public function buat_pemilik_perekaman(){
+if($this->input->post()){
+$tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
+$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+$input = $this->input->post();
+
+if(!$input['no_client']){
+$status = array(
+"status"     => "error",
+"pesan"      => "Tentukan pemilik dokumen terlebih dahulu"    
+);
+echo json_encode($status);    
+}else{
+$cek = $this->db->get_where('data_pemilik',array('no_client'=>$input['no_client'],'no_pekerjaan'=>base64_decode($input['no_pekerjaan'])));
+if($cek->num_rows() == 1){
+$status = array(
+"status"     => "error",
+"pesan"      => "Tidak Boleh Ada Nama Badan Hukum atau perorangan sama dalam satu jenis pekerjaan"    
+);
+echo json_encode($status);
+    
+}else{
+$data = array(
+'no_pemilik'    =>$no_pemilik,   
+'no_client'     =>$input['no_client'],
+'no_pekerjaan'  => base64_decode($input['no_pekerjaan'])    
+);
+$this->db->insert('data_pemilik',$data);
+
+$status = array(
+"status"     => "success",
+"pesan"      => "Pemilik Dokumen Berhasil ditambahkan"    
+);
+echo json_encode($status);
+}
+}
+}else{
+redirect(404);    
+}
+
+}
+
 }
 
 

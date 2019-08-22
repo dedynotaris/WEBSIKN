@@ -116,5 +116,36 @@ $(document).ready(function(){
 
 $("#pencarian").easyAutocomplete(options);
  
-});    
+}); 
+
+
+function cek_download(no_berkas){
+
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_berkas="+no_berkas,
+url:"<?php echo base_url($this->uri->segment(1).'/cek_download_berkas') ?>",
+success:function(data){
+var r = JSON.parse(data);
+if(r.status == 'success'){
+window.location.href = '<?php echo base_url($this->uri->segment(1).'/download_berkas/') ?>'+no_berkas;   
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated tada'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+}
+}
+});
+}
 </script>
