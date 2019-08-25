@@ -102,7 +102,7 @@ echo "<table class='table text-center table-sm table-bordered table-striped'>"
 foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$d['nama_dokumen']."</td>"
-    . "<td><button onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$input['no_pemilik']."'); class='btn btn-dark btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
+    . "<td><button onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$d['no_client']."'); class='btn btn-dark btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
     . "</tr>";  
 }
 
@@ -444,9 +444,8 @@ echo print_r($this->session->userdata());
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-
-$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_pemilik']);
-$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_pemilik']);
+$query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
+$query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
@@ -468,7 +467,7 @@ foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
+.'<button class="btn btn-success btn-sm" onclick=cek_download("'.base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>
 </td>';
 echo "</tr>";
     

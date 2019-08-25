@@ -31,6 +31,7 @@ App Management
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_client'); ?>"><i class="fas fa-user-tie"></i> Data client</a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/pekerjaan_proses'); ?>"><i class="fa fa-exchange-alt"></i> Pekerjaan diproses</a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_user'); ?>"><i class="fas fa-users"></i> Data user</a></li>
+<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/feature'); ?>"><i class="fas fa-cogs"></i> Setting Feature</a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/setting'); ?>"><i class="fas fa-cogs"></i> Setting</a></li>
 </ul>
 </div>

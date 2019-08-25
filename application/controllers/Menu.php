@@ -11,8 +11,9 @@ redirect(base_url('Login'));
 }
 
 public function index(){
+$status_aplikasi = $this->db->get_where('status_aplikasi');
 $this->load->view('umum/V_header');    
-$this->load->view('V_menu');    
+$this->load->view('V_menu',['status_aplikasi'=>$status_aplikasi]);    
 }
 public function keluar(){
 $this->session->sess_destroy();

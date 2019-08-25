@@ -287,11 +287,11 @@ $("#laporan").val("")
 }); 
 });
 
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_pemilik){
+function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pemilik="+no_pemilik,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    

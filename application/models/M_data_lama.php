@@ -33,6 +33,12 @@ $query = $this->db->get('data_client');
 
 return $query;
 }
+public function data_pemilik(){
+         $this->db->limit(1);
+         $this->db->order_by('data_pemilik.id_data_pemilik','DESC');
+$query = $this->db->get_where('data_pemilik');
+return $query;
+}
 
 public function data_client_where($no_client){
 

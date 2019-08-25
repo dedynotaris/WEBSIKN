@@ -1134,6 +1134,136 @@ $info = new SplFileInfo($data['nama_file']);
 force_download($data['nama_berkas'].".".$info->getExtension(), file_get_contents($file_path));
 }
 
+public function feature(){
+$this->load->view('umum/V_header');
+$this->load->view('dashboard/V_feature');
+}
+public function setting_feature(){
+$cek_aplikasi = $this->db->get('status_aplikasi')->row_array();
+    
+    
+echo '<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.5.0/js/bootstrap4-toggle.min.js"></script>  <div class="container-fluid">
+';    
+echo '<div class="row mt-2 text-theme">
+<div class="col text-center">
+                <div class="card">
+                  <div class="card-header rounded ">
+                      STATUS WORKFLOW </div>
+                    <div class="card-body">
+                    <div class="checkbox">
+                        <label>
+                            <input ';
+                           if($cek_aplikasi['app_workflow'] == "on"){ echo 'checked';};
+                           echo ' onchange=toogle("app_workflow") type="checkbox" data-toggle="toggle" data-onstyle="dark">
+                        </label>
+                    </div>
+                 </div>
+               </div>
+            </div>
+            <div class="col text-center">
+                <div class="card">
+                  <div class="card-header rounded ">
+                     APP  MANAGEMENT </div>
+                    <div class="card-body">
+                    <div class="checkbox">
+                        <label>
+                            <input ';
+                           if($cek_aplikasi['app_managemen'] == "on"){ echo 'checked';};
+                           echo ' onchange=toogle("app_managemen") type="checkbox" data-toggle="toggle" data-onstyle="dark">
+                        </label>
+                    </div>
+                 </div>
+               </div>
+            </div>
+            <div class="col text-center">
+                <div class="card">
+                  <div class="card-header rounded ">
+                      STATUS APP RECEPTIONIST </div>
+                    <div class="card-body">
+                    <div class="checkbox">
+                        <label>
+                             <input ';
+                           if($cek_aplikasi['app_resepsionis'] == "on"){ echo 'checked';};
+                           echo ' onchange=toogle("app_resepsionis") type="checkbox" data-toggle="toggle" data-onstyle="dark">
+                       </label>
+                    </div>
+                 </div>
+               </div>
+            </div>
+         <div class="col text-center">
+                <div class="card">
+                  <div class="card-header rounded ">
+                      STATUS APP ADMIN </div>
+                    <div class="card-body">
+                    <div class="checkbox">
+                        <label>
+                              <input ';
+                           if($cek_aplikasi['app_admin'] == "on"){ echo 'checked';};
+                           echo ' onchange=toogle("app_admin") type="checkbox" data-toggle="toggle" data-onstyle="dark">
+                      </label>
+                    </div>
+                 </div>
+               </div>
+            </div>
+
+</div>';    
 }
 
+function on_off_feature(){
+if($this->input->post()){
+$input = $this->input->post();
+$cek_aplikasi = $this->db->get('status_aplikasi')->row_array();
+
+if($input['app'] == "app_managemen"){
+
+if($cek_aplikasi['app_managemen'] == "off"){
+$data = array('app_managemen'=>"on");     
+$this->db->update('status_aplikasi',$data,array('app_managemen'=>"off"));    
+}else{
+$data = array('app_managemen'=>"off");         
+$this->db->update('status_aplikasi',$data,array('app_managemen'=>"on"));   
+}
+    
+}elseif($input['app'] == "app_admin"){
+
+if($cek_aplikasi['app_admin'] == "off"){
+$data = array('app_admin'=>"on");     
+$this->db->update('status_aplikasi',$data,array('app_admin'=>"off"));    
+}else{
+$data = array('app_admin'=>"off");     
+$this->db->update('status_aplikasi',$data,array('app_admin'=>"on"));        
+}
+
+}elseif($input['app'] == "app_workflow"){
+    
+if($cek_aplikasi['app_workflow'] == "off"){
+$data = array('app_workflow'=>"on");     
+$this->db->update('status_aplikasi',$data,array('app_workflow'=>"off"));    
+}else{
+$data = array('app_workflow'=>"off");     
+$this->db->update('status_aplikasi',$data,array('app_workflow'=>"on"));    
+}
+
+
+}elseif($input['app'] == "app_resepsionis"){
+
+if($cek_aplikasi['app_resepsionis'] == "off"){
+$data = array('app_resepsionis'=>"on");        
+$this->db->update('status_aplikasi',$data,array('app_resepsionis'=>"off"));
+}else{
+$data = array('app_resepsionis'=>"off");        
+$this->db->update('status_aplikasi',$data,array('app_resepsionis'=>"on"));
+}
+
+}
+
+
+    
+}else{
+redirect(404);    
+}
+}
+
+}
 

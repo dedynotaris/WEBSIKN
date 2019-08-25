@@ -183,7 +183,7 @@ var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
-url:"<?php echo base_url('User2/lihat_laporan') ?>",
+url:"<?php echo base_url('Data_lama/lihat_laporan') ?>",
 success:function(data){
 $('#modal_laporan').modal('show');
 $(".data_laporan").html(data);
@@ -196,7 +196,7 @@ var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client+"&no_pemilik="+no_pemilik,
-url:"<?php echo base_url('User2/modal_alihkan_tugas') ?>",
+url:"<?php echo base_url('Data_lama/modal_alihkan_tugas') ?>",
 success:function(data){
 $('#modal_alihkan_tugas').modal('show');
 $(".modal_alihkan_tugas").html(data);
@@ -269,7 +269,7 @@ var no_pekerjaan             = "<?php echo $this->uri->segment(3) ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/data_perekaman_user') ?>",
+url:"<?php echo base_url('Data_lama/data_perekaman_user') ?>",
 success:function(data){
 $('#data_perekaman_user').modal('show');
 $('.data_perekaman_user').html(data);
@@ -301,7 +301,7 @@ minLength:0,
 delay:0,
 source: function( request, response ) {
 $.ajax({
-url: "<?php echo base_url('User2/cari_nama_client') ?>",
+url: "<?php echo base_url('Data_lama/cari_nama_client') ?>",
 method:'post',
 data: {
 token:token,  
@@ -328,7 +328,7 @@ var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/buat_pemilik_perekaman') ?>",
+url:"<?php echo base_url('Data_lama/buat_pemilik_perekaman') ?>",
 success:function(data){
 response(data);
 tampilkan_data_client();
