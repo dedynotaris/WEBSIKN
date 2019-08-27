@@ -166,9 +166,8 @@ redirect(404);
 public function simpan_nama_dokumen(){
 if($this->input->post()){
 
-$jumlah_nama_dokumen        = $this->M_dashboard->data_nama_dokumen()->num_rows()+1;
-$no_nama_dokumen            = str_pad($jumlah_nama_dokumen,4 ,"0",STR_PAD_LEFT);
-
+$jumlah_nama_dokumen        = $this->M_dashboard->hitung_nama_dokumen()->row_array();
+$no_nama_dokumen            = str_pad($jumlah_nama_dokumen['id_nama_dokumen'],4 ,"0",STR_PAD_LEFT);
 
 $data = array(
 'no_nama_dokumen'   => "N_".$no_nama_dokumen,
@@ -1263,6 +1262,17 @@ $this->db->update('status_aplikasi',$data,array('app_resepsionis'=>"on"));
 }else{
 redirect(404);    
 }
+}
+
+public function hapus_nama_dokumen(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$this->db->delete('nama_dokumen',array('id_nama_dokumen'=>$input['id_nama_dokumen']));    
+    
+}else{
+    redirect(404);    
+}    
 }
 
 }

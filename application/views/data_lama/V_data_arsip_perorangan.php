@@ -5,7 +5,7 @@
     
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-3x fas fa-clipboard-list"></span><br>Seluruh Data Arsip</h5>
+<h5 align="center " class="text-theme1"><span class="fa-3x fas fa-users"></span><br> Data Client perorangan</h5>
 </div>
 
 <div class="row card m-2 p-2">
@@ -58,7 +58,7 @@ sProcessing: "loading..."
 },
 processing: true,
 serverSide: true,
-ajax: {"url": "<?php echo base_url('Data_lama/json_data_arsip') ?> ", 
+ajax: {"url": "<?php echo base_url('Data_lama/json_data_arsip_perorangan') ?> ", 
 "type": "POST",
 data: function ( d ) {
 d.token = '<?php echo $this->security->get_csrf_hash(); ?>';

@@ -66,6 +66,27 @@ echo json_encode($json);
 public function create_client(){
 if($this->input->post()){
 $data = $this->input->post();
+$data = $this->input->post();
+if($data['jenis_client'] == "Perorangan"){
+$this->simpan_client($data);
+}else if($data['jenis_client'] == "Badan Hukum"){
+$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($data['badan_hukum'])))->num_rows();        
+if($cek_badan_hukum == 0){
+$this->simpan_client($data);
+}else{
+$status = array(
+"status"     => "error",
+"pesan"      => "Nama Badan Hukum sudah tersedia"    
+);    
+echo json_encode($status);
+}
+}
+}else{
+redirect(404);    
+}
+}
+
+public function simpan_client($data){
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
@@ -98,6 +119,15 @@ $data_r = array(
 
 $this->db->insert('data_pekerjaan',$data_r);
 
+$tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
+$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+
+$data_pem = array(
+'no_pemilik'    =>$no_pemilik,   
+'no_client'     =>$no_client,
+'no_pekerjaan'  =>$no_pekerjaan    
+);
+$this->db->insert('data_pemilik',$data_pem);
 
 
 if(!file_exists("berkas/"."Dok".$no_client)){
@@ -112,12 +142,7 @@ $status = array(
 "no_client"  => base64_encode($no_client),
 "pesan"      => "Telah dimasukan kedalam agenda kerja"    
 );
-echo json_encode($status);
-
-}else{
-redirect(404);    
-
-}
+echo json_encode($status);    
 }
 
 

@@ -1,7 +1,7 @@
-<div class="container mt-2 text-theme1">
+<div class="container-fluid mt-2 text-theme1">
 <div class="row">
 <div class="col">
-<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-right "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>
+<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-right "  onclick="modal_client();">Tambahkan Susunan Pengurus <span class="fa fa-plus"></span></button>
 <hr> </b></div>
 <div class="data_client">
 </div>
@@ -39,7 +39,7 @@
 <div class="modal-body">
 <label>Jenis Pemilik</label> 
 <select onchange="tentukan_jenis()" class="form-control tentukan_jenis">
-<option value="null">--- Tentukan Jenis Pemilik ---</option>    
+<option value="null"> Tentukan Jenis Pemilik</option>    
 <option value="Badan Hukum">Badan Hukum</option>    
 <option Value="Perorangan">Perorangan</option>    
 </select>
@@ -73,14 +73,10 @@
 </button>
 </div>    
 <div class="modal-body">
-<form  id="fileclient" method="post" action="<?php echo base_url('User2/buat_client') ?>">
-<label>Contact Person</label>
-<input type="text" name="contact_person" placeholder="contact person" class="form-control form-control-sm contact_person required" accept="text/plain">
-<label>No Telepon</label>
-<input type="number" name="no_tlp" placeholder="no telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
+<form  id="fileclient" method="post" action="<?php echo base_url('Data_lama/create_client') ?>">
 <label>Pilih Jenis client</label>
 <select name="jenis" id="pilih_jenis" class="form-control form-control-sm  required" accept="text/plain">
-<option>---Jenis cLient ----</option>
+<option>Jenis Client</option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>
@@ -94,6 +90,12 @@
 <label  id="label_alamat_perorangan">Alamat Perorangan</label>
 <textarea rows="4" placeholder="Alamat Lengkap perorangan atau badan hukum" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
+
+<label>Contact Person</label>
+<input type="text" name="contact_person" placeholder="contact person" class="form-control form-control-sm contact_person required" accept="text/plain">
+<label>No Telepon</label>
+<input type="number" name="no_tlp" placeholder="no telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
+
 </div>
 <div class="card-footer">
 <button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
