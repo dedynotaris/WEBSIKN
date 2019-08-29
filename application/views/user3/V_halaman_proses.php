@@ -4,7 +4,7 @@
 <?php  $this->load->view('umum/V_navbar_user3'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
+<h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
 </div>   
 <div class="row">
 <div class="col">    
@@ -28,7 +28,7 @@ $this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client')
 $this->db->where('data_pemilik.no_pemilik',$data['no_pemilik']);
 $pemilik = $this->db->get()->row_array();
 echo $pemilik['nama_client'];
- ?></td>
+?></td>
 <td><?php echo $data['nama_lengkap'] ?></td>
 <td class="text-center"><?php echo $data['target_selesai_perizinan'] ?></td>
 <td>
@@ -123,7 +123,7 @@ echo $pemilik['nama_client'];
 
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-md btn-simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
 </div>
 </form>    
 </div>
@@ -134,6 +134,44 @@ echo $pemilik['nama_client'];
 
 
 <script type="text/javascript">
+function response(data){
+var r = JSON.parse(data);
+if(r.status == "success"){
+
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+$(".form-control").val("");
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
+}
+
+}    
+
+
 function aksi_option(no_pekerjaan,no_berkas_perizinan,no_nama_dokumen,no_client,no_pemilik){
 var aksi_option = $(".data_option"+no_berkas_perizinan+" option:selected").val();
 if(aksi_option == 1){
@@ -154,25 +192,25 @@ $(".data_option"+no_berkas_perizinan).prop('selectedIndex',0);
 }
 function selesaikan_perizinan(no_berkas_perizinan){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-    
+
 Swal.fire({
-  text: 'Anda yakin ingin menyelesaikan perizinan tersebut ?',
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#FF8C00',
-  cancelButtonColor: '#2F4F4F',
-  confirmButtonText: 'Ya, Selesaikan!'
+text: 'Anda yakin ingin menyelesaikan perizinan tersebut ?',
+type: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#FF8C00',
+cancelButtonColor: '#2F4F4F',
+confirmButtonText: 'Ya, Selesaikan!'
 }).then((result) => {
-  if (result.value) {
-    
-    $.ajax({
-      type:"post",
-      data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
-      url:"<?php echo base_url('User3/selesaikan_tugas') ?>",
-      success:function(data){
-          var r = JSON.parse(data);
-          
-          const Toast = Swal.mixin({
+if (result.value) {
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
+url:"<?php echo base_url('User3/selesaikan_tugas') ?>",
+success:function(data){
+var r = JSON.parse(data);
+
+const Toast = Swal.mixin({
 toast: true,
 position: 'center',
 showConfirmButton: false,
@@ -186,13 +224,13 @@ title: "Perizinan berhasil diselesaikan"
 }).then(function(){
 window.location.href="<?php echo base_url('User3/Halaman_proses') ?>";    
 });
-  
-    }
-    });
-    
-    
-    
-    }
+
+}
+});
+
+
+
+}
 });    
 }
 
@@ -220,27 +258,27 @@ $(".form_persyaratan").html(data);
 $('#modal_upload').modal('show');
 
 var inputQuantity = [];
-    $(function() {
-      $(".quantity").each(function(i) {
-        inputQuantity[i]=this.defaultValue;
-         $(this).data("idx",i); // save this field's index to access later
-      });
-      $(".quantity").on("keyup", function (e) {
-        var $field = $(this),
-            val=this.value,
-            $thisIndex=parseInt($field.data("idx"),10); // retrieve the index
-        if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
-            this.value = inputQuantity[$thisIndex];
-            return;
-        } 
-        if (val.length > Number($field.attr("maxlength"))) {
-            var t = Number($field.attr("maxlength"));
-          val=val.slice(0,t);
-          $field.val(val);
-        }
-        inputQuantity[$thisIndex]=val;
-      });      
-    });
+$(function() {
+$(".quantity").each(function(i) {
+inputQuantity[i]=this.defaultValue;
+$(this).data("idx",i); // save this field's index to access later
+});
+$(".quantity").on("keyup", function (e) {
+var $field = $(this),
+val=this.value,
+$thisIndex=parseInt($field.data("idx"),10); // retrieve the index
+if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
+this.value = inputQuantity[$thisIndex];
+return;
+} 
+if (val.length > Number($field.attr("maxlength"))) {
+var t = Number($field.attr("maxlength"));
+val=val.slice(0,t);
+$field.val(val);
+}
+inputQuantity[$thisIndex]=val;
+});      
+});
 }
 });
 }
@@ -312,6 +350,7 @@ $(element).closest(".form-control").removeClass("is-invalid");
 },    
 submitHandler: function(form) {
 
+$(".btn_simpan_persyaratan").attr("disabled", true);
 var result = { };
 var jml_meta = $('.meta').length;
 for (i = 1; i <=jml_meta; i++) {
@@ -342,22 +381,9 @@ contentType: false,
 type: form.method,
 data: formdata,
 success:function(data){
-     
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
 
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
-
+$(".btn_simpan_persyaratan").attr("disabled", false);     
+response(data);
 }
 
 });

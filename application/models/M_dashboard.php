@@ -68,7 +68,7 @@ return $query;
 }
 
 public function simpan_jenis($data){
-$this->db->insert('data_jenis_dokumen',$data);    
+$this->db->insert('data_jenis_pekerjaan',$data);    
 }
 public function getJenis($id_jenis){
 $query = $this->db->get_where('data_jenis_dokumen',array('id_jenis_dokumen'=>$id_jenis));

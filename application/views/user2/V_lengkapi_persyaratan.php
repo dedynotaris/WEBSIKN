@@ -132,7 +132,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-md btn_simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
 </div>
 </form>    
 </div>
@@ -211,7 +211,9 @@ $('.data_perekaman_user').html(data);
 }    
     
 function response(data){
+
 var r = JSON.parse(data);
+if(r.status == "success"){
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -224,7 +226,23 @@ customClass: 'animated zoomInDown'
 Toast.fire({
 type: r.status,
 title: r.pesan
-});    
+});
+$(".form-control").val("");    
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+}
 }    
 
 $(function(){
@@ -341,7 +359,7 @@ url:"<?php echo base_url('User2/hapus_berkas_persyaratan') ?>",
 success:function(data){
 data_perekaman_user(no_client);    
 response(data);
-lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
+lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client);
 persyaratan_telah_dilampirkan();
 refresh();
 }
@@ -489,6 +507,7 @@ unhighlight: function (element, errorClass) {
 $(element).closest(".form-control").removeClass("is-invalid");
 },    
 submitHandler: function(form) {
+$(".btn_simpan_persyaratan").attr("disabled", true);
 
 var result = { };
 var jml_meta = $('.meta').length;
@@ -520,6 +539,7 @@ contentType: false,
 type: form.method,
 data: formdata,
 success:function(data){
+$(".btn_simpan_persyaratan").attr("disabled", false);
 data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
 response(data);

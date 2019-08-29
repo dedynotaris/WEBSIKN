@@ -81,7 +81,7 @@ $no_jenis            = str_pad($jumlah_jenis,4,"0",STR_PAD_LEFT);
 
 
 $data = array(
-'no_jenis_dokumen' =>"J_".$no_jenis,
+'no_jenis_pekerjaan' =>"J_".$no_jenis,
 'pekerjaan'        =>$this->input->post('pekerjaan'),
 'nama_jenis'       =>$this->input->post('jenis_dokumen'),
 'pembuat_jenis'    => $this->session->userdata('nama_lengkap'),  

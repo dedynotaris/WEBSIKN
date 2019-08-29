@@ -310,20 +310,34 @@ if(!empty($_FILES['file_berkas'])){
 $config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
-$this->upload->initialize($config);    
+$config['max_size']             = 50000;
+$this->upload->initialize($config);   
 
 if (!$this->upload->do_upload('file_berkas')){  
 $status = array(
 "status"     => "error",
 "pesan"      => $this->upload->display_errors()    
 );
+echo json_encode($status);
+
 }else{
 $lampiran = $this->upload->data('file_name');    
-}   
-}else{
-$lampiran = NULL;        
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
+}else{
+$lampiran = NULL;
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
+}
+
+
+}else{
+redirect(404);    
+}
+    
+}
+
+public function simpan_data_persyaratan($no_berkas,$input,$lampiran){
 $data_berkas = array(
 'no_berkas'         => $no_berkas,    
 'no_client'         => $input['no_client'],    
@@ -352,14 +366,7 @@ $status = array(
 "status"     => "success",
 "pesan"      => "Persyaratan berhasil ditambahkan"    
 );
-
 echo json_encode($status);
-
-
-}else{
-redirect(404);    
-}
-    
 }
 
 public function persyaratan_telah_dilampirkan(){
@@ -382,6 +389,7 @@ echo "</div>
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
+
 $query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
 $query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
@@ -417,7 +425,7 @@ echo "</tr>";
 echo "</tbody>";
 
 
-echo"</table>";   
+echo"</table>";  
 }else{
 redirect(404);    
 }    
@@ -483,8 +491,10 @@ $data = $this->M_user2->hapus_berkas($input['id_data_berkas'])->row_array();
 
 $filename = './berkas/'.$data['nama_folder']."/".$data['nama_berkas'];
 
-if(!file_exists($filename)){
+if(!empty($data['nama_berkas'])){
+if(file_exists($filename)){
 unlink($filename);
+}
 }
 
 $this->db->delete('data_berkas',array('id_data_berkas'=>$this->input->post('id_data_berkas')));    

@@ -116,6 +116,7 @@ type: form.method,
 data: formData,
 success:function(data){   
 var r = JSON.parse(data);
+if(r.status == "success"){
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -131,7 +132,24 @@ title: r.pesan
 }).then(function(){
 window.location.href='<?php echo base_url('User2/pekerjaan_antrian') ?>';    
 });
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
 
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+
+$(".simpan_perizinan").attr("disabled", false);
+
+}
 }
 
 });
