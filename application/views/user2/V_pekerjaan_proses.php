@@ -9,12 +9,9 @@
 <div class="row">    
 <div class="col mt-2">
 <?php if($query->num_rows() == 0){ ?>    
-    <h5 class="text-center text-theme1">Pekerjaan yang sedang diproses belum tersedia<br>
-       
-    </h5>
-    
+<h5 class="text-center text-theme1">Pekerjaan yang sedang diproses belum tersedia<br>
+</h5>
 <?php } else { ?>    
-    
 <table class="table text-theme1 table-hover table-sm text-center table-striped table-bordered">
 <tr>
 <th>Nama client</th>
@@ -35,7 +32,6 @@
 <option value="1">Proses Perizinan</option>
 <option value="2">Buat laporan</option>
 <option value="3">Lihat laporan</option>
-
 </select>    
 </td>
 </tr>

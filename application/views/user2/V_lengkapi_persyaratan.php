@@ -3,22 +3,27 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <?php $static = $query->row_array(); ?>
-<div class="container">    
-<div class="card-header mt-2 mb-2 text-center">
-Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
+<div class="container text-theme1">    
+<div class="card-header text-theme1 mt-2 mb-2 text-center">
+LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span></button>
 </div>
 </div>   
 <div class="container">
+
 <div class="row">
 <div class="col">
-<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-left "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>
+<div class="text-center text-theme1"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-left "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>
 <hr> </b></div>
-<div class="data_client">
+<div class="data_client text-theme1">
 </div>
 </div>
 </div>
+ 
+    
+    
 </div>
+    
 </div>
 
 
@@ -101,17 +106,20 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 
 
 <!------------------modal data perekaman user------------->
-<div class="modal fade" id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content ">
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data Perekaman Client<span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">PROSES PEREKAMAN DATA <span class="nama_client_title"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body data_perekaman_user">
+    
+<div class="modal-body data_perekaman_user  text-theme1 ">
+
 </div>
+    
 </div>
 </div>
 </div>
@@ -123,7 +131,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <div class="modal-dialog modal-md" role="document">
 <div class="modal-content ">
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Perekaman data<span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">PEREKAMAN DOKUMEN <span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
@@ -149,7 +157,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body data_perekaman">
+<div class="modal-body data_perekaman ">
 </div>
 </div>
 </div>
@@ -543,7 +551,6 @@ $(".btn_simpan_persyaratan").attr("disabled", false);
 data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
 response(data);
-refresh();
 }
 
 });

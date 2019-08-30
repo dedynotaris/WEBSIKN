@@ -27,18 +27,33 @@
 <tr>
 <td id='nama_client<?php echo $data['id_data_pekerjaan'] ?>'><?php echo $data['nama_client'] ?></td>
 <td><?php echo $data['nama_jenis'] ?></td>
-<td><?php 
-
-$d = new DateTime($data['target_kelar']);
-echo $d->diff(new DateTime())->format('%a');
- ?> Hari lagi </td>
 <td>
-<select onchange="aksi_option('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $data['id_data_pekerjaan'] ?>">
-<option>-- Klik untuk lihat menu --</option>
-<option value="1">Proses Persyaratan</option>
-<option value="2">Buat laporan</option>
-<option value="3">Lihat laporan</option>
-</select>    
+<?php
+if($data['target_kelar'] == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span><b>";    
+}else if($data['target_kelar'] <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span><b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
+}
+?> 
+</td>
+<td>
+<button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Proses persyaratan" class="btn btn-sm btn-success"><span class="fa fa-retweet"></span></button>    
+<button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>')" title="Buat Laporan" class="btn btn-sm btn-success"><span class="fas fa-pencil-alt"></span></button>    
+<button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Lihat Laporan" class="btn btn-sm btn-success"><span class="fa fa-eye"></span></button>    
+    
+   
 </td>
 </tr>
 <?php } ?>
@@ -50,19 +65,21 @@ echo $d->diff(new DateTime())->format('%a');
 </div>
 </div>
 
-<div class="modal fade" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade text-theme1" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
-<div class="modal-header">
-<h6>Progress <span class="laporan_client"></span></h6>  
-</div>   
+<div class="modal-header text-center">
+<h6 class="text-center"> LAPORAN PROSES PEKERJAAN <span class="laporan_client"></span> </h6>  
+</div>
+    
 <div class="modal-body">
 <input class="no_pekerjaan" value="" type="hidden">
 <input class="id_data_pekerjaan" value="" type="hidden">
-<textarea class="form-control laporan" placeholder="laporkan progress pekerjaan"></textarea>
+<textarea class="form-control laporan" rows="5" placeholder="Masukan laporan proses pekerjaan"></textarea>
 </div>
+    
 <div class="modal-footer">
-<button type="button" class="btn btn-success btn-sm simpan_progress">Simpan</button>
+<button type="button" class="btn btn-success btn-sm simpan_progress btn-block">Simpan laporan <span class="fa fa-save"></span></button>
 </div>
 </div>
 </div>
@@ -70,12 +87,12 @@ echo $d->diff(new DateTime())->format('%a');
 
 
 <div class="modal fade" id="lihat_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-body lihat_laporan">
-      </div>
-    </div>
-  </div>
+<div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+<div class="modal-content">
+<div class="modal-body lihat_laporan">
+</div>
+</div>
+</div>
 </div>
 
 
@@ -113,39 +130,17 @@ $(".laporan").val("");
 });    
 
 });    
-
-
-function aksi_option(no_pekerjaan,id_data_pekerjaan){
-var aksi_option = $(".data_option"+id_data_pekerjaan+" option:selected").val();
-if(aksi_option == 1){
-tambahkan_kedalam_proses(no_pekerjaan);
-}else if(aksi_option == 2){
+function buat_laporan(no_pekerjaan,id_data_pekerjaan){
 $('#modal_laporan').modal('show');
 var nama_client = $("#nama_client"+id_data_pekerjaan).text();
 $(".laporan_client").text(nama_client);
 $(".no_pekerjaan").val(no_pekerjaan);
 $(".id_data_pekerjaan").val(id_data_pekerjaan);
-}else if(aksi_option == 3){
-lihat_laporan(no_pekerjaan);
-
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: "warning",
-title: "Anda belum menentukan pilihan"
-});
-}
-$(".data_option"+id_data_pekerjaan).prop('selectedIndex',0);
 
 }
+
+
+
 
 function lihat_laporan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";    

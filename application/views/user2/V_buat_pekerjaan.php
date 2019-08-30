@@ -4,7 +4,7 @@
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <div class="container-fluid p-2 ">
 <div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Tambahkan pekerjaan dan Klien Baru <br><span class="fa-2x fas fa-pencil-alt"></span></h5>
+    <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan pekerjaan dan Klien Baru</h5>
 </div>
     <form  id="fileForm" class="mt-2 p-2" method="post" action="<?php echo base_url('User2/create_client') ?>">
 <div class="row text-theme1 rounded card-header m-2" >
@@ -24,7 +24,7 @@
 <div class="col ">
 <label>Pilih Jenis client</label>
 <select name="jenis" id="pilih_jenis" class="form-control form-control-sm required" accept="text/plain">
-<option>-- Klik untuk melihat plihan jenis client --</option>
+<option>Pilih jenis client</option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>    

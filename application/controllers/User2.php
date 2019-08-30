@@ -548,7 +548,7 @@ $input = $this->input->post();
 $data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 if($data->num_rows() == 0){
 echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
-    . "<span class='fa fa-list-alt fa-3x'></span></h5>";
+    . "<span class=' far fa-clipboard fa-3x'></span></h5>";
     
 }else{echo "<table class='table table-bordered table-striped table-hover table-sm'>"
 . "<tr>"
@@ -628,11 +628,11 @@ $input = $this->input->post();
 
 $data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 if($data->num_rows() == 0){
-echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
-    . "<br><br><span class='fa fa-list-alt fa-3x'></span></h5>";
+echo "<h5 class='text-center text-theme1'>Belum ada laporan yang anda masukan"
+    . "<br><span class='far fa-clipboard fa-3x'></span></h5>";
     
 }else{
-echo "<table class='table table-bordered table-striped table-hover table-sm'>"
+echo "<table class='table text-theme1 table-bordered table-striped table-hover table-sm'>"
 . "<tr>"
 . "<th>Tanggal </th>"
 . "<th>laporan</th>"
@@ -1005,7 +1005,7 @@ foreach ($data->result_array() as $d){
 echo "<div class='row'>"
 . "<div class='col-md-6 mt-2'>".$d['nama_client']."</div>"
 . "<div class='col mt-2'>".$d['pembuat_client']."</div>"
-. "<div class='col mt-2'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-dark btn-sm'>Data Terekam ".$this->db->get_where('data_berkas',array('no_client'=>$d['no_client']))->num_rows()." <span class='fa fa-eye'></span></button></div>"
+. "<div class='col mt-2'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-success btn-sm'>Proses Perekaman <span class='fa fa-retweet'></span></button></div>"
 . "<div class='col-md-1 mt-2'><button onclick = hapus_pemilik('".$d['no_pemilik']."'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></div>"
 . "</div>";     
 }
@@ -1069,7 +1069,7 @@ echo "<div class='col text-left card-footer'>";
 echo $nama_dokumen['nama_dokumen'];
 echo"</div>";
 echo "<div class='col-md-4 text-left card-footer'>";
-echo '<button class="btn btn-block btn-dark m-1 btn-sm" onclick=tampil_modal_upload("'.$nama_dokumen['no_pekerjaan'].'","'.$nama_dokumen['no_nama_dokumen'].'","'.$input['no_client'].'");> Rekam Data <span class="fa fa-eye"></span> </button>';
+echo '<button class="btn btn-block btn-outline-dark m-1 btn-sm" onclick=tampil_modal_upload("'.$nama_dokumen['no_pekerjaan'].'","'.$nama_dokumen['no_nama_dokumen'].'","'.$input['no_client'].'");> Rekam Data <span class="fa fa-eye"></span> </button>';
 echo"</div>";
 echo"</div>";
 }
