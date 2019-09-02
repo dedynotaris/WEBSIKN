@@ -44,14 +44,10 @@ echo  "<tr class='hapus_syarat".$d['id_data_persyaratan']."'>"
 ."<td  class='text-center'><button onclick=hapus_syarat(".$d['id_data_persyaratan']."); class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>"
 . "</tr>";    
 }
-
 echo "</table>";
-
-
 }else{
 redirect(4);    
-}    
-    
+}     
 }
 
 public function keluar(){
@@ -64,13 +60,11 @@ if($this->session->userdata('level') == "Super Admin"){
 $user           = $this->M_dashboard->data_user();
 $nama_dokumen   = $this->M_dashboard->data_nama_dokumen();
 $nama_jenis     = $this->M_dashboard->data_jenis();
-
 $this->load->view('umum/V_header');
 $this->load->view('dashboard/V_setting',['user'=>$user,'nama_dokumen'=>$nama_dokumen,'nama_jenis'=>$nama_jenis]);
 }else{
 redirect(404);    
 }
-
 }
 
 public function simpan_jenis_dokumen(){
@@ -570,10 +564,13 @@ public function simpan_meta(){
 if($this->input->post()){
 $input = $this->input->post();
 $data = array(
-'no_nama_dokumen' =>$input['no_nama_dokumen'],
-'nama_meta'       =>$input['nama_meta'], 
+'no_nama_dokumen'   => $input['no_nama_dokumen'],
+'nama_meta'         => $input['nama_meta'],
+'jenis_inputan'     => $input['jenis_input'],
+'maksimal_karakter' => $input['maksimal_karakter']   
 );
 $this->db->insert('data_meta',$data);    
+
 $status = array(
 "status"      =>"success",
 "pesan"       =>"Meta dokumen berhasil ditambahkan" 
@@ -592,8 +589,6 @@ echo "<table class='table table-sm table-bordered table-striped table-hover'>"
         . "<tr>"
         . "<th>No</th>"
         . "<th>Nama meta</th>"
-        . "<th>Jenis Inputan</th>"
-        . "<th>Maksimal karakter</th>"
         . "<th>Aksi</th>"
         . "</tr>";
 $h =1;
@@ -601,14 +596,6 @@ foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$h++."</td>"
     . "<td>".$d['nama_meta']."</td>"
-    . "<td>"
-    . "<select onchange=simpan_jenis_inputan('".$d['id_data_meta']."'); class='form-control jenis_inputan".$d['id_data_meta']."'>"
-    . "<option>".$d['jenis_inputan']."</option>"
-    . "<option>Numeric dan Text</option>"
-    . "<option>Numeric</option>"
-    . "</select>"
-    . "</td>"
-    . "<td><input  onchange=simpan_maksimal_karakter('".$d['id_data_meta']."'); type='text' value='".$d['maksimal_karakter']."' class='form-control maksimal_karakter".$d['id_data_meta']."'></td>"
     . "<td><button class='btn btn-danger btn-sm' onclick=hapus_meta('".$d['id_data_meta']."')><span class='fa fa-trash'></span></button></td>"
 . "</tr>";
 }
@@ -854,45 +841,9 @@ redirect(404);
 
 }
 
-public function simpan_jenis_inputan(){
-if($this->input->post()){
-$inputan = array('jenis_inputan'=> $this->input->post('jenis_inputan'));
-
-$this->db->update('data_meta',$inputan,array('id_data_meta'=>$this->input->post('id_data_meta')));
-$status = array(
-"status"     => "success",
-"pesan"      => "Jenis Inputan Tersimpan",    
-);
 
 
-echo json_encode($status);
 
-
-    
-}else{
-redirect(404);    
-}    
-}
-
-public function simpan_maksimal_karakter(){
-if($this->input->post()){
-$inputan = array('maksimal_karakter'=> $this->input->post('maksimal_karakter'));
-
-$this->db->update('data_meta',$inputan,array('id_data_meta'=>$this->input->post('id_data_meta')));
-$status = array(
-"status"     => "success",
-"pesan"      => "Maskismal Inputan Tersimpan",    
-);
-
-
-echo json_encode($status);
-
-
-    
-}else{
-redirect(404);    
-}    
-}
 
 public function pencarian_data_client($input){
 $this->db->select('data_client.nama_client,'

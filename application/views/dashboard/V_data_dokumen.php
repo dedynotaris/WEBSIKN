@@ -44,7 +44,15 @@
 <div class="modal-body">
     <input type="hidden" class="no_nama_dokumen ">
     <label>Masukan Nama Meta</label>
-    <input type="text" class="form-control nama_meta">    
+    <input type="text" placeholder="nama meta" class="form-control form-control-sm nama_meta">
+    <label>Jenis inputan</label>
+    <select class="form-control form-control-sm jenis_input">
+        <option>text</option>    
+        <option>number</option>
+        <option>select</option>
+    </select>
+    <label>Maksimal karakter</label>
+    <input type="text" placeholder="maksimal karakter" class="form-control maksimal_karakter form-control-sm">
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
@@ -57,7 +65,7 @@
 
 <!------------- Modal Meta---------------->
 <div class="modal fade bd-example-modal-lg" id="lihat_meta" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
+<div class="modal-dialog modal-md" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <h6 class="modal-title" >Data Meta</h6>
@@ -87,15 +95,7 @@
 </div>
 
 <script type="text/javascript">
-function simpan_jenis_inputan(id_data_meta){
-var jenis_inputan = $(".jenis_inputan"+id_data_meta+" option:selected").text();
-
-var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
-$.ajax({
-type:"post",
-url :"<?php echo base_url('Dashboard/simpan_jenis_inputan') ?>",
-data:"token="+token+"&jenis_inputan="+jenis_inputan+"&id_data_meta="+id_data_meta,
-success:function(data){
+function response(data){
 var r = JSON.parse(data);
 const Toast = Swal.mixin({
 toast: true,
@@ -109,37 +109,12 @@ customClass: 'animated bounceInDown'
 Toast.fire({
 type: r.status,
 title: r.pesan
-});
+});    
+}    
+    
 
-}
-});
-}
-function simpan_maksimal_karakter(id_data_meta){
-var maksimal_karakter = $(".maksimal_karakter"+id_data_meta).val();
-var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
-$.ajax({
-type:"post",
-url :"<?php echo base_url('Dashboard/simpan_maksimal_karakter') ?>",
-data:"token="+token+"&maksimal_karakter="+maksimal_karakter+"&id_data_meta="+id_data_meta,
-success:function(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
 
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
 
-}
-});
-}
 
 $(document).ready(function() {
 $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings)
@@ -352,36 +327,23 @@ $('#edit_dokumen').modal('hide');
 
 
 $("#simpan_meta").click(function(){
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
-var no_nama_dokumen = $(".no_nama_dokumen").val();
-var nama_meta       = $(".nama_meta").val();
+var token                   = "<?php echo $this->security->get_csrf_hash() ?>";    
+var no_nama_dokumen         = $(".no_nama_dokumen").val();
+var nama_meta               = $(".nama_meta").val();
+var jenis_input             = $(".jenis_input option:selected").val();
+var maksimal_karakter       = $(".maksimal_karakter").val();
 if(nama_meta != ''){
 $.ajax({
 type:"post",
 url :"<?php echo base_url('Dashboard/simpan_meta') ?>",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta+"&jenis_input="+jenis_input+"&maksimal_karakter="+maksimal_karakter,
 success:function(data){
-var r =JSON.parse(data);    
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-})
+response(data);
 $('#modal_meta').modal('hide');
 $(".nama_meta").val("");
 }
 
 });
-
-
 } else {
 const Toast = Swal.mixin({
 toast: true,
