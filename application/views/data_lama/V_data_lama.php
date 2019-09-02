@@ -21,7 +21,7 @@
 <input type="hidden" name="no_client" readonly="" class="form-control form-control-sm no_client required" accept="text/plain">
 <label>Nama Notaris</label>
 <select class="form-control form-control-sm nama_notaris required" accept="text/plain">
-    <option>--- Pilih Nama Notaris ---</option>    
+    <option> Pilih Nama Notaris </option>    
 <?php 
 foreach ($nama_notaris->result_array() as $nama){
 echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";    
@@ -53,31 +53,23 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 <div class="modal-content">
 <div class="modal-body">
 <form  id="fileForm" method="post" action="<?php echo base_url('Data_lama/create_client') ?>">
-    
-<label>Contact Person</label>
-<input type="text" name="contact_person" class="form-control form-control-sm contact_person required" accept="text/plain">
 
-<label>No Telepon</label>
-<input type="number" name="no_tlp"  class="form-control form-control-sm contact_number required" accept="text/plain">
-
-<label>Pilih Jenis client</label>
-<select name="jenis" id="pilih_jenis" class="form-control form-control-sm  required" accept="text/plain">
-<option ></option>
-<option value="Perorangan">Perorangan</option>
-<option value="Badan Hukum">Badan Hukum</option>	
-</select>
-
+    <input type="hidden" id="pilih_jenis" value="Badan Hukum">
 <div id="form_badan_hukum">
-<label  id="label_nama_perorangan">Nama Perorangan</label>
-<label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
+<label   id="label_nama_hukum">Nama Badan Hukum</label>
+<input  placeholder="Nama badan hukum" type="text" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
 </div>
 
 <div id="form_alamat_hukum">
-<label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
-<label  id="label_alamat_perorangan">Alamat Perorangan</label>
-<textarea rows="4" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
+<label  id="label_alamat_hukum">Alamat Badan Hukum</label>
+<textarea placeholder="Badan Hukum" rows="4" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
+
+<label>Contact Person</label>
+<input placeholder="contact Person" type="text" name="contact_person" class="form-control form-control-sm contact_person required" accept="text/plain">
+
+<label>No Telepon</label>
+<input placeholder="No telepon" type="number" name="no_tlp"  class="form-control form-control-sm contact_number required" accept="text/plain">
 
     
 </div>
@@ -128,32 +120,6 @@ $('#modal_tambah_client').modal('show');
 
 });
 
-$("#pilih_jenis").on("change",function(){
-var client = $("#pilih_jenis option:selected").text();
-if(client == "Perorangan"){
-$("#form_client").show(100);
-$("#label_alamat_perorangan,#label_nama_perorangan").fadeIn(100);
-$("#label_alamat_hukum,#label_nama_hukum").fadeOut(100);
-}else if(client == "Badan Hukum"){
-$("#form_client").show(100);
-$("#label_alamat_hukum,#label_nama_hukum").fadeIn(100);
-$("#label_alamat_perorangan,#label_nama_perorangan").fadeOut(100);
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated tada'
-});
-
-Toast.fire({
-type: 'warning',
-title: 'Silahkan pilih jenis client terlebih dahulu.'
-})
-}
-});
 
 
 
@@ -172,7 +138,7 @@ $(".simpan_client").attr("disabled", true);
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 formData = new FormData();
 formData.append('token',token);
-formData.append('jenis_client',$("#pilih_jenis option:selected").text());
+formData.append('jenis_client',$("#pilih_jenis").val());
 formData.append('badan_hukum',$("#badan_hukum").val()),
 formData.append('alamat_badan_hukum',$("textarea#alamat_badan_hukum").val()),
 formData.append('contact_person',$(".contact_person").val()),

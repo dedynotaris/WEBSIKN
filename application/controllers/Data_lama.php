@@ -18,9 +18,27 @@ $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_data_lama',['nama_notaris'=>$nama_notaris]);
 }
 
+public function lihat_rekam_data(){ 
+$no_pekerjaan      = base64_decode($this->uri->segment(3));
+$data_perekaman    = $this->M_data_lama->data_perekaman_pekerjaan($no_pekerjaan);
+
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_rekaman_data',['data_perekaman'=>$data_perekaman]);
+}
+
 public function data_arsip(){
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_data_arsip');    
+}
+
+public function perorangan(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_data_arsip_perorangan');    
+}
+
+public function badan_hukum(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_data_arsip_badan_hukum');    
 }
 
 public function rekam_data(){
@@ -34,6 +52,14 @@ $this->load->view('data_lama/V_rekam_data',['data'=>$dokumen_perizinan,'dokumen_
 
 public function json_data_berkas(){
 echo $this->M_data_lama->json_data_berkas();       
+}
+
+public function json_data_arsip_perorangan(){
+echo $this->M_data_lama->json_data_arsip_perorangan();       
+}
+
+public function json_data_arsip_badan_hukum(){
+echo $this->M_data_lama->json_data_arsip_badan_hukum();       
 }
 
 public function json_data_arsip(){
@@ -79,11 +105,28 @@ echo json_encode($json);
 public function create_client(){
 if($this->input->post()){
 $data = $this->input->post();
+if($data['jenis_client'] == "Perorangan"){
+$this->simpan_client($data);
+}else if($data['jenis_client'] == "Badan Hukum"){
+$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($data['badan_hukum'])))->num_rows();        
+if($cek_badan_hukum == 0){
+$this->simpan_client($data);
+}else{
+$status = array(
+"status"     => "error",
+"pesan"      => "Nama Badan Hukum sudah tersedia"    
+);    
+echo json_encode($status);
+}
+}
+}else{
+redirect(404);    
+}
+}
 
+public function simpan_client($data){    
 $h_client = $this->M_data_lama->data_client()->num_rows()+1;
-
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
-
 $data_client = array(
 'no_client'                 => $no_client,    
 'jenis_client'              => ucwords($data['jenis_client']),    
@@ -96,29 +139,20 @@ $data_client = array(
 'contact_person'            => ucwords($data['contact_person']),    
 'contact_number'            => ucwords($data['contact_number']),    
 );    
-
-
 $this->db->insert('data_client',$data_client);
+
 
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
-
-
 $status = array(
 "status"     => "success",
 "pesan"      => "Client Berhasil ditambahkan"    
 );
 echo json_encode($status);
 
-}else{
-redirect(404);    
+
 }
-}
-
-
-
-
 public function simpan_pekerjaan_arsip(){
 if($this->input->post()){
 $input = $this->input->post();
@@ -140,6 +174,17 @@ $data_r = array(
 );
 
 $this->db->insert('data_pekerjaan',$data_r);
+
+$tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
+$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+
+$data_pem = array(
+'no_pemilik'    =>$no_pemilik,   
+'no_client'     =>$input['no_client'],
+'no_pekerjaan'  =>$no_pekerjaan    
+);
+$this->db->insert('data_pemilik',$data_pem);
+
 $status = array(
 "status"     => "success",
 "pesan"      => "Arsip Berhasil dibuat"    
@@ -347,9 +392,10 @@ $no_berkas = date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_L
 
 $static = $this->M_data_lama->data_pekerjaan($input['no_pekerjaan'])->row_array();
 
+$data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 
 if(!empty($_FILES['file_berkas'])){
-$config['upload_path']          = './berkas/'.$static['nama_folder'];
+$config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
 $this->upload->initialize($config);    
@@ -396,7 +442,6 @@ $status = array(
 );
 
 echo json_encode($status);
-
 
 }else{
 redirect(404);    
@@ -682,7 +727,10 @@ redirect(404);
 }
 
 }
-
+public function keluar(){
+$this->session->sess_destroy();
+redirect (base_url('Login'));
+}
 }
 
 

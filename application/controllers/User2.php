@@ -66,6 +66,27 @@ echo json_encode($json);
 public function create_client(){
 if($this->input->post()){
 $data = $this->input->post();
+$data = $this->input->post();
+if($data['jenis_client'] == "Perorangan"){
+$this->simpan_client($data);
+}else if($data['jenis_client'] == "Badan Hukum"){
+$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($data['badan_hukum'])))->num_rows();        
+if($cek_badan_hukum == 0){
+$this->simpan_client($data);
+}else{
+$status = array(
+"status"     => "error",
+"pesan"      => "Nama Badan Hukum sudah tersedia"    
+);    
+echo json_encode($status);
+}
+}
+}else{
+redirect(404);    
+}
+}
+
+public function simpan_client($data){
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
@@ -98,6 +119,15 @@ $data_r = array(
 
 $this->db->insert('data_pekerjaan',$data_r);
 
+$tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
+$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+
+$data_pem = array(
+'no_pemilik'    =>$no_pemilik,   
+'no_client'     =>$no_client,
+'no_pekerjaan'  =>$no_pekerjaan    
+);
+$this->db->insert('data_pemilik',$data_pem);
 
 
 if(!file_exists("berkas/"."Dok".$no_client)){
@@ -112,12 +142,7 @@ $status = array(
 "no_client"  => base64_encode($no_client),
 "pesan"      => "Telah dimasukan kedalam agenda kerja"    
 );
-echo json_encode($status);
-
-}else{
-redirect(404);    
-
-}
+echo json_encode($status);    
 }
 
 
@@ -285,20 +310,34 @@ if(!empty($_FILES['file_berkas'])){
 $config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
-$this->upload->initialize($config);    
+$config['max_size']             = 50000;
+$this->upload->initialize($config);   
 
 if (!$this->upload->do_upload('file_berkas')){  
 $status = array(
 "status"     => "error",
 "pesan"      => $this->upload->display_errors()    
 );
+echo json_encode($status);
+
 }else{
 $lampiran = $this->upload->data('file_name');    
-}   
-}else{
-$lampiran = NULL;        
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
+}else{
+$lampiran = NULL;
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
+}
+
+
+}else{
+redirect(404);    
+}
+    
+}
+
+public function simpan_data_persyaratan($no_berkas,$input,$lampiran){
 $data_berkas = array(
 'no_berkas'         => $no_berkas,    
 'no_client'         => $input['no_client'],    
@@ -327,14 +366,7 @@ $status = array(
 "status"     => "success",
 "pesan"      => "Persyaratan berhasil ditambahkan"    
 );
-
 echo json_encode($status);
-
-
-}else{
-redirect(404);    
-}
-    
 }
 
 public function persyaratan_telah_dilampirkan(){
@@ -357,6 +389,7 @@ echo "</div>
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
+
 $query     = $this->M_user2->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
 $query2     = $this->M_user2->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
@@ -392,7 +425,7 @@ echo "</tr>";
 echo "</tbody>";
 
 
-echo"</table>";   
+echo"</table>";  
 }else{
 redirect(404);    
 }    
@@ -458,8 +491,10 @@ $data = $this->M_user2->hapus_berkas($input['id_data_berkas'])->row_array();
 
 $filename = './berkas/'.$data['nama_folder']."/".$data['nama_berkas'];
 
-if(!file_exists($filename)){
+if(!empty($data['nama_berkas'])){
+if(file_exists($filename)){
 unlink($filename);
+}
 }
 
 $this->db->delete('data_berkas',array('id_data_berkas'=>$this->input->post('id_data_berkas')));    
@@ -513,7 +548,7 @@ $input = $this->input->post();
 $data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 if($data->num_rows() == 0){
 echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
-    . "<span class='fa fa-list-alt fa-3x'></span></h5>";
+    . "<span class=' far fa-clipboard fa-3x'></span></h5>";
     
 }else{echo "<table class='table table-bordered table-striped table-hover table-sm'>"
 . "<tr>"
@@ -593,11 +628,11 @@ $input = $this->input->post();
 
 $data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 if($data->num_rows() == 0){
-echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
-    . "<br><br><span class='fa fa-list-alt fa-3x'></span></h5>";
+echo "<h5 class='text-center text-theme1'>Belum ada laporan yang anda masukan"
+    . "<br><span class='far fa-clipboard fa-3x'></span></h5>";
     
 }else{
-echo "<table class='table table-bordered table-striped table-hover table-sm'>"
+echo "<table class='table text-theme1 table-bordered table-striped table-hover table-sm'>"
 . "<tr>"
 . "<th>Tanggal </th>"
 . "<th>laporan</th>"
@@ -970,7 +1005,7 @@ foreach ($data->result_array() as $d){
 echo "<div class='row'>"
 . "<div class='col-md-6 mt-2'>".$d['nama_client']."</div>"
 . "<div class='col mt-2'>".$d['pembuat_client']."</div>"
-. "<div class='col mt-2'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-dark btn-sm'>Data Terekam ".$this->db->get_where('data_berkas',array('no_client'=>$d['no_client']))->num_rows()." <span class='fa fa-eye'></span></button></div>"
+. "<div class='col mt-2'><button onclick=data_perekaman_user('".$d['no_client']."'); class='btn btn-block btn-success btn-sm'>Proses Perekaman <span class='fa fa-retweet'></span></button></div>"
 . "<div class='col-md-1 mt-2'><button onclick = hapus_pemilik('".$d['no_pemilik']."'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></div>"
 . "</div>";     
 }
@@ -1034,7 +1069,7 @@ echo "<div class='col text-left card-footer'>";
 echo $nama_dokumen['nama_dokumen'];
 echo"</div>";
 echo "<div class='col-md-4 text-left card-footer'>";
-echo '<button class="btn btn-block btn-dark m-1 btn-sm" onclick=tampil_modal_upload("'.$nama_dokumen['no_pekerjaan'].'","'.$nama_dokumen['no_nama_dokumen'].'","'.$input['no_client'].'");> Rekam Data <span class="fa fa-eye"></span> </button>';
+echo '<button class="btn btn-block btn-outline-dark m-1 btn-sm" onclick=tampil_modal_upload("'.$nama_dokumen['no_pekerjaan'].'","'.$nama_dokumen['no_nama_dokumen'].'","'.$input['no_client'].'");> Rekam Data <span class="fa fa-eye"></span> </button>';
 echo"</div>";
 echo"</div>";
 }

@@ -316,6 +316,8 @@ $query = $this->db->get();
 return $query;
 }
 
+
+
 public function data_pekerjaan($no_pekerjaan){
 $this->db->select('data_client.nama_folder,'
         . 'data_client.no_client,'

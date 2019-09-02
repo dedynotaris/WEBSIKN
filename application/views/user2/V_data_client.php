@@ -15,7 +15,7 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >jenis client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >pembuat client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >asisten</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody align="center">

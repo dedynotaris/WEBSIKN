@@ -3,18 +3,19 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user2'); ?>
 <?php $static = $query->row_array(); ?>
-<div class="container">    
-<div class="card-header mt-2 mb-2 text-center">
-Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
+<div class="container text-theme1">    
+<div class="card-header text-theme1 mt-2 mb-2 text-center">
+LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span></button>
 </div>
 </div>   
 <div class="container">
+
 <div class="row">
 <div class="col">
-<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-left "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>
+<div class="text-center text-theme1"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-left "  onclick="modal_client();">Tambahkan Pengurus <span class="fa fa-plus"></span></button>
 <hr> </b></div>
-<div class="data_client">
+<div class="data_client text-theme1">
 </div>
 </div>
 </div>
@@ -70,26 +71,26 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 </div>    
 <div class="modal-body">
 <form  id="fileclient" method="post" action="<?php echo base_url('User2/buat_client') ?>">
-<label>Contact Person</label>
-<input type="text" name="contact_person" placeholder="contact person" class="form-control form-control-sm contact_person required" accept="text/plain">
-<label>No Telepon</label>
-<input type="number" name="no_tlp" placeholder="no telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
 <label>Pilih Jenis client</label>
 <select name="jenis" id="pilih_jenis" class="form-control form-control-sm  required" accept="text/plain">
-<option>---Jenis cLient ----</option>
+<option>Jenis Client</option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" placeholder="nama perorangan / badan HUkum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
+<input type="text" placeholder="Nama perorangan / Badan Hukum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
 </div>
 <div id="form_alamat_hukum">
 <label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
 <label  id="label_alamat_perorangan">Alamat Perorangan</label>
 <textarea rows="4" placeholder="Alamat Lengkap perorangan atau badan hukum" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
+<label>Contact Person</label>
+<input type="text" name="contact_person" placeholder="Contact Person" class="form-control form-control-sm contact_person required" accept="text/plain">
+<label>No Telepon</label>
+<input type="number" name="no_tlp" placeholder="No Telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
 </div>
 <div class="card-footer">
 <button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
@@ -101,17 +102,20 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 
 
 <!------------------modal data perekaman user------------->
-<div class="modal fade" id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content ">
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data Perekaman Client<span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">PROSES PEREKAMAN DATA <span class="nama_client_title"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body data_perekaman_user">
+    
+<div class="modal-body data_perekaman_user  text-theme1 ">
+
 </div>
+    
 </div>
 </div>
 </div>
@@ -123,7 +127,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <div class="modal-dialog modal-md" role="document">
 <div class="modal-content ">
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Perekaman data<span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">PEREKAMAN DOKUMEN <span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
@@ -132,7 +136,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-md btn_simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
 </div>
 </form>    
 </div>
@@ -140,7 +144,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 </div>
 
 <!------------------modal data perekaman------------->
-<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content ">
 <div class="modal-header">
@@ -149,7 +153,7 @@ Lengkapi persyaratan dokumen <?php echo $static['nama_client'] ?>
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body data_perekaman">
+<div class="modal-body data_perekaman ">
 </div>
 </div>
 </div>
@@ -211,7 +215,9 @@ $('.data_perekaman_user').html(data);
 }    
     
 function response(data){
+
 var r = JSON.parse(data);
+if(r.status == "success"){
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -224,7 +230,23 @@ customClass: 'animated zoomInDown'
 Toast.fire({
 type: r.status,
 title: r.pesan
-});    
+});
+$(".form-control").val("");    
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+}
 }    
 
 $(function(){
@@ -341,7 +363,7 @@ url:"<?php echo base_url('User2/hapus_berkas_persyaratan') ?>",
 success:function(data){
 data_perekaman_user(no_client);    
 response(data);
-lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
+lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client);
 persyaratan_telah_dilampirkan();
 refresh();
 }
@@ -489,6 +511,7 @@ unhighlight: function (element, errorClass) {
 $(element).closest(".form-control").removeClass("is-invalid");
 },    
 submitHandler: function(form) {
+$(".btn_simpan_persyaratan").attr("disabled", true);
 
 var result = { };
 var jml_meta = $('.meta').length;
@@ -520,10 +543,10 @@ contentType: false,
 type: form.method,
 data: formdata,
 success:function(data){
+$(".btn_simpan_persyaratan").attr("disabled", false);
 data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
 response(data);
-refresh();
 }
 
 });
@@ -531,6 +554,14 @@ return false;
 }
 });
 
+$(document).ready(function(){
+});
+
+function regis_js(no_nama_dokumen){
+$(".simpan_form"+no_nama_dokumen).click(function(){
+alert("asd");    
+});
+}
 
 
 $("#fileclient").submit(function(e) {

@@ -51,6 +51,14 @@ public function data_nama_dokumen(){
 $query = $this->db->get('nama_dokumen');
 return $query;        
 }
+
+public function hitung_nama_dokumen(){
+         $this->db->limit(1);
+         $this->db->select('nama_dokumen.id_nama_dokumen');
+         $this->db->order_by('id_nama_dokumen','DESC');
+$query = $this->db->get('nama_dokumen');
+return $query;        
+}
 public function simpan_nama_dokumen($data){
 $this->db->insert('nama_dokumen',$data);    
 }
@@ -60,7 +68,7 @@ return $query;
 }
 
 public function simpan_jenis($data){
-$this->db->insert('data_jenis_dokumen',$data);    
+$this->db->insert('data_jenis_pekerjaan',$data);    
 }
 public function getJenis($id_jenis){
 $query = $this->db->get_where('data_jenis_dokumen',array('id_jenis_dokumen'=>$id_jenis));
@@ -189,6 +197,7 @@ $this->datatables->add_column('view',""
         . "<option value='1'>Lihat Meta</option>"
         . "<option value='2'>Tambah Meta</option>"
         . "<option value='3'>Edit nama dokumen</option>"
+        . "<option value='4'>Hapus nama dokumen</option>"
         . "</select>"
         . "",'id_nama_dokumen,no_nama_dokumen');
 

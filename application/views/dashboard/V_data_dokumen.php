@@ -20,11 +20,11 @@
 </div>
 <div class="modal-body">
 <label>Tambahkan Nama Dokumen</label> 
-<input type="text"  class="form-control" id="nama_dokumen" name="Nama Dokumen" placeholder="Nama Dokumen">
+<input type="text"  class="form-control form-control-sm" id="nama_dokumen" name="Nama Dokumen" placeholder="Nama Dokumen">
 </div>
 <div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<button type="button" class="btn btn-success"  id="simpan_dokumen">Simpan Nama Dokumen</button>
+<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-sm btn-success"  id="simpan_dokumen">Simpan Nama Dokumen</button>
 </div>
 </div>
 </div>
@@ -206,6 +206,7 @@ $('#data_nama_dokumen').val( json.lastInput );
 }
 
 function opsi_nama_dokumen(id_nama_dokumen,no_nama_dokumen){
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
 var val = $(".opsi_nama_dokumen"+id_nama_dokumen+" option:selected").val();
 if(val == 1){
 lihat_meta(no_nama_dokumen);    
@@ -213,6 +214,36 @@ lihat_meta(no_nama_dokumen);
 tambah_meta(no_nama_dokumen);    
 }else if(val == 3){
 edit_nama_dokumen(id_nama_dokumen);
+}else if(val == 4){
+
+Swal.fire({
+  title: 'Anda yakin ingin mengahpus nama dokumen ini?',
+  text: "Seluruh data yang pernah tersimpan dengan nama dokumen ini akan dihapus",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Hapus'
+}).then((result) => {
+  if (result.value) {
+    
+    $.ajax({
+      type:"post",
+      data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
+      url:"<?php echo base_url('Dashboard/hapus_nama_dokumen') ?>",
+      success:function(){
+          Swal.fire(
+      'Terhapus!',
+      'Nama Dokumen berhasil dihapus',
+      'success'
+       )
+       refresh_nama_dokumen();
+      }
+    });                
+  }
+})
+
+
 }
 $(".opsi_nama_dokumen"+id_nama_dokumen).val("-- Klik untuk melihat menu --");
 }

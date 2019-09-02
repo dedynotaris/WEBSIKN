@@ -160,6 +160,7 @@ if(!empty($_FILES['file_berkas'])){
 $config['upload_path']          = './berkas/'.$static['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
+$config['max_size']             = 50000;
 $this->upload->initialize($config);    
 
 if (!$this->upload->do_upload('file_berkas')){  
@@ -167,20 +168,31 @@ $status = array(
 "status"     => "error",
 "pesan"      => $this->upload->display_errors()    
 );
+echo json_encode($status);
+
 }else{
 $lampiran = $this->upload->data('file_name');    
-}   
-}else{
-$lampiran = NULL;        
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
+}else{
+$lampiran = NULL;
+$this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
+}
+
+}else{
+redirect(404);    
+}    
+}
+
+public function simpan_data_persyaratan($no_berkas,$input,$lampiran){
 $data_berkas = array(
 'no_berkas'         => $no_berkas,    
 'no_client'         => $input['no_client'],    
 'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
 'nama_berkas'       => $lampiran,
-'Pengupload'        => $this->session->userdata('nama_lengkap'),
+'Pengupload'        => $this->session->userdata('no_user'),
 'tanggal_upload'    => date('Y/m/d' ),  
 );    
 
@@ -202,14 +214,7 @@ $status = array(
 "status"     => "success",
 "pesan"      => "Persyaratan berhasil ditambahkan"    
 );
-
 echo json_encode($status);
-
-
-}else{
-redirect(404);    
-}
-    
 }
 
 public function simpan_laporan(){

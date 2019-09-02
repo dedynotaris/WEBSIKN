@@ -34,7 +34,26 @@ echo "<option value=".$user['no_user'].">".$user['nama_lengkap']."</option>";
 }?>
 </select>
 </td>   
-<td><?php echo $d['target_kelar']  ?></td>
+<td>
+<?php
+if($d['target_kelar'] == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span><b>";    
+}else if($d['target_kelar'] <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($d['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span><b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($d['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
+}
+?> </td>
 <td>
 <select onchange="aksi_option('<?php echo base64_encode($d['no_pekerjaan']) ?>','<?php echo $d['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $d['id_data_pekerjaan'] ?>">
 <option>-- Klik untuk melihat menu --</option>

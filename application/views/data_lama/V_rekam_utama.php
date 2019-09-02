@@ -2,10 +2,11 @@
 <div class="container-fluid mt-2 ">    
 <div class="row ">
 <div class="col">    
-<div class="card-header  text-center text-theme1 ">
-Dokumen utama yang sudah diupload
+<div class="text-center text-theme1 ">
+    <b>Dokumen utama yang sudah diupload</b>
 
 <button class="btn btn-dark btn-sm float-md-right" onclick="tambah_dokumen_utama();">Tambah dokumen utama</button>
+<hr>
 </div>
 <table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
 <tr>

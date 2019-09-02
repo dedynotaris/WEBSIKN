@@ -15,6 +15,12 @@ return $query->result();
        $query = $this->db->get('data_pekerjaan');
 return $query;
 }
+public function data_pemilik(){
+         $this->db->limit(1);
+         $this->db->order_by('data_pemilik.id_data_pemilik','DESC');
+$query = $this->db->get_where('data_pemilik');
+return $query;
+}
 public function cari_jenis_pekerjaan($term){
 $this->db->from("data_jenis_pekerjaan");
 $this->db->limit(15);
@@ -25,20 +31,26 @@ if($query->num_rows() >0 ){
 return $query->result();
 }
 }
+public function data_perekaman_pekerjaan($no_pekerjaan){
+$this->db->select('*');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('data_berkas','data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
+$this->db->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->db->group_by('nama_dokumen.no_nama_dokumen');
+$this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+$query = $this->db->get();    
 
-
-
+return $query;      
+}
 public function data_client(){
 $query = $this->db->get('data_client');
 
 return $query;
 }
-public function data_pemilik(){
-         $this->db->limit(1);
-         $this->db->order_by('data_pemilik.id_data_pemilik','DESC');
-$query = $this->db->get_where('data_pemilik');
-return $query;
-}
+
 
 public function data_client_where($no_client){
 
@@ -73,7 +85,36 @@ $this->datatables->from('data_pekerjaan');
 $this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->join('user', 'user.no_user = data_pekerjaan.no_user');
 $this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
-$this->datatables->add_column('view','<a href="'.base_url('Data_lama/rekam_data/$1').'"><button  class="btn btn-sm btn-dark">Rekam Data <span class="fa fa-pencil-alt"></span></button></a>','base64_encode(no_pekerjaan)');
+$this->datatables->add_column('view','<a href="'.base_url('Data_lama/lihat_rekam_data/$1').'"><button  class="btn btn-sm btn-outline-dark">Lihat rekaman <span class="fa fa-eye"></span></button></a>','base64_encode(no_pekerjaan)');
+return $this->datatables->generate();
+}
+
+function json_data_arsip_perorangan(){
+$this->datatables->select('id_data_pekerjaan,'
+        . 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
+        . 'data_client.nama_client as nama_client,'
+        . 'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
+        . 'user.nama_lengkap as nama_lengkap');
+$this->datatables->from('data_pekerjaan');
+$this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->datatables->where('data_client.jenis_client','Perorangan');
+$this->datatables->add_column('view','<a href="'.base_url('Data_lama/rekam_data/$1').'"><button  class="btn btn-sm btn-outline-dark">Rekam Data <span class="fa fa-pencil-alt"></span></button></a>','base64_encode(no_pekerjaan)');
+return $this->datatables->generate();
+}
+function json_data_arsip_badan_hukum(){
+$this->datatables->select('id_data_pekerjaan,'
+        . 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
+        . 'data_client.nama_client as nama_client,'
+        . 'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
+        . 'user.nama_lengkap as nama_lengkap');
+$this->datatables->from('data_pekerjaan');
+$this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->datatables->where('data_client.jenis_client','Badan Hukum');
+$this->datatables->add_column('view','<a href="'.base_url('Data_lama/rekam_data/$1').'"><button  class="btn btn-sm btn-outline-dark">Rekam Data <span class="fa fa-pencil-alt"></span></button></a>','base64_encode(no_pekerjaan)');
 return $this->datatables->generate();
 }
 
@@ -93,7 +134,7 @@ public function data_meta($no_nama_dokumen){
 $query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_nama_dokumen));
 return $query;
 }
-public function nama_persyaratan($no_pekerjaan){
+public function nama_persyaratan($no_pekerjaan,$jenis_client){
 $this->db->select('nama_dokumen.nama_dokumen,'
         . 'nama_dokumen.no_nama_dokumen,'
         . 'data_client.nama_client,'
@@ -107,6 +148,12 @@ $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
+if($jenis_client == "Badan Hukum"){
+$this->db->where('nama_dokumen.badan_hukum',$jenis_client);    
+}else if($jenis_client == "Perorangan"){
+$this->db->where('nama_dokumen.perorangan',$jenis_client);        
+}
+
 $query = $this->db->get();  
 return $query;
 }

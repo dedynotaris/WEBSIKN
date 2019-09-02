@@ -9,12 +9,9 @@
 <div class="row">    
 <div class="col mt-2">
 <?php if($query->num_rows() == 0){ ?>    
-    <h5 class="text-center text-theme1">Pekerjaan yang sedang diproses belum tersedia<br>
-       
-    </h5>
-    
+<h5 class="text-center text-theme1">Pekerjaan yang sedang diproses belum tersedia<br>
+</h5>
 <?php } else { ?>    
-    
 <table class="table text-theme1 table-hover table-sm text-center table-striped table-bordered">
 <tr>
 <th>Nama client</th>
@@ -28,14 +25,31 @@
 <td id='nama_client<?php echo $data['id_data_pekerjaan'] ?>'><?php echo $data['nama_client'] ?></td>
 <td ><?php echo $data['nama_jenis'] ?></td>
 <td><?php echo $data['tanggal_proses'] ?></td>
-<td><?php echo $data['target_kelar'] ?></td>
+<td><?php
+if($data['target_kelar'] == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span><b>";    
+}else if($data['target_kelar'] <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span><b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
+}
+?></td>
 <td>
 <select onchange="aksi_option('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $data['id_data_pekerjaan'] ?>">
 <option> -- Klik untuk lihat menu -- </option>
 <option value="1">Proses Perizinan</option>
 <option value="2">Buat laporan</option>
 <option value="3">Lihat laporan</option>
-
 </select>    
 </td>
 </tr>

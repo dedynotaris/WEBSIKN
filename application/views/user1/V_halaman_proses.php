@@ -23,10 +23,25 @@
 <td><?php echo $data['pembuat_client'] ?></td>   
 <td><?php echo $data['tanggal_dibuat'] ?></td>
 <td><?php 
-$d = new DateTime($data['target_kelar']);
-echo $d->diff(new DateTime())->format('%a');
- ?> Hari lagi </td>
 
+if($data['target_kelar'] == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span><b>";    
+}else if($data['target_kelar'] <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span><b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($data['target_kelar']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
+}
+?> 
 </tr>
 <?php } ?>
 

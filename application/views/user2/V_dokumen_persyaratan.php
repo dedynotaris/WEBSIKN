@@ -2,7 +2,7 @@
 <div class="container mt-2 text-theme1">
 <div class="row">
 <div class="col">
-<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-right "  onclick="modal_client();">Tambah Client <span class="fa fa-plus"></span></button>
+<div class="text-center"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-right "  onclick="modal_client();">Tambahkan Pengurus <span class="fa fa-plus"></span></button>
 <hr> </b></div>
 <div class="data_client">
 </div>
@@ -151,7 +151,7 @@
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-md btn_simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
 </div>
 </form>    
 </div>
@@ -193,6 +193,42 @@
 
 
 <script type="text/javascript">
+    
+function response(data){
+
+var r = JSON.parse(data);
+if(r.status == "success"){
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+$(".form-control").val("");    
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+});
+}
+}    
+    
 function lihat_progress_perizinan(no_berkas_perizinan){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -493,7 +529,7 @@ url:"<?php echo base_url('User2/hapus_berkas_persyaratan') ?>",
 success:function(data){
 data_perekaman_user(no_client);    
 response(data);
-lihat_data_perekaman(no_nama_dokumen,no_pekerjaan);
+lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client);
 persyaratan_telah_dilampirkan();
 refresh();
 }
@@ -585,6 +621,7 @@ unhighlight: function (element, errorClass) {
 $(element).closest(".form-control").removeClass("is-invalid");
 },    
 submitHandler: function(form) {
+$(".btn_simpan_persyaratan").attr("disabled", true);
 
 var result = { };
 var jml_meta = $('.meta').length;
@@ -616,6 +653,8 @@ contentType: false,
 type: form.method,
 data: formdata,
 success:function(data){
+ $(".btn_simpan_persyaratan").attr("disabled", false);
+   
 data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
 response(data);
@@ -640,7 +679,8 @@ unhighlight: function (element, errorClass) {
 $(element).closest(".form-control").removeClass("is-invalid");
 },    
 submitHandler: function(form) {
-$(".simpan_client").attr("disabled", true);
+$(".simpan_client").removeAttr("disabled", false);
+
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 formData = new FormData();
 formData.append('token',token);
@@ -655,21 +695,8 @@ processData: false,
 contentType: false,
 type: form.method,
 data: formData,
-success:function(data){
-$('#modal_tambah_client').modal('hide');       
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
+success:function(data){      
+response(data);
 $(".simpan_client").removeAttr("disabled", true);
 }
 });
@@ -684,23 +711,7 @@ data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/update_selesaikan_pekerjaan') ?>",
 success:function(data){
 refresh();
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function() {
-window.location.href = "<?php echo base_url('User2/pekerjaan_proses/'); ?>";
-});
-
+response(data);
 }
 });
 }
@@ -716,23 +727,14 @@ var r = JSON.parse(data);
 if(r.status == 'success'){
 window.location.href = '<?php echo base_url('User2/download_berkas/') ?>'+no_berkas;   
 }else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated tada'
+response(data);
+}
+
+}
 });
 
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
 }
-}
-});
-}
+
 
 </script>
 

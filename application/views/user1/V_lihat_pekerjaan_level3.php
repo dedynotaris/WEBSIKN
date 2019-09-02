@@ -23,7 +23,26 @@
 <td><?php echo $d['nama_dokumen']  ?></td>
 <td><?php echo $d['nama_client']  ?></td>
 <td><?php echo $d['status_berkas']  ?></td>
-<td><?php echo $d['target_selesai_perizinan']  ?></td>
+<td>
+<?php
+if($d['target_selesai_perizinan'] == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span><b>";    
+}else if($d['target_selesai_perizinan'] <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($d['target_selesai_perizinan']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span><b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($d['target_selesai_perizinan']);
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
+}
+?> </td>
 <td>
 <select onchange="opsi('<?php echo $d['no_berkas_perizinan'] ?>','<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_pekerjaan'] ?>')" class="form-control aksi<?php echo $d['no_berkas_perizinan'] ?>">
     <option >-- Klik untuk melihat menu --</option>

@@ -26,8 +26,19 @@ App Management
      
 <ul class="list-unstyled components">
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama'); ?>"><i class="fas fa-pen"></i> Buat File Arsip</a></li>
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/data_arsip'); ?>"><i class="fas fa-list-alt"></i> Data Arsip</a></li>
-
+<li class="">
+<a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
+<i class="fas fa-users"></i> Client</a>
+<ul class="list-unstyled collapse show" id="homeSubmenu">
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/perorangan'); ?>">Client Perorangan <i class="fa fa-users float-right"></i></a>
+</li>
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/badan_hukum'); ?>">Client Badan Hukum <i class="far fa-building float-right"></i></a>
+</li>
+</ul>
+</li>
+<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/data_arsip'); ?>"><i class="fas fa-clipboard-list"></i> Data Arsip</a></li>
 </ul>
 </div>
 </div>
