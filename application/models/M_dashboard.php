@@ -59,6 +59,13 @@ public function hitung_nama_dokumen(){
 $query = $this->db->get('nama_dokumen');
 return $query;        
 }
+public function id_data_meta(){
+         $this->db->select('data_meta.id_meta');
+         $this->db->order_by('id_meta','DESC'); 
+         $this->db->limit(1);
+$query = $this->db->get('data_meta');
+return $query;        
+}
 public function simpan_nama_dokumen($data){
 $this->db->insert('nama_dokumen',$data);    
 }
@@ -192,13 +199,10 @@ $this->datatables->select('id_nama_dokumen,'
 );
 $this->datatables->from('nama_dokumen');
 $this->datatables->add_column('view',""
-        . "<select onchange=opsi_nama_dokumen('$1','$2') class='form-control opsi_nama_dokumen$1'>"
-        . "<option>-- Klik untuk melihat menu --</option>"
-        . "<option value='1'>Lihat Meta</option>"
-        . "<option value='2'>Tambah Meta</option>"
-        . "<option value='3'>Edit nama dokumen</option>"
-        . "<option value='4'>Hapus nama dokumen</option>"
-        . "</select>"
+        . "<button onclick=tambah_meta('$2') title='Tambahkan meta' class='m-1 btn btn-sm btn-success'><span class='fas fa-pencil-alt'></span></button>"
+        . "<button onclick=edit_nama_dokumen('$1') title='Edit nama dokumen meta' class='m-1 btn btn-sm btn-success'><span class='fa fa-edit'></span></button>"
+        . "<button onclick=lihat_meta('$2') title='Lihat meta' class='m-1 btn btn-sm btn-success'><span class='fa fa-eye'></span></button>"
+        . "<button onclick=hapus_nama_dokumen('$1') title='Hapus dokumen' class='m-1 btn btn-sm btn-success'><span class='fa fa-trash'></span></button>"
         . "",'id_nama_dokumen,no_nama_dokumen');
 
 return $this->datatables->generate();

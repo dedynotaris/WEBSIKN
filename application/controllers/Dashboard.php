@@ -563,7 +563,11 @@ redirect(404);
 public function simpan_meta(){
 if($this->input->post()){
 $input = $this->input->post();
+$id_data_meta = $this->M_dashboard->id_data_meta()->row_array();
+$id_meta = $id_data_meta['id_meta']+1;
+
 $data = array(
+'id_data_meta'      => 'M_'.$id_meta,   
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
 'nama_meta'         => $input['nama_meta'],
 'jenis_inputan'     => $input['jenis_input'],
@@ -575,6 +579,7 @@ $status = array(
 "status"      =>"success",
 "pesan"       =>"Meta dokumen berhasil ditambahkan" 
 );
+
 echo json_encode($status);    
 }else{
 redirect(404);    
@@ -589,14 +594,23 @@ echo "<table class='table table-sm table-bordered table-striped table-hover'>"
         . "<tr>"
         . "<th>No</th>"
         . "<th>Nama meta</th>"
-        . "<th>Aksi</th>"
+        . "<th>Maksimal karakter</th>"
+        . "<th>Jenis inputan</th>"
+        . "<th class='text-center'>Aksi</th>"
         . "</tr>";
 $h =1;
 foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$h++."</td>"
     . "<td>".$d['nama_meta']."</td>"
-    . "<td><button class='btn btn-danger btn-sm' onclick=hapus_meta('".$d['id_data_meta']."')><span class='fa fa-trash'></span></button></td>"
+    . "<td>".$d['maksimal_karakter']."</td>"
+    . "<td>".$d['jenis_inputan']."</td>"
+    . "<td class='text-center'>"
+        . "<button title='hapus meta' class='btn btn-danger m-1 btn-sm' onclick=hapus_meta('".$d['id_data_meta']."')><span class='fa fa-trash'></span></button>";
+        if($d['jenis_inputan'] == 'select'){
+            echo "<button onclick=data_option('".$d['id_data_meta']."') title='Tambahkan option' class='btn btn-success btn-sm'><span class='fa fa-plus'</button>";
+        }
+        echo "</td>"
 . "</tr>";
 }
 echo "</table>";
@@ -608,6 +622,40 @@ echo "<h3 align='center'>Tidak ada data meta yang bisa ditampilkan</h3>";
 redirect(404);    
 }    
 }
+public function data_option(){
+if($this->input->post()){
+$input = $this->input->post();
+
+echo ""
+. "<input type='hidden' class='form-control form-control-sm id_data_meta' value='".$input['id_data_meta']."'>"
+. "<label>Jenis pilihan</label>"
+. "<input type='text' placeholder='Jenis pilihan' class='form-control form-control-sm jenis_pilihan'>";
+    
+}else{
+redirect(404);    
+}    
+}
+public function simpan_jenis_pilihan(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$data = array(
+'id_data_meta'   =>$input['id_data_meta'],
+'jenis_pilihan'  =>$input['jenis_pilihan']  
+);
+$this->db->insert('data_input_pilihan',$data);
+
+$status = array(
+"status"     => "success",
+"pesan"      => "Jenis Pilihan berhasil ditambahkan"    
+);
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}    
+}
+
 
 public function hapus_data_meta(){
 if($this->input->post()){

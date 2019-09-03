@@ -1,9 +1,9 @@
-<table style="width:100%;" id="data_nama_dokumen" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table  id="data_nama_dokumen" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th align="center" aria-controls="datatable-fixed-header"  >no nama dokumen</th>
 <th align="center" aria-controls="datatable-fixed-header"  >nama dokumen</th>
-<th style="width: 25%;" align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th class='text-center' style="width: 1%;" align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody >
 </table>
@@ -42,17 +42,28 @@
 </button>
 </div>
 <div class="modal-body">
-    <input type="hidden" class="no_nama_dokumen ">
-    <label>Masukan Nama Meta</label>
-    <input type="text" placeholder="nama meta" class="form-control form-control-sm nama_meta">
-    <label>Jenis inputan</label>
-    <select class="form-control form-control-sm jenis_input">
-        <option>text</option>    
-        <option>number</option>
-        <option>select</option>
-    </select>
-    <label>Maksimal karakter</label>
-    <input type="text" placeholder="maksimal karakter" class="form-control maksimal_karakter form-control-sm">
+<input type="hidden" class="no_nama_dokumen ">
+<label>Masukan Nama Meta</label>
+<input type="text" placeholder="nama meta" class="form-control form-control-sm nama_meta">
+<label>Jenis inputan</label>
+<select onchange="check_inputan()" class="form-control form-control-sm jenis_input">
+<option>text</option>    
+<option>number</option>
+<option>select</option>
+<option>date</option>
+</select>
+<label>Maksimal karakter</label>
+<input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control maksimal_karakter form-control-sm">
+
+<div style="display: none" id='jenis_bilangan'>
+<label>Jenis Bilangan</label>
+<select class="form-control form-control-sm jenis_bilangan">
+<option></option>    
+<option>Bulat</option>    
+<option>Desimal</option>
+</select>
+</div>
+
 </div>
 <div class="modal-footer">
 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
@@ -65,7 +76,7 @@
 
 <!------------- Modal Meta---------------->
 <div class="modal fade bd-example-modal-lg" id="lihat_meta" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
+<div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-header">
 <h6 class="modal-title" >Data Meta</h6>
@@ -94,7 +105,47 @@
 </div>
 </div>
 
+<!------------- Edit Dokumen---------------->
+<div class="modal fade bd-example-modal-lg" id="tambah_option" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
+<div class="modal-dialog modal-md" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >Data pilihan</h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>    
+<div class="modal-body data_option">
+   
+</div>
+<div class="modal-footer">
+<button class="btn btn-success btn-sm simpan_pilihan"> simpan pilihan </button>    
+</div></div>
+</div>
+</div>
+
 <script type="text/javascript">
+function check_inputan(){
+var jenis_inputan = $(".jenis_input option:selected").text();
+if(jenis_inputan == 'number'){
+$("#jenis_bilangan").show();    
+}else{
+$("#jenis_bilangan").hide();    
+}
+}
+function data_option(id_data_meta){
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_meta="+id_data_meta,
+url:"<?php echo base_url('Dashboard/data_option') ?>",
+success:function(data){
+$(".data_option").html(data);    
+$('#tambah_option').modal('show');    
+}
+});       
+}
+   
 function response(data){
 var r = JSON.parse(data);
 const Toast = Swal.mixin({
@@ -131,6 +182,7 @@ return {
 };
 
 var t = $("#data_nama_dokumen").dataTable({
+ 
 initComplete: function() {
 var api = this.api();
 $('#data_nama_dokumen')
@@ -162,7 +214,10 @@ columns: [
 {"data": "view"}
 
 
-],
+],"columnDefs": [
+    { "width": "17%", "targets": 3 }
+  ], 
+   "autoWidth": false,    
 order: [[0, 'desc']],
 rowCallback: function(row, data, iDisplayIndex) {
 var info = this.fnPagingInfo();
@@ -179,49 +234,37 @@ table.ajax.reload( function ( json ) {
 $('#data_nama_dokumen').val( json.lastInput );
 });
 }
-
-function opsi_nama_dokumen(id_nama_dokumen,no_nama_dokumen){
+function hapus_nama_dokumen(id_nama_dokumen){
 var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
-var val = $(".opsi_nama_dokumen"+id_nama_dokumen+" option:selected").val();
-if(val == 1){
-lihat_meta(no_nama_dokumen);    
-}else if(val == 2){
-tambah_meta(no_nama_dokumen);    
-}else if(val == 3){
-edit_nama_dokumen(id_nama_dokumen);
-}else if(val == 4){
 
 Swal.fire({
-  title: 'Anda yakin ingin mengahpus nama dokumen ini?',
-  text: "Seluruh data yang pernah tersimpan dengan nama dokumen ini akan dihapus",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Hapus'
+title: 'Anda yakin ingin mengahpus nama dokumen ini?',
+text: "Seluruh data yang pernah tersimpan dengan nama dokumen ini akan dihapus",
+type: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Hapus'
 }).then((result) => {
-  if (result.value) {
-    
-    $.ajax({
-      type:"post",
-      data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
-      url:"<?php echo base_url('Dashboard/hapus_nama_dokumen') ?>",
-      success:function(){
-          Swal.fire(
-      'Terhapus!',
-      'Nama Dokumen berhasil dihapus',
-      'success'
-       )
-       refresh_nama_dokumen();
-      }
-    });                
-  }
-})
+if (result.value) {
 
+$.ajax({
+type:"post",
+data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
+url:"<?php echo base_url('Dashboard/hapus_nama_dokumen') ?>",
+success:function(){
+Swal.fire(
+'Terhapus!',
+'Nama Dokumen berhasil dihapus',
+'success'
+)
+refresh_nama_dokumen();
+}
+});                
+}
+});  
+}
 
-}
-$(".opsi_nama_dokumen"+id_nama_dokumen).val("-- Klik untuk melihat menu --");
-}
 
 function edit_nama_dokumen(id_nama_dokumen){
 var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
@@ -332,17 +375,16 @@ var no_nama_dokumen         = $(".no_nama_dokumen").val();
 var nama_meta               = $(".nama_meta").val();
 var jenis_input             = $(".jenis_input option:selected").val();
 var maksimal_karakter       = $(".maksimal_karakter").val();
+var jenis_bilangan          = $(".jenis_bilangan").val();
 if(nama_meta != ''){
 $.ajax({
 type:"post",
 url :"<?php echo base_url('Dashboard/simpan_meta') ?>",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta+"&jenis_input="+jenis_input+"&maksimal_karakter="+maksimal_karakter,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta+"&jenis_input="+jenis_input+"&maksimal_karakter="+maksimal_karakter+"&jenis_bilangan="+jenis_bilangan,
 success:function(data){
 response(data);
-$('#modal_meta').modal('hide');
-$(".nama_meta").val("");
+$(".form-control").val("");
 }
-
 });
 } else {
 const Toast = Swal.mixin({
@@ -391,7 +433,6 @@ Toast.fire({
 type: 'success',
 title: 'Dokumen Berhasil Ditambahkan.'
 });
-
 }else{
 const Toast = Swal.mixin({
 toast: true,
@@ -401,18 +442,13 @@ timer: 3000,
 animation: false,
 customClass: 'animated tada'
 });
-
 Toast.fire({
 type: 'error',
 title: 'Kesalahan.'
 })
 }
-
 }    
-
 });
-
-
 }else{
 const Toast = Swal.mixin({
 toast: true,
@@ -422,14 +458,28 @@ timer: 3000,
 animation: false,
 customClass: 'animated tada'
 });
-
 Toast.fire({
 type: 'warning',
 title: 'Nama Dokumen Belum di isikan.'
 })   
 }
-
 });
 
+$(".simpan_pilihan").click(function(){
+var id_data_meta = $(".id_data_meta").val();
+var jenis_pilihan = $(".jenis_pilihan").val();
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_meta="+id_data_meta+"&jenis_pilihan="+jenis_pilihan,
+url:"<?php echo base_url('Dashboard/simpan_jenis_pilihan') ?>",
+success:function(data){
+response(data);
+$(".jenis_pilihan").val("");
+}
+});
+
+});
 });
 </script> 
