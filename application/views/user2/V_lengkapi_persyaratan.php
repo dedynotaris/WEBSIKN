@@ -35,23 +35,23 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 <div class="modal-body">
 <label>Jenis Pemilik</label> 
-<select onchange="tentukan_jenis()" class="form-control tentukan_jenis">
-<option value="null">--- Tentukan Jenis Pemilik ---</option>    
+<select onchange="tentukan_jenis()" class="form-control form-control-sm tentukan_jenis">
+<option value="null">Pilih jeni pemilik</option>    
 <option value="Badan Hukum">Badan Hukum</option>    
 <option Value="Perorangan">Perorangan</option>    
 </select>
 
 <label>Cari Nama <span class="jenis_pemilik"></span></label>
 <div class="input-group ">
-    <input type="text" id="cari_client" name="nama_client" class="form-control perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
+    <input type="text" id="cari_client" name="nama_client" class="form-control form-control-sm perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
-<button class="btn btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+<button class="btn btn-sm btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
 </div>
 
 
 <label>No Client</label>
-<input type="text" id="no_client" class="form-control perekaman" readonly="">
+<input type="text" id="no_client" class="form-control perekaman form-control-sm" readonly="">
 <hr>
 <button class="btn btn-dark btn-sm" onclick="buat_perekaman();">Buat Perekaman</button>
 </div>
@@ -80,7 +80,7 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" placeholder="Nama perorangan / Badan Hukum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
+<input onkeyup="jadikan_kontak_person();" type="text" placeholder="Nama perorangan / Badan Hukum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
 </div>
 <div id="form_alamat_hukum">
 <label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
@@ -93,7 +93,7 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <input type="number" name="no_tlp" placeholder="No Telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
 </div>
 <div class="card-footer">
-<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
+<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data pengurus <span class="fa fa-save"></span></button>
 </form>
 </div>
 </div>
@@ -194,6 +194,10 @@ title: 'Silahkan pilih jenis client terlebih dahulu.'
 })
 }
 });    
+
+function jadikan_kontak_person(){
+$(".contact_person").val($("#badan_hukum").val());
+}
 
 function modal_client(){
 $('#modal_cari_client').modal('show');    
@@ -331,7 +335,6 @@ success:function(data){
 $(".data_perekaman").html(data);    
 $('#data_perekaman').modal('show');
 }
-
 });
 }
 
@@ -437,34 +440,38 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('.form_persyaratan').html(data);    
 $('#modal_upload').modal('show');
-var inputQuantity = [];
-    $(function() {
-      $(".quantity").each(function(i) {
-        inputQuantity[i]=this.defaultValue;
-         $(this).data("idx",i); // save this field's index to access later
-      });
-      $(".quantity").on("keyup", function (e) {
-        var $field = $(this),
-            val=this.value,
-            $thisIndex=parseInt($field.data("idx"),10); // retrieve the index
-        if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
-            this.value = inputQuantity[$thisIndex];
-            return;
-        } 
-        if (val.length > Number($field.attr("maxlength"))) {
-            var t = Number($field.attr("maxlength"));
-          val=val.slice(0,t);
-          $field.val(val);
-        }
-        inputQuantity[$thisIndex]=val;
-      });      
-    });
+regis_js();
 }    
 });
-
-
-
 }
+
+function regis_js(){
+var inputQuantity = [];
+$(function() {
+$(".quantity").each(function(i) {
+inputQuantity[i]=this.defaultValue;
+$(this).data("idx",i); // save this field's index to access later
+});
+$(".quantity").on("keyup", function (e) {
+var $field = $(this),
+val=this.value,
+$thisIndex=parseInt($field.data("idx"),10); // retrieve the index
+if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
+this.value = inputQuantity[$thisIndex];
+return;
+} 
+if (val.length > Number($field.attr("maxlength"))) {
+var t = Number($field.attr("maxlength"));
+val=val.slice(0,t);
+$field.val(val);
+}
+inputQuantity[$thisIndex]=val;
+});      
+}); 
+ 
+ $('.Desimal').simpleMoneyFormat();
+ 
+ }
 
 function lanjutkan_proses_perizinan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -526,7 +533,6 @@ result[key] = value;
 
 }
 
-
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 var name = $("#id").attr("name");
 
@@ -551,6 +557,7 @@ $(".btn_simpan_persyaratan").attr("disabled", false);
 data_perekaman_user($(".no_client").val());    
 persyaratan_telah_dilampirkan();    
 response(data);
+
 }
 
 });
@@ -561,11 +568,6 @@ return false;
 $(document).ready(function(){
 });
 
-function regis_js(no_nama_dokumen){
-$(".simpan_form"+no_nama_dokumen).click(function(){
-alert("asd");    
-});
-}
 
 
 $("#fileclient").submit(function(e) {

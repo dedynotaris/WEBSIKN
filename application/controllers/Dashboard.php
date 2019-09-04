@@ -571,7 +571,8 @@ $data = array(
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
 'nama_meta'         => $input['nama_meta'],
 'jenis_inputan'     => $input['jenis_input'],
-'maksimal_karakter' => $input['maksimal_karakter']   
+'maksimal_karakter' => $input['maksimal_karakter'],
+'jenis_bilangan'    => $input['jenis_bilangan'] 
 );
 $this->db->insert('data_meta',$data);    
 

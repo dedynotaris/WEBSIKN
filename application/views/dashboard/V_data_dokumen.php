@@ -46,7 +46,7 @@
 <label>Masukan Nama Meta</label>
 <input type="text" placeholder="nama meta" class="form-control form-control-sm nama_meta">
 <label>Jenis inputan</label>
-<select onchange="check_inputan()" class="form-control form-control-sm jenis_input">
+<select class="form-control form-control-sm jenis_input">
 <option>text</option>    
 <option>number</option>
 <option>select</option>
@@ -55,14 +55,12 @@
 <label>Maksimal karakter</label>
 <input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control maksimal_karakter form-control-sm">
 
-<div style="display: none" id='jenis_bilangan'>
 <label>Jenis Bilangan</label>
 <select class="form-control form-control-sm jenis_bilangan">
 <option></option>    
 <option>Bulat</option>    
 <option>Desimal</option>
 </select>
-</div>
 
 </div>
 <div class="modal-footer">
@@ -125,14 +123,7 @@
 </div>
 
 <script type="text/javascript">
-function check_inputan(){
-var jenis_inputan = $(".jenis_input option:selected").text();
-if(jenis_inputan == 'number'){
-$("#jenis_bilangan").show();    
-}else{
-$("#jenis_bilangan").hide();    
-}
-}
+
 function data_option(id_data_meta){
 var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
 $.ajax({
@@ -375,7 +366,7 @@ var no_nama_dokumen         = $(".no_nama_dokumen").val();
 var nama_meta               = $(".nama_meta").val();
 var jenis_input             = $(".jenis_input option:selected").val();
 var maksimal_karakter       = $(".maksimal_karakter").val();
-var jenis_bilangan          = $(".jenis_bilangan").val();
+var jenis_bilangan          = $(".jenis_bilangan option:selected").val();
 if(nama_meta != ''){
 $.ajax({
 type:"post",
