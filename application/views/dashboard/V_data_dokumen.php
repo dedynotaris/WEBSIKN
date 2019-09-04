@@ -477,6 +477,7 @@ url:"<?php echo base_url('Dashboard/simpan_jenis_pilihan') ?>",
 success:function(data){
 response(data);
 $(".jenis_pilihan").val("");
+data_option(id_data_meta);
 }
 });
 

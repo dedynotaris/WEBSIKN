@@ -281,13 +281,29 @@ echo "<input type='hidden' class='form-control no_client' value='".$input['no_cl
 $i = 1;
 foreach ($query->result_array() as $d){
     
-echo "<label>".$d['nama_meta']."</label>"
+/*echo "<label>".$d['nama_meta']."</label>"
     ."<input    ";
     if($d['jenis_inputan'] == 'Numeric'){
       echo "type='number' maxlength='".$d['maksimal_karakter']."'  class='form-control quantity meta required' required='' accept='text/plain'";  
     }else{
       echo "maxlength='".$d['maksimal_karakter']."' type='text'  class='form-control meta required' required='' accept='text/plain'";  
     }echo "id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."' >";    
+*/
+if($d['jenis_inputan'] == 'select'){
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+echo "<label>".$d['nama_meta']."</label>"
+     ."<select class='form-control meta required' required='' accept='text/plain'>";
+     foreach ($data_option->result_array() as $option){
+         echo "<option>".$option['jenis_pilihan']."</option>";
+     }
+
+        echo "</select>";
+ 
+
+}else{
+echo "<label>".$d['nama_meta']."</label>"
+   ."<input type='".$d['jenis_inputan']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form-control-sm meta required' required='' accept='text/plain' >";    
+}    
 }
 
 echo "<label>Lampiran</label>"

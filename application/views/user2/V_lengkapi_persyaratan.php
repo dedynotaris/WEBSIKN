@@ -516,12 +516,16 @@ $(".btn_simpan_persyaratan").attr("disabled", true);
 var result = { };
 var jml_meta = $('.meta').length;
 for (i = 1; i <=jml_meta; i++) {
+
 var key   =($("#data_meta"+i).attr('name'));
 var value =($("#data_meta"+i).val());
+
 $.each($('form').serializeArray(), function() {
 result[key] = value;
 });
+
 }
+
 
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 var name = $("#id").attr("name");

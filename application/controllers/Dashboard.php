@@ -630,7 +630,14 @@ echo ""
 . "<input type='hidden' class='form-control form-control-sm id_data_meta' value='".$input['id_data_meta']."'>"
 . "<label>Jenis pilihan</label>"
 . "<input type='text' placeholder='Jenis pilihan' class='form-control form-control-sm jenis_pilihan'>";
-    
+
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$input['id_data_meta']));
+echo "<hr>";
+echo "<ol>";
+foreach ($data_option->result_array() as $d){
+echo "<li>".$d['jenis_pilihan']."</li>";    
+}
+echo "</ol>";
 }else{
 redirect(404);    
 }    
