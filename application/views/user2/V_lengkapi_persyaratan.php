@@ -5,6 +5,7 @@
 <?php $static = $query->row_array(); ?>
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
+        
 LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span></button>
 </div>
@@ -136,7 +137,7 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn_simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+    <button type="submit" class="btn btn-sm btn_simpan_persyaratan btn-block btn-dark">Simpan <img id="loading"  style="display: none; width:25px;" src="<?php echo base_url() ?>assets/loading.svg"></button>    
 </div>
 </form>    
 </div>
@@ -158,7 +159,6 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 </div>
-
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -235,7 +235,7 @@ Toast.fire({
 type: r.status,
 title: r.pesan
 });
-$(".form-control").val("");    
+$(".form_meta").val("");
 }else{
 const Toast = Swal.mixin({
 toast: true,
@@ -446,32 +446,26 @@ regis_js();
 }
 
 function regis_js(){
-var inputQuantity = [];
-$(function() {
-$(".quantity").each(function(i) {
-inputQuantity[i]=this.defaultValue;
-$(this).data("idx",i); // save this field's index to access later
+$(".Desimal").keyup(function(){
+var string = numeral(this.value).format('0,0');
+$("#"+this.id).val(string);
 });
-$(".quantity").on("keyup", function (e) {
-var $field = $(this),
-val=this.value,
-$thisIndex=parseInt($field.data("idx"),10); // retrieve the index
-if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
-this.value = inputQuantity[$thisIndex];
-return;
-} 
-if (val.length > Number($field.attr("maxlength"))) {
-var t = Number($field.attr("maxlength"));
-val=val.slice(0,t);
-$field.val(val);
+
+$(function() {
+$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+});
+
 }
-inputQuantity[$thisIndex]=val;
-});      
-}); 
- 
- $('.Desimal').simpleMoneyFormat();
- 
- }
+
+
+
+
+
 
 function lanjutkan_proses_perizinan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -558,8 +552,8 @@ data_perekaman_user($(".no_client").val());
 persyaratan_telah_dilampirkan();    
 response(data);
 
-}
 
+}
 });
 return false; 
 }

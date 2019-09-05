@@ -285,14 +285,18 @@ foreach ($query->result_array() as $d){
 if($d['jenis_inputan'] == 'select'){
 $data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
 echo "<label>".$d['nama_meta']."</label>"
-."<select id='data_meta".$i++."' name='".$d['nama_meta']."' class='form-control form-control-sm meta required' required='' accept='text/plain'>";
+."<select id='data_meta".$i++."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
 foreach ($data_option->result_array() as $option){
 echo "<option>".$option['jenis_pilihan']."</option>";
 }
 echo "</select>";
+}else if($d['jenis_inputan'] == 'date'){
+
+echo "<label>".$d['nama_meta']."</label>"
+   ."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
 }else{
 echo "<label>".$d['nama_meta']."</label>"
-   ."<input  type='".$d['jenis_inputan']."' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";    
+   ."<input  type='".$d['jenis_inputan']."' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";    
 }    
 }
 
@@ -1429,6 +1433,11 @@ echo "</div>
 else{
 redirect(404);    
 }
+}
+public function lihat_data(){
+    $filepath = "./berkas/tes.docx";
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="Laporan Penjualan.xlsx"');
 
 }
 }

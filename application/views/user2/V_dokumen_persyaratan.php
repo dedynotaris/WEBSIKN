@@ -151,7 +151,7 @@
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn_simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-sm btn_simpan_persyaratan btn-block btn-dark">Simpan <img id="loading"  style="display: none; width:25px;" src="<?php echo base_url() ?>assets/loading.svg"></button>    
 </div>
 </form>    
 </div>
@@ -211,7 +211,8 @@ Toast.fire({
 type: r.status,
 title: r.pesan
 });
-$(".form-control").val("");    
+
+$(".form_meta").val("");
 }else{
 const Toast = Swal.mixin({
 toast: true,
@@ -575,35 +576,28 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('.form_persyaratan').html(data);    
 $('#modal_upload').modal('show');
-var inputQuantity = [];
-    $(function() {
-      $(".quantity").each(function(i) {
-        inputQuantity[i]=this.defaultValue;
-         $(this).data("idx",i); // save this field's index to access later
-      });
-      $(".quantity").on("keyup", function (e) {
-        var $field = $(this),
-            val=this.value,
-            $thisIndex=parseInt($field.data("idx"),10); // retrieve the index
-        if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
-            this.value = inputQuantity[$thisIndex];
-            return;
-        } 
-        if (val.length > Number($field.attr("maxlength"))) {
-            var t = Number($field.attr("maxlength"));
-          val=val.slice(0,t);
-          $field.val(val);
-        }
-        inputQuantity[$thisIndex]=val;
-      });      
-    });
+regis_js();
 }    
+});
+}
+
+function regis_js(){
+$(".Desimal").keyup(function(){
+var string = numeral(this.value).format('0,0');
+$("#"+this.id).val(string);
 });
 
 
+$(function() {
+$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+});
 
 }
-
 
 function download(id_data_berkas){
 window.location.href="<?php echo base_url('User2/download_berkas/') ?>"+id_data_berkas;

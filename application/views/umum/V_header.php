@@ -31,15 +31,17 @@
 <link href="<?php echo base_url() ?>assets/toast/build/toastr.min.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo base_url() ?>assets/EasyAutocomplete-1.3.5/easy-autocomplete.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js" type="text/javascript"></script>
-<script src="<?php echo base_url() ?>assets/jquery/autoNumeric.js" type="text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/jquery/numeral.min.js" type="text/javascript"></script>
 </head> 
 
 <script type="text/javascript">
 jQuery( document ).ajaxStart(function() {
 NProgress.start();
+$("#loading").show();
 });
 jQuery( document ).ajaxStop(function() {
 NProgress.done();
+$("#loading").hide();
 });
 
 

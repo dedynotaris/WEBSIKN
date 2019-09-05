@@ -119,7 +119,7 @@ window.location.href="<?php echo base_url('User2/proses_pekerjaan/'.$this->uri->
 
 
 $(function() {
-$("input[name='tanggal_akta']").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
     "locale": {
         "format": "YYYY/MM/DD",
         "separator": "-",

@@ -49,9 +49,11 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 ?> 
 </td>
 <td>
-<button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Proses persyaratan" class="btn btn-sm btn-success"><span class="fa fa-retweet"></span></button>    
+
+ <button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Proses persyaratan" class="btn btn-sm btn-success"><span class="fa fa-retweet"></span></button>    
 <button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>')" title="Buat Laporan" class="btn btn-sm btn-success"><span class="fas fa-pencil-alt"></span></button>    
 <button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Lihat Laporan" class="btn btn-sm btn-success"><span class="fa fa-eye"></span></button>    
+<button onclick="download_data('<?php echo base_url('User2/lihat_data') ?>')" title="Download data" class="btn btn-sm btn-success"><span class="fa fa-download"></span></button>    
     
    
 </td>
@@ -129,7 +131,30 @@ $(".laporan").val("");
 
 });    
 
-});    
+});
+function download_data(data, fileName, type="text/plain"){
+ // Create an invisible A element
+  const a = document.createElement("a");
+  a.style.display = "none";
+  document.body.appendChild(a);
+
+  // Set the HREF to a Blob representation of the data to be downloaded
+  a.href = window.URL.createObjectURL(
+    new Blob([data], { type })
+  );
+
+  // Use download attribute to set set desired file name
+  a.setAttribute("download", fileName);
+
+  // Trigger the download by simulating click
+  a.click();
+
+  // Cleanup
+  window.URL.revokeObjectURL(a.href);
+  document.body.removeChild(a);
+}
+
+
 function buat_laporan(no_pekerjaan,id_data_pekerjaan){
 $('#modal_laporan').modal('show');
 var nama_client = $("#nama_client"+id_data_pekerjaan).text();
