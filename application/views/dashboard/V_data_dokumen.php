@@ -44,19 +44,19 @@
 <div class="modal-body">
 <input type="hidden" class="no_nama_dokumen ">
 <label>Masukan Nama Meta</label>
-<input type="text" placeholder="nama meta" class="form-control form-control-sm nama_meta">
+<input type="text" placeholder="nama meta" class="form-control form-meta form-control-sm nama_meta">
 <label>Jenis inputan</label>
-<select class="form-control form-control-sm jenis_input">
+<select class="form-control form-control-sm  form-meta jenis_input">
 <option>text</option>    
 <option>number</option>
 <option>select</option>
 <option>date</option>
 </select>
 <label>Maksimal karakter</label>
-<input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control maksimal_karakter form-control-sm">
+<input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control form-meta maksimal_karakter form-control-sm">
 
 <label>Jenis Bilangan</label>
-<select class="form-control form-control-sm jenis_bilangan">
+<select class="form-control form-meta form-control-sm jenis_bilangan">
 <option></option>    
 <option>Bulat</option>    
 <option>Desimal</option>
@@ -374,7 +374,7 @@ url :"<?php echo base_url('Dashboard/simpan_meta') ?>",
 data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta+"&jenis_input="+jenis_input+"&maksimal_karakter="+maksimal_karakter+"&jenis_bilangan="+jenis_bilangan,
 success:function(data){
 response(data);
-$(".form-control").val("");
+$(".form-meta").val("");
 }
 });
 } else {
