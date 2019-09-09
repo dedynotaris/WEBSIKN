@@ -155,13 +155,12 @@ $this->datatables->select('id_jenis_pekerjaan,'
 
 $this->datatables->from('data_jenis_pekerjaan');
 $this->datatables->add_column('view',""
-        . "<select onchange=opsi_jenis_pekerjaan('$1','$2') class='form-control text-center opsi_pekerjaan$1'>"
-        . "<option>-- Klik untuk melihat menu --</option>"
-        . "<option value='1'>Tambah Persyaratan</option>"
-        . "<option value='2'>Lihat persyaratan</option>"
-        . "<option value='3'>Edit Pekerjaan</option>"
-        . "</select>"
-        . "",'id_jenis_pekerjaan , no_jenis_pekerjaan');
+         . "<button onclick=tambah_syarat_jenis('$1','$2'); class='btn btn-sm m-1 btn-success' title='Tambah Persyaratan'><span class='fa fa-plus'></span></button>"
+         . "<button onclick=tampilkan_data_persyaratan('$2'); class='btn btn-sm m-1 btn-success' title='Lihat Persyaratan'><span class='fa fa-eye'></span></button>"
+         . "<button onclick=edit_jenis_pekerjaan('$1'); class='btn btn-sm  m-1 btn-success' title='Edit Pekerjaan'><span class='fa fa-edit'></span></button>"
+         . "",'id_jenis_pekerjaan , no_jenis_pekerjaan');
+
+
 return $this->datatables->generate();
 }
 function json_data_jenis(){
@@ -188,7 +187,10 @@ $this->datatables->select('id_user,'
 );
 
 $this->datatables->from('user');
-$this->datatables->add_column('view',"<button class='btn btn-sm btn-success'  onclick=getUser('$1'); data-toggle='modal' data-target='#exampleModal'> Edit <i class='fa fa-plus'></i></button> <button class='btn btn-sm btn-success'  onclick=tambah_sublevel('$1','$2'); > Sublevel <i class='fa fa-plus'></i></button>",'id_user,no_user');
+$this->datatables->add_column('view',""
+        . "<button class='btn btn-sm btn-success'  onclick=getUser('$1'); data-toggle='modal' title='edit user' data-target='#exampleModal'> <i class='fa fa-edit'></i></button> "
+        . "<button class='btn btn-sm btn-success'  onclick=tambah_sublevel('$1','$2');  title='edit sublevel'>  <i class='fa fa-edit'></i></button>"
+        . "",'id_user,no_user');
 return $this->datatables->generate();
 }
 function json_data_nama_dokumen(){

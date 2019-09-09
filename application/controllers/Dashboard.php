@@ -13,7 +13,6 @@ redirect(base_url('Menu'));
 }
 } 
 
-
 public function index(){
 $this->setting();    
 } 
@@ -32,7 +31,7 @@ public function get_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
 $data = $this->M_dashboard->data_persyaratan($input['no_jenis_pekerjaan']);
-        
+
 echo "<table class='table table-sm table-bordered table-striped table-hover'>"
 . "<tr>"
 ."<th>Nama File</th>"

@@ -30,7 +30,6 @@
 </div>
 </div>
 </div>
-
 <!----------------------------Dokumen------------------------------>
 <div class="tab-pane card container-fluid fade" id="dokumen">
 <div class="row p-2">
@@ -43,7 +42,6 @@
 </div>
 </div>
 </div>
-
 <!----------------------------Aplikasi------------------------------>
 <div class="tab-pane card container-fluid fade" id="aplikasi">
 <div class="row p-2">

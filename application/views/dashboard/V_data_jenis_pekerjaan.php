@@ -4,7 +4,7 @@
 <th  align="center" aria-controls="datatable-fixed-header">no jenis pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header">pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header">nama pekerjaan</th>
-<th style="width: 25%;" align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
+<th sclass='text-center' style="width: 1%;" align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody align="center">
 </table>
@@ -139,7 +139,10 @@ columns: [
 {"data": "view"}
 
 
-],
+],"columnDefs": [
+    { "width": "14%", "targets": 4 }
+  ], 
+   "autoWidth": false,  
 order: [[0, 'desc']],
 rowCallback: function(row, data, iDisplayIndex) {
 var info = this.fnPagingInfo();
@@ -348,12 +351,15 @@ $('.hapus_syarat'+id_data_persyaratan).hide();
 }
 });
 }
-    
+
+function tambah_syarat_jenis(id_jenis_dokumen,no_jenis_dokumen){
+$('#tambah_syarat_jenis').modal('show');
+$(".no_jenis_dokumen").val(no_jenis_dokumen); 
+}
+
 function opsi_jenis_pekerjaan(id_jenis_dokumen,no_jenis_dokumen){
 var val = $(".opsi_pekerjaan"+id_jenis_dokumen+" option:selected").val();
 if(val == 1){
-$('#tambah_syarat_jenis').modal('show');
-$(".no_jenis_dokumen").val(no_jenis_dokumen);
 }else if(val == 2){
 tampilkan_data_persyaratan(no_jenis_dokumen);
 }else if(val == 3){

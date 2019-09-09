@@ -452,7 +452,13 @@ $("#"+this.id).val(string);
 });
 
 $(function() {
-$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+$(".date").daterangepicker({ 
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
     "locale": {
         "format": "YYYY/MM/DD",
         "separator": "-",
