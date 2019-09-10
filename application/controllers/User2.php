@@ -66,7 +66,6 @@ echo json_encode($json);
 public function create_client(){
 if($this->input->post()){
 $data = $this->input->post();
-$data = $this->input->post();
 if($data['jenis_client'] == "Perorangan"){
 $this->simpan_client($data);
 }else if($data['jenis_client'] == "Badan Hukum"){
@@ -298,6 +297,11 @@ echo "<label>".$d['nama_meta']."</label>"
 }else if($d['jenis_inputan'] == 'number'){
 echo "<label>".$d['nama_meta']."</label>"
 ."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+
+
+}else if($d['jenis_inputan'] == 'textarea'){
+echo "<label>".$d['nama_meta']."</label>"
+        . "<textarea  id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
 
 
 }else{
@@ -1071,6 +1075,57 @@ redirect(404);
 }    
 }
 
+public function lihat_data_meta(){
+$no_pekerjaan = $this->input->post();
+
+$data_client = $this->M_user2->data_berkas_where_no_pekerjaan(base64_decode($no_pekerjaan['no_pekerjaan']));
+
+echo "<input type='hidden' value='".$no_pekerjaan['no_pekerjaan']."' id='no_pekerjaan' class='form-control'>";
+echo "<label>Pilih data client yang ingin ditampilkan</label>";
+echo "<select onchange='tampilkan_data()' class='form-control form-control-sm' id='no_client'>";
+foreach ($data_client->result_array() as $data){
+echo "<option value='".$data['no_client']."'>".$data['nama_client']."</option>";   
+}
+echo "</select>";
+
+/*foreach ($data_client->result_array() as $data){
+$query     = $this->M_user2->data_perekaman($data['no_nama_dokumen'],$data['no_client']);
+$query2     = $this->M_user2->data_perekaman2($data['no_nama_dokumen'],$data['no_client']);
+echo $data['nama_client']."<hr>";
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr>";
+foreach ($query->result_array() as $d){
+    
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "<th>Aksi</th>";
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr>";
+
+foreach ($b->result_array() as $i){
+echo "<td>".$i['value_meta']."</td>";    
+}
+echo '<td class="text-center">';
+echo '</td>';
+echo "</tr>";
+    
+    
+}
+echo "</tbody>";
+
+
+echo"</table>";   */ 
+
+
+}
+
 public function data_perekaman_user(){
 if($this->input->post()){
 $input = $this->input->post();    
@@ -1117,11 +1172,28 @@ redirect(404);
 public function buat_client(){
 if($this->input->post()){
 $data = $this->input->post();
+if($data['jenis_client'] == "Perorangan"){
+$this->client_baru($data);
+}else if($data['jenis_client'] == "Badan Hukum"){
+$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($data['badan_hukum'])))->num_rows();        
+if($cek_badan_hukum == 0){
+$this->client_baru($data);
+}else{
+$status = array(
+"status"     => "error",
+"pesan"      => "Nama Badan Hukum sudah tersedia"    
+);    
+echo json_encode($status);
+}
+}
+}else{
+redirect(404);    
+}
+}
+public function client_baru($data){
 
 $h_client = $this->M_user2->data_client()->num_rows()+1;
-
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
-
 $data_client = array(
 'no_client'                 => $no_client,    
 'jenis_client'              => ucwords($data['jenis_client']),    
@@ -1134,24 +1206,17 @@ $data_client = array(
 'contact_person'            => ucwords($data['contact_person']),    
 'contact_number'            => ucwords($data['contact_number']),    
 );    
-
-
 $this->db->insert('data_client',$data_client);
-
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
-
-
 $status = array(
 "status"     => "success",
 "pesan"      => "Client Berhasil ditambahkan"    
 );
 echo json_encode($status);
-
-}else{
-redirect(404);    
-}}
+    
+}
 
 public function modal_buat_perizinan(){
 if($this->input->post()){

@@ -45,12 +45,10 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 }
 ?></td>
 <td>
-<select onchange="aksi_option('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $data['id_data_pekerjaan'] ?>">
-<option> -- Klik untuk lihat menu -- </option>
-<option value="1">Proses Perizinan</option>
-<option value="2">Buat laporan</option>
-<option value="3">Lihat laporan</option>
-</select>    
+
+<button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>');" class="btn btn-sm btn-success" title="Proses Perizinan"><span class="fa fa-retweet"></span></button>    
+<button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>')" class="btn btn-sm btn-success" title="Buat Laporan"><span class="fa fa-pencil-alt"></span></button>    
+<button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" class="btn btn-sm btn-success" title="Lihat Laporan"><i class="far fa-clipboard"></i></button>    
 </td>
 </tr>
 <?php } ?>
@@ -121,39 +119,15 @@ $(".laporan").val("");
 });    
     
 });    
-    
-function aksi_option(no_pekerjaan,id_data_pekerjaan){
-var aksi_option = $(".data_option"+id_data_pekerjaan+" option:selected").val();
-if(aksi_option == 1){
-tambahkan_kedalam_proses(no_pekerjaan);
-}else if(aksi_option == 2){
+function buat_laporan(no_pekerjaan,id_data_pekerjaan){
 $('#modal_laporan').modal('show');
 var nama_client = $("#nama_client"+id_data_pekerjaan).text();
 $(".laporan_client").text(nama_client);
 $(".no_pekerjaan").val(no_pekerjaan);
 $(".id_data_pekerjaan").val(id_data_pekerjaan);
-}else if(aksi_option == 3){
-lihat_laporan(no_pekerjaan);
 
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: "warning",
-title: "Anda belum menentukan pilihan"
-});
-}
-$(".data_option"+id_data_pekerjaan).prop('selectedIndex',0);
-
-
-}     
+}    
+     
 function lihat_laporan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
 $.ajax({

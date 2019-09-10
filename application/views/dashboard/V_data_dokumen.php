@@ -46,21 +46,24 @@
 <label>Masukan Nama Meta</label>
 <input type="text" placeholder="nama meta" class="form-control form-meta form-control-sm nama_meta">
 <label>Jenis inputan</label>
-<select class="form-control form-control-sm  form-meta jenis_input">
+<select onchange="check_inputan();"  class="form-control form-control-sm  form-meta jenis_input">
 <option>text</option>    
 <option>number</option>
 <option>select</option>
 <option>date</option>
+<option>textarea</option>
 </select>
 <label>Maksimal karakter</label>
 <input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control form-meta maksimal_karakter form-control-sm">
 
+<div class="jenis_bilangan" style="display:none">
 <label>Jenis Bilangan</label>
 <select class="form-control form-meta form-control-sm jenis_bilangan">
-<option></option>    
+<option>Pilih Jenis Bilangan</option>    
 <option>Bulat</option>    
 <option>Desimal</option>
 </select>
+</div>
 
 </div>
 <div class="modal-footer">
@@ -123,6 +126,15 @@
 </div>
 
 <script type="text/javascript">
+function check_inputan(){
+var inputan = $(".jenis_input option:selected").text();
+if(inputan == 'number'){
+$(".jenis_bilangan").show();    
+}else{
+$(".jenis_bilangan").hide();        
+}
+}
+
 
 function data_option(id_data_meta){
 var token = '<?php echo $this->security->get_csrf_hash(); ?>';  

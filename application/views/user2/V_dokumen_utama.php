@@ -2,12 +2,12 @@
 <div class="container-fluid mt-2 ">    
 <div class="row ">
 <div class="col">    
-<div class="card-header  text-center text-theme1 ">
-Dokumen utama yang sudah diupload
-
-<button class="btn btn-dark btn-sm float-md-right" onclick="tambah_dokumen_utama();">Tambah dokumen utama</button>
+<div class=" mt-2 mb-2 text-center text-theme1 ">
+    <b>Dokumen utama yang sudah diupload</b>
+<button class="btn btn-dark btn-sm float-md-right" onclick="tambah_dokumen_utama();">Tambah dokumen utama <span class="fa fa-plus"></span></button>
 </div>
-<table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
+    <hr>
+    <table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
 <tr>
 <th>nama file</th>
 <th>jenis</th>
@@ -47,7 +47,7 @@ Dokumen utama yang sudah diupload
 <div class="modal-body">
 <form action="<?php  echo base_url('User2/upload_utama')?>" method="post" enctype="multipart/form-data">
 <label>Tanggal akta</label>
-<input type="text" required="" readonly="" class="form-control" name="tanggal_akta">
+<input type="text" name="tanggal_akta" required="" readonly="" class="form-control " name="tanggal_akta">
 <label>Jenis file utama</label>
 <select name="jenis" class="form-control">
 <option value="Draft">Draft</option>    
@@ -119,7 +119,7 @@ window.location.href="<?php echo base_url('User2/proses_pekerjaan/'.$this->uri->
 
 
 $(function() {
-$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+$("input[name=tanggal_akta]").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
     "locale": {
         "format": "YYYY/MM/DD",
         "separator": "-",

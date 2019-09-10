@@ -63,7 +63,7 @@
 <div class="input-group ">
     <input type="text" id="cari_client" name="nama_client" class="form-control form-control-sm perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
-<button class="btn btn-dark form-control-sm add_client" type="button"><span class="fa fa-plus"></span> Client</button>
+<button class="btn btn-dark btn-sm form-control-sm add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
 </div>
 
@@ -91,14 +91,14 @@
 <form  id="fileclient" method="post" action="<?php echo base_url('User2/buat_client') ?>">
 <label>Pilih Jenis client</label>
 <select name="jenis" id="pilih_jenis" class="form-control form-control-sm  required" accept="text/plain">
-<option>Jenis client</option>
+<option>Jenis Client</option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>
 <div id="form_badan_hukum">
 <label  id="label_nama_perorangan">Nama Perorangan</label>
 <label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" placeholder="nama perorangan / badan HUkum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
+<input onkeyup="jadikan_kontak_person();" type="text" placeholder="Nama perorangan / Badan Hukum" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm  required"  accept="text/plain">
 </div>
 <div id="form_alamat_hukum">
 <label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
@@ -106,13 +106,13 @@
 <textarea rows="4" placeholder="Alamat Lengkap perorangan atau badan hukum" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
 </div>
 <label>Contact Person</label>
-<input type="text" name="contact_person" placeholder="contact person" class="form-control form-control-sm contact_person required" accept="text/plain">
+<input type="text" name="contact_person" placeholder="Contact Person" class="form-control form-control-sm contact_person required" accept="text/plain">
 <label>No Telepon</label>
-<input type="number" name="no_tlp" placeholder="no telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
+<input type="number" name="no_tlp" placeholder="No Telepon/HP"  class="form-control form-control-sm contact_number required" accept="text/plain">
 
 </div>
 <div class="card-footer">
-<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data arsip <span class="fa fa-save"></span></button>
+<button type="submit" class="btn btn-sm simpan_client btn-dark btn-block">Simpan data client<span class="fa fa-save"></span></button>
 </form>
 </div>
 </div>
@@ -194,6 +194,9 @@
 
 
 <script type="text/javascript">
+function jadikan_kontak_person(){
+$(".contact_person").val($("#badan_hukum").val());
+}
     
 function response(data){
 
@@ -213,6 +216,7 @@ type: r.status,
 title: r.pesan
 });
 
+$(".form-control").val("");
 $(".form_meta").val("");
 }else{
 const Toast = Swal.mixin({
@@ -370,23 +374,7 @@ $('.data_perekaman_user').html(data);
 }
 });
 }    
-    
-function response(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});    
-}    
+       
 
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
@@ -587,10 +575,19 @@ $(".Desimal").keyup(function(){
 var string = numeral(this.value).format('0,0');
 $("#"+this.id).val(string);
 });
-
+$(".Bulat").keyup(function(){
+var string = numeral(this.value).format('0');
+$("#"+this.id).val(string);
+});
 
 $(function() {
-$(".date").daterangepicker({ singleDatePicker: true,dateFormat: 'yy/mm/dd',
+$(".date").daterangepicker({ 
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
     "locale": {
         "format": "YYYY/MM/DD",
         "separator": "-",
@@ -654,6 +651,7 @@ data_perekaman_user($(".no_client").val());
 persyaratan_telah_dilampirkan();    
 response(data);
 refresh();
+
 }
 
 });
@@ -692,6 +690,7 @@ type: form.method,
 data: formData,
 success:function(data){      
 response(data);
+$(".form-control").val("");
 $(".simpan_client").removeAttr("disabled", true);
 }
 });

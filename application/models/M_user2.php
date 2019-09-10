@@ -360,6 +360,7 @@ $query = $this->db->get();
 return $query;
 }
 
+
 public function hapus_berkas($id_data_berkas){
 $this->db->select('data_client.nama_folder,'
         . 'data_berkas.nama_berkas,'
@@ -383,7 +384,25 @@ $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_n
 $this->db->where('data_berkas.no_berkas', base64_decode($no_berkas));
 $query = $this->db->get();  
 return $query;
+
 }
+
+public function data_berkas_where_no_pekerjaan($no_pekerjaan){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas,'
+        . 'data_berkas.no_nama_dokumen,'
+        . 'data_berkas.no_client,'
+        . 'data_client.nama_client,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->group_by('data_berkas.no_client');
+$query = $this->db->get();  
+return $query;
+}
+
 
 public function total_berkas(){
         $this->db->select('data_berkas.id_data_berkas');
@@ -401,9 +420,11 @@ return $query;
 public function data_perekaman($no_nama_dokumen,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
-                ."data_berkas.no_berkas");
+                ."data_berkas.no_berkas,"
+                . "data_client.nama_client");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
 $this->db->where('data_berkas.no_client',$no_client);
@@ -417,10 +438,10 @@ $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_berkas.no_berkas,"
                 ."data_berkas.pengupload,"
                 ."data_berkas.tanggal_upload,"
-                . "data_berkas.id_data_berkas,"
-                . "data_meta_berkas.no_nama_dokumen,"
-                 . "data_meta_berkas.no_pekerjaan,"
-        . "data_berkas.no_client");
+                ."data_berkas.id_data_berkas,"
+                ."data_meta_berkas.no_nama_dokumen,"
+                ."data_meta_berkas.no_pekerjaan,"
+                ."data_berkas.no_client");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');

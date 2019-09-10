@@ -450,6 +450,10 @@ $(".Desimal").keyup(function(){
 var string = numeral(this.value).format('0,0');
 $("#"+this.id).val(string);
 });
+$(".Bulat").keyup(function(){
+var string = numeral(this.value).format('0');
+$("#"+this.id).val(string);
+});
 
 $(function() {
 $(".date").daterangepicker({ 
@@ -568,8 +572,6 @@ return false;
 $(document).ready(function(){
 });
 
-
-
 $("#fileclient").submit(function(e) {
 e.preventDefault();
 $.validator.messages.required = '';
@@ -597,20 +599,8 @@ contentType: false,
 type: form.method,
 data: formData,
 success:function(data){
-$('#modal_tambah_client').modal('hide');       
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
+$(".form-control").val("");  
+response(data);
 $(".simpan_client").removeAttr("disabled", true);
 }
 });
