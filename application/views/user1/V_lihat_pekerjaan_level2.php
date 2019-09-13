@@ -4,15 +4,15 @@
 <?php  $this->load->view('umum/V_navbar_user1'); ?>
 <?php $kar = $data->row_array(); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Data pekerjaan <?php echo base64_decode($this->uri->segment(4)) ?> 
-</h5>
+    
+<div class="text-theme1 mt-2 text-center ">
+<h5 align="center">Data pekerjaan <?php echo base64_decode($this->uri->segment(4)) ?></h5>
 </div>
     
 
 <div class="row mt-2">
 <div class="col">
-<table class="table table-sm table-bordered table-striped  text-center table-condensed">
+<table class="table text-theme1 table-sm table-bordered table-striped  text-center table-condensed">
 <tr>
 <th>Pekerjaan</th>
 <th>Nama client</th>
@@ -25,7 +25,7 @@
 <td><?php echo $d['nama_jenis']  ?></td>
 <td><?php echo $d['nama_client']  ?></td>
 <td>
- <select disabled="" onchange="alihkan_tugas('<?php echo base64_encode($d['no_pekerjaan']) ?>','<?php echo $d['id_data_pekerjaan'] ?>');" class="form-control pekerjaan<?php echo $d['id_data_pekerjaan'] ?>">    
+ <select disabled="" onchange="alihkan_tugas('<?php echo base64_encode($d['no_pekerjaan']) ?>','<?php echo $d['id_data_pekerjaan'] ?>');" class="form-control form-control-sm  pekerjaan<?php echo $d['id_data_pekerjaan'] ?>">    
 <option><?php echo $d['pembuat_pekerjaan'] ?></option>
 <?php
 foreach ($data_user->result_array() as $user){
@@ -55,15 +55,11 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 }
 ?> </td>
 <td>
-<select onchange="aksi_option('<?php echo base64_encode($d['no_pekerjaan']) ?>','<?php echo $d['id_data_pekerjaan'] ?>');" class="form-control data_option<?php echo $d['id_data_pekerjaan'] ?>">
-<option>-- Klik untuk melihat menu --</option>
-<option value="1">Lihat Laporan</option>
-<option value="2">Alihkan Pekerjaan</option>
-<option value="3">Lihat Dokumen </option>
-</select>    
+<button onclick="lihat_laporan_pekerjaan('<?php echo base64_encode($d['no_pekerjaan']) ?>');" class="btn btn-success btn-sm" title="Lihat laporan"><i class="far fa-clipboard"></i></button>
+<button onclick="alihkan_pekerjaan('<?php echo $d['id_data_pekerjaan'] ?>');" class="btn btn-success btn-sm" title="Alihkan pekerjaan"><i class="far fa-share-square"></i></button>
+<button onclick="lihat_dokumen('<?php echo base64_encode($d['no_pekerjaan']) ?>')" class="btn btn-success btn-sm" title="Lihat Dokumen"><i class="far fa-eye"></i></span></button>
+
 </td>
-
-
 </tr>
 <?php } ?>    
 
@@ -82,7 +78,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
  <!-------------------modal laporan--------------------->
 
 <div class="modal fade" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
 <div class="modal-content">
 <div class="modal-body" id="lihat_status_sekarang">
 
@@ -91,20 +87,17 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
 </div>    
 <script type="text/javascript">
-function aksi_option(no_pekerjaan,id_data_pekerjaan){
-var val = $(".data_option"+id_data_pekerjaan+" option:selected").val();
-if(val == 1){
-lihat_laporan_pekerjaan(no_pekerjaan);   
-$('.pekerjaan'+id_data_pekerjaan).attr("disabled",true);
-}else if (val == 2){
-$('.pekerjaan'+id_data_pekerjaan).removeAttr("disabled");
-}else if(val == 3){
+
+function lihat_dokumen(no_pekerjaan){
 window.location.href ="<?php echo base_url('User1/berkas_dikerjakan/') ?>"+no_pekerjaan;    
 }
-$(".data_option"+id_data_pekerjaan).val("-- Klik untuk melihat menu --");
 
+function alihkan_pekerjaan(id_data_pekerjaan){
+$('.pekerjaan'+id_data_pekerjaan).removeAttr("disabled");
 }
+
 function alihkan_tugas(no_pekerjaan,id_data_pekerjaan){
+$('.pekerjaan'+id_data_pekerjaan).attr("disabled",true);
 var no_user             = $(".pekerjaan"+id_data_pekerjaan+" option:selected").val();
 var pembuat_pekerjaan   = $(".pekerjaan"+id_data_pekerjaan+" option:selected").text();
 var token               = "<?php echo $this->security->get_csrf_hash() ?>";

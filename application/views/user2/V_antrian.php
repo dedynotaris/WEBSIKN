@@ -192,10 +192,24 @@ var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
-url:"<?php echo base_url('User2/lihat_data_meta') ?>",
+url:"<?php echo base_url('User2/tampilkan_data') ?>",
 success:function(data){
-$('#lihat_data_meta').modal('show');
-$(".lihat_data_meta").html(data);
+$(".tampilkan_data").html(data);
+var clipboard = new ClipboardJS('button');
+
+clipboard.on('success', function(e) {
+  setTooltip(e.trigger, 'Copied!');
+  hideTooltip(e.trigger);
+});
+
+clipboard.on('error', function(e) {
+  setTooltip(e.trigger, 'Failed!');
+  hideTooltip(e.trigger);
+});
+$('button').tooltip({
+  trigger: 'click',
+  placement: 'bottom'
+});
 }
 });
 

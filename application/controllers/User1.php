@@ -134,6 +134,7 @@ if($this->input->post()){
 $input = $this->input->post();
 
 $data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
+if($data->num_rows() != 0){
 echo "<table class='table table-striped table-bordered text-center table-hover table-sm'>"
 . "<tr>"
 . "<th>Tanggal </th>"
@@ -145,7 +146,11 @@ echo "<tr>"
     . "<td>".$d['laporan_pekerjaan']."</td>"
     . "</tr>";    
 }
-echo "</table>";    
+echo "</table>";
+}else{
+echo "<div class='text-center text-theme1 h5'> <i class='far fa-clipboard fa-3x'></i><br>Belum ada laporan yang diberikan</div>";    
+}
+
 }else{
 redirect(404);    
 }    
@@ -296,10 +301,9 @@ $input = $this->input->post();
 
 $data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 if($data->num_rows() == 0){
-echo "<h5 class='text-center'>Belum ada laporan yang dimasukan<br>"
-    . "<span class='fa fa-list-alt fa-3x'></span></h5>";
+echo "<div class='text-center text-theme1 h5'> <i class='far fa-clipboard fa-3x'></i><br>Belum ada laporan yang diberikan</div>";    
     
-}else{echo "<table class='table table-bordered table-striped table-hover table-sm'>"
+}else{echo "<table text-theme1 class='table table-bordered table-striped table-hover table-sm'>"
 . "<tr>"
 . "<th>Tanggal </th>"
 . "<th>laporan</th>"
@@ -331,8 +335,8 @@ echo print_r($this->session->userdata());
 public function data_perekaman(){
 if($this->input->post()){
 $input = $this->input->post();
-$query     = $this->M_user1->data_perekaman($input['no_nama_dokumen'],$input['no_pekerjaan']);
-$query2     = $this->M_user1->data_perekaman2($input['no_nama_dokumen'],$input['no_pekerjaan']);
+$query     = $this->M_user1->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
+$query2     = $this->M_user1->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
 echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
@@ -340,7 +344,6 @@ echo "<thead>
 foreach ($query->result_array() as $d){
 echo "<th>".$d['nama_meta']."</th>";
 }
-echo "<th>Pengupload</th>";
 echo "<th>Aksi</th>";
 echo "</tr>"
 
@@ -354,11 +357,9 @@ echo "<tr>";
 foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
-echo '<td class="text-center">'.$d['pengupload'].'</td>';
-
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick="cek_download('. $d['id_data_berkas'].')"><span class="fa fa-download"></span></button>
-</td>';
+.'<button class="btn btn-success btn-sm" onclick=cek_download("'. base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>';
+    echo '</td>';
 echo "</tr>";
     
     
@@ -366,10 +367,10 @@ echo "</tr>";
 echo "</tbody>";
 
 
-echo"</table>";   
+echo"</table>";  
 }else{
 redirect(404);    
-}    
+}  
 }
 
 public function data_pencarian(){
@@ -544,7 +545,7 @@ $this->db->select('data_dokumen_utama.nama_file,'
 $this->db->from('data_dokumen_utama');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
-$this->db->where('id_data_dokumen_utama',base64_decode($id_data_dokumen_utama));
+$this->db->where('id_data_dokumen_utama',$id_data_dokumen_utama);
 $data= $this->db->get()->row_array();    
 
 

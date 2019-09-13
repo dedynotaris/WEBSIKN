@@ -216,7 +216,6 @@ type: r.status,
 title: r.pesan
 });
 
-$(".form-control").val("");
 $(".form_meta").val("");
 }else{
 const Toast = Swal.mixin({

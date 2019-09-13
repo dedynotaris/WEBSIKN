@@ -1,10 +1,11 @@
-            <table class="table table-striped table-bordered table-sm mt-2">
+            <table class="table text-theme1 table-striped table-bordered table-sm mt-2">
                 <thead>
                     <tr>
-                        <td>No</td>
-                        <td>No pekerjaan</td>
-                        <td>Nama dokumen penunjang</td>
-                        <td>Aksi</td>
+                        <th>No</th>
+                        <th>No pekerjaan</th>
+                        <th>Nama dokumen penunjang</th>
+                        <th>Pengupload</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 
@@ -13,7 +14,8 @@
         <td><?php echo $no++ ?></td>  
         <td><?php echo $data['no_pekerjaan'] ?></td>
         <td><?php echo $data['nama_dokumen'] ?></td>
-        <td><button onclick="lihat_data_perekaman('<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_pekerjaan'] ?>')" class="btn btn-sm btn-dark btn-block">Lihat rekaman data <span class="fa fa-eye"></span></button></td>
+        <td><?php echo $data['nama_lengkap'] ?></td>
+        <td><button onclick="lihat_data_perekaman('<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_client'] ?>')" class="btn btn-sm btn-dark btn-block" titl="Lihat rekaman data"><span class="fa fa-eye"></span></button></td>
     </tr> 
             <?php } ?>
         </table>

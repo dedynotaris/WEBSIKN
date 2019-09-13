@@ -52,12 +52,29 @@ echo json_encode($json);
 
 public function cari_nama_client(){
 $input = $this->input->post();    
+
+if(!$this->input->post('jenis_pemilik')){
+$json[]= array(
+'label'                    => "Tentukan jenis pemilik ",   
+'no_client'                => NULL,
+);   
+}else{   
 $query = $this->M_user2->cari_jenis_client($input);
-foreach ($query as $d) {
+$query2 = $query->result();
+if($query->num_rows() == 0){
+$json[]= array(
+'label'                    => "Data client tidak tersedia",   
+'no_client'                => NULL,
+);   
+    
+}else{
+foreach ($query2 as $d) {
 $json[]= array(
 'label'                    => $d->nama_client,   
 'no_client'                => $d->no_client,
 );   
+}
+}
 }
 echo json_encode($json);
 }
@@ -324,7 +341,7 @@ if($this->input->post()){
 $input = $this->input->post();
 $total_berkas = $this->M_user2->total_berkas()->row_array();
 
-$no_berkas = date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
+$no_berkas = "BK".date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 
@@ -650,8 +667,8 @@ $input = $this->input->post();
 
 $data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 if($data->num_rows() == 0){
-echo "<h5 class='text-center text-theme1'>Belum ada laporan yang anda masukan"
-    . "<br><span class='far fa-clipboard fa-3x'></span></h5>";
+echo "<h5 class='text-center text-theme1'>"
+    . "<span class='far fa-clipboard fa-3x'></span><br>Belum ada laporan yang anda masukan</h5>";
     
 }else{
 echo "<table class='table text-theme1 table-bordered table-striped table-hover table-sm'>"
@@ -1079,51 +1096,16 @@ public function lihat_data_meta(){
 $no_pekerjaan = $this->input->post();
 
 $data_client = $this->M_user2->data_berkas_where_no_pekerjaan(base64_decode($no_pekerjaan['no_pekerjaan']));
-
 echo "<input type='hidden' value='".$no_pekerjaan['no_pekerjaan']."' id='no_pekerjaan' class='form-control'>";
 echo "<label>Pilih data client yang ingin ditampilkan</label>";
-echo "<select onchange='tampilkan_data()' class='form-control form-control-sm' id='no_client'>";
+echo "<select onchange='tampilkan_data()' class='form-control form-control-sm' id='no_client'>"
+. "<option>Pilih client yang ingin ditampilkan</option>";
 foreach ($data_client->result_array() as $data){
 echo "<option value='".$data['no_client']."'>".$data['nama_client']."</option>";   
 }
-echo "</select>";
+echo "</select><hr>";
 
-/*foreach ($data_client->result_array() as $data){
-$query     = $this->M_user2->data_perekaman($data['no_nama_dokumen'],$data['no_client']);
-$query2     = $this->M_user2->data_perekaman2($data['no_nama_dokumen'],$data['no_client']);
-echo $data['nama_client']."<hr>";
-echo "<table class='table table-sm table-striped table-bordered'>";
-echo "<thead>
-    <tr>";
-foreach ($query->result_array() as $d){
-    
-echo "<th>".$d['nama_meta']."</th>";
-}
-echo "<th>Aksi</th>";
-echo "</tr>"
-
-. "</thead>";
-
-echo "<tbody>";
-foreach ($query2->result_array() as $d){
-$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
-echo "<tr>";
-
-foreach ($b->result_array() as $i){
-echo "<td>".$i['value_meta']."</td>";    
-}
-echo '<td class="text-center">';
-echo '</td>';
-echo "</tr>";
-    
-    
-}
-echo "</tbody>";
-
-
-echo"</table>";   */ 
-
-
+echo "<div class='tampilkan_data overflow-auto' style='max-height:380px;'></div>";
 }
 
 public function data_perekaman_user(){
@@ -1154,7 +1136,7 @@ foreach ($data_berkas->result_array() as $u){
 echo'<div class=" m-1">
 <div class="row">
 <div class="col ">'.$u['nama_dokumen'].'</div> 
-<div class="col-md-4  text-right">
+<div  class="col-md-4  text-right">
 <button type="button" onclick=lihat_data_perekaman("'.$u['no_nama_dokumen'].'","'.$u['no_pekerjaan'].'","'.$input['no_client'].'") class="btn btn-sm btn-outline-dark btn-block">Lihat data <span class="fa fa-eye"></span></button>';
 echo "</div>    
 </div>
@@ -1474,7 +1456,6 @@ echo "<td>".$i['value_meta']."</td>";
         echo '</td>';
 echo "</tr>";
     
-    
 }
 echo "</tbody>";
 
@@ -1507,10 +1488,54 @@ else{
 redirect(404);    
 }
 }
-public function lihat_data(){
-    $filepath = "./berkas/tes.docx";
-header('Content-type: application/vnd.ms-excel');
-header('Content-Disposition: attachment; filename="Laporan Penjualan.xlsx"');
+public function tampilkan_data(){
+if($this->input->post()){
+$input = $this->input->post();
+$data_berkas = $this->M_user2->data_berkas_where_no_client($input['no_client']);
 
+foreach ($data_berkas->result_array() as $d){
+ 
+$query     = $this->M_user2->data_perekaman($d['no_nama_dokumen'],$d['no_client']);
+$query2     = $this->M_user2->data_perekaman2($d['no_nama_dokumen'],$d['no_client']);
+$cols = $query->num_rows()+1;
+echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<thead>
+    <tr><th class='text-center' colspan='".$cols."'>".$d['nama_dokumen']."</th></tr>";
+
+echo  "<tr>";
+foreach ($query->result_array() as $d){
+echo "<th>".$d['nama_meta']."</th>";
+}
+echo "<th style='width:50px;'>Aksi</th>";
+echo "</tr>"
+
+. "</thead>";
+
+echo "<tbody>";
+
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<tr id='".$d['no_berkas']."'>";
+foreach ($b->result_array() as $i){
+echo "<td >".$i['value_meta']."</td>";    
+}
+echo '<td class="text-center">'
+.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>';
+        echo '</td>';
+echo "</tr>";
+    
+    
+}
+echo "</tbody>";
+
+
+echo"</table>";      
+    
+}
+
+}else{
+redirect(404);    
+}
+    
 }
 }

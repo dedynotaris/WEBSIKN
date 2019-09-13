@@ -1,14 +1,12 @@
 <?php
 class M_user1 extends CI_Model{
 public function data_tugas($status){
-
 $this->db->select('*');
 $this->db->order_by('data_pekerjaan.target_kelar','ASC');
 $this->db->from('data_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->where('data_pekerjaan.status_pekerjaan',$status);
 $query = $this->db->get();
-
 return $query;
 }
 
@@ -19,13 +17,11 @@ $this->db->from('data_persyaratan_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_persyaratan_pekerjaan.no_client');
 $this->db->where('data_persyaratan_pekerjaan.no_pekerjaan_syarat',$no_pekerjaan);
 $query = $this->db->get();    
-
 return $query;
 }
 
 
-function json_data_pekerjaan_selesai(){
-    
+function json_data_pekerjaan_selesai(){   
 $this->datatables->select('id_data_pekerjaan,'
 .'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
 .'data_jenis_pekerjaan.nama_jenis as jenis_perizinan,'
@@ -41,14 +37,13 @@ $this->datatables->add_column('view',"<button class='btn btn-sm btn-success '  o
 $this->datatables->where('data_pekerjaan.status_pekerjaan','Selesai');
 return $this->datatables->generate();
 }
+
 public function data_user_where($no_user){
-
 $query = $this->db->get_where('user',array('no_user'=>$no_user));
-
 return $query;
 }
+
 function json_data_riwayat(){
-    
 $this->datatables->select('id_data_histori_pekerjaan,'
 .'data_histori_pekerjaan.keterangan as keterangan,'
 .'data_histori_pekerjaan.tanggal as tanggal,'
@@ -115,6 +110,7 @@ $this->db->select('*');
 $this->db->from('data_berkas');
 $this->db->join('data_pekerjaan','data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
 $this->db->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->join('user','user.no_user = data_berkas.pengupload');
 $this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
 $this->db->group_by('data_berkas.no_nama_dokumen');
 $data = $this->db->get();
@@ -127,6 +123,7 @@ public function data_berkas_utama($no_pekerjaan){
 $this->db->select('*');
 $this->db->from('data_dokumen_utama');
 $this->db->join('data_pekerjaan','data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('user','user.no_user = data_pekerjaan.no_user');
 $this->db->where('data_dokumen_utama.no_pekerjaan',$no_pekerjaan);
 $data = $this->db->get();
 return $data;        
@@ -146,10 +143,14 @@ return $data;
 }
 public function data_perekaman($no_nama_dokumen,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
-                ."data_meta_berkas.value_meta,"
-                ."data_berkas.no_berkas");
+                    ."data_meta_berkas.value_meta,"
+                    ."data_berkas.no_berkas,"
+                    ."data_client.nama_client,"
+                    ."nama_dokumen.nama_dokumen");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
 $this->db->where('data_berkas.no_client',$no_client);
@@ -163,10 +164,10 @@ $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_berkas.no_berkas,"
                 ."data_berkas.pengupload,"
                 ."data_berkas.tanggal_upload,"
-                . "data_berkas.id_data_berkas,"
-                . "data_meta_berkas.no_nama_dokumen,"
-                 . "data_meta_berkas.no_pekerjaan,"
-        . "data_berkas.no_client");
+                ."data_berkas.id_data_berkas,"
+                ."data_meta_berkas.no_nama_dokumen,"
+                ."data_meta_berkas.no_pekerjaan,"
+                ."data_berkas.no_client");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
 $this->db->group_by('data_berkas.no_berkas');

@@ -129,14 +129,37 @@ echo "<input type='hidden' class='form-control no_client' value='".$input['no_cl
 
 $i = 1;
 foreach ($query->result_array() as $d){
-    
+
+      
+if($d['jenis_inputan'] == 'select'){
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
 echo "<label>".$d['nama_meta']."</label>"
-    ."<input    ";
-    if($d['jenis_inputan'] == 'Numeric'){
-      echo "type='number' maxlength='".$d['maksimal_karakter']."'  class='form-control quantity meta required' required='' accept='text/plain'";  
-    }else{
-      echo "maxlength='".$d['maksimal_karakter']."' type='text'  class='form-control meta required' required='' accept='text/plain'";  
-    }echo "id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."' >";    
+."<select id='data_meta".$i++."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+foreach ($data_option->result_array() as $option){
+echo "<option>".$option['jenis_pilihan']."</option>";
+}
+echo "</select>";
+}else if($d['jenis_inputan'] == 'date'){
+
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+
+}else if($d['jenis_inputan'] == 'number'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+
+
+}else if($d['jenis_inputan'] == 'textarea'){
+echo "<label>".$d['nama_meta']."</label>"
+        . "<textarea  id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+
+
+}else{
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='".$d['jenis_inputan']."' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+
+
+}    
 }
 
 echo "<label>Lampiran</label>"
@@ -151,7 +174,7 @@ if($this->input->post()){
 $input = $this->input->post();
 $total_berkas = $this->M_user3->total_berkas()->row_array();
 
-$no_berkas = date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
+$no_berkas = "BK".date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
 $static = $this->M_user3->data_pekerjaan($input['no_pekerjaan'])->row_array();
 

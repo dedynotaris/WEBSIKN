@@ -4,13 +4,13 @@
 <?php  $this->load->view('umum/V_navbar_user1'); ?>
 <?php $kar = $data->row_array(); ?>
 <div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
+<div class="text-theme1 mt-2 text-center ">
 <h5 align="center">Data pekerjaan <?php echo base64_decode($this->uri->segment(4)) ?>  </h5>
 </div>    
 
 <div class="row mt-2">
 <div class="col">
-<table class="table table-sm table-bordered table-striped  table-condensed">
+<table class="table text-theme1 table-sm table-bordered table-striped  table-condensed">
 <tr>
 <th>Nama Tugas</th>
 <th>Nama client</th>
@@ -43,12 +43,11 @@ $numberDays = intval($numberDays);
 echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 }
 ?> </td>
-<td>
-<select onchange="opsi('<?php echo $d['no_berkas_perizinan'] ?>','<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_pekerjaan'] ?>')" class="form-control aksi<?php echo $d['no_berkas_perizinan'] ?>">
-    <option >-- Klik untuk melihat menu --</option>
-    <option value="1">Lihat laporan</option>
-    <option value="2">Rekaman Data</option>
-</select>
+<td class="text-center">
+<button onclick="lihat_laporan('<?php echo base64_encode($d['no_berkas_perizinan']) ?>');" class="btn btn-success btn-sm" title="Lihat laporan"><i class="far fa-clipboard"></i></button>
+<button onclick="lihat_data_perekaman('<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_client'] ?>')" class="btn btn-success btn-sm" title="Lihat Dokumen"><i class="far fa-eye"></i></span></button>
+   
+
 </td>
 </tr>
 <?php } ?>    
@@ -59,14 +58,14 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
 </div>
 <div class="modal fade" id="data_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body data_laporan">
-      
-      </div>
-      
-    </div>
-  </div>
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-body data_laporan">
+
+</div>
+
+</div>
+</div>
 </div>
     <div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
@@ -117,11 +116,11 @@ $(".data_laporan").html(data);
 </script> 
 
 <script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
 url:"<?php echo base_url('User1/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    
