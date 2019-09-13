@@ -61,7 +61,7 @@ echo "<div class='row mt-1 card-header rounded'>"
     . "<div class='col'>".$utama['nama_berkas']."</div>"
     . "<div class='col-sm-2'>".$utama['tanggal_akta']."</div>"
     . "<div class='col-sm-2 text-center'>"
-    . "<button onclick=download_utama('".base64_encode($utama['id_data_dokumen_utama'])."') class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
+    . "<button onclick=download_utama('".$utama['id_data_dokumen_utama']."') class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
     . "</div>"
      . "</div>";    
 }

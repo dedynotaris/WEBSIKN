@@ -7,7 +7,7 @@
 
 <ul class="nav nav-tabs">
 <li class="nav-item">
-<a class="nav-link active" data-toggle="tab" href="#utama"> Dokumen Utama <i class="fas fa-file-word"></i></a>
+<a class="nav-link active" data-toggle="tab" href="#utama"> Dokumen Utama <i class="fas fa-file"></i></a>
 </li>
 <li class="nav-item ml-1">
 <a class="nav-link " data-toggle="tab" href="#perizinan"> Dokumen Penunjang <i class="fas fa-file"></i></a>
@@ -47,11 +47,11 @@
 </div>
 
 <script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_nama_dokumen,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
 url:"<?php echo base_url('User1/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    
@@ -98,12 +98,7 @@ $("#lihat_data_lampiran").html(data);
         
 }
 
-function download_berkas(id_data_berkas){
-window.location.href="<?php  echo base_url('User1/download_berkas/')?>"+id_data_berkas;
-}
-function download_berkas_informasi(id_data_berkas){
-window.location.href="<?php  echo base_url('User1/download_berkas_informasi/')?>"+id_data_berkas;
-}
+
 function download_utama(id_data_berkas){
 window.location.href="<?php  echo base_url('User1/download_utama/')?>"+id_data_berkas;
 }

@@ -40,9 +40,7 @@ $this->db->where('data_client.jenis_client',$input['jenis_pemilik']);
 $array = array('nama_client' => $input['term']);
 $this->db->like($array);
 $query = $this->db->get();
-if($query->num_rows() >0 ){
-return $query->result();
-}
+return $query;
 }
 
 
@@ -60,7 +58,6 @@ return $query;
 }
 
 function json_data_berkas_client($no_client){
-    
 $this->datatables->select('id_data_berkas,'
 .'data_berkas.no_client as no_client,'
 .'data_berkas.no_pekerjaan as no_pekerjaan,'
@@ -78,8 +75,7 @@ $this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-suc
 return $this->datatables->generate();
 }
 
-function json_data_perorangan(){
-    
+function json_data_perorangan(){   
 $this->datatables->select('id_perorangan,'
 .'data_perorangan.id_perorangan as id_perorangan,'
 .'data_perorangan.no_nama_perorangan as no_nama_perorangan,'
@@ -386,7 +382,6 @@ $query = $this->db->get();
 return $query;
 
 }
-
 public function data_berkas_where_no_pekerjaan($no_pekerjaan){
 $this->db->select('data_client.nama_folder,'
         . 'data_berkas.nama_berkas,'
@@ -399,6 +394,22 @@ $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
 $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
 $this->db->group_by('data_berkas.no_client');
+$query = $this->db->get();  
+return $query;
+}
+
+public function data_berkas_where_no_client($no_client){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas,'
+        . 'data_berkas.no_nama_dokumen,'
+        . 'data_berkas.no_client,'
+        . 'data_client.nama_client,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.no_client',$no_client);
+$this->db->group_by('data_berkas.no_nama_dokumen');
 $query = $this->db->get();  
 return $query;
 }
@@ -421,10 +432,12 @@ public function data_perekaman($no_nama_dokumen,$no_client){
 $this->db->select("data_meta_berkas.nama_meta,"
                 ."data_meta_berkas.value_meta,"
                 ."data_berkas.no_berkas,"
-                . "data_client.nama_client");
+                ."data_client.nama_client,"
+                ."nama_dokumen.nama_dokumen");
 $this->db->from('data_berkas');
 $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
 $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->db->order_by('data_meta_berkas.id_data_meta_berkas','ASC');
 $this->db->group_by('data_meta_berkas.nama_meta');
 $this->db->where('data_berkas.no_client',$no_client);

@@ -26,7 +26,7 @@ App Management
       
 <ul class="list-unstyled components">
 <li>
-<a class="list-group-item list-group-item-action" href="<?php echo base_url('User1/lihat_karyawan') ?>">Lihat karyawan<i class="fa fa-user-tie float-right"></i></a>
+<a class="list-group-item list-group-item-action" href="<?php echo base_url('User1/lihat_karyawan') ?>">Lihat karyawan<i class="fas fa-user-friends float-right"></i></a>
 </li>
 
     
@@ -35,13 +35,13 @@ App Management
 <i class="fa fa-briefcase"></i> Pekerjaan</a>
 <ul class="list-unstyled collapse show" id="homeSubmenu">
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User1/') ?>">Pekerjaan masuk<i class="fa fa-suitcase	 float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User1/') ?>">Pekerjaan masuk<i class="far fa-share-square float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User1/halaman_proses') ?>">Pekerjaan diproses<i class="fa fa-suitcase float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User1/halaman_proses') ?>">Pekerjaan diproses<i class="fas fa-retweet float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action" href="<?php echo base_url('User1/halaman_selesai') ?>">Pekerjaan diselesaikan<i class="fa fa-suitcase float-right"></i></a>
+<a class="list-group-item list-group-item-action" href="<?php echo base_url('User1/halaman_selesai') ?>">Pekerjaan diselesaikan<i class="far fa-flag float-right"></i></a>
 </li>
 </ul>
 

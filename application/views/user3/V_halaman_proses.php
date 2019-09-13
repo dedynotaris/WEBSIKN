@@ -123,7 +123,7 @@ echo $pemilik['nama_client'];
 
 </div>
 <div class="modal-footer">
-<button type="submit" class="btn btn-md btn-simpan_persyaratan btn-block btn-dark">Simpan <span class="fa fa-save"></span></button>    
+<button type="submit" class="btn btn-md btn-simpan_persyaratan btn-block btn-dark">Simpan <img id="loading"  style="display: none; width:25px;" src="<?php echo base_url() ?>assets/loading.svg"></button>    
 </div>
 </form>    
 </div>
@@ -256,33 +256,38 @@ data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_peke
 success:function(data){
 $(".form_persyaratan").html(data);
 $('#modal_upload').modal('show');
+regis_js();
 
-var inputQuantity = [];
+}
+});
+}
+
+function regis_js(){
+$(".Desimal").keyup(function(){
+var string = numeral(this.value).format('0,0');
+$("#"+this.id).val(string);
+});
+$(".Bulat").keyup(function(){
+var string = numeral(this.value).format('0');
+$("#"+this.id).val(string);
+});
+
 $(function() {
-$(".quantity").each(function(i) {
-inputQuantity[i]=this.defaultValue;
-$(this).data("idx",i); // save this field's index to access later
+$(".date").daterangepicker({ 
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
 });
-$(".quantity").on("keyup", function (e) {
-var $field = $(this),
-val=this.value,
-$thisIndex=parseInt($field.data("idx"),10); // retrieve the index
-if (this.validity && this.validity.badInput || isNaN(val) || $field.is(":invalid") ) {
-this.value = inputQuantity[$thisIndex];
-return;
-} 
-if (val.length > Number($field.attr("maxlength"))) {
-var t = Number($field.attr("maxlength"));
-val=val.slice(0,t);
-$field.val(val);
-}
-inputQuantity[$thisIndex]=val;
-});      
 });
-}
-});
-}
 
+}
 function form_tolak_tugas(no_pekerjaan,id_data_berkas){
 }
 

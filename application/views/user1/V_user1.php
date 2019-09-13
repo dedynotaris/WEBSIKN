@@ -2,15 +2,15 @@
 <?php  $this->load->view('umum/V_sidebar_user1'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar_user1'); ?>
-<div class="container-fluid ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Data pekerjaan baru masuk
+<div class="container-fluid text-theme1 ">
+<div class=" mt-2 text-center ">
+<h5 align="center"><i class="far fa-3x fa-share-square"></i><br>Pekerjaan Baru Masuk
 </h5>
 </div>
 
 <div class="row mt-2">
 <div class="col">    
-<table class="table table-sm  table-bordered table-striped table-hover">
+<table class="table text-theme1 table-sm  table-bordered table-striped table-hover">
 <tr>
 <th>Nama Client</th>
 <th>Pekerjaan</th>

@@ -49,6 +49,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 <button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>');" class="btn btn-sm btn-success" title="Proses Perizinan"><span class="fa fa-retweet"></span></button>    
 <button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>')" class="btn btn-sm btn-success" title="Buat Laporan"><span class="fa fa-pencil-alt"></span></button>    
 <button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" class="btn btn-sm btn-success" title="Lihat Laporan"><i class="far fa-clipboard"></i></button>    
+<button onclick="lihat_data('<?php echo base64_encode($data['no_pekerjaan'])  ?>')" title="Lihat data perekaman" class="btn btn-sm btn-success"><span class="fa fa-eye"></span></button>    
 </td>
 </tr>
 <?php } ?>
@@ -84,7 +85,17 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
       </div>
     </div>
   </div>
-</div>  
+</div>
+
+<div class="modal fade" id="lihat_data_meta" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+<div class="modal-content">
+<div class="modal-body lihat_data_meta">
+    
+</div>
+</div>
+</div>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 $(".simpan_progress").click(function(){
@@ -145,9 +156,61 @@ function tambahkan_kedalam_proses(no_pekerjaan){
 window.location.href = "<?php echo base_url('User2/proses_pekerjaan/'); ?>"+no_pekerjaan;
 }
 
+function lihat_data(no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/lihat_data_meta') ?>",
+success:function(data){
+$('#lihat_data_meta').modal('show');
+$(".lihat_data_meta").html(data);
+}
+});
+}
+function tampilkan_data(){
+var no_pekerjaan = $("#no_pekerjaan").val();
+var no_client    = $("#no_client option:selected").val();
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
+url:"<?php echo base_url('User2/tampilkan_data') ?>",
+success:function(data){
+$(".tampilkan_data").html(data);
+var clipboard = new ClipboardJS('button');
+
+clipboard.on('success', function(e) {
+  setTooltip(e.trigger, 'Copied!');
+  hideTooltip(e.trigger);
+});
+
+clipboard.on('error', function(e) {
+  setTooltip(e.trigger, 'Failed!');
+  hideTooltip(e.trigger);
+});
+$('button').tooltip({
+  trigger: 'click',
+  placement: 'bottom'
+});
+
+}
+});
+
+}
 
 
-   
+function setTooltip(btn, message) {
+  $(btn).tooltip('hide')
+    .attr('data-original-title', message)
+    .tooltip('show');
+}
+
+function hideTooltip(btn) {
+  setTimeout(function() {
+    $(btn).tooltip('hide');
+  }, 1000);
+}
 </script>        
     
 </body>
