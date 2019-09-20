@@ -10,13 +10,11 @@ $this->datatables->select('id_data_client,'
 );
 $this->datatables->from('data_client');
 $this->datatables->where('no_user',$this->session->userdata('no_user'));
+
 $this->datatables->add_column('view',""
-        . "<select onchange=opsi_client('$1','$2') class='form-control opsi_pekerjaan$1'>"
-        . "<option>-- Klik untuk melihat menu --</option>"
-        . "<option value='1'>Lihat berkas</option>"
-        . "<option value='2'>Pekerjaan baru</option>"
-        . "</select>"
-        . "",'id_data_client , base64_encode(no_client)');
+        . "<button onclick=lihat_berkas('$1') class='btn ml-1 btn-sm btn-success' title='lihat berkas client'><span class='fa fa-eye'></span></button>"
+        . "<button onclick=tambah_pekerjaan('$1') class='btn ml-1 btn-sm btn-success' title='Tambahkan pekerjaan baru'><span class='fa fa-plus'></span></button>"
+        . "",'base64_encode(no_client)');
 return $this->datatables->generate();
 }
 public function simpan_syarat($data){
