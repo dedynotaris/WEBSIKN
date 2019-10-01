@@ -1,7 +1,8 @@
-<body >
-<?php  $this->load->view('umum/V_sidebar_user2'); ?>
+<body>
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_data_user2'); ?>
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
     <h5 align="center " class="text-theme1">Pekerjaan Masuk<br><span class="fa-2x far fa-share-square"></span></h5>

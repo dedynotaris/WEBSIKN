@@ -81,28 +81,43 @@ echo json_encode($json);
 
 
 public function create_client(){
-if($this->input->post()){
-$data = $this->input->post();
-if($data['jenis_client'] == "Perorangan"){
-$this->simpan_client($data);
-}else if($data['jenis_client'] == "Badan Hukum"){
-$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($data['badan_hukum'])))->num_rows();        
-if($cek_badan_hukum == 0){
-$this->simpan_client($data);
+$input = $this->input->post();
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
+$this->form_validation->set_rules('target_kelar', 'Target kelar', 'required');
+$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
+$this->form_validation->set_rules('contact_number', 'Contact Number', 'required|numeric');
+$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required');
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
+$this->form_validation->set_rules('badan_hukum', 'Badan Hukum', 'required');
+$this->form_validation->set_rules('alamat_badan_hukum', 'Alamat', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
 }else{
-$status = array(
-"status"     => "error",
-"pesan"      => "Nama Badan Hukum sudah tersedia"    
+if($input['jenis_client'] == "Perorangan"){
+$this->simpan_client($input);
+}else if($input['jenis_client'] == "Badan Hukum"){    
+$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($input['badan_hukum'])))->num_rows();        
+if($cek_badan_hukum == 0){
+$this->simpan_client($input);
+}else{
+$status[] = array(
+"status"       => "error_validasi",
+"messages"     =>[array("jenis_client"=>"Jenis Badan Hukum Sudah Tersedia","badan_hukum"=>"Nama Badan Hukum Sudah Tersedia")],    
 );    
 echo json_encode($status);
-}
-}
-}else{
-redirect(404);    
-}
+}   
 }
 
+}
+}
 public function simpan_client($data){
+    
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
@@ -110,15 +125,16 @@ $no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
 $data_client = array(
 'no_client'                 => $no_client,    
-'jenis_client'              => ucwords($data['jenis_client']),    
+'jenis_client'              => ucfirst($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
-'alamat_client'             => ucwords($data['alamat_badan_hukum']),    
+'alamat_client'             => ucfirst($data['alamat_badan_hukum']),    
 'tanggal_daftar'            => date('Y/m/d'),    
 'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
 'no_user'                   => $this->session->userdata('no_user'), 
 'nama_folder'               =>"Dok".$no_client,
-'contact_person'            => ucwords($data['contact_person']),    
-'contact_number'            => ucwords($data['contact_number']),    
+'contact_person'            => ucfirst($data['contact_person']),    
+'contact_number'            => ucfirst($data['contact_number']),    
+'jenis_kontak'              => ucfirst($data['jenis_kontak']),    
 );    
 $this->db->insert('data_client',$data_client);
 
@@ -127,7 +143,7 @@ $data_r = array(
 'status_pekerjaan'   => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
 'tanggal_dibuat'     => date('Y/m/d'),
-'no_jenis_pekerjaan' => $data['no_jenis_pekerjaan'],   
+'no_jenis_pekerjaan' => $data['id_jenis_pekerjaan'],   
 'target_kelar'       => $data['target_kelar'],
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
@@ -153,12 +169,13 @@ mkdir("berkas/"."Dok".$no_client,0777);
 $keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum'];
 $this->histori($keterangan);
 
-$status = array(
-"status"     => "success",
-"no_client"  => base64_encode($no_client),
-"pesan"      => "Telah dimasukan kedalam agenda kerja"    
+$status[] = array(
+"status"        => "success",
+"no_client"     => base64_encode($no_client),
+"messages"      => "Telah dimasukan kedalam agenda kerja"    
 );
-echo json_encode($status);    
+
+echo json_encode($status);        
 }
 
 
@@ -181,15 +198,16 @@ $keterangan = $this->session->userdata('nama_lengkap')." Menambahkan persyaratan
 $this->histori($keterangan);
 
 $status = array(
-"status"     => "success",
+"status"        => "success",
 "no_pekerjaan"  => base64_encode($input['no_pekerjaan']),
-"pesan"      => "Persyaratan berhasil ditambahkan",    
+"messages"      => "Persyaratan berhasil ditambahkan",    
 );
 
 echo json_encode($status);
 }else{
 redirect(404);    
-}   
+}
+    
 }
 
 

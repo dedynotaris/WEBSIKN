@@ -1,28 +1,29 @@
 <body onload="refresh();"></body>
-<?php  $this->load->view('umum/V_sidebar_user2'); ?>
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_data_user2'); ?>
 <?php $static = $query->row_array(); ?>
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
-        
 LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan <span class="fa fa-exchange-alt"></span></button>
 </div>
-</div>   
+</div>
+    
 <div class="container">
-
 <div class="row">
-<div class="col">
-<div class="text-center text-theme1"><b>Nama Badan Hukum atau Perorangan yang harus dilengkapi datanya   <button class="btn btn-dark btn-sm float-md-left "  onclick="modal_client();">Tambahkan Pengurus <span class="fa fa-plus"></span></button>
-<hr> </b></div>
-<div class="data_client text-theme1">
+    <div class="col">
+        <label>Nama Client</label>
+    </div>
+</div>
+        
+<div class="row">
+<div class="col data_client text-theme1"></div>
+</div>
+    
 </div>
 </div>
-</div>
-</div>
-</div>
-
 
 <!------------------modal cari client------------->
 <div class="modal fade" id="modal_cari_client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -44,13 +45,11 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 
 <label>Cari Nama <span class="jenis_pemilik"></span></label>
 <div class="input-group ">
-    <input type="text" id="cari_client" name="nama_client" class="form-control form-control-sm perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
+<input type="text" id="cari_client" name="nama_client" class="form-control form-control-sm perekaman nama_client required" readonly="" accept="text/plain" aria-describedby="basic-addon2">
 <div class="input-group-append">
 <button class="btn btn-sm btn-dark add_client" type="button"><span class="fa fa-plus"></span> Client</button>
 </div>
 </div>
-
-
 <label>No Client</label>
 <input type="text" id="no_client" class="form-control perekaman form-control-sm" readonly="">
 <hr>
@@ -59,7 +58,6 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 </div>
-
 <!------------------modal tambah client------------->
 <div class="modal fade" id="modal_tambah_client" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
@@ -100,8 +98,6 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 </div> 
-
-
 <!------------------modal data perekaman user------------->
 <div class="modal fade " id="data_perekaman_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
@@ -112,17 +108,11 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-    
 <div class="modal-body data_perekaman_user  text-theme1 ">
-
-</div>
-    
 </div>
 </div>
 </div>
-
-
-
+</div>
 <!------------------modal upload data------------->
 <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
@@ -137,13 +127,12 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <div class="modal-body form_persyaratan">
 </div>
 <div class="modal-footer">
-    <button type="submit" class="btn btn-sm btn_simpan_persyaratan btn-block btn-dark">Simpan <img id="loading"  style="display: none; width:25px;" src="<?php echo base_url() ?>assets/loading.svg"></button>    
+<button type="submit" class="btn btn-sm btn_simpan_persyaratan btn-block btn-dark">Simpan <img id="loading"  style="display: none; width:25px;" src="<?php echo base_url() ?>assets/loading.svg"></button>    
 </div>
 </form>    
 </div>
 </div>
 </div>
-
 <!------------------modal data perekaman------------->
 <div class="modal fade " id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
@@ -159,15 +148,14 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 </div>
-
 <script type="text/javascript">
 $(document).ready(function(){
 $(".add_client").click(function(){
 $('#modal_tambah_client').modal('show');   
 });
 });    
-    
-    
+
+
 $("#pilih_jenis").on("change",function(){
 var client = $("#pilih_jenis option:selected").text();
 if(client == "Perorangan"){
@@ -202,7 +190,7 @@ $(".contact_person").val($("#badan_hukum").val());
 function modal_client(){
 $('#modal_cari_client').modal('show');    
 }
-    
+
 function data_perekaman_user(no_client){
 var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
 var no_pekerjaan             = "<?php echo $this->uri->segment(3) ?>";
@@ -217,7 +205,7 @@ $('.data_perekaman_user').html(data);
 }
 });
 }    
-    
+
 function response(data){
 
 var r = JSON.parse(data);
@@ -309,7 +297,7 @@ $(".data_client").html(data);
 });
 
 }
- 
+
 function tentukan_jenis(){
 var jenis = $(".tentukan_jenis option:selected").val();
 if(jenis != 'null'){
@@ -323,8 +311,8 @@ $(".jenis_pemilik").html("");
 }
 
 }    
-    
-    
+
+
 function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan,no_client){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -385,10 +373,10 @@ url:"<?php echo base_url('User2/persyaratan_telah_dilampirkan/'.$this->uri->segm
 success:function(data){
 $('.syarat_telah_dilampirkan').html(data);
 $(function () {
-  $('[data-toggle="popover"]').popover({
-    container: 'body',
-    html :true
-  });
+$('[data-toggle="popover"]').popover({
+container: 'body',
+html :true
+});
 $('.btn').on('click', function (e) {
 $('.btn').not(this).popover('hide');
 });
@@ -457,16 +445,16 @@ $("#"+this.id).val(string);
 
 $(function() {
 $(".date").daterangepicker({ 
-    singleDatePicker: true,
-    dateFormat: 'yy/mm/dd',
-    singleDatePicker: true,
-    showDropdowns: true,
-    minYear: 1901,
-    maxYear: parseInt(moment().format('YYYY'),10),
-    "locale": {
-        "format": "YYYY/MM/DD",
-        "separator": "-",
-      }
+singleDatePicker: true,
+dateFormat: 'yy/mm/dd',
+singleDatePicker: true,
+showDropdowns: true,
+minYear: 1901,
+maxYear: parseInt(moment().format('YYYY'),10),
+"locale": {
+"format": "YYYY/MM/DD",
+"separator": "-",
+}
 });
 });
 
