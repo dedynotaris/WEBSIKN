@@ -164,4 +164,23 @@ title: r.pesan
 }
 });
 }
+
+function read_response(data){
+var r =JSON.parse(data); 
+
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounce'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+}
+
 </script>

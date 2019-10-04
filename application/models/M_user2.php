@@ -269,16 +269,20 @@ return $query;
 
 
 public function data_persyaratan($no_pekerjaan){
-$this->db->select('nama_dokumen.nama_dokumen,'
-        . 'nama_dokumen.no_nama_dokumen,'
-        . 'data_client.nama_client,'
+$this->db->select('data_client.nama_client,'
         . 'data_client.no_client,'
+        . 'data_client.jenis_client,'
+        . 'data_client.alamat_client,'
+        . 'data_client.contact_person,'
+        . 'data_client.contact_number,'
+        . 'data_client.jenis_kontak,'
+        . 'data_client.pembuat_client,'
         . 'data_jenis_pekerjaan.nama_jenis,'
         . 'data_pekerjaan.no_pekerjaan,'
-        . 'data_persyaratan.no_nama_dokumen');
+        . 'data_pekerjaan.target_kelar,'
+        . 'data_pekerjaan.pembuat_pekerjaan,'
+        . 'data_pekerjaan.tanggal_dibuat');
 $this->db->from('data_pekerjaan');
-$this->db->join('data_persyaratan', 'data_persyaratan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_persyaratan.no_nama_dokumen');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->where('data_pekerjaan.no_pekerjaan',$no_pekerjaan);
@@ -291,6 +295,7 @@ $this->db->select('nama_dokumen.nama_dokumen,'
         . 'nama_dokumen.no_nama_dokumen,'
         . 'data_client.nama_client,'
         . 'data_client.no_client,'
+        . 'data_client.jenis_client,'
         . 'data_jenis_pekerjaan.nama_jenis,'
         . 'data_pekerjaan.no_pekerjaan,'
         . 'data_persyaratan.no_nama_dokumen');
@@ -592,5 +597,19 @@ $this->db->like('data_dokumen_utama.nama_berkas',$input);
 $query = $this->db->get();
 return $query;
 }
+
+public function data_para_pihak($no_pekerjaan){
+$this->db->select('data_pemilik.selaku,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+
+$this->db->where('data_pemilik.no_pekerjaan',$no_pekerjaan);
+
+$query = $this->db->get();
+return $query;    
+}
+
 }
 ?>

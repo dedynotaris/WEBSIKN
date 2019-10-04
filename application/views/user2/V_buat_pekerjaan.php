@@ -112,7 +112,7 @@ dateFormat: 'yy/mm/dd'
 });
 
 function simpan_pekerjaan(){
-//$(".simpan_perizinan").attr("disabled", true);
+$(".simpan_perizinan").attr("disabled", true);
 $("#form_pekerjaan").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
 $('.form-control + p').remove();
 $.ajax({
