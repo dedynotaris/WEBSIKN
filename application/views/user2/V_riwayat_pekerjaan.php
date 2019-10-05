@@ -1,7 +1,9 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_user2'); ?>
+
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_data_user2'); ?>
 <div class="container-fluid ">
 <div class="card-header mt-2 text-center ">
 <h5 align="center">Data riwayat pekerjaan</h5>

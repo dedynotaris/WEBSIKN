@@ -1,9 +1,10 @@
-<body >
-<?php  $this->load->view('umum/V_sidebar_user2'); ?>
+<body>
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_data_user2'); ?>
 <div class="container-fluid  text-theme1"> 
-<div class="card p-2 mt-2">
+<div class="p-2 mt-2">
 
 <div class="row">
 <div class="col">
@@ -34,18 +35,18 @@
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body p-3 " >
-<div class="row  p-3" >
+<div class="modal-body " >
+<div class="row" >
 
 <div class="col">
 <form  id="fileForm" method="post" action="<?php echo base_url('User2/buat_pekerjaan_baru') ?>">
 
 <label>Jenis Pekerjaan</label>
-<input type="hidden" name="no_client"  id="no_client" class="form-control required"  accept="text/plain">
-<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control required"  accept="text/plain">
-<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_client"  id="no_client" class="form-control form-control-sm required"  accept="text/plain">
+<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
+<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
 <label>Target selesai</label>
-<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control required"  accept="text/plain">
+<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
 <hr>
 <button type="submit" class="btn btn-success btn-sm  mx-auto btn-block simpan_perizinan">Simpan client & Buat pekerjaan <i class="fa fa-save"></i></button>
 </div>
@@ -109,7 +110,10 @@ columns: [
 {"data": "view"}
 
 
-],
+],"columnDefs": [
+    { "width": "10%", "targets": 5 }
+  ], 
+   "autoWidth": false,
 order: [[0, 'desc']],
 rowCallback: function(row, data, iDisplayIndex) {
 var info = this.fnPagingInfo();
@@ -123,16 +127,16 @@ $('td:eq(0)', row).html(index);
 
 </script>    
 
+
+
 <script type="text/javascript">
-function opsi_client(id_data_client,no_client){
-var val = $('.opsi_pekerjaan'+id_data_client).val();
-if(val == 1){
-window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_client ;    
-}else if(val == 2){
+function  tambah_pekerjaan(no_client){
 $('#modal_tambah_pekerjaan').modal('show');    
-$('#no_client').val(no_client);
+$('#no_client').val(no_client);    
 }
-$('.opsi_pekerjaan'+id_data_client).val("-- Klik untuk melihat menu --")
+
+function lihat_berkas(no_client){
+window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_client ;        
 }
 
 $("#fileForm").submit(function(e) {
