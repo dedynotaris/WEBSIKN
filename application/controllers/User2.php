@@ -289,18 +289,26 @@ redirect(404);
 public function lengkapi_persyaratan(){    
 $no_pekerjaan       = base64_decode($this->uri->segment(3));    
 $query              = $this->M_user2->data_persyaratan($no_pekerjaan);
-$jenis_client       = $query->row_array();
-$nama_persyaratan   = $this->M_user2->nama_persyaratan($no_pekerjaan,$jenis_client['jenis_client']);
 
 $this->load->view('umum/V_header');
-$this->load->view('user2/V_lengkapi_persyaratan',['query'=>$query,'nama_persyaratan'=>$nama_persyaratan]);    
+$this->load->view('user2/V_lengkapi_persyaratan',['query'=>$query]);    
 }
 
 
 public function simpan_persyaratan(){
+$input = $this->input->post();
+
+echo print_r($input);
+
+echo print_r($_FILES['file_berkas']);
+
 if($this->input->post()){
 $input = $this->input->post();
-$total_berkas = $this->M_user2->total_berkas()->row_array();
+
+echo print_r($input);
+
+echo print_r($_FILES);
+/*$total_berkas = $this->M_user2->total_berkas()->row_array();
 
 $no_berkas = "BK".date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
@@ -330,9 +338,9 @@ $lampiran = NULL;
 $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
-
+*/
 }else{
-redirect(404);    
+//redirect(404);    
 }
     
 }
@@ -1349,6 +1357,7 @@ redirect(404);
 }
 
 
+
 public function data_perekaman_pencarian(){
 if($this->input->post()){
 $input = $this->input->post();
@@ -1462,7 +1471,6 @@ redirect(404);
 function simpan_pihak_terlibat(){
 $input = $this->input->post();
 
-$this->form_validation->set_rules('selaku_pihak', 'Selaku Pihak', 'required');
 $this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required');
 $this->form_validation->set_rules('nama_pihak', 'Nama Pihak', 'required');
 $this->form_validation->set_rules('alamat_pihak', 'Alamat Pihak', 'required');
@@ -1506,8 +1514,7 @@ $this->db->insert('data_client',$data_client);
 $data_pem = array(
 'no_pemilik'    =>$no_pemilik,   
 'no_client'     =>$no_client,
-'no_pekerjaan'  => base64_decode($input['no_pekerjaan']),   
-'selaku'        =>$input['selaku_pihak']
+'no_pekerjaan'  => base64_decode($input['no_pekerjaan'])   
 );
 
 $this->db->insert('data_pemilik',$data_pem);
@@ -1533,7 +1540,6 @@ $data_pem = array(
 'no_pemilik'    =>$no_pemilik,   
 'no_client'     =>$input['no_client'],
 'no_pekerjaan'  => base64_decode($input['no_pekerjaan']),   
-'selaku'        =>$input['selaku_pihak']
 );
 $this->db->insert('data_pemilik',$data_pem);
 $status[] =array(
@@ -1559,8 +1565,7 @@ $data_pihak = $this->M_user2->data_para_pihak(base64_decode($input['no_pekerjaan
 foreach ($data_pihak->result_array() as $data){
 echo "<div class='row mt-2 '>"
     . "<div class='col '>".$data['nama_client']."</div>"
-    . "<div class='col '>".$data['selaku']."</div>"
-    . "<div class='col  text-center'><button class='btn btn-success btn-sm' title='Rekam Dokumen Milik ".$data['nama_client']."'><span class='fa fa-plus'></span></button></div>"
+    . "<div class='col  text-center'><button onclick=tampilkan_form('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam Dokumen Milik ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam dokumen</button></div>"
     . "</div>";
 }
 }else{
@@ -1568,4 +1573,82 @@ redirect(404);
 }
 
 }
+
+function form_persyaratan(){
+if($this->input->post()){    
+$input = $this->input->post();
+$data_client      = $this->M_user2->data_client_where(base64_encode($input['no_client']))->row_array();
+$nama_persyaratan = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
+
+echo '
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">ISILAH FORM-FORM DATA MILIK '.strtoupper($data_client['jenis_client'])." ".$data_client['nama_client'].' DIBAWAH INI <span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body overflow-auto" style="max-height:500px;" >';
+
+
+foreach ($nama_persyaratan->result_array() as $persyaratan){
+$data_meta = $this->M_user2->data_meta($persyaratan['no_nama_dokumen']);
+echo '<div class="row card-header  m-1">';
+echo '<div class="col">'
+. '<div class="text-center h5">'.$persyaratan['nama_dokumen'].'<hr></div>';
+echo "<form action='#' id='".$persyaratan['no_nama_dokumen']."'>";
+
+echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+foreach ($data_meta->result_array() as $d){
+/*INPUTAN SELECT*/
+if($d['jenis_inputan'] == 'select'){
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+echo "<label>".$d['nama_meta']."</label>"
+."<select id='data_meta' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+foreach ($data_option->result_array() as $option){
+echo "<option>".$option['jenis_pilihan']."</option>";
+}
+echo "</select>";
+
+/*INPUTAN DATE*/
+}else if($d['jenis_inputan'] == 'date'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+
+/*INPUTAN NUMBER*/
+}else if($d['jenis_inputan'] == 'number'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+
+/*INPUTAN TEXTAREA*/
+}else if($d['jenis_inputan'] == 'textarea'){
+echo "<label>".$d['nama_meta']."</label>"
+. "<textarea  id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+}else{
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='".$d['jenis_inputan']."' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+}
+
+}
+echo "<label>Lampiran</label>"
+. "<input type='file' id='file".$persyaratan['no_nama_dokumen']."' class='form-control'>";
+echo "<hr>"
+. "<button type='button' onclick=upload_data('".$persyaratan['no_nama_dokumen']."','".$input['no_client']."') class='btn btn-sm btn-success btn-block '>Simpan dan rekam</button>"
+. "</form>";
+
+
+echo  '</div>';
+
+/*DATA YANG AKAN DITAMPILKAN*/
+echo '<div class="col"></div>';
+echo"</div>";
+}
+
+echo'</div>';    
+}else{
+    redirect(404);    
+}
+
+
+}
+
 }

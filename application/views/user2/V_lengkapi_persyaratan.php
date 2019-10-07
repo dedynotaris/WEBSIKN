@@ -126,22 +126,13 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <!-----------------------------PIHAK2 YANG TERLIBAT--------------------------------------------------->    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">Daftar Pihak-pihak yang terlibat
 </div>
-<form id="form_pihak_terlibat">
 <div class=" card-header" >
 <div class="row">
-<div class="col-md-5">    
-<div style="max-height:250px; " class="col overflow-auto">
+<div class="col-md-6">    
+<div class="col ">
+<form id="form_pihak_terlibat">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
-<label>Selaku Pihak</label>
-<select name="selaku_pihak" id="selaku_pihak"  class="form-control form-control-sm">
-<option>Direktur</option>    
-<option>Komisaris</option>    
-<option>Pemegang Saham</option>    
-<option>Kreditur</option>    
-<option>Debitur</option>    
-
-</select>   
     
 <label>Pilih Jenis pihak</label>
 <select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
@@ -177,80 +168,33 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 
 <div class="col text-theme1 ">
-    <div class="row text-center">
-        <div class="col"><b>Nama</div>
-        <div class="col">Selaku</div>
-        <div class="col">Aksi</b></div>
-    </div>
-    <div class="para_pihak">
-        
-    </div>    
+<div class="row text-center">
+<div class="col"><b>Nama</div>
+<div class="col">Aksi</b></div>
+</div>
+<div class="para_pihak">
+
+</div>    
     
 </div>    
 </div>
 </div>
 
-<div class="card-header text-theme1 mt-2 mb-2 text-center">Lengkapi form-form dokumen dibawah ini
-</div>
-
-<div class=" card-header">
-<div class="row">    
-<?php 
-foreach ($nama_persyaratan->result_array() as $persyaratan){ 
-$fm = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$persyaratan['no_nama_dokumen']));    
-?>
-<div class="col-md-6">
-<span class="text-center"><?php echo $persyaratan['nama_dokumen'] ?></span><hr>
-<?php
-$i = 1;
-foreach ($fm->result_array() as $d){
-
-if($d['jenis_inputan'] == 'select'){
-$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
-echo "<label>".$d['nama_meta']."</label>"
-."<select id='data_meta".$i++."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
-foreach ($data_option->result_array() as $option){
-echo "<option>".$option['jenis_pilihan']."</option>";
-}
-echo "</select>";
-}else if($d['jenis_inputan'] == 'date'){
-
-echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
-
-}else if($d['jenis_inputan'] == 'number'){
-echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
-
-
-}else if($d['jenis_inputan'] == 'textarea'){
-echo "<label>".$d['nama_meta']."</label>"
-. "<textarea  id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
-
-
-}else{
-echo "<label>".$d['nama_meta']."</label>"
-."<input  type='".$d['jenis_inputan']."' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
-}    
-}
-
-echo "<label>Lampiran</label>"
-. "<input type='file' id='file_berkas' class='form-control'>";
-echo "<hr>"
-. "<button class='btn btn-sm btn-success '>Simpan dan rekam</button>"
-. "<button class='btn btn-sm btn-warning float-right'>Lihat Rekaman</button><hr>";
-
-?>
-</div>
-
-<?php } ?>    
 </div>
 </div>
-</div>
-</div>
-
-<script type="text/javascript">
     
+<!--------------- data modal --------------->    
+<div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+    
+</div>
+</div>
+</div>
+
+    
+    
+<script type="text/javascript">
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
@@ -331,6 +275,46 @@ $(".para_pihak").html(data);
 
 function refresh(){
 para_pihak();
+}
+
+
+function tampilkan_form(no_client,no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/form_persyaratan') ?>",
+success:function(data){
+$('#data_modal').modal('show');
+$(".modal-content").html(data);
+    
+}
+});    
+}
+
+function upload_data(no_nama_dokumen,no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+formdata = new FormData();
+formdata.append("token", token);
+file = $("#file"+no_nama_dokumen).prop('files')[0];
+formdata.append("file_berkas", file);
+
+var form  = $("#"+no_nama_dokumen).serialize; 
+
+//alert(form);
+$.ajax({
+type:"post",
+data:formdata,
+processData: false,
+contentType: false,
+url:"<?php echo base_url('User2/simpan_persyaratan') ?>",
+success:function(data){
+    
+}
+});
+
+
 }
 
 </script>    

@@ -599,8 +599,7 @@ return $query;
 }
 
 public function data_para_pihak($no_pekerjaan){
-$this->db->select('data_pemilik.selaku,'
-        . 'data_client.nama_client,'
+$this->db->select('data_client.nama_client,'
         . 'data_client.no_client');
 $this->db->from('data_pemilik');
 $this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
