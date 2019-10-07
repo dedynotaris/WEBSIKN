@@ -294,15 +294,19 @@ $(".modal-content").html(data);
 }
 
 function upload_data(no_nama_dokumen,no_client){
+
+$("#form"+no_nama_dokumen).find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$("#form"+no_nama_dokumen).find('.form-control + p').remove();
+
+
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 formdata = new FormData();
-formdata.append("token", token);
-file = $("#file"+no_nama_dokumen).prop('files')[0];
-formdata.append("file_berkas", file);
+var x = $('#form'+no_nama_dokumen).serializeArray();
+$.each(x,function(prop,obj){
+formdata.append(obj.name, obj.value);
+});
+formdata.append("file_berkas", $("#file"+no_nama_dokumen).prop('files')[0]);
 
-var form  = $("#"+no_nama_dokumen).serialize; 
-
-//alert(form);
 $.ajax({
 type:"post",
 data:formdata,
@@ -310,7 +314,19 @@ processData: false,
 contentType: false,
 url:"<?php echo base_url('User2/simpan_persyaratan') ?>",
 success:function(data){
-    
+var r = JSON.parse(data); 
+
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form"+no_nama_dokumen).find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form"+no_nama_dokumen).find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+refresh();    
+}    
 }
 });
 

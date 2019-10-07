@@ -296,19 +296,24 @@ $this->load->view('user2/V_lengkapi_persyaratan',['query'=>$query]);
 
 
 public function simpan_persyaratan(){
-$input = $this->input->post();
-
-echo print_r($input);
-
-echo print_r($_FILES['file_berkas']);
-
 if($this->input->post()){
 $input = $this->input->post();
 
-echo print_r($input);
+foreach ($_POST as $key=>$val) {
+$this->form_validation->set_rules($key,str_replace('_', ' ', $key), 'required');
+}
 
-echo print_r($_FILES);
-/*$total_berkas = $this->M_user2->total_berkas()->row_array();
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+
+echo json_encode($status);
+}else{
+    
+$total_berkas = $this->M_user2->total_berkas()->row_array();
 
 $no_berkas = "BK".date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
@@ -322,9 +327,9 @@ $config['max_size']             = 50000;
 $this->upload->initialize($config);   
 
 if (!$this->upload->do_upload('file_berkas')){  
-$status = array(
+$status[] = array(
 "status"     => "error",
-"pesan"      => $this->upload->display_errors()    
+"messages"      => $this->upload->display_errors()    
 );
 echo json_encode($status);
 
@@ -338,14 +343,19 @@ $lampiran = NULL;
 $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
-*/
+    
+//echo "validasi _berhasil";    
+
+
+}
 }else{
-//redirect(404);    
+redirect(404);    
 }
     
 }
 
 public function simpan_data_persyaratan($no_berkas,$input,$lampiran){
+
 $data_berkas = array(
 'no_berkas'         => $no_berkas,    
 'no_client'         => $input['no_client'],    
@@ -358,8 +368,9 @@ $data_berkas = array(
 
 $this->db->insert('data_berkas',$data_berkas);
     
-$data_meta = json_decode($input['data_meta']);
-foreach ($data_meta as $key=>$value){
+foreach ($input as $key=>$value){
+if($key == "no_nama_dokumen" || $key == 'no_client' || $key == 'no_pekerjaan' || $key == 'file_berkas'){
+}else{
 $meta = array(
 'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
@@ -368,11 +379,12 @@ $meta = array(
 'value_meta'        => $value,    
 );
 $this->db->insert('data_meta_berkas',$meta);
-
 }
-$status = array(
+}
+
+$status[] = array(
 "status"     => "success",
-"pesan"      => "Persyaratan berhasil ditambahkan"    
+"messages"   => "Persyaratan berhasil ditambahkan"    
 );
 echo json_encode($status);
 }
@@ -1593,17 +1605,21 @@ echo '
 foreach ($nama_persyaratan->result_array() as $persyaratan){
 $data_meta = $this->M_user2->data_meta($persyaratan['no_nama_dokumen']);
 echo '<div class="row card-header  m-1">';
-echo '<div class="col">'
-. '<div class="text-center h5">'.$persyaratan['nama_dokumen'].'<hr></div>';
-echo "<form action='#' id='".$persyaratan['no_nama_dokumen']."'>";
+echo '<div class="col-md-5">'
+. '<div class="text-center h6">'.$persyaratan['nama_dokumen'].'<hr></div>';
+echo "<form action='#' id='form".$persyaratan['no_nama_dokumen']."'>";
 
 echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_client" value="'.$input['no_client'].'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_pekerjaan" value="'.base64_decode($input['no_pekerjaan']).'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_nama_dokumen" value="'.$persyaratan['no_nama_dokumen'].'" readonly="" class="required"  accept="text/plain">';
+
 foreach ($data_meta->result_array() as $d){
 /*INPUTAN SELECT*/
 if($d['jenis_inputan'] == 'select'){
 $data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
 echo "<label>".$d['nama_meta']."</label>"
-."<select id='data_meta' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
 foreach ($data_option->result_array() as $option){
 echo "<option>".$option['jenis_pilihan']."</option>";
 }
@@ -1612,20 +1628,20 @@ echo "</select>";
 /*INPUTAN DATE*/
 }else if($d['jenis_inputan'] == 'date'){
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
 
 /*INPUTAN NUMBER*/
 }else if($d['jenis_inputan'] == 'number'){
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
 
 /*INPUTAN TEXTAREA*/
 }else if($d['jenis_inputan'] == 'textarea'){
 echo "<label>".$d['nama_meta']."</label>"
-. "<textarea  id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+. "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
 }else{
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='".$d['jenis_inputan']."' id='data_meta' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+."<input  type='".$d['jenis_inputan']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
 }
 
 }
@@ -1639,8 +1655,35 @@ echo "<hr>"
 echo  '</div>';
 
 /*DATA YANG AKAN DITAMPILKAN*/
-echo '<div class="col"></div>';
-echo"</div>";
+echo '<div class="col " >'
+    .'<div class="text-center  h6">'.$persyaratan['nama_dokumen'].'<hr></div>';
+
+$query     = $this->M_user2->data_perekaman($persyaratan['no_nama_dokumen'],$input['no_client']);
+$query2     = $this->M_user2->data_perekaman2($persyaratan['no_nama_dokumen'],$input['no_client']);
+
+echo "<div class='row'>";
+foreach ($query->result_array() as $d){
+echo "<div class='col-md-3'>".str_replace('_', ' ',$d['nama_meta'])."</div>";
+}
+echo "<div class='col-md-3'>Aksi</div>";
+echo "</div>";
+
+foreach ($query2->result_array() as $d){
+$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
+echo "<div class='row' id='".$d['no_berkas']."'>";
+foreach ($b->result_array() as $i){
+echo "<div class='col-md-3' >".$i['value_meta']."</div>";    
+}
+
+echo '<div class="col-md-3">'
+.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>';
+        echo '</div>';
+        echo '</div>';
+}
+
+echo "</div>";
+
+echo'</div>';   
 }
 
 echo'</div>';    
