@@ -1663,19 +1663,20 @@ $query2     = $this->M_user2->data_perekaman2($persyaratan['no_nama_dokumen'],$i
 
 echo "<div class='row'>";
 foreach ($query->result_array() as $d){
-echo "<div class='col-md-3'>".str_replace('_', ' ',$d['nama_meta'])."</div>";
+echo "<div class='col'>".str_replace('_', ' ',$d['nama_meta'])."</div>";
 }
-echo "<div class='col-md-3'>Aksi</div>";
+
+echo "<div class='col'>Aksi</div>";
 echo "</div>";
 
 foreach ($query2->result_array() as $d){
 $b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
 echo "<div class='row' id='".$d['no_berkas']."'>";
 foreach ($b->result_array() as $i){
-echo "<div class='col-md-3' >".$i['value_meta']."</div>";    
+echo "<div class='col' >".$i['value_meta']."</div>";    
 }
 
-echo '<div class="col-md-3">'
+echo '<div class="col">'
 .'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>';
         echo '</div>';
         echo '</div>';

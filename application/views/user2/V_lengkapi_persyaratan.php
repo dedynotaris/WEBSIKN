@@ -267,7 +267,7 @@ $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/data_para_pihak/') ?>",
 data:"token="+token+"&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
-    success:function(data){
+success:function(data){
 $(".para_pihak").html(data);
 }
 });
@@ -275,6 +275,7 @@ $(".para_pihak").html(data);
 
 function refresh(){
 para_pihak();
+regis_js();
 }
 
 
@@ -288,7 +289,9 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('#data_modal').modal('show');
 $(".modal-content").html(data);
-    
+
+
+regis_js();
 }
 });    
 }
@@ -333,6 +336,32 @@ refresh();
 
 }
 
+function regis_js(){
+$(".Desimal").keyup(function(){
+var string = numeral(this.value).format('0,0');
+$("#"+this.id).val(string);
+});
+$(".Bulat").keyup(function(){
+var string = numeral(this.value).format('0');
+$("#"+this.id).val(string);
+});
+
+$(function() {
+$(".date").daterangepicker({ 
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+});
+
+}
 </script>    
 
 
