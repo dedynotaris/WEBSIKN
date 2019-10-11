@@ -25,41 +25,14 @@
 </div>
 </div>
 
-<!------------- Modal Tambah pekerjaan---------------->
-<div class="modal fade bd-example-modal-md" id="modal_tambah_pekerjaan" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" >Buat pekerjaan baru <span id="title"> </span> </h5>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body " >
-<div class="row" >
-
-<div class="col">
-<form  id="fileForm" method="post" action="<?php echo base_url('User2/buat_pekerjaan_baru') ?>">
-
-<label>Jenis Pekerjaan</label>
-<input type="hidden" name="no_client"  id="no_client" class="form-control form-control-sm required"  accept="text/plain">
-<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
-<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
-<label>Target selesai</label>
-<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
-<hr>
-<button type="submit" class="btn btn-success btn-sm  mx-auto btn-block simpan_perizinan">Simpan client & Buat pekerjaan <i class="fa fa-save"></i></button>
-</div>
-</form>
-</div>    
-</div>
+<!------------- Modal ---------------->
+<div class="modal fade bd-example-modal-md" id="modal" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
+<div class="modal-dialog modal-md data_modal" role="document">
 
 </div>
 </div>
 </div>
 <!------------- Modal tambah pekerjaan---------------->
-
-
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -92,7 +65,7 @@ sProcessing: "loading..."
 },
 processing: true,
 serverSide: true,
-ajax: {"url": "<?php echo base_url('User2/json_data_client') ?> ", 
+ajax: {"url": "<?php echo base_url('User2/json_data_client/Badan_hukum') ?> ", 
 "type": "POST",
 data: function ( d ) {
 d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
@@ -111,7 +84,7 @@ columns: [
 
 
 ],"columnDefs": [
-    { "width": "10%", "targets": 5 }
+    { "width": "15%", "targets": 5 }
   ], 
    "autoWidth": false,
 order: [[0, 'desc']],
@@ -130,71 +103,65 @@ $('td:eq(0)', row).html(index);
 
 
 <script type="text/javascript">
-function  tambah_pekerjaan(no_client){
-$('#modal_tambah_pekerjaan').modal('show');    
-$('#no_client').val(no_client);    
+function  form_tambah_pekerjaan(no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/form_tambah_pekerjaan') ?>",
+data:"token="+token+"&no_client="+no_client,
+success:function(data){
+$(".data_modal").html(data);    
+$('#modal').modal('show');
+cari_jenis_pekerjaan();
+target_kelar();
+}
+});
+}
+
+function  form_edit_client(no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/form_edit_client') ?>",
+data:"token="+token+"&no_client="+no_client,
+success:function(data){
+$(".data_modal").html(data);    
+$('#modal').modal('show');
+}
+});
+}
+
+function update_client(){
+$(".update_pekerjaan").attr("disabled", true);
+$("#form_update_pekerjaan").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("User2/update_client") ?>",
+type : "post",
+data : $("#form_update_pekerjaan").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_update_pekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_pekerjaan").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+$('#modal').modal('hide');
+}
+$(".update_pekerjaan").attr("disabled", false);
+}
+});
 }
 
 function lihat_berkas(no_client){
 window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_client ;        
 }
 
-$("#fileForm").submit(function(e) {
-e.preventDefault();
-$.validator.messages.required = '';
-}).validate({
-highlight: function (element, errorClass) {
-$(element).closest('.form-control').addClass('is-invalid');
-},
-unhighlight: function (element, errorClass) {
-$(element).closest(".form-control").removeClass("is-invalid");
-},    
-submitHandler: function(form) {
-$(".simpan_perizinan").attr("disabled", true);
-    
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
-formData = new FormData();
-formData.append('token',token);
-formData.append('jenis_akta',$("#jenis_akta").val()),
-formData.append('id_jenis',$("#id_jenis_akta").val()),
-formData.append('target_kelar',$("#target_kelar").val()),
-formData.append('no_client',$("#no_client").val()),
-
-
-$.ajax({
-url: form.action,
-processData: false,
-contentType: false,
-type: form.method,
-data: formData,
-success:function(data){   
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function(){
-window.location.href='<?php echo base_url('User2/pekerjaan_antrian') ?>';    
-});
-
-}
-
-});
-return false; 
-}
-});
-
-    
-
-$(function () {
+function cari_jenis_pekerjaan(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#jenis_akta,#jenis_akta_perorangan").autocomplete({
 minLength:0,
@@ -204,15 +171,43 @@ select:function(event, ui){
 $("#id_jenis_akta").val("");
 $("#id_jenis_akta,#id_jenis_akta_perorangan").val(ui.item.no_jenis_pekerjaan);
 }
-}
-);
 });
+}
 
-$(function() {
+function target_kelar() {
 $("input[name='target_kelar']").datepicker({ minDate:0,dateFormat: 'yy/mm/dd'
 });
+}
 
+function simpan_pekerjaan_baru(){
+
+$(".simpan_pekerjaan").attr("disabled", true);
+$("#form_pekerjaan_baru").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("User2/buat_pekerjaan_baru") ?>",
+type : "post",
+data : $("#form_pekerjaan_baru").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_pekerjaan_baru").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_pekerjaan_baru").find("#"+key).removeClass("is-valid");
 });
+});
+}else{
+read_response(data);
+window.location.href="<?php echo base_url('User2/lengkapi_persyaratan/') ?>"+r[0].no_pekerjaan;
+
+}
+$(".simpan_pekerjaan").attr("disabled", false);
+
+}
+});
+}
+
 
 </script>
 </body>

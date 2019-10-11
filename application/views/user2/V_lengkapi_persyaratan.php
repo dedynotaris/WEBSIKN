@@ -195,6 +195,21 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
     
     
 <script type="text/javascript">
+function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
+data:"token="+token+"&id_data_berkas="+id_data_berkas,
+success:function(data){
+tampilkan_form(no_client,no_pekerjaan);
+read_response(data);
+}
+});    
+    
+}        
+    
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
@@ -328,7 +343,9 @@ $("#form"+no_nama_dokumen).find("#"+key).removeClass("is-valid");
 });
 }else{
 read_response(data);
-refresh();    
+refresh(); 
+tampilkan_form(r[0].no_client,btoa(r[0].no_pekerjaan));
+
 }    
 }
 });

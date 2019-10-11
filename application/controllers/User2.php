@@ -29,13 +29,25 @@ $this->load->view('umum/V_header');
 $this->load->view('user2/V_data_asisten',['asisten'=>$asisten]);    
 }
 
-public function data_client(){
+public function data_client_hukum(){
 $this->load->view('umum/V_header');
-$this->load->view('user2/V_data_client');
+$this->load->view('user2/V_data_client_hukum');
+}
+
+public function data_client_perorangan(){
+$this->load->view('umum/V_header');
+$this->load->view('user2/V_data_client_perorangan');
 }
 
 public function json_data_client(){
-echo $this->M_user2->json_data_client();       
+
+if($this->uri->segment(3) == "Badan_hukum"){
+$jenis  ="Badan Hukum";   
+}else{
+$jenis  ="Perorangan";    
+}    
+    
+echo $this->M_user2->json_data_client($jenis);       
 }
 
 public function cari_jenis_pekerjaan(){
@@ -383,8 +395,10 @@ $this->db->insert('data_meta_berkas',$meta);
 }
 
 $status[] = array(
-"status"     => "success",
-"messages"   => "Persyaratan berhasil ditambahkan"    
+"status"      => "success",
+"messages"    => "Persyaratan berhasil ditambahkan",
+"no_client"   =>$input['no_client'],
+"no_pekerjaan"=>$input['no_pekerjaan']    
 );
 echo json_encode($status);
 }
@@ -758,33 +772,43 @@ redirect(404);
 
 
 public function buat_pekerjaan_baru(){
-
 if($this->input->post()){    
 $input = $this->input->post();
+$this->form_validation->set_rules('jenis_akta', 'Jenis akta', 'required');
+$this->form_validation->set_rules('target_kelar', 'Target selesai', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
 
+}else{
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 
 $no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
 $data_r = array(
-'no_client'          => base64_decode($input['no_client']),    
+'no_client'          => $input['no_client'],    
 'status_pekerjaan'   => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
 'tanggal_dibuat'     => date('Y/m/d'),
-'no_jenis_pekerjaan' => $input['id_jenis'],   
+'no_jenis_pekerjaan' => $input['id_jenis_akta'],   
 'target_kelar'       => $input['target_kelar'],
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
 );
 $this->db->insert('data_pekerjaan',$data_r);
 
-
-$status = array(
-"status"     => "success",
-"no_client"  => base64_decode($input['no_client']),
-"pesan"      => "Telah dimasukan kedalam agenda kerja"    
+$status[] = array(
+"status"        => "success",
+"no_pekerjaan"  => base64_encode($no_pekerjaan),
+"messages"      => "Telah dimasukan kedalam agenda kerja"    
 );
 echo json_encode($status);
+    
+}
 
 }else{
 redirect(404);    
@@ -1594,7 +1618,7 @@ $nama_persyaratan = $this->M_user2->nama_persyaratan(base64_decode($input['no_pe
 
 echo '
 <div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">ISILAH FORM-FORM DATA MILIK '.strtoupper($data_client['jenis_client'])." ".$data_client['nama_client'].' DIBAWAH INI <span class="i"><span></h6>
+<h6 class="modal-title" id="exampleModalLabel text-center">ISILAH FORM-FORM DATA MILIK '.strtoupper($data_client['nama_client'])." ".$data_client['nama_client'].' DIBAWAH INI <span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
@@ -1661,25 +1685,30 @@ echo '<div class="col " >'
 $query     = $this->M_user2->data_perekaman($persyaratan['no_nama_dokumen'],$input['no_client']);
 $query2     = $this->M_user2->data_perekaman2($persyaratan['no_nama_dokumen'],$input['no_client']);
 
-echo "<div class='row'>";
+echo "<div class='row '>";
 foreach ($query->result_array() as $d){
-echo "<div class='col'>".str_replace('_', ' ',$d['nama_meta'])."</div>";
+echo "<div class='col-sm-3 text-center'><b>".str_replace('_', ' ',$d['nama_meta'])."</b></div>";
 }
-
-echo "<div class='col'>Aksi</div>";
+if($query->num_rows() > 0){
+echo "<div class='col text-center'><b>Aksi</b></div>";
+}
 echo "</div>";
 
 foreach ($query2->result_array() as $d){
+    $this->db->limit(3);
 $b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
-echo "<div class='row' id='".$d['no_berkas']."'>";
+echo "<div class='row mt-2' id='".$d['no_berkas']."'>";
 foreach ($b->result_array() as $i){
-echo "<div class='col' >".$i['value_meta']."</div>";    
+echo "<div class='col-sm-3' >".$i['value_meta']."</div>";    
 }
 
-echo '<div class="col">'
-.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>';
-        echo '</div>';
-        echo '</div>';
+echo '<div class="col text-center">'
+.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success  ml-1 btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>'
+.'<button  class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
+.'<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$d['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
+.'<button  onclick=cek_download("'.base64_encode($d['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
+echo '</div>';
+echo '</div>';
 }
 
 echo "</div>";
@@ -1689,10 +1718,138 @@ echo'</div>';
 
 echo'</div>';    
 }else{
-    redirect(404);    
+redirect(404);    
+}
+}
+public function form_tambah_pekerjaan(){
+if($this->input->post()){    
+$input = $this->input->post();    
+$data_client = $this->M_user2->data_client_where($input['no_client'])->row_array();    
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >Buat Pekerjaan Baru untuk '.$data_client['nama_client'].' <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body " >';
+
+echo '<form id="form_pekerjaan_baru">
+<label>Jenis Pekerjaan</label>
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+
+<input type="hidden" name="no_client"  id="no_client" value='. base64_decode($input['no_client']).' class="form-control form-control-sm required"  accept="text/plain">
+<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
+<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
+<label>Target selesai</label>
+<input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
+
+</div> 
+<div class="modal-footer">
+<button onclick=simpan_pekerjaan_baru(); class="btn btn-sm btn-success simpan_pekerjaan btn-block">Simpan Pekerjaan <span class="fa fa-save"></span> </button>
+</form>
+</div>
+</div>
+';    
+}else{
+redirect(404);    
 }
 
-
 }
 
+function form_edit_client(){
+if($this->input->post()){    
+$input = $this->input->post();    
+$data_client = $this->M_user2->data_client_where($input['no_client'])->row_array();    
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >Edit Client '.$data_client['nama_client'].' <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body " >';
+
+echo '<form id="form_update_pekerjaan">
+    <label>Kontak yang bisa dihubungi</label>
+<input type="text" value="'.$data_client['contact_person'].'" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_client" value="'.$data_client['no_client'].'" readonly="" class="form-control required"  accept="text/plain">
+
+<label>Nomor Kontak Telephone / HP</label>
+<input type="text" value="'.$data_client['contact_number'].'" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
+
+<label>Jenis Kontak</label>
+<select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
+<option></option>
+<option ';if($data_client['jenis_kontak'] == "Staff"){echo "selected ";} echo 'value="Staff">Staff</option>
+<option ';if($data_client['jenis_kontak'] == "Pribadi"){echo "selected ";} echo' value="Pribadi">Pribadi</option>	
+</select>  
+
+<label>Pilih Jenis client</label>
+<select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
+<option></option>
+<option ';if($data_client['jenis_client'] == "Perorangan"){echo "selected ";} echo' value="Perorangan">Perorangan</option>
+<option ';if($data_client['jenis_client'] == "Badan Hukum"){echo "selected ";}echo 'value="Badan Hukum">Badan Hukum</option>	
+</select>    
+
+<label  id="label_nama_perorangan">Nama </label>
+<input type="text" value="'.$data_client['nama_client'].'" placeholder="Nama" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
+
+<label  id="label_alamat_perorangan">Alamat </label>
+<textarea name="alamat_badan_hukum" rows="6" placeholder="Alamat " id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain">'.$data_client['alamat_client'].'</textarea>
+';
+
+echo "</div>"
+. "<div class='modal-footer'>"
+        . "<button onclick=update_client(); class='btn btn-sm btn-success update_pekerjaan btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
+        . "</div>"
+. "</div>";
+    
+
+}else{
+redirect(404);  
+}
+}
+
+public function update_client(){
+if($this->input->post()){    
+$input = $this->input->post();
+
+$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
+$this->form_validation->set_rules('contact_number', 'Contact Number', 'required|numeric');
+$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required');
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
+$this->form_validation->set_rules('badan_hukum', 'Badan Hukum', 'required');
+$this->form_validation->set_rules('alamat_badan_hukum', 'Alamat', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
+}else{
+$data = array(
+'contact_person'        =>$input['contact_person'], 
+'contact_number'        =>$input['contact_number'],
+'jenis_kontak'          =>$input['jenis_kontak'],
+'jenis_client'          =>$input['jenis_client'],
+'nama_client'           =>$input['badan_hukum'],
+'alamat_client'         =>$input['alamat_badan_hukum']     
+);    
+$this->db->where('no_client',$input['no_client']);
+$this->db->update('data_client',$data);
+$status[] = array(
+'status'  => 'success',
+'messages'=> "Klien ".$input['badan_hukum']." Berhasil diupdate",    
+);
+echo json_encode($status);
+
+}
+}else{
+redirect(404);  
+}
+}
 }

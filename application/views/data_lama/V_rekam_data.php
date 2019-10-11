@@ -177,6 +177,22 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 <script type="text/javascript">
+function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
+data:"token="+token+"&id_data_berkas="+id_data_berkas,
+success:function(data){
+tampilkan_form(no_client,no_pekerjaan);
+read_response(data);
+}
+});    
+    
+}    
+    
+    
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
@@ -235,7 +251,7 @@ $("#form_pihak_terlibat").find("#"+key).removeClass("is-valid");
 }else{
 read_response(data);
 $("#form_pihak_terlibat").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
-refresh();
+
 }
 }
 
@@ -300,7 +316,7 @@ contentType: false,
 url:"<?php echo base_url('Data_lama/simpan_persyaratan') ?>",
 success:function(data){
 var r = JSON.parse(data); 
-
+console.log(r);
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
 $.each(value, function(key, value){
@@ -310,7 +326,7 @@ $("#form"+no_nama_dokumen).find("#"+key).removeClass("is-valid");
 });
 }else{
 read_response(data);
-refresh();    
+tampilkan_form(r[0].no_client,btoa(r[0].no_pekerjaan));
 }    
 }
 });

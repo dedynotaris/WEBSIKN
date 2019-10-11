@@ -33,8 +33,12 @@ App Management
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('User2'); ?>">Client Baru <i class="fa fa-plus float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/data_client'); ?>">Data Client <i class="fa fa-list-alt float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/data_client_hukum'); ?>">Client Badan Hukum<i class="fa fa-list-alt float-right"></i></a>
 </li>
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/data_client_perorangan'); ?>">Client Perorangan <i class="fa fa-list-alt float-right"></i></a>
+</li>
+
 </ul>
 </li>
 

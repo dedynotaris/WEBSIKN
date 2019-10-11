@@ -1,6 +1,6 @@
 <?php 
 class M_user2 extends CI_model{
-function json_data_client(){
+function json_data_client($jenis){
     
 $this->datatables->select('id_data_client,'
 .'data_client.no_client as no_client,'
@@ -9,11 +9,12 @@ $this->datatables->select('id_data_client,'
 .'data_client.nama_client as nama_client,'
 );
 $this->datatables->from('data_client');
-$this->datatables->where('no_user',$this->session->userdata('no_user'));
+$this->datatables->where('jenis_client',$jenis);
 
 $this->datatables->add_column('view',""
         . "<button onclick=lihat_berkas('$1') class='btn ml-1 btn-sm btn-success' title='lihat berkas client'><span class='fa fa-eye'></span></button>"
-        . "<button onclick=tambah_pekerjaan('$1') class='btn ml-1 btn-sm btn-success' title='Tambahkan pekerjaan baru'><span class='fa fa-plus'></span></button>"
+        . "<button onclick=form_tambah_pekerjaan('$1') class='btn ml-1 btn-sm btn-success' title='Tambahkan pekerjaan baru'><span class='fa fa-plus'></span></button>"
+        . "<button onclick=form_edit_client('$1') class='btn ml-1 btn-sm btn-success' title='Edit Client'><span class='fa fa-edit'></span></button>"
         . "",'base64_encode(no_client)');
 return $this->datatables->generate();
 }
@@ -371,8 +372,8 @@ $this->db->where('data_berkas.id_data_berkas',$id_data_berkas);
 $query = $this->db->get();  
 
 return $query;
-
 }
+
 public function data_berkas_where($no_berkas){
 $this->db->select('data_client.nama_folder,'
         . 'data_berkas.nama_berkas,'

@@ -511,8 +511,10 @@ $this->db->insert('data_meta_berkas',$meta);
 }
 
 $status[] = array(
-"status"     => "success",
-"messages"   => "Persyaratan berhasil ditambahkan"    
+"status"      => "success",
+"messages"    => "Persyaratan berhasil ditambahkan",
+"no_client"   =>$input['no_client'],
+"no_pekerjaan"=>$input['no_pekerjaan']    
 );
 echo json_encode($status);
 }
@@ -892,25 +894,30 @@ echo '<div class="col " >'
 $query     = $this->M_data_lama->data_perekaman($persyaratan['no_nama_dokumen'],$input['no_client']);
 $query2     = $this->M_data_lama->data_perekaman2($persyaratan['no_nama_dokumen'],$input['no_client']);
 
-echo "<div class='row'>";
+echo "<div class='row '>";
 foreach ($query->result_array() as $d){
-echo "<div class='col'>".str_replace('_', ' ',$d['nama_meta'])."</div>";
+echo "<div class='col-sm-3 text-center'><b>".str_replace('_', ' ',$d['nama_meta'])."</b></div>";
 }
-
-echo "<div class='col'>Aksi</div>";
+if($query->num_rows() > 0){
+echo "<div class='col text-center'><b>Aksi</b></div>";
+}
 echo "</div>";
 
 foreach ($query2->result_array() as $d){
+    $this->db->limit(3);
 $b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
-echo "<div class='row' id='".$d['no_berkas']."'>";
+echo "<div class='row mt-2' id='".$d['no_berkas']."'>";
 foreach ($b->result_array() as $i){
-echo "<div class='col' >".$i['value_meta']."</div>";    
+echo "<div class='col-sm-3' >".$i['value_meta']."</div>";    
 }
 
-echo '<div class="col">'
-.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>';
-        echo '</div>';
-        echo '</div>';
+echo '<div class="col text-center">'
+.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success  ml-1 btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>'
+.'<button  class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
+.'<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$d['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
+.'<button  onclick=cek_download("'.base64_encode($d['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
+echo '</div>';
+echo '</div>';
 }
 
 echo "</div>";
@@ -1011,10 +1018,35 @@ $status[] =array(
 ); 
 echo json_encode($status);    
 }
+}
+}
+}
+public function hapus_berkas_persyaratan(){
+if($this->input->post()){
+$input = $this->input->post();    
+
+$data = $this->M_data_lama->hapus_berkas($input['id_data_berkas'])->row_array();
+
+$filename = './berkas/'.$data['nama_folder']."/".$data['nama_berkas'];
+
+if(!empty($data['nama_berkas'])){
+if(file_exists($filename)){
+unlink($filename);
+}
+}
+$this->db->delete('data_berkas',array('id_data_berkas'=>$this->input->post('id_data_berkas')));    
+
+
+$status[] =array(
+'status'    => 'success',
+'messages'  => 'Data berhasil dihapus' 
+); 
+echo json_encode($status);    
+
 
 }
 }
-}
+
 }
 
 
