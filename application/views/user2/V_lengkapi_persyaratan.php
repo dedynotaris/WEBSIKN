@@ -79,6 +79,8 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <?php echo $static['jenis_kontak'] ?>        
 </div>
 </div>
+    <hr>
+    <button onclick=form_edit_client("<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit client <span class="fa fa-edit"></span></button>    
 </div>
 
 <div class="col card-header ml-1">
@@ -119,6 +121,9 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <?php echo $static['target_kelar'] ?>        
 </div>
 </div>    
+    <hr>
+    <button onclick=form_edit_pekerjaan("<?php echo base64_encode($static['no_pekerjaan']) ?>","<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit pekerjaan <span class="fa fa-edit"></span></button>    
+
 </div>
 
 </div>
@@ -379,6 +384,63 @@ $(".date").daterangepicker({
 });
 
 }
+
+
+
+function  form_edit_client(no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/form_edit_client') ?>",
+data:"token="+token+"&no_client="+no_client,
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+}
+});
+}
+
+function update_client(){
+$(".update_pekerjaan").attr("disabled", true);
+$("#form_update_pekerjaan").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("User2/update_client") ?>",
+type : "post",
+data : $("#form_update_pekerjaan").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_update_pekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_pekerjaan").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+$('#data_modal').modal('hide');
+}
+$(".update_pekerjaan").attr("disabled", false);
+}
+});
+}
+
+function form_edit_pekerjaan(no_pekerjaan,no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
+url :"<?php echo base_url('User2/form_edit_pekerjaan') ?>",
+success:function(data){
+$('#data_modal').modal('show');
+$(".modal-content").html(data);
+}
+
+});
+}
+
+
 </script>    
 
 

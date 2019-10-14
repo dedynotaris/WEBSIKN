@@ -1852,4 +1852,28 @@ echo json_encode($status);
 redirect(404);  
 }
 }
+function form_edit_pekerjaan(){
+if($this->input->post()){
+$input = $this->input->post();    
+$data_client = $this->M_user2->data_client_where($input['no_client'])->row_array();    
+
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >Edit Pekerjaan '.$data_client['nama_client'].' <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body " >';
+echo "</div>"
+. "<div class='modal-footer'>"
+        . "<button onclick=update_pekerjaan(); class='btn btn-sm btn-success update_pekerjaan btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
+        . "</div>"
+. "</div>";
+
+}else{
+    redirect(404);    
+}    
+}
+
 }
