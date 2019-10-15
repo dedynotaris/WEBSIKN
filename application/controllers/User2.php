@@ -1770,10 +1770,11 @@ echo '<div class="modal-content">
 </div>
 <div class="modal-body " >';
 
-echo '<form id="form_update_pekerjaan">
+echo '<form id="form_update_client">
+    <input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+
     <label>Kontak yang bisa dihubungi</label>
 <input type="text" value="'.$data_client['contact_person'].'" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
-<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
 <input type="hidden" name="no_client" value="'.$data_client['no_client'].'" readonly="" class="form-control required"  accept="text/plain">
 
 <label>Nomor Kontak Telephone / HP</label>
@@ -1802,7 +1803,7 @@ echo '<form id="form_update_pekerjaan">
 
 echo "</div>"
 . "<div class='modal-footer'>"
-        . "<button onclick=update_client(); class='btn btn-sm btn-success update_pekerjaan btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
+        . "<button onclick=update_client(); class='btn btn-sm btn-success update_client btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
         . "</div>"
 . "</div>";
     
@@ -1865,15 +1866,56 @@ echo '<div class="modal-content">
 </button>
 </div>
 <div class="modal-body " >';
+echo ""
+. "<form id='form_update_pekerjaan'>"
+. "<label>Cari Pekerjaan Baru</label>"
+. "<input type='text' name='cari_pekerjaan' id='cari_pekerjaan' class='form-control form-control-sm nama_pekerjaan'>"
+. "<input type='hidden' name='no_pekerjaan' id='no_pekerjaan' value=".$input['no_pekerjaan']." class='form-control form-control-sm form-control-sm no_pekerjaan'>"
+. "<input type='hidden' name='id_jenis_pekerjaan' id='id_jenis_pekerjaan' class='form-control form-control-sm id_jenis_pekerjaan)'>";
+echo '<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+';
 echo "</div>"
 . "<div class='modal-footer'>"
         . "<button onclick=update_pekerjaan(); class='btn btn-sm btn-success update_pekerjaan btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
-        . "</div>"
+        . "</form></div>"
 . "</div>";
 
 }else{
     redirect(404);    
 }    
+}
+
+function update_pekerjaan(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$this->form_validation->set_rules('cari_pekerjaan', 'Jenis pekerjaan ', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
+}else{
+$data = array(
+'no_jenis_pekerjaan' =>$input['id_jenis_pekerjaan']
+); 
+$this->db->where('no_pekerjaan', base64_decode($input['no_pekerjaan']));
+$this->db->update('data_pekerjaan',$data);
+
+$status[] = array(
+'status'  => 'success',
+'messages'=> "anda berhasil merubah pekerjaan",    
+);
+echo json_encode($status);
+
+}    
+}else{
+    redirect(404);    
+}    
+    
 }
 
 }

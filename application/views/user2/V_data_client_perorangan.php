@@ -133,27 +133,27 @@ $('#modal').modal('show');
 }
 
 function update_client(){
-$(".update_pekerjaan").attr("disabled", true);
-$("#form_update_pekerjaan").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$(".update_client").attr("disabled", true);
+$("#form_update_client").find(".form-control").removeClass("is-invalid").addClass("is-valid");
 $('.form-control + p').remove();
 $.ajax({
 url  : "<?php echo base_url("User2/update_client") ?>",
 type : "post",
-data : $("#form_update_pekerjaan").serialize(),
+data : $("#form_update_client").serialize(),
 success: function(data) {
 var r  = JSON.parse(data);
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
 $.each(value, function(key, value){
-$("#form_update_pekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
-$("#form_update_pekerjaan").find("#"+key).removeClass("is-valid");
+$("#form_update_client").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_client").find("#"+key).removeClass("is-valid");
 });
 });
 }else{
 read_response(data);
 $('#modal').modal('hide');
 }
-$(".update_pekerjaan").attr("disabled", false);
+$(".update_client").attr("disabled", false);
 }
 });
 }

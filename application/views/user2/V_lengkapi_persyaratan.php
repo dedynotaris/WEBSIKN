@@ -401,11 +401,69 @@ $('#data_modal').modal('show');
 }
 
 function update_client(){
+$(".update_client").attr("disabled", true);
+$("#form_update_client").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("User2/update_client") ?>",
+type : "post",
+data : $("#form_update_client").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_update_client").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_client").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+$('#data_modal').modal('hide');
+}
+$(".update_client").attr("disabled", false);
+}
+
+});
+}
+
+function form_edit_pekerjaan(no_pekerjaan,no_client){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
+url :"<?php echo base_url('User2/form_edit_pekerjaan') ?>",
+success:function(data){
+$('#data_modal').modal('show');
+$(".modal-content").html(data);
+cari_pekerjaan();
+
+}
+
+});
+}
+
+function cari_pekerjaan(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+
+$("#cari_pekerjaan").autocomplete({
+minLength:0,
+delay:0,
+source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+select:function(event, ui){
+$("#id_jenis_pekerjaan").val(ui.item.no_jenis_pekerjaan);
+}
+}
+);
+
+}
+
+function update_pekerjaan(){
 $(".update_pekerjaan").attr("disabled", true);
 $("#form_update_pekerjaan").find(".form-control").removeClass("is-invalid").addClass("is-valid");
 $('.form-control + p').remove();
 $.ajax({
-url  : "<?php echo base_url("User2/update_client") ?>",
+url  : "<?php echo base_url("User2/update_pekerjaan") ?>",
 type : "post",
 data : $("#form_update_pekerjaan").serialize(),
 success: function(data) {
@@ -423,23 +481,9 @@ $('#data_modal').modal('hide');
 }
 $(".update_pekerjaan").attr("disabled", false);
 }
-});
-}
-
-function form_edit_pekerjaan(no_pekerjaan,no_client){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$.ajax({
-type:"post",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
-url :"<?php echo base_url('User2/form_edit_pekerjaan') ?>",
-success:function(data){
-$('#data_modal').modal('show');
-$(".modal-content").html(data);
-}
 
 });
 }
-
 
 </script>    
 
