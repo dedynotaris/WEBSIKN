@@ -1,7 +1,7 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_user2'); ?>
+<?php  $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user2'); ?>
+<?php  $this->load->view('umum/user3/V_navbar_user3'); ?>
 <div class="container-fluid ">
 <?php  $static = $data_user->row_array(); ?>
 <div class="row mt-2">

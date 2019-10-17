@@ -1,10 +1,10 @@
 <body >
-<?php $this->load->view('umum/V_sidebar_user3'); ?>
+<?php $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
-<?php $this->load->view('umum/V_navbar_user3'); ?>
+<?php $this->load->view('umum/user3/V_navbar_user3'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Data Perizinan masuk<br><span class="fa-2x far fa-share-square"></span></h5>
+<h5 align="center " class="text-theme1">Data Perizinan masuk<br><span class="fa-2x far fa-share-square"></span></h5>
 </div>
 <div class="row ">
 <div class="col">    
@@ -17,7 +17,6 @@
     <th>No</th>    
 <th>Nama client</th>
 <th>Nama Tugas</th>
-<th>Pemilik dokumen</th>
 <th>Tugas Dari</th>
 <th>Tanggal penugasan</th>
 <th>Aksi</th>
@@ -27,23 +26,13 @@
 <td><?php echo $no++ ?></td>    
 <td><?php echo $data['nama_client'] ?></td>
 <td id="nama_file<?php echo $data['no_berkas_perizinan']?>"><?php echo $data['nama_dokumen'] ?></td>
-<td><?php 
-$this->db->select('data_client.nama_client');
-$this->db->from('data_pemilik');
-$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
-$this->db->where('data_pemilik.no_pemilik',$data['no_pemilik']);
-$pemilik = $this->db->get()->row_array();
-echo $pemilik['nama_client'];
- ?></td>
 <td ><?php echo $data['nama_lengkap'] ?></td>
 <td><?php echo $data['tanggal_penugasan'] ?></td>
 <td>
-<select onchange="aksi_option('<?php echo $data['no_pekerjaan'] ?>','<?php echo $data['no_berkas_perizinan'] ?>','<?php echo $data['no_pemilik'] ?>');" class="form-control data_option<?php echo $data['no_berkas_perizinan'] ?>">
-<option>-- Klik untuk lihat menu --</option>
-<option value="1">Terima Tugas</option>
-<option value="2">Tolak Tugas</option>
-<option value="3">Dokumen Pemilik</option>
-</select>    
+
+<button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas"><i class="fa fa-check"></i></button>    
+<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas"><i class="fa fa-eject"></i></button>    
+<button onclick="lihat_persyaratan('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
 </td>
 </tr>
 
@@ -56,76 +45,12 @@ echo $pemilik['nama_client'];
 </div>
 
 <!-------------modal--------------------->
-<div class="modal fade" id="modal_proses" tabindex="-1" role="dialog" aria-labelledby="modal_dinamis" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content ">
-<div class="modal-header">
-<h5 class="modal-title" id="modal_dinamis">Modal</h5>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body data_modal">
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-<button type="button" class="btn btn-primary">Save changes</button>
-</div>
-</div>
-</div>
+<div class="modal fade text-theme1" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="modal_dinamis" aria-hidden="true">
 </div>
 
-<!-------------modal--------------------->
-<div class="modal fade" id="modal_lihatpersyaratan" tabindex="-1" role="dialog" aria-labelledby="modal_dinamis" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content ">
-<div class="modal-body lihat_syarat">
 
-</div>
-</div>
-</div>
-</div>
-
-<!-------------modal tolak perizinan--------------------->
-<div class="modal fade" id="modal_tolak_perizinan" tabindex="-1" role="dialog" aria-labelledby="modal_dinamis" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content ">
-<div class="modal-header">
-<h6>Penolakan tugas <span class="nama_tugas"></span></h6>
-</div>
-<div class="modal-body ">
-<input type="hidden" class="no_berkas_perizinan">    
-<input type="hidden" class="no_pekerjaan">    
-<textarea class="form-control alasan_penolakan" placeholder="Masukan alasan penolakan"></textarea>
-</div>
-<div class="modal-footer">
-<button class="btn btn-sm btn-success simpan_penolakan">Simpan Penolakan</button>
-</div>    
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 
   
-<div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content ">
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-
-<div class="modal-body data_perekaman">
-
-
-</div>
-</div>
-</div>
-</div>
 
 <style>
 .swal2-overflow {
@@ -144,85 +69,30 @@ type:"post",
 data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
-$(".data_perekaman").html(data);    
-$('#data_perekaman').modal('show');
+$("#data_modal").html(data);    
+$('#data_modal').modal('show');
 }
 
 });
 }
     
-    
-$(document).ready(function(){
-$(".simpan_penolakan").click(function(){
-var token               = "<?php echo $this->security->get_csrf_hash() ?>";
-var alasan_penolakan    = $(".alasan_penolakan").val();
-var no_berkas_perizinan = $(".no_berkas_perizinan").val();
-var nama_tugas          = $("#nama_file"+no_berkas_perizinan).text();
-
-if(alasan_penolakan !=''){
+function tolak_perizinan(no_berkas_perizinan,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-url:"<?php echo base_url('User3/tolak_tugas') ?>",
-data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&alasan_penolakan="+alasan_penolakan+"&nama_tugas="+nama_tugas,
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User3/form_tolak_perizinan') ?>",
 success:function(data){
-var r  = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function() {
-window.location.href = "<?php echo base_url('User3/halaman_proses'); ?>";
-});
+$("#data_modal").html(data);    
+$('#data_modal').modal('show');
 }
-
 });
-
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-Toast.fire({
-type: "warning",
-title: "Alasan penolakan belum diberikan"
-});
-
-}
-});    
-
-});
+}    
+    
+    
 
 
-
-function aksi_option(no_pekerjaan,no_berkas_perizinan,no_pemilik){
-var aksi_option = $(".data_option"+no_berkas_perizinan+" option:selected").val();
-if(aksi_option == 1){
-proses_perizinan(no_berkas_perizinan);   
-}else if(aksi_option == 2){
-$('#modal_tolak_perizinan').modal('show');
-var nama_file = $("#nama_file"+no_berkas_perizinan).text();
-$(".nama_tugas").html(nama_file);
-$(".no_berkas_perizinan").val(no_berkas_perizinan);
-$(".no_pekerjaan").val(no_pekerjaan);
-
-}else if(aksi_option == 3){
-lihat_persyaratan(no_pekerjaan,no_pemilik);    
-}
-$(".data_option"+no_berkas_perizinan).val("-- Klik untuk lihat menu --");
-}
-
-function proses_perizinan(no_berkas_perizinan){
+function terima_perizinan(no_berkas_perizinan){
 swal.fire({
 title: 'Target Selesai Perizinan <br><hr>',
 html: '<input class="form-control" readonly="" id="target_kelar">',
@@ -282,15 +152,15 @@ window.location.href = "<?php echo base_url('User3/halaman_proses'); ?>";
 });
 }
 
-function lihat_persyaratan(no_pekerjaan,no_pemilik){
+function lihat_persyaratan(no_client){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User3/lihat_persyaratan') ?>",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_pemilik="+no_pemilik,
+data:"token="+token+"&no_client="+no_client,
 success:function(data){
-$(".lihat_syarat").html(data);
-$('#modal_lihatpersyaratan').modal('show');
+$("#data_modal").html(data);    
+$('#data_modal').modal('show');
 }
 });
 }
@@ -299,8 +169,33 @@ function download(id_data_berkas){
 window.location.href="<?php echo base_url('User3/download_berkas/') ?>"+id_data_berkas;
 }
 
-</script>    
-<script>
+
+function simpan_penolakan(){
+    
+$(".btn_tolak_tugas").attr("disabled", true);
+$("#form_penolakan_tugas").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("User3/tolak_tugas") ?>",
+type : "post",
+data : $("#form_penolakan_tugas").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_penolakan_tugas").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_penolakan_tugas").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+}
+$(".btn_tolak_tugas").attr("disabled", false);
+}
+});   
+}
+
 $(function() {
 $("input[name='target_kelar']").datepicker({ minDate:0});
 });

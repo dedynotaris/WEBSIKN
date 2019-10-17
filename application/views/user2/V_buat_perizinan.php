@@ -6,8 +6,8 @@
 <?php $static = $query->row_array(); ?>
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
-LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
-<button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Lanjutkan keproses perizinan<span class="fa fa-exchange-alt"></span></button>
+HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
+<button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Selesaikan pekerjaan <span class="fa fa-check"></span></button>
 </div>
 
 
@@ -140,9 +140,8 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 ?> 
 </div>
 </div>    
-    <hr>
-    <button onclick=form_edit_pekerjaan("<?php echo base64_encode($static['no_pekerjaan']) ?>","<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit pekerjaan <span class="fa fa-edit"></span></button>    
-
+<hr>
+<button onclick=form_edit_pekerjaan("<?php echo base64_encode($static['no_pekerjaan']) ?>","<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit pekerjaan <span class="fa fa-edit"></span></button>    
 </div>
 
 </div>
@@ -152,7 +151,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
 <div class=" card-header" >
 <div class="row">
-<div class="col-md-6">    
+<div class="col-md-5">    
 <div class="col ">
 <form id="form_pihak_terlibat">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
@@ -188,7 +187,6 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>    
 <hr>
 <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat</button>
-
 </div>
 
 <div class="col text-theme1 ">
@@ -305,7 +303,7 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/data_para_pihak/') ?>",
-data:"token="+token+"&proses=persyaratan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
+data:"token="+token+"&proses=perizinan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
 success:function(data){
 $(".para_pihak").html(data);
 }
@@ -376,7 +374,6 @@ tampilkan_form(r[0].no_client,btoa(r[0].no_pekerjaan));
 
 
 }
-
 function regis_js(){
 $(".Desimal").keyup(function(){
 var string = numeral(this.value).format('0,0');
@@ -389,14 +386,12 @@ $("#"+this.id).val(string);
 
 $(function() {
 $(".date").daterangepicker({ 
-    singleDatePicker: true,
     dateFormat: 'yy/mm/dd',
     singleDatePicker: true,
     showDropdowns: true,
     minYear: 1901,
-     changeMonth: false,
+    changeMonth: false,
    changeYear: false,
-   
     maxYear: parseInt(moment().format('YYYY'),10),
     "locale": {
         "format": "YYYY/MM/DD",
@@ -518,6 +513,90 @@ read_response(data);
 
 }
 
+});
+}
+
+function tampilkan_form_perizinan(no_client,no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/form_data_perizinan') ?>",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+
+}
+});
+}
+
+function simpan_perizinan(no_pekerjaan,no_client){
+var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
+var no_petugas               = $(".data_nama_petugas option:selected").val();
+var no_dokumen               = $(".data_nama_dokumen option:selected").val();
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/simpan_perizinan') ?>",
+data:"token="+token+"&no_petugas="+no_petugas+"&no_nama_dokumen="+no_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
+success:function(data){
+read_response(data);
+tampilkan_form_perizinan(no_client,btoa(no_pekerjaan));
+}
+});
+}
+
+
+function hapus_perizinan(no_berkas_perizinan,no_client,no_pekerjaan){
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",	
+url:"<?php echo base_url('User2/hapus_perizinan') ?>",	
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
+success:function(data){	
+read_response(data);
+tampilkan_form_perizinan(no_client,no_pekerjaan);
+}
+});
+}
+
+function alihkan_perizinan(no_berkas_perizinan,no_client,no_pekerjaan){
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",	
+url:"<?php echo base_url('User2/option_user_level3') ?>",	
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){	
+$("#"+no_berkas_perizinan).html(data);
+}
+});
+
+}
+
+function simpan_alihan_perizinan(no_berkas_perizinan,no_client,no_pekerjaan){
+var no_user = $("."+no_berkas_perizinan+" option:selected").val();
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",	
+url:"<?php echo base_url('User2/simpan_petugas_perizinan') ?>",	
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan+"&no_user="+no_user,
+success:function(data){	
+read_response(data);
+tampilkan_form_perizinan(no_client,no_pekerjaan);
+}
+});
+}
+
+function lihat_laporan_perizinan(no_berkas_perizinan){
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
+url:"<?php echo base_url('User2/lihat_laporan_perizinan') ?>",
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+}
 });
 }
 

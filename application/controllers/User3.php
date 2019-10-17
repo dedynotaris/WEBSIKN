@@ -90,9 +90,20 @@ public function lihat_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
 
-$data = $this->M_user3->data_persyaratan($input['no_pemilik']);
-
-echo "<table class='table text-center table-sm table-bordered table-striped'>"
+$data = $this->M_user3->data_persyaratan($input['no_client']);
+echo '<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >DATA DOKUMEN PERSYARATAN<span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body " >
+<form id="form_penolakan_tugas">
+';
+echo "<table class='table text-theme1 text-center table-sm table-bordered table-striped'>"
 . "<thead>"
         . "<tr>"
         . "<th>Dokumen penunjang yang diberikan client</th>"
@@ -102,11 +113,16 @@ echo "<table class='table text-center table-sm table-bordered table-striped'>"
 foreach ($data->result_array() as $d){
 echo "<tr>"
     . "<td>".$d['nama_dokumen']."</td>"
-    . "<td><button onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$d['no_client']."'); class='btn btn-dark btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
+    . "<td><button type='button' onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$d['no_client']."'); class='btn btn-success btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
     . "</tr>";  
 }
 
 echo"</table>";
+
+
+
+echo "</div>"
+. "</div>";
 
 
 }else{
@@ -116,80 +132,107 @@ redirect(404);
 
 
 
-public function form_persyaratan(){
+public function form_rekam_dokumen(){
 if($this->input->post()){
 $input = $this->input->post();
-$query = $this->M_user3->data_meta($input['no_nama_dokumen']);
+$data_client      = $this->M_user3->data_client_where(base64_encode($input['no_client']))->row_array();
+$nama_persyaratan = $this->M_user3->nama_persyaratan($input['no_berkas_perizinan'],$data_client['jenis_client'])->row_array();
 
-echo "<div class='row'>";
-echo "<div class='col'>";
-echo "<input type='hidden' class='form-control no_nama_dokumen'  value='".$input['no_nama_dokumen']."' >";
-echo "<input type='hidden' class='form-control no_pekerjaan' value='".$input['no_pekerjaan']."'>";
-echo "<input type='hidden' class='form-control no_client' value='".$input['no_client']."'>";
+echo '<div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >REKAM DOKUMEN MILIK '.$data_client['nama_client'].'<span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body text-theme1 " >';
+echo "<form action='#' id='form".$nama_persyaratan['no_nama_dokumen']."'>";
+echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_client" value="'.$input['no_client'].'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_pekerjaan" value="'.base64_decode($input['no_pekerjaan']).'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_nama_dokumen" value="'.$nama_persyaratan['no_nama_dokumen'].'" readonly="" class="required"  accept="text/plain">';
 
-$i = 1;
-foreach ($query->result_array() as $d){
+$data_meta = $this->M_user3->data_meta($nama_persyaratan['no_nama_dokumen']);
 
-      
+foreach ($data_meta->result_array() as $d){
+/*INPUTAN SELECT*/
 if($d['jenis_inputan'] == 'select'){
 $data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
 echo "<label>".$d['nama_meta']."</label>"
-."<select id='data_meta".$i++."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
 foreach ($data_option->result_array() as $option){
 echo "<option>".$option['jenis_pilihan']."</option>";
 }
 echo "</select>";
+
+/*INPUTAN DATE*/
 }else if($d['jenis_inputan'] == 'date'){
-
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
 
+/*INPUTAN NUMBER*/
 }else if($d['jenis_inputan'] == 'number'){
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='text' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
 
-
+/*INPUTAN TEXTAREA*/
 }else if($d['jenis_inputan'] == 'textarea'){
 echo "<label>".$d['nama_meta']."</label>"
-        . "<textarea  id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
-
-
+. "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
 }else{
 echo "<label>".$d['nama_meta']."</label>"
-."<input  type='".$d['jenis_inputan']."' id='data_meta".$i++."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
-
-
-}    
+."<input  type='".$d['jenis_inputan']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
 }
 
+}
 echo "<label>Lampiran</label>"
-. "<input type='file' id='file_berkas' class='form-control'>";
-echo "</div>";
-echo "</div>";
+. "<input type='file' id='file".$nama_persyaratan['no_nama_dokumen']."' class='form-control'>";
+echo "<hr>"
+. "<button type='button' onclick=upload_data('".$nama_persyaratan['no_nama_dokumen']."','".$input['no_client']."') class='btn btn-sm btn-success btn-block '>Simpan dan rekam</button>"
+. "</form>";
+
+echo '</div></div>';
 }
 }
+
 
 public function simpan_persyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
+
+foreach ($_POST as $key=>$val) {
+$this->form_validation->set_rules($key,str_replace('_', ' ', $key), 'required');
+}
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+
+echo json_encode($status);
+}else{
+    
 $total_berkas = $this->M_user3->total_berkas()->row_array();
 
 $no_berkas = "BK".date('Ymd').str_pad($total_berkas['id_data_berkas'],6,"0",STR_PAD_LEFT);
 
-$static = $this->M_user3->data_pekerjaan($input['no_pekerjaan'])->row_array();
-
+$data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
 
 if(!empty($_FILES['file_berkas'])){
-$config['upload_path']          = './berkas/'.$static['nama_folder'];
+$config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
 $config['encrypt_name']         = TRUE;
 $config['max_size']             = 50000;
-$this->upload->initialize($config);    
+$this->upload->initialize($config);   
 
 if (!$this->upload->do_upload('file_berkas')){  
-$status = array(
+$status[] = array(
 "status"     => "error",
-"pesan"      => $this->upload->display_errors()    
+"messages"      => $this->upload->display_errors()    
 );
 echo json_encode($status);
 
@@ -203,12 +246,20 @@ $lampiran = NULL;
 $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
+    
+//echo "validasi _berhasil";    
+
+
+}
 }else{
 redirect(404);    
-}    
+}
+    
 }
 
+
 public function simpan_data_persyaratan($no_berkas,$input,$lampiran){
+
 $data_berkas = array(
 'no_berkas'         => $no_berkas,    
 'no_client'         => $input['no_client'],    
@@ -221,8 +272,9 @@ $data_berkas = array(
 
 $this->db->insert('data_berkas',$data_berkas);
     
-$data_meta = json_decode($input['data_meta']);
-foreach ($data_meta as $key=>$value){
+foreach ($input as $key=>$value){
+if($key == "no_nama_dokumen" || $key == 'no_client' || $key == 'no_pekerjaan' || $key == 'file_berkas'){
+}else{
 $meta = array(
 'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
@@ -231,11 +283,14 @@ $meta = array(
 'value_meta'        => $value,    
 );
 $this->db->insert('data_meta_berkas',$meta);
-
 }
-$status = array(
-"status"     => "success",
-"pesan"      => "Persyaratan berhasil ditambahkan"    
+}
+
+$status[] = array(
+"status"      => "success",
+"messages"    => "Persyaratan berhasil ditambahkan",
+"no_client"   =>$input['no_client'],
+"no_pekerjaan"=>$input['no_pekerjaan']    
 );
 echo json_encode($status);
 }
@@ -243,23 +298,32 @@ echo json_encode($status);
 public function simpan_laporan(){
 if($this->input->post()){
 $input = $this->input->post();
-$data = array(
+$this->form_validation->set_rules('laporan', 'Laporan belum dimasukan', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
+}else{
+ $data = array(
 'no_berkas_perizinan'    => $input['no_berkas_perizinan'],
 'laporan'                => $input['laporan'],
 'waktu'                  => date('Y/m/d')    
 );
 $this->db->insert('data_progress_perizinan',$data);
 
-$status = array(
+$status[] = array(
 "status"=>"success",
-"pesan" =>"laporan berhasil tersimpan",
+"messages" =>"laporan berhasil tersimpan",
 );
 echo json_encode($status);
-   
-}else{
-redirect(404);    
-}    
+      
 }
+}  
+ }
 public function download_berkas_informasi(){
 $data = $this->db->get_where('data_informasi_pekerjaan',array('id_data_informasi_pekerjaan'=>$this->uri->segment(3)))->row_array();    
 $file_path = "./berkas/".$data['nama_folder']."/".$data['lampiran']; 
@@ -287,10 +351,20 @@ redirect(404);
 
 public function tolak_tugas(){
 if($this->input->post()){
+$this->form_validation->set_rules('alasan_penolakan', 'Alasan penolakan perlu di isi', 'required');
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
+}else{
 $input = $this->input->post();    
 $data = array(
 'no_berkas_perizinan'       => $input['no_berkas_perizinan'],
-'laporan'                   => $this->session->userdata('nama_lengkap')." Menolak Tugas ".$input['nama_tugas']." dengan alasan ".$input['alasan_penolakan'],
+'laporan'                   => $this->session->userdata('nama_lengkap')." Menolak Tugas dengan alasan ".$input['alasan_penolakan'],
 'waktu'                     => date('Y/m/d')    
 );
 $this->db->insert('data_progress_perizinan',$data);
@@ -301,12 +375,13 @@ $update = array(
 $this->db->update('data_berkas_perizinan',$update,array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
 
 
-$status = array(
-"status"=>"success",
-"pesan" =>"Penolakan tugas berhasil",
+$status[] = array(
+"status"   =>"success",
+"messages" =>"Penolakan tugas berhasil",
 );
 echo json_encode($status);
-  
+
+}  
 }else{
 redirect(404);    
 }
@@ -475,11 +550,24 @@ $input = $this->input->post();
 $query     = $this->M_user3->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
 $query2     = $this->M_user3->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
 
-echo "<table class='table table-sm table-striped table-bordered'>";
+echo '<div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >DATA DOKUMEN PERSYARATAN<span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body text-theme1 " >
+<form id="form_penolakan_tugas">
+';
+
+echo "<table class='table text-theme1 table-sm table-striped table-bordered'>";
 echo "<thead>
     <tr>";
 foreach ($query->result_array() as $d){
-echo "<th>".$d['nama_meta']."</th>";
+echo "<th>".str_replace('_', ' ',$d['nama_meta'])."</th>";
 }
 echo "<th>Aksi</th>";
 echo "</tr>"
@@ -495,7 +583,7 @@ foreach ($b->result_array() as $i){
 echo "<td>".$i['value_meta']."</td>";    
 }
 echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick=cek_download("'.base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>
+.'<button type="button" class="btn btn-success btn-sm" onclick=cek_download("'.base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>
 </td>';
 echo "</tr>";
     
@@ -504,7 +592,12 @@ echo "</tr>";
 echo "</tbody>";
 
 
-echo"</table>";   
+echo"</table>"; 
+
+
+echo "</div>"
+. "</div>";
+
 }else{
 redirect(404);    
 }    
@@ -642,7 +735,7 @@ $input = $this->input->post();
 $query     = $this->M_user3->data_perekaman(base64_decode($input['no_nama_dokumen']),base64_decode($input['no_client']));
 $query2     = $this->M_user3->data_perekaman2(base64_decode($input['no_nama_dokumen']),base64_decode($input['no_client']));
 
-echo "<table class='table table-sm table-striped table-bordered'>";
+echo "<table class='table text-theme1 table-sm table-striped table-bordered'>";
 echo "<thead>
     <tr>";
 foreach ($query->result_array() as $d){
@@ -721,6 +814,82 @@ $data= $this->db->get()->row_array();
 $file_path = "./berkas/".$data['nama_folder']."/".$data['nama_file']; 
 $info = new SplFileInfo($data['nama_file']);
 force_download($data['nama_berkas'].".".$info->getExtension(), file_get_contents($file_path));
+}
+
+function form_tolak_perizinan(){
+if($this->input->post()){    
+$input = $this->input->post();
+echo '<div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >MASUKAN ALASAN PENOLAKAN PERIZINAN <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body text-theme1 " >
+<form id="form_penolakan_tugas">
+';
+ echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+
+echo '<input type="hidden" name="no_berkas_perizinan" id="no_berkas_perizinan" class="no_berkas_perizinan" value="'.$input['no_berkas_perizinan'].'">    
+<input name="no_pekerjaan" id="no_pekerjaan" type="hidden" class="no_pekerjaan" value="'.$input['no_pekerjaan'].'">    
+<textarea name="alasan_penolakan" id="alasan_penolakan" class="form-control alasan_penolakan" placeholder="Masukan alasan penolakan"></textarea>
+';    
+
+echo "</div>"
+. "<div class='modal-footer'>"
+        . "<button onclick=simpan_penolakan(); class='btn btn-sm btn-success btn_tolak_tugas btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
+        . "</form></div>"
+. "</div>";
+
+echo "</div>"
+. "</div>";
+
+
+}else{
+    redirect(404);    
+}
+}
+
+
+
+function form_laporan(){
+if($this->input->post()){    
+$input = $this->input->post();
+echo '<div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+<div class="modal-content ">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >MASUKAN LAPORAN PERIZINAN<span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body text-theme1 " >
+<form id="form_laporan">
+';
+ echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+
+echo '<input type="hidden" name="no_berkas_perizinan" id="no_berkas_perizinan" class="no_berkas_perizinan" value="'.$input['no_berkas_perizinan'].'">    
+<input name="no_pekerjaan" id="no_pekerjaan" type="hidden" class="no_pekerjaan" value="'.$input['no_pekerjaan'].'">    
+<textarea name="laporan" id="laporan" class="form-control alasan_penolakan" placeholder="Masukan laporan perizinan"></textarea>
+';    
+
+echo "</div>"
+. "<div class='modal-footer'>"
+        . "<button onclick=simpan_laporan(); class='btn btn-sm btn-success btn_simpan_laporan btn-block'>Simpan Perubahan <span class='fa fa-save'</button></form>"
+        . "</form></div>"
+. "</div>";
+
+echo "</div>"
+. "</div>";
+
+
+}else{
+    redirect(404);    
+}
 }
 
 }

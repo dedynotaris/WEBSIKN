@@ -18,6 +18,9 @@ $this->datatables->add_column('view',""
         . "",'base64_encode(no_client)');
 return $this->datatables->generate();
 }
+
+
+
 public function simpan_syarat($data){
 $this->db->insert('data_syarat_jenis_dokumen',$data);    
 }

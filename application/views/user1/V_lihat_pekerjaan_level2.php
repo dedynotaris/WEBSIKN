@@ -1,7 +1,7 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_user1'); ?>
+<?php  $this->load->view('umum/user1/V_sidebar_user1'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_user1'); ?>
+<?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php $kar = $data->row_array(); ?>
 <div class="container-fluid ">
     
@@ -36,7 +36,9 @@ echo "<option value=".$user['no_user'].">".$user['nama_lengkap']."</option>";
 </td>   
 <td>
 <?php
-if($d['target_kelar'] == date('Y/m/d')){
+if($d['target_kelar'] == NULL){
+echo "<b><span class='text-dark'>Belum tersedia</span><b>";    
+}else if($d['target_kelar'] == date('Y/m/d')){
 echo "<b><span class='text-warning'>Hari ini</span><b>";    
 }else if($d['target_kelar'] <= date('Y/m/d')){
 $startTimeStamp = strtotime(date('Y/m/d'));
