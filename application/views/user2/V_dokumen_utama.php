@@ -44,25 +44,6 @@
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body">
-<form action="<?php  echo base_url('User2/upload_utama')?>" method="post" enctype="multipart/form-data">
-<label>Tanggal akta</label>
-<input type="text" name="tanggal_akta" required="" readonly="" class="form-control " name="tanggal_akta">
-<label>Jenis file utama</label>
-<select name="jenis" class="form-control">
-<option value="Draft">Draft</option>    
-<option value="Minuta">Minuta</option>    
-<option value="Salinan">Salinan</option>    
-</select>
-<label>Upload</label>
-<input type="hidden" value="<?php echo $this->uri->segment(3) ?>" name="no_pekerjaan">
-<input type="hidden" value="<?php echo $this->security->get_csrf_hash() ?>" name="token">
-<input type="file" required="" name="file" class="form-control">
-</div>
-<div class="card-footer">  
-    <button type="submit" class="btn btn-block btn-sm btn-success">Upload File <span class="fa fa-upload"></span></button>
-</div>
-</form>    
 
 </div>
 </div>

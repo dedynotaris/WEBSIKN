@@ -530,6 +530,21 @@ $('#data_modal').modal('show');
 });
 }
 
+function tampilkan_form_utama(no_client,no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/tampilkan_form_utama') ?>",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+tanggal_akta();
+
+}
+});
+}
+
 function simpan_perizinan(no_pekerjaan,no_client){
 var token                    = "<?php echo $this->security->get_csrf_hash() ?>";
 var no_petugas               = $(".data_nama_petugas option:selected").val();
@@ -600,6 +615,62 @@ $('#data_modal').modal('show');
 });
 }
 
+function tanggal_akta(){
+$("input[name=tanggal_akta]").daterangepicker({
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+}
+
+
+
+function upload_utama(no_nama_dokumen,no_client){
+
+$("#form_utama").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$("#form_utama").find('.form-control + p').remove();
+
+
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+formdata = new FormData();
+var x = $('#form_utama').serializeArray();
+$.each(x,function(prop,obj){
+formdata.append(obj.name, obj.value);
+});
+formdata.append("file_utama", $("#file_utama").prop('files')[0]);
+
+$.ajax({
+type:"post",
+data:formdata,
+processData: false,
+contentType: false,
+url:"<?php echo base_url('User2/upload_utama') ?>",
+success:function(data){
+var r = JSON.parse(data); 
+
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_utama").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_utama").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+refresh(); 
+}    
+}
+});
+
+
+}
 </script>    
 
 

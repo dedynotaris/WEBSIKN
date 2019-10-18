@@ -699,7 +699,29 @@ redirect(404);
 
 public function upload_utama(){
 if($this->input->post()){
-$input = $this->input->post();    
+$input = $this->input->post();
+
+$this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required');
+$this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required');
+$this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required');
+$this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required');
+if(!empty($_FILES['file_utama']['name'])){
+$this->form_validation->set_rules('file_utama', 'Document', 'required');    
+}
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+
+echo json_encode($status);
+
+}else{
+    
+}
+/*   
 $data_pekerjaan = $this->M_user2->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
 
 
@@ -729,7 +751,7 @@ $this->db->insert('data_dokumen_utama',$data);
 
 
 redirect(base_url('User2/proses_pekerjaan/'.base64_encode($data_pekerjaan['no_pekerjaan'])));
-}else{
+*/}else{
 redirect(404);    
 }
 }
@@ -1541,8 +1563,9 @@ foreach ($data_pihak->result_array() as $data){
 echo "<div class='row mt-2 '>"
     . "<div class='col '>".$data['nama_client']."</div>"
     . "<div class='col  text-center'>"
-    . "<button onclick=tampilkan_form('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam Dokumen Milik ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam dokumen</button>";
+    . "<button onclick=tampilkan_form('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam Dokumen Milik ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam penunjang</button>";
     if($input['proses'] == 'perizinan'){
+    echo  "<button onclick=tampilkan_form_utama('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam dokumen utama ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam utama</button>";
     echo  "<button onclick=tampilkan_form_perizinan('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Buat Perizinan ".$data['nama_client']."'><span class='fa fa-pencil-alt'></span> Buat perizinan</button>";
     } 
     echo "</div>"
@@ -1942,7 +1965,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
     . "<button onclick=hapus_perizinan('".$form['no_berkas_perizinan']."','".$input['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-sm ml-1 btn-danger' title='Hapus perizinan'> <i class='fas fa-trash'></i></button>"
     . "<button onclick=alihkan_perizinan('".$form['no_berkas_perizinan']."','".$input['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-sm ml-1 btn-warning' title='Alihkan perizinan'> <i class='fas fa-exchange-alt'></i></button>"
     . "<button onclick=lihat_laporan_perizinan('".$form['no_berkas_perizinan']."'); class='btn btn-sm ml-1  btn-success' title='Lihat laporan perizinan'> <i class='fas fa-eye'></i></button>"
-    . "<button class='btn btn-sm  ml-1 btn-primary' title='Download perizinan'> <i class='fas fa-download'></i></button>"
+    . "<button onclick=tampilkan_form('".$input['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-sm  ml-1 btn-primary' title='Lihat file perizinan'> <i class='fas fa-eye'></i></button>"
     . "</div>"
     . "</div>";
     
@@ -1971,4 +1994,40 @@ echo  "</select>";
 redirect(404);    
 }    
 }
+function tampilkan_form_utama(){
+if($this->input->post()){    
+$input = $this->input->post();
+
+echo '<div class="modal-body">
+<form id="form_utama">
+<input type="hidden" value="'.$input['no_pekerjaan'].'" name="no_pekerjaan">
+<input type="hidden" value="'.$this->security->get_csrf_hash().'" name="token">
+
+<label>Tanggal akta</label>
+<input type="text" name="tanggal_akta" id="tanggal_akta"   class="form-control date form-control-sm" name="tanggal_akta">
+<label>No akta</label>
+<input type="text" name="no_akta" id="no_akta"  class="form-control form-control-sm " name="tanggal_akta">
+
+<label>Jenis file utama</label>
+<select name="jenis_utama" id="jenis_utama" class="form-control form-control-sm">
+<option></option>    
+<option value="Draft">Draft</option>    
+<option value="Minuta">Minuta</option>    
+<option value="Salinan">Salinan</option>    
+</select>
+
+<label>Upload</label>
+<input type="file" required="" name="file_utama" id="file_utama" class="form-control form-control-sm">
+</div>
+<div class="card-footer">  
+    <button type="button" onclick="upload_utama()" class="btn btn-block btn-sm btn-success">Upload File <span class="fa fa-upload"></span></button>
+</div>
+</form>    
+';
+}else{
+redirect(404);    
+}    
+    
+}
+
 }
