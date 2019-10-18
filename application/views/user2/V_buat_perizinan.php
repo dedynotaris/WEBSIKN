@@ -632,7 +632,7 @@ $("input[name=tanggal_akta]").daterangepicker({
 
 
 
-function upload_utama(no_nama_dokumen,no_client){
+function upload_utama(no_client,no_pekerjaan){
 
 $("#form_utama").find(".form-control").removeClass("is-invalid").addClass("is-valid");
 $("#form_utama").find('.form-control + p').remove();
@@ -664,13 +664,58 @@ $("#form_utama").find("#"+key).removeClass("is-valid");
 });
 }else{
 read_response(data);
-refresh(); 
+tampilkan_form_utama(no_client,no_pekerjaan);
 }    
 }
 });
+}
 
+
+function hapus_utama(id_data_dokumen_utama,no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+Swal.fire({
+title: 'Anda yakin',
+text: "file akan dihapus secara permanen",
+type: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya Hapus'
+}).then((result) => {
+if (result.value) {
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_dokumen_utama="+id_data_dokumen_utama,
+url:"<?php echo base_url('User2/hapus_file_utama') ?>",
+success:function(data){
+read_response(data);
+tampilkan_form_utama(no_client,no_pekerjaan);
 
 }
+});
+}
+})
+
+}
+
+function download_utama(id_data_dokumen_utama){
+window.location.href="<?php echo base_url('User2/download_utama/') ?>"+btoa(id_data_dokumen_utama);
+}
+
+function form_edit_meta(no_client,no_berkas,no_berkas,no_nama_dokumen){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen,
+url:"<?php echo base_url('User2/form_edit_meta') ?>",
+success:function(data){
+$("#form"+no_nama_dokumen).html(data); 
+regis_js();
+}
+});
+}
+
 </script>    
 
 

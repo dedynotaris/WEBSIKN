@@ -705,68 +705,79 @@ $this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required');
 $this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required');
 $this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required');
 $this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required');
-if(!empty($_FILES['file_utama']['name'])){
-$this->form_validation->set_rules('file_utama', 'Document', 'required');    
-}
+
+$data_pekerjaan = $this->M_user2->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
+
+$config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
+$config['allowed_types']        = 'jpg|png|pdf|docx|doc|xlxs|';
+$config['encrypt_name']         = TRUE;
+$config['max_size']             = 50000;
+$this->upload->initialize($config);   
 
 if ($this->form_validation->run() == FALSE){
+
 $status_input = $this->form_validation->error_array();
 $status[] = array(
 'status'  => 'error_validasi',
 'messages'=>array($status_input),    
 );
-
 echo json_encode($status);
 
+
 }else{
-    
-}
-/*   
-$data_pekerjaan = $this->M_user2->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
 
-
-$config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
-$config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
-$config['encrypt_name']         = TRUE;
-$this->upload->initialize($config);
-
-
-if (!$this->upload->do_upload('file')){
-$error = array('error' => $this->upload->display_errors());
-echo print_r($error);
+if (!$this->upload->do_upload('file_utama')){
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>[array("file_utama"=>$this->upload->display_errors('', ''))],    
+);
+echo json_encode($status);
 }else{
 
 $data = array(
 'nama_file'    =>$this->upload->data('file_name'),
-'nama_berkas'  =>$input['jenis']." " .$data_pekerjaan['nama_client']." ".$data_pekerjaan['nama_jenis'],
+'nama_berkas'  =>$input['jenis_utama']." " .$data_pekerjaan['nama_client']." ".$data_pekerjaan['nama_jenis'],
 'no_pekerjaan' =>$data_pekerjaan['no_pekerjaan'],
 'waktu'        =>date('Y/m/d'),
 'tanggal_akta' =>$input['tanggal_akta'],   
-'jenis'        =>$input['jenis'],    
+'jenis'        =>$input['jenis_utama'],
+'no_akta'      =>$input['no_akta']   
 );
 
 $this->db->insert('data_dokumen_utama',$data);    
-
+$status[] = array(
+"status"        => "success",
+"messages"      => "File utama berhasil ditambahkan"    
+);
+echo json_encode($status);
+}
+    
 }
 
 
-redirect(base_url('User2/proses_pekerjaan/'.base64_encode($data_pekerjaan['no_pekerjaan'])));
-*/}else{
+
+}else{
 redirect(404);    
 }
 }
 
 public function hapus_file_utama(){
 if($this->input->post()){
-$data = $this->db->get_where('data_dokumen_utama',array('id_data_dokumen_utama'=>$this->input->post('id_data_dokumen_utama')))->row_array();    
+$input = $this->input->post();
+
+$data = $this->M_user2->data_dokumen_utama_where($input['id_data_dokumen_utama'])->row_array();
+
 
 unlink('./berkas/'.$data['nama_folder']."/".$data['nama_file']);
 
 $this->db->delete('data_dokumen_utama',array('id_data_dokumen_utama'=>$this->input->post('id_data_dokumen_utama')));    
 
 
-$keterangan = $this->session->userdata('nama_lengkap')." Menghapus ".$data['nama_berkas'] ;
-$this->histori($keterangan);
+$status[] = array(
+"status"        => "success",
+"messages"      => "File berhasil dihapus"    
+);
+echo json_encode($status);
 
 
 
@@ -1246,6 +1257,7 @@ $input = $this->input->post();
 $data = array(
     'no_user_perizinan'  => $input['no_user'],
     'tanggal_penugasan'  => date('Y/m/d'),
+    'target_selesai_perizinan'  => NULL,
     'status_berkas'      => 'Masuk',
     'status_lihat'       => NULL
 );
@@ -1565,11 +1577,11 @@ echo "<div class='row mt-2 '>"
     . "<div class='col  text-center'>"
     . "<button onclick=tampilkan_form('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam Dokumen Milik ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam penunjang</button>";
     if($input['proses'] == 'perizinan'){
-    echo  "<button onclick=tampilkan_form_utama('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Rekam dokumen utama ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam utama</button>";
-    echo  "<button onclick=tampilkan_form_perizinan('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm' title='Buat Perizinan ".$data['nama_client']."'><span class='fa fa-pencil-alt'></span> Buat perizinan</button>";
+    echo  "<button  onclick=tampilkan_form_utama('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm ml-1' title='Rekam dokumen utama ".$data['nama_client']."'><span class='fa fa-plus'></span> Rekam utama</button>";
+    echo  "<button onclick=tampilkan_form_perizinan('".$data['no_client']."','".$input['no_pekerjaan']."'); class='btn btn-success btn-sm mt-1' title='Buat Perizinan ".$data['nama_client']."'><span class='fa fa-pencil-alt'></span> Buat perizinan</button>";
     } 
     echo "</div>"
-    . "</div>";
+    . "</div><hr>";
 }
 }else{
 redirect(404);    
@@ -1670,8 +1682,7 @@ echo "<div class='col-sm-3' >".$i['value_meta']."</div>";
 }
 
 echo '<div class="col text-center">'
-.'<button data-clipboard-action="copy" data-clipboard-target="#'.$d['no_berkas'].'" class="btn btn_copy btn-success  ml-1 btn-sm" title="Copy data ini" ><i class="far fa-copy"></i></button>'
-.'<button  class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
+.'<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$d['no_berkas'].'","'.$d['no_nama_dokumen'].'"); class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
 .'<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$d['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
 .'<button  onclick=cek_download("'.base64_encode($d['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
 echo '</div>';
@@ -1984,7 +1995,8 @@ if($this->input->post()){
 $input = $this->input->post();
 
 $data_user = $this->M_user2->data_user_perizinan('Level 3');
-echo "<select  onchange=simpan_alihan_perizinan('".$input['no_berkas_perizinan']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='form-control ".$input['no_berkas_perizinan']."  form-control-sm'>";
+echo "<select  onclick=simpan_alihan_perizinan('".$input['no_berkas_perizinan']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='form-control ".$input['no_berkas_perizinan']."  form-control-sm'>";
+
 foreach ($data_user->result_array() as $u){        
 echo "<option value=".$u['no_user'].">".$u['nama_lengkap']."</option>";
 }                
@@ -1998,7 +2010,14 @@ function tampilkan_form_utama(){
 if($this->input->post()){    
 $input = $this->input->post();
 
-echo '<div class="modal-body">
+
+echo '<div class="modal-body">';
+
+
+echo  '<div class="row">
+<div class="col-md-4">    
+<h5 class ="text-center"> Upload dokumen utama </h5>
+<hr>
 <form id="form_utama">
 <input type="hidden" value="'.$input['no_pekerjaan'].'" name="no_pekerjaan">
 <input type="hidden" value="'.$this->security->get_csrf_hash().'" name="token">
@@ -2015,19 +2034,106 @@ echo '<div class="modal-body">
 <option value="Minuta">Minuta</option>    
 <option value="Salinan">Salinan</option>    
 </select>
-
-<label>Upload</label>
+<label>Upload lampiran</label>
 <input type="file" required="" name="file_utama" id="file_utama" class="form-control form-control-sm">
+<hr>
+    <button type="button" onclick=upload_utama("'.$input['no_client'].'","'.$input['no_pekerjaan'].'"); class="btn btn-block btn-sm btn-success">Upload File <span class="fa fa-upload"></span></button>
+
 </div>
-<div class="card-footer">  
-    <button type="button" onclick="upload_utama()" class="btn btn-block btn-sm btn-success">Upload File <span class="fa fa-upload"></span></button>
-</div>
-</form>    
-';
+
+<div class="col overflow-auto" style="max-height:355px;">    
+<h5 class ="text-center">Daftar dokumen utama  yang sudah diupload</h5>
+<hr>';
+$dokumen_utama = $this->M_user2->dokumen_utama($input['no_pekerjaan']);
+
+echo '<table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
+<tr>
+<th>nama file</th>
+<th>No akta</th>
+<th>tanggal akta</th>
+<th>aksi</th>
+</tr>';
+foreach ($dokumen_utama->result_array() as $utama){ 
+echo '<tr>
+<td>'.$utama['nama_berkas'] .'</td>   
+<td>'. $utama['no_akta'] .'</td>   
+<td>'.$utama['tanggal_akta'] .'</td>   
+<td>
+<button  onclick=download_utama("'.$utama['id_data_dokumen_utama'].'"); class="btn btn-sm btn-success "><i class="fa fa-download"></i></button>
+<button  onclick=hapus_utama("'.$utama['id_data_dokumen_utama'].'","'.$input['no_client'].'","'.$input['no_pekerjaan'].'"); class="btn btn-sm btn-danger "><i class="fa fa-trash"></i></button>
+</td>   
+</tr>';
+ } 
+echo ' 
+</table>';
+echo '</div>
+</div>';
+
 }else{
 redirect(404);    
 }    
     
 }
+function form_edit_meta(){
+if($this->input->post()){
+$input = $this->input->post();
+
+//echo print_r($input);
+$data_meta = $this->M_user2->data_meta($input['no_nama_dokumen']);
+$data_meta_berkas = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));;
+//$combine = array_combine($data_meta, $data_meta_berkas);
+
+foreach ($data_meta->result_array() as $d){
+$nama_meta[] = array(
+$d['nama_meta']    
+);    
+}
+
+foreach ($data_meta_berkas->result_array() as $v){
+$val_meta[] = array(
+$v['value_meta']    
+);    
+}
+
+echo print_r(array_combine([]$nama_meta, []$val_meta));
+/*
+foreach (array_combine($data_meta,$data_meta_berkas) as $d=>$name ){
+/*INPUTAN SELECT
+if($d['jenis_inputan'] == 'select'){
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+echo "<label>".$d['nama_meta']."</label>"
+."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+foreach ($data_option->result_array() as $option){
+echo "<option>".$option['jenis_pilihan']."</option>";
+}
+echo "</select>";
+
+/*INPUTAN DATE
+}else if($d['jenis_inputan'] == 'date'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+
+/*INPUTAN NUMBER
+}else if($d['jenis_inputan'] == 'number'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+
+/*INPUTAN TEXTAREA
+}else if($d['jenis_inputan'] == 'textarea'){
+echo "<label>".$d['nama_meta']."</label>"
+. "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+}else{
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='".$d['jenis_inputan']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+}
+
+}
+echo "<hr>";
+*/    
+}else{
+redirect(404);    
+} 
+}
+
 
 }

@@ -514,6 +514,17 @@ $query = $this->db->get();
 return $query;    
 }
 
+public function data_dokumen_utama_where($id_data_dokumen_utama){
+$this->db->select("data_client.nama_folder,"
+        . "data_dokumen_utama.nama_file");
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan','left');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('data_dokumen_utama.id_data_dokumen_utama',$id_data_dokumen_utama);
+$query = $this->db->get();  
+return $query;    
+}
+
 public function data_asisten($no_user){
 $this->db->from('data_berkas_perizinan');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');

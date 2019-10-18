@@ -7,7 +7,7 @@
 <button class="btn btn-dark btn-sm float-md-right" onclick="tambah_dokumen_utama();">Tambah dokumen utama <span class="fa fa-plus"></span></button>
 </div>
     <hr>
-    <table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
+<table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
 <tr>
 <th>nama file</th>
 <th>jenis</th>
