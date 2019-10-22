@@ -2079,28 +2079,18 @@ if($this->input->post()){
 $input = $this->input->post();
 
 //echo print_r($input);
-$data_meta = $this->M_user2->data_meta($input['no_nama_dokumen']);
-$data_meta_berkas = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));;
-//$combine = array_combine($data_meta, $data_meta_berkas);
+$data_meta = $this->M_user2->data_meta($input['no_nama_dokumen'])->result();
+$data_meta_berkas = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']))->result();;
 
-foreach ($data_meta->result_array() as $d){
-$nama_meta[] = array(
-$d['nama_meta']    
-);    
-}
+$array_merged = array_merge($data_meta_berkas,$data_meta);
 
-foreach ($data_meta_berkas->result_array() as $v){
-$val_meta[] = array(
-$v['value_meta']    
-);    
-}
+foreach ($array_merged  as $d ){
+//INPUTAN SELECT
 
-echo print_r(array_combine([]$nama_meta, []$val_meta));
-/*
-foreach (array_combine($data_meta,$data_meta_berkas) as $d=>$name ){
-/*INPUTAN SELECT
-if($d['jenis_inputan'] == 'select'){
-$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+if(isset($d->jenis_inputan) ){
+    
+if($d->jenis_inputan == 'select'){
+/*$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
 echo "<label>".$d['nama_meta']."</label>"
 ."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
 foreach ($data_option->result_array() as $option){
@@ -2108,28 +2098,34 @@ echo "<option>".$option['jenis_pilihan']."</option>";
 }
 echo "</select>";
 
-/*INPUTAN DATE
-}else if($d['jenis_inputan'] == 'date'){
-echo "<label>".$d['nama_meta']."</label>"
+*///INPUTAN DATE
+}else if($d->jenis_inputan == 'date'){
+/*echo "<label>".$d['nama_meta']."</label>"
 ."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
 
-/*INPUTAN NUMBER
-}else if($d['jenis_inputan'] == 'number'){
-echo "<label>".$d['nama_meta']."</label>"
+*///INPUTAN NUMBER
+}else if($d->jenis_inputan == 'number'){
+/*echo "<label>".$d['nama_meta']."</label>"
 ."<input  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
-
-/*INPUTAN TEXTAREA
-}else if($d['jenis_inputan'] == 'textarea'){
-echo "<label>".$d['nama_meta']."</label>"
+*/
+//INPUTAN TEXTAREA
+}else if($d->jenis_inputan == 'textarea'){
+/*echo "<label>".$d['nama_meta']."</label>"
 . "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+*/}else{
+echo "<label>".$d->nama_meta."</label>"
+."<input  type='".$d->jenis_inputan."' value='' id='".str_replace(' ', '_',$d->nama_meta)."' name='".$d->nama_meta."' placeholder='".$d->nama_meta."'  maxlength='".$d->maksimal_karakter."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+echo $d->value_meta;  
+}
+
 }else{
-echo "<label>".$d['nama_meta']."</label>"
-."<input  type='".$d['jenis_inputan']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+    
 }
 
 }
-echo "<hr>";
-*/    
+
+
+    
 }else{
 redirect(404);    
 } 
