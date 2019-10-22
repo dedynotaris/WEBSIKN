@@ -1,8 +1,6 @@
 <style>
 form {
-    display: inherit;
-    width: inherit;
-    margin-bottom: 0;
+    display: contents;
 }    
 </style>    
 <nav class="navbar navbar-expand-lg navbar-light bg-theme border-bottom">

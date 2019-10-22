@@ -21,6 +21,9 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
+SET @@GLOBAL.GTID_PURGED='48f32e65-9d3b-11e9-8a3f-f44d30e97fb9:1-7241,
+70fdff0e-efa2-4f30-8019-2feea7315ee8:1-36:1000003-1000089';
+
 --
 -- Table structure for table `data_berkas`
 --
