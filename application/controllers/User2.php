@@ -2095,7 +2095,6 @@ $v['value_meta']
 );    
 }
 
-echo print_r(array_combine([]$nama_meta, []$val_meta));
 /*
 foreach (array_combine($data_meta,$data_meta_berkas) as $d=>$name ){
 /*INPUTAN SELECT
