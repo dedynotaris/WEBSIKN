@@ -1745,18 +1745,26 @@ redirect(404);
 function form_edit_meta(){
 if($this->input->post()){
 $input = $this->input->post();
-//echo print_r($input);
+
 $data_meta = $this->M_user2->data_meta($input['no_nama_dokumen']);
 $data_meta_berkas = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));
 
-$data_edit ="";
+$data = array("data");
+
 
 foreach ($data_meta_berkas->result_array() as $d_edit){
-$data_edit = array($d_edit['nama_meta']);
+$result = array_push($data,$d_edit['value_meta']);    
 }
 
-echo var_dump($data_edit);
+echo print_r($result);
 
+//echo print_r($a);
+//echo array_search("data", $data);
+
+echo "<hr>";
+
+
+/*
 foreach ($data_meta->result_array()  as $d ){
 //INPUTAN SELECT   
 if($d['jenis_inputan'] == 'select'){
@@ -1784,9 +1792,9 @@ echo "<label>".$d['nama_meta']."</label>"
 echo "<label>".$d['nama_meta']."</label>"
 ."<input  type='".$d['jenis_inputan']."' value='' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
 }
-}
+}*/
 
-echo "edit";
+//echo "edit";
     
 }else{
 redirect(404);    
