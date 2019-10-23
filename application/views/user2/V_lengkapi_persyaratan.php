@@ -305,7 +305,7 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/data_para_pihak/') ?>",
-data:"token="+token+"&proses=persyaratan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
+data:"token="+token+"&proses=persyaratan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>"+"&no_client=<?php echo $static['no_client'] ?>",
 success:function(data){
 $(".para_pihak").html(data);
 }
@@ -515,12 +515,24 @@ data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
 url :"<?php echo base_url('User2/lanjutkan_proses_perizinan') ?>",
 success:function(data){
 read_response(data);
-
 }
-
 });
 }
 
+
+function hapus_keterlibatan(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/hapus_keterlibatan') ?>",
+success:function(data){
+read_response(data);
+para_pihak();
+}
+});
+}
+5
 </script>    
 
 

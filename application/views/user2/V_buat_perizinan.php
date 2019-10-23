@@ -3,7 +3,8 @@
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
-<?php $static = $query->row_array(); ?>
+<?php $static = $query->row_array(); 
+?>
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
 HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
@@ -303,7 +304,7 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/data_para_pihak/') ?>",
-data:"token="+token+"&proses=perizinan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
+data:"token="+token+"&proses=perizinan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>"+"&no_client=<?php echo $static['no_client'] ?>",
 success:function(data){
 $(".para_pihak").html(data);
 }
@@ -404,7 +405,7 @@ $(".date").daterangepicker({
 
 
 
-function  form_edit_client(no_client){
+function  form_edit_client(no_client,no_pekerjaan){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
@@ -702,12 +703,12 @@ function download_utama(id_data_dokumen_utama){
 window.location.href="<?php echo base_url('User2/download_utama/') ?>"+btoa(id_data_dokumen_utama);
 }
 
-function form_edit_meta(no_client,no_berkas,no_berkas,no_nama_dokumen){
+function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
 $.ajax({
 type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen,
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
 $("#form"+no_nama_dokumen).html(data); 
@@ -715,6 +716,35 @@ regis_js();
 }
 });
 }
+
+function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+
+
+$.ajax({
+type:"post",
+data:$("#form"+no_nama_dokumen).serialize(),
+url:"<?php echo base_url('User2/update_meta') ?>",
+success:function(data){
+read_response(data);
+tampilkan_form(no_client,no_pekerjaan);
+}
+});
+}
+
+function hapus_keterlibatan(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/hapus_keterlibatan') ?>",
+success:function(data){
+read_response(data);
+para_pihak();
+}
+});
+
+}
+
 
 </script>    
 

@@ -624,6 +624,17 @@ $this->db->where('data_pemilik.no_pekerjaan',$no_pekerjaan);
 $query = $this->db->get();
 return $query;    
 }
+public function data_edit($no_berkas,$nama_meta){
+$this->db->select('data_meta_berkas.value_meta');
+$this->db->from('data_meta_berkas');
+$this->db->where('data_meta_berkas.no_berkas',$no_berkas);
+$this->db->where('data_meta_berkas.nama_meta',$nama_meta);
+
+$query = $this->db->get();
+return $query;    
+    
+}
+
 
 }
 ?>
