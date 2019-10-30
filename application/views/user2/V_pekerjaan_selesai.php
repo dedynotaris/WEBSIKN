@@ -28,13 +28,8 @@
 </div>
 <script type="text/javascript">
 
-function opsi_menu(id_data_pekerjaan,no_client){
-var menu = $(".opsi_menu"+id_data_pekerjaan +" option:selected").val();
-if(menu == 1){
+function lihat_berkas(no_client){
 window.location.href="<?php echo base_url('User2/lihat_berkas_client/') ?>"+no_client;
-}else if(menu == 2){
-proses_ulang(id_data_pekerjaan);    
-}
     
 }
 
@@ -46,26 +41,11 @@ type:"post",
 data:"token="+token+"&id_data_pekerjaan="+id_data_pekerjaan,
 url:"<?php echo base_url('User2/proses_ulang') ?>",
 success:function(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 2000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});
-}
-});
+read_response(data)
 refresh_table();
-
 }
-
+});
+}
 
 function refresh_table(){
 var table = $('#data_pekerjaan_selesai').DataTable();

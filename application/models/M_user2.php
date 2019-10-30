@@ -119,11 +119,9 @@ $this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_p
 $this->datatables->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
 $this->datatables->where('data_pekerjaan.status_pekerjaan','Selesai');
 $this->datatables->add_column('view',""
-        . "<select onchange=opsi_menu('$1','$2') class='form-control opsi_menu$1'>"
-        . "<option></option>"
-        . "<option value='1'>Lihat berkas client</option>"
-        . "<option value='2'>proses ulang</option>"
-        . "</select>"
+        . "<button class='btn btn-success btn-sm' onclick=proses_ulang('$1'); title='Proses ulang pekerjaan'><span class='fa fa-retweet'></span></button>"
+        . "<button class='btn btn-success btn-sm ml-1' onclick=lihat_berkas('$2'); title='lihat berkas'><span class='fa fa-eye'></span></button>"
+       
         . "",'id_data_pekerjaan, base64_encode(no_client)');
 
 return $this->datatables->generate();
@@ -618,12 +616,13 @@ $this->db->select('data_client.nama_client,'
         . 'data_client.no_client');
 $this->db->from('data_pemilik');
 $this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
-
+$this->db->order_by('data_pemilik.id_data_pemilik','ASC');
 $this->db->where('data_pemilik.no_pekerjaan',$no_pekerjaan);
 
 $query = $this->db->get();
 return $query;    
 }
+
 public function data_edit($no_berkas,$nama_meta){
 $this->db->select('data_meta_berkas.value_meta');
 $this->db->from('data_meta_berkas');

@@ -33,7 +33,10 @@
 <script src="<?php echo base_url() ?>assets/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/jquery/numeral.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/clipboard.js/dist/clipboard.js" type="text/javascript"></script>
-</head> 
+<link href="<?php echo base_url() ?>assets/select2-4.0.11/dist/css/select2.css" rel="stylesheet" type="text/css"/>
+<script src="<?php echo base_url() ?>assets/select2-4.0.11/dist/js/select2.js" type="text/javascript"></script>
+</head>
+
 
 <script type="text/javascript">
 jQuery( document ).ajaxStart(function() {
