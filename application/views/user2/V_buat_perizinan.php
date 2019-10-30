@@ -8,7 +8,7 @@
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
 HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
-<button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_perizinan('<?php echo $this->uri->segment(3) ?>');">Selesaikan pekerjaan <span class="fa fa-check"></span></button>
+<button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_selesai('<?php echo $this->uri->segment(3) ?>');">Selesaikan pekerjaan <span class="fa fa-check"></span></button>
 </div>
 
 
@@ -141,8 +141,15 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 ?> 
 </div>
 </div>    
+<form id='form_update_pekerjaan' >
 <hr>
-<button onclick=form_edit_pekerjaan("<?php echo base64_encode($static['no_pekerjaan']) ?>","<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit pekerjaan <span class="fa fa-edit"></span></button>    
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo  $this->security->get_csrf_hash()  ?>" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_pekerjaan" value="<?php echo base64_encode($static['no_pekerjaan'])?>" readonly="" class="form-control required"  accept="text/plain">           
+<label>Jenis Pekerjaan</label>
+<select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
+</form>    
+<hr>
+<button onclick=update_pekerjaan(); class="btn btn-success btn-sm btn-block">Update jenis pekerjaan <span class="fa fa-edit"></span></button>    
 </div>
 
 </div>
@@ -445,36 +452,37 @@ $(".update_client").attr("disabled", false);
 });
 }
 
-function form_edit_pekerjaan(no_pekerjaan,no_client){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$.ajax({
-type:"post",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
-url :"<?php echo base_url('User2/form_edit_pekerjaan') ?>",
-success:function(data){
-$('#data_modal').modal('show');
-$(".modal-content").html(data);
-cari_pekerjaan();
 
-}
 
+$(function(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan").select2({
+   ajax: {
+    url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+    method : "post",
+    
+    data: function (params) {
+      var query = {
+        search: params.term,
+        token: token
+      };
+
+      return query;
+    },
+   processResults: function (data) {
+      // Transforms the top-level key of the response object from 'items' to 'results'
+      var data = JSON.parse(data);
+      console.log(data.results);
+      return {
+        results: data.results
+      };
+      
+    }
+      
+    }        
+   
 });
-}
-
-function cari_pekerjaan(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-
-$("#cari_pekerjaan").autocomplete({
-minLength:0,
-delay:0,
-source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
-select:function(event, ui){
-$("#id_jenis_pekerjaan").val(ui.item.no_jenis_pekerjaan);
-}
-}
-);
-
-}
+});
 
 function update_pekerjaan(){
 $(".update_pekerjaan").attr("disabled", true);
@@ -503,12 +511,12 @@ $(".update_pekerjaan").attr("disabled", false);
 });
 }
 
-function lanjutkan_proses_perizinan(no_pekerjaan){
+function lanjutkan_proses_selesai(no_pekerjaan){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
-url :"<?php echo base_url('User2/lanjutkan_proses_perizinan') ?>",
+url :"<?php echo base_url('User2/update_selesaikan_pekerjaan') ?>",
 success:function(data){
 read_response(data);
 

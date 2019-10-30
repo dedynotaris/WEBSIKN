@@ -3,7 +3,11 @@
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
-
+    <style>
+        .is-invalid .select2-selection {
+    border-color: rgb(185, 74, 72) !important;
+        }
+    </style>
 <div class="container-fluid p-2 ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan pekerjaan dan klien baru</h5>
@@ -13,8 +17,7 @@
 <div class="col-md-6">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="form-control required"  accept="text/plain">
 <label>Jenis Pekerjaan</label>
-<input type="text" placeholder="Tentukan jenis pekerjaan" name="jenis_pekerjaan"  id="jenis_pekerjaan" class="form-control form-control-sm required"  accept="text/plain">
-<input type="hidden" name="id_jenis_pekerjaan" readonly="" id="id_jenis_pekerjaan" class="form-control required"  accept="text/plain">
+<select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
 <label>Target selesai</label>
 <input type="text" placeholder="Target selesai pekerjaan" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
 
@@ -91,18 +94,35 @@ title: 'Silahkan pilih jenis client terlebih dahulu.'
 
 
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$("#jenis_pekerjaan").autocomplete({
-minLength:0,
-delay:0,
-source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
-select:function(event, ui){
-$("#id_jenis_pekerjaan").val("");
-$("#id_jenis_pekerjaan,#id_jenis_akta_pekerjaan").val(ui.item.no_jenis_pekerjaan);
-}
-}
-);
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan").select2({
+   ajax: {
+    url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+    method : "post",
+    
+    data: function (params) {
+      var query = {
+        search: params.term,
+        token: token
+      };
+
+      return query;
+    },
+   processResults: function (data) {
+      // Transforms the top-level key of the response object from 'items' to 'results'
+      var data = JSON.parse(data);
+      console.log(data.results);
+      return {
+        results: data.results
+      };
+      
+    }
+      
+    }        
+   
 });
+});
+
 
 $(function() {
 $("input[name='target_kelar']").datepicker({
@@ -114,7 +134,9 @@ dateFormat: 'yy/mm/dd'
 function simpan_pekerjaan(){
 $(".simpan_perizinan").attr("disabled", true);
 $("#form_pekerjaan").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$("#form_pekerjaan").find(".select2").removeClass("is-invalid").addClass("is-valid");    
 $('.form-control + p').remove();
+$('.select2 + p').remove();
 $.ajax({
 url  : "<?php echo base_url("User2/create_client") ?>",
 type : "post",
@@ -124,8 +146,13 @@ var r  = JSON.parse(data);
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
 $.each(value, function(key, value){
+if(key == "jenis_pekerjaan"){
+$("#form_pekerjaan").find(".select2").addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_pekerjaan").find(".select2").removeClass("is-valid");    
+}else{
 $("#form_pekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
 $("#form_pekerjaan").find("#"+key).removeClass("is-valid");
+}
 });
 });
 }else{
