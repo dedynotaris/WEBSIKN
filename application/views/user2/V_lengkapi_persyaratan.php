@@ -334,52 +334,23 @@ url:"<?php echo base_url('User2/form_persyaratan') ?>",
 success:function(data){
 $('#data_modal').modal('show');
 $(".modal-content").html(data);
-
+data_terupload(no_client,no_pekerjaan);
+data_tersimpan(no_client,no_pekerjaan);
 regis_js();
 }
 });    
 }
 
-function upload_data(no_nama_dokumen,no_client){
-
-$("#form"+no_nama_dokumen).find(".form-control").removeClass("is-invalid").addClass("is-valid");
-$("#form"+no_nama_dokumen).find('.form-control + p').remove();
-
-
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
-formdata = new FormData();
-var x = $('#form'+no_nama_dokumen).serializeArray();
-$.each(x,function(prop,obj){
-formdata.append(obj.name, obj.value);
-});
-formdata.append("file_berkas", $("#file"+no_nama_dokumen).prop('files')[0]);
-
+function simpan_meta(no_client,no_pekerjaan,no_nama_dokumen){
 $.ajax({
 type:"post",
-data:formdata,
-processData: false,
-contentType: false,
-url:"<?php echo base_url('User2/simpan_persyaratan') ?>",
+data:$("#form"+no_nama_dokumen).serialize(),
+url:"<?php echo base_url('User2/simpan_meta') ?>",
 success:function(data){
-var r = JSON.parse(data); 
-
-if(r[0].status == 'error_validasi'){
-$.each(r[0].messages, function(key, value){
-$.each(value, function(key, value){
-$("#form"+no_nama_dokumen).find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
-$("#form"+no_nama_dokumen).find("#"+key).removeClass("is-valid");
-});
-});
-}else{
-read_response(data);
-refresh(); 
-tampilkan_form(r[0].no_client,btoa(r[0].no_pekerjaan));
-
-}    
+data_terupload(no_client,no_pekerjaan);
+data_tersimpan(no_client,no_pekerjaan);
 }
 });
-
-
 }
 
 function regis_js(){
@@ -531,22 +502,22 @@ type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
-$("#form"+no_nama_dokumen).html(data); 
+$(".data"+no_berkas).html(data).slideDown(); 
 regis_js();
 }
 });
 }
 
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+var data = $("#form"+no_berkas).serialize();
 
 
 $.ajax({
 type:"post",
-data:$("#form"+no_nama_dokumen).serialize(),
+data:$("#form"+no_berkas).serialize(),
 url:"<?php echo base_url('User2/update_meta') ?>",
 success:function(data){
-read_response(data);
-tampilkan_form(no_client,no_pekerjaan);
+$(".data"+no_berkas).slideUp().html(""); 
 }
 });
 }
@@ -586,11 +557,55 @@ processData: false,
 contentType: false,
 url:"<?php echo base_url('User2/upload_berkas') ?>",
 success:function(data){
-console.log(data);
+data_terupload($(".no_client").val(),$(".no_pekerjaan").val());
+regis_js();
 }
 });
 
 }
+
+function data_terupload(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/data_terupload') ?>",
+success:function(data){
+$(".data_terupload").html(data);    
+}
+});
+
+}
+function data_tersimpan(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/data_tersimpan') ?>",
+success:function(data){
+$(".data_tersimpan").html(data);    
+}
+});
+}
+
+function set_jenis_dokumen(no_client,no_pekerjaan,no_berkas){
+var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
+
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas,
+url:"<?php echo base_url('User2/set_jenis_dokumen') ?>",
+success:function(data){
+data_terupload(no_client,no_pekerjaan);
+}
+});
+
+}
+function cancel_edit(no_berkas){
+$( ".data"+no_berkas ).slideUp().html();
+}
+
 </script>    
 
 
