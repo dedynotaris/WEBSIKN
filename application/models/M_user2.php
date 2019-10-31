@@ -361,6 +361,22 @@ $query = $this->db->get();
 return $query;
 }
 
+public function data_berkas_where_pekerjaan($no_client,$no_pekerjaan){
+$this->db->select('data_client.nama_folder,'
+                 . 'data_berkas.nama_berkas,'
+                . 'data_berkas.no_berkas,'
+                 . 'nama_dokumen.nama_dokumen,'
+                . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_berkas.id_data_berkas');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.no_pekerjaan',$no_pekerjaan);
+$this->db->where('data_berkas.no_client',$no_client);
+$query = $this->db->get();  
+return $query;
+}
+
 
 public function hapus_berkas($id_data_berkas){
 $this->db->select('data_client.nama_folder,'
@@ -471,8 +487,8 @@ return $query;
 
 public function simpan_perizinan($data){
 $this->db->insert('data_berkas_perizinan',$data);    
-    
 }
+
 public function data_perizinan($no_pekerjaan,$no_client){
 $this->db->select("nama_dokumen.nama_dokumen,"
         . "data_berkas_perizinan.no_berkas_perizinan,"
@@ -490,8 +506,8 @@ $this->db->where('data_berkas_perizinan.no_client',$no_client);
 $this->db->where('data_pemilik.no_client',$no_client);
 $query = $this->db->get();  
 return $query;
-    
 }
+
 public function data_user_perizinan($level){
 $this->db->select("*");
 $this->db->from('sublevel_user');
@@ -502,6 +518,7 @@ $this->db->where('user.level','User');
 $query = $this->db->get();  
 return $query;
 }
+
 public function dokumen_utama($no_pekerjaan){
 $this->db->select("*");
 $this->db->from('data_dokumen_utama');
