@@ -3,13 +3,13 @@
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
-<div class="container-fluid">
+<div class="container-fluid text-theme1">
 <div class="card p-2 mt-2">
 
 <div class="row">
 <div class="col">
 <h5 align="center"><i class="fa fa-3x fa-users"></i><br>Daftar asisten yang memiliki pekerjaan</h5>
-<table class="table table-sm table-bordered  table-condensed table-striped ">
+<table class="table text-theme1 table-sm table-bordered  table-condensed table-striped ">
 <tr>
 <th> Asisten</th>   
 <th class="text-center">In</th>   

@@ -162,15 +162,32 @@ window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_c
 }
 
 function cari_jenis_pekerjaan(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$("#jenis_akta,#jenis_akta_perorangan").autocomplete({
-minLength:0,
-delay:0,
-source:'<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
-select:function(event, ui){
-$("#id_jenis_akta").val("");
-$("#id_jenis_akta,#id_jenis_akta_perorangan").val(ui.item.no_jenis_pekerjaan);
-}
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan").select2({
+   ajax: {
+    url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+    method : "post",
+    
+    data: function (params) {
+      var query = {
+        search: params.term,
+        token: token
+      };
+
+      return query;
+    },
+   processResults: function (data) {
+      // Transforms the top-level key of the response object from 'items' to 'results'
+      var data = JSON.parse(data);
+      console.log(data.results);
+      return {
+        results: data.results
+      };
+      
+    }
+      
+    }        
+   
 });
 }
 

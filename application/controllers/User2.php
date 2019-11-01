@@ -306,7 +306,7 @@ echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
     <tr>";
 foreach ($query->result_array() as $d){
-echo "<th>".$d['nama_meta']."</th>";
+echo "<th>".str_replace('_',' ',$d['nama_meta'])."</th>";
 }
 echo "<th>Aksi</th>";
 echo "</tr>"
@@ -596,7 +596,7 @@ redirect(404);
 public function buat_pekerjaan_baru(){
 if($this->input->post()){    
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_akta', 'Jenis akta', 'required');
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
 $this->form_validation->set_rules('target_kelar', 'Target selesai', 'required');
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
@@ -613,12 +613,22 @@ $data_r = array(
 'status_pekerjaan'   => "Masuk",
 'no_pekerjaan'       => $no_pekerjaan,    
 'tanggal_dibuat'     => date('Y/m/d'),
-'no_jenis_pekerjaan' => $input['id_jenis_akta'],   
+'no_jenis_pekerjaan' => $input['jenis_pekerjaan'],   
 'target_kelar'       => $input['target_kelar'],
 'no_user'            => $this->session->userdata('no_user'),    
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
 );
 $this->db->insert('data_pekerjaan',$data_r);
+
+$tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
+$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+$data_pem = array(
+'no_pemilik'    =>$no_pemilik,   
+'no_client'     =>$input['no_client'],
+'no_pekerjaan'  =>$no_pekerjaan   
+);
+$this->db->insert('data_pemilik',$data_pem);
+
 $status[] = array(
 "status"        => "success",
 "no_pekerjaan"  => base64_encode($no_pekerjaan),
@@ -1078,7 +1088,7 @@ echo "<table class='table table-sm table-striped table-bordered'>";
 echo "<thead>
     <tr>";
 foreach ($query->result_array() as $d){
-echo "<th>".$d['nama_meta']."</th>";
+echo '<th>'.str_replace('_', ' ',$d['nama_meta']).'</th>';
 }
 echo "</tr>"
 . "</thead>";
@@ -1124,7 +1134,7 @@ $input = $this->input->post();
 $data_berkas = $this->M_user2->data_berkas_where_no_client($input['no_client']);
 foreach ($data_berkas->result_array() as $d){
  
-$query     = $this->M_user2->data_perekaman($d['no_nama_dokumen'],$d['no_client']);
+$query      = $this->M_user2->data_perekaman($d['no_nama_dokumen'],$d['no_client']);
 $query2     = $this->M_user2->data_perekaman2($d['no_nama_dokumen'],$d['no_client']);
 $cols = $query->num_rows()+1;
 echo "<table class='table table-sm table-striped table-bordered'>";
@@ -1284,7 +1294,7 @@ echo "<div class=''>"
         . "<form  class='card-header mb-1' id='form_berkas'>"
         . "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
         . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
-        . "<label>Upload dokumen penunjang</label>"
+        . "<label h6>Upload dokumen penunjang</label>"
         . "<input type='file' id='file_berkas' name='file_berkas[]' multiple class='form-control form-control-sm '>"
         . "<hr>"
         . "<button type='button' onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas <span class='fa fa-upload'></span></button>"
@@ -1293,7 +1303,7 @@ echo "<div class=''>"
 echo  "</div>";
 
 echo '<div class="col">';
-echo "<div class='card-header text-center'> Dokumen Penunjang yang sudah disimpan </div>";
+echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
 echo "<div class='data_tersimpan'></div>";
 echo '</div>';
 echo  "</div>";
@@ -1317,10 +1327,11 @@ $data_client        = $this->M_user2->data_client_where(base64_encode($input['no
 $nama_persyaratan   = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
 
 echo "<div class='card-header text-center'> Data Dokumen terupload </div>";
+if($data_upload->num_rows() != 0){   
 foreach ($data_upload->result_array() as $data){
 echo "<div class='col mt-1 card-header'>";
 echo "<label>Pilih Jenis Dokumen :</label>";
-echo "<select onclick=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control form-control-sm no_berkas".$data['no_berkas']."'>";
+echo "<select onchange=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control form-control-sm no_berkas".$data['no_berkas']."'>";
 echo "<option></option>";
 
 foreach ($nama_persyaratan->result_array() as  $persyartan){     
@@ -1371,7 +1382,11 @@ echo "<hr></form>"
 }else{
 echo "</div>";    
 }
+
 }
+}else{
+    echo "<div class='text-center  text-theme1 h5'>BELUM TERDAPAT FILE YANG DI UPLOAD <br> <span class='fa fa-file fa-3x'></span></div>";    
+} 
 }else{
 redirect(404);    
 }        
@@ -1414,11 +1429,10 @@ echo '<div class="modal-content">
 </div>
 <div class="modal-body " >';
 echo '<form id="form_pekerjaan_baru">
-<label>Jenis Pekerjaan</label>
+<label>Jenis Pekerjaan</label><br>
 <input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
 <input type="hidden" name="no_client"  id="no_client" value='. base64_decode($input['no_client']).' class="form-control form-control-sm required"  accept="text/plain">
-<input type="text" name="jenis_akta"  id="jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
-<input type="hidden" name="id_jenis_akta" readonly="" id="id_jenis_akta" class="form-control form-control-sm required"  accept="text/plain">
+<select type="text" name="jenis_pekerjaan"  id="jenis_pekerjaan" class="form-control jenis_pekerjaan form-control-sm required"  accept="text/plain"></select><br>
 <label>Target selesai</label>
 <input type="text" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
 </div> 
@@ -1811,7 +1825,6 @@ $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_
 
 for($i =0; $i<count($_FILES); $i++){
   
-echo print_r($uploaded);
 
 $config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
