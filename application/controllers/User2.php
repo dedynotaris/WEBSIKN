@@ -1296,8 +1296,11 @@ echo "<div class=''>"
         . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
         . "<label h6>Upload dokumen penunjang</label>"
         . "<input type='file' id='file_berkas' name='file_berkas[]' multiple class='form-control form-control-sm '>"
+        .'<div class="progress" style="display:none">
+         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+         </div>'
         . "<hr>"
-        . "<button type='button' onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas <span class='fa fa-upload'></span></button>"
+        . "<button type='button'  onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas  </button>"
         . "</form>";
         echo '<div class=" data_terupload"></div>';
 echo  "</div>";
@@ -1771,7 +1774,7 @@ echo "<label>".$d['nama_meta']."</label>"
 
 }
 echo "<hr>"
-. "<button type='button' onclick=cancel_edit('".$input['no_berkas']."') class='btn col-md-3  btn-sm btn-danger  '>Cancel<i class='fa fa-backward'></i></button>"
+. "<button type='button' onclick=cancel_edit('".$input['no_berkas']."') class='btn col-md-3  btn-sm btn-danger  '>Cancel <i class='fas fa-arrow-up'></i></button>"
 . "<button type='button' onclick=update_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='btn col-md-8  float-right ml-1 btn-sm btn-success '>Simpan Perubahahan <i class='fa fa-save'></i></button>"
 . "</form>";
     
@@ -1821,29 +1824,34 @@ redirect(404);
 public function upload_berkas(){
 $input = $this->input->post(); 
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
-
-
+$status = array();
 for($i =0; $i<count($_FILES); $i++){
   
 
 $config['upload_path']          = './berkas/'.$data_client['nama_folder'];
-$config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
+$config['allowed_types']        = 'jpg|jpeg|png|pdf|docx|doc|xlxs|pptx|';
 $config['encrypt_name']         = FALSE;
 $config['max_size']             = 50000;
 $this->upload->initialize($config);   
 if (!$this->upload->do_upload('file_berkas'.$i)){  
 $status[] = array(
 "status"     => "error",
-"messages"      => $this->upload->display_errors()    
+"messages"      => $this->upload->display_errors(),    
+'name_file'     => $this->upload->data('file_name')
 );
-echo json_encode($status);
 }else{
 $lampiran = $this->upload->data('file_name');    
 $this->simpan_data_persyaratan($input,$lampiran);
+$status[] = array(
+"status"        => "success",
+"messages"      => "File berhasil di upload",
+'name_file'     =>$this->upload->data('file_name')
+);
 
-echo "berhasil";
 }
 }
+echo json_encode($status);
+
 }
 
 public function simpan_data_persyaratan($input,$lampiran){

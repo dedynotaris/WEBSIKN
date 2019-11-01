@@ -725,6 +725,7 @@ $(".data"+no_berkas).slideUp().html("");
 }
 });
 }
+
 function upload_file(){
 var formData = new FormData();
 var files = $("#file_berkas")[0].files;;
@@ -738,21 +739,51 @@ for (var i = 0; i < files.length; i++) {
 formData.append("file_berkas"+i, $("#file_berkas").prop('files')[i]);
 }
 
-console.log(formData);
 $.ajax({
 type:"post",
 data:formData,
+xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){
+                    myXhr.upload.addEventListener('progress',progress, false);
+                }
+                return myXhr;
+        },
 processData: false,
 contentType: false,
 url:"<?php echo base_url('User2/upload_berkas') ?>",
 success:function(data){
+    var z = JSON.parse(data);
+for (i=0; i<z.length; i++){
+    
+if(z[i].status == "error"){
+toastr.error(z[i].messages, z[i].name_file);    
+}else if(z[i].status == "success"){
+toastr.success(z[i].messages, z[i].name_file);    
+}
+}
 $("#file_berkas").val("");
 data_terupload($(".no_client").val(),$(".no_pekerjaan").val());
 regis_js();
+$(".progress").hide();
 }
 });
 }
+function progress(e){
+    if(e.lengthComputable){
+        var max = e.total;
+        var current = e.loaded;
 
+        var Percentage = (current * 100)/max;
+        console.log(Percentage);
+        $(".progress").show();
+        $(".progress-bar").css({'width': +Percentage+'%'});
+
+        if(Percentage >= 100){
+        
+       }
+    }  
+ }
 function data_terupload(no_client,no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
