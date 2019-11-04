@@ -1290,7 +1290,7 @@ echo '
 
 echo "<div class=''>"
 . "<div class='row'>"
-. "<div class='col-md-5  '>"
+. "<div class='col-md-5 mx-auto  '>"
         . "<form  class='card-header mb-1' id='form_berkas'>"
         . "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
         . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
@@ -1302,13 +1302,17 @@ echo "<div class=''>"
         . "<hr>"
         . "<button type='button'  onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas  </button>"
         . "</form>";
-        echo '<div class=" data_terupload"></div>';
+echo  "</div>";
 echo  "</div>";
 
-echo '<div class="col">';
-echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
+echo '<div class="row">';
+echo '<div class="col data_terupload"></div>';
+
+
+/*echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
 echo "<div class='data_tersimpan'></div>";
-echo '</div>';
+echo '</div>';*/
+
 echo  "</div>";
 
 echo '</div>';
@@ -1323,25 +1327,40 @@ redirect(404);
 public function data_terupload(){
 if($this->input->post()){    
 $input              = $this->input->post();    
-$data_upload        = $this->db->get_where('data_berkas',array('no_client'=>$input['no_client'],'no_pekerjaan'=> base64_decode($input['no_pekerjaan']),'status_berkas'=>'upload'));
+$data_upload        = $this->db->get_where('data_berkas',array('no_client'=>$input['no_client'],'no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 
 
 $data_client        = $this->M_user2->data_client_where(base64_encode($input['no_client']))->row_array();
 $nama_persyaratan   = $this->M_user2->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
 
-echo "<div class='card-header text-center'> Data Dokumen terupload </div>";
+echo "<div class='row card-header mt-1 text-center'>"
+. "<div class='col-md-1'>No</div>"
+. "<div class='col'>Nama dokumen</div>"
+. "<div class='col'>Jenis dokumen</div>"
+. "<div class='col'>Aksi</div>"
+. "</div>";
+$n=1;
 if($data_upload->num_rows() != 0){   
 foreach ($data_upload->result_array() as $data){
-echo "<div class='col mt-1 card-header'>";
-echo "<label>Pilih Jenis Dokumen :</label>";
-echo "<select onchange=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control form-control-sm no_berkas".$data['no_berkas']."'>";
+echo "<div class='row mt-1 card-header'>";
+echo "<div class='col-md-1 text-center'>".$n++."</div>";
+echo "<div class='col'>".substr($data['nama_berkas'],0,30)."</div>";
+echo "<div class='col'><select onchange=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control form-control-sm no_berkas".$data['no_berkas']."'>";
 echo "<option></option>";
 
 foreach ($nama_persyaratan->result_array() as  $persyartan){     
 echo "<option "; if($data['no_nama_dokumen'] == $persyartan['no_nama_dokumen']){ echo "selected ";}  echo "value='".$persyartan['no_nama_dokumen']."'>".$persyartan['nama_dokumen']."</option>";
 }
-echo "</select>";
+echo "</select></div>";
 
+echo '<div class="col text-center">'
+.'<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
+.'<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
+.'<button  onclick=cek_download("'.base64_encode($data['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
+echo '</div>';
+
+
+/*
 $data_meta = $this->M_user2->data_meta($data['no_nama_dokumen']);
 echo "<form action='#' id='form".$data['no_nama_dokumen']."'>";
 echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="">'; 
@@ -1384,40 +1403,18 @@ echo "<hr></form>"
 . "<button type='button' onclick=simpan_meta('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_nama_dokumen']."') class='btn btn-sm btn-success btn-block '>Simpan <i class='fa fa-save'></i></button></div>";
 }else{
 echo "</div>";    
-}
+}*/
 
+echo "</div>";    
 }
 }else{
-    echo "<div class='text-center  text-theme1 h5'>BELUM TERDAPAT FILE YANG DI UPLOAD <br> <span class='fa fa-file fa-3x'></span></div>";    
+echo "<div class='text-center  text-theme1 h5'>BELUM TERDAPAT FILE YANG DI UPLOAD <br> <span class='fa fa-file fa-3x'></span></div>";    
 } 
 }else{
 redirect(404);    
 }        
 }
 
-public function data_tersimpan(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data_upload = $this->M_user2->data_berkas_where_pekerjaan($input['no_client'], base64_decode($input['no_pekerjaan']));
-
-
-foreach ($data_upload->result_array() as $data){    
-echo "<div class='row mt-1 card-header'>";
-echo "<div class='col'>".$data['nama_dokumen']."</div>";
-echo '<div class="col-md-3 text-center">'
-.'<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>'
-.'<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
-.'<button  onclick=cek_download("'.base64_encode($data['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
-echo '</div>';
-echo "</div><div class='col data".$data['no_berkas']."'></div>";
-}
-
-}else{
-redirect(404);    
-}        
-    
-}
 
 public function form_tambah_pekerjaan(){
 if($this->input->post()){    
@@ -1449,6 +1446,7 @@ echo '<form id="form_pekerjaan_baru">
 redirect(404);    
 }
 }
+
 function form_edit_client(){
 if($this->input->post()){    
 $input = $this->input->post();    
@@ -1865,8 +1863,7 @@ $data_berkas = array(
 'no_nama_dokumen'   => NULL,
 'nama_berkas'       => $lampiran,
 'Pengupload'        => $this->session->userdata('no_user'),
-'tanggal_upload'    => date('Y/m/d' ),
-'status_berkas'     => 'upload'
+'tanggal_upload'    => date('Y/m/d' )
 );    
 $this->db->insert('data_berkas',$data_berkas); 
 }
