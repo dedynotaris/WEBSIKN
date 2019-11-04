@@ -1290,7 +1290,7 @@ echo '
 
 echo "<div class=''>"
 . "<div class='row'>"
-. "<div class='col-md-5  '>"
+. "<div class='col  '>"
         . "<form  class='card-header mb-1' id='form_berkas'>"
         . "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
         . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
@@ -1305,10 +1305,10 @@ echo "<div class=''>"
         echo '<div class=" data_terupload"></div>';
 echo  "</div>";
 
-echo '<div class="col">';
+/*echo '<div class="col">';
 echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
 echo "<div class='data_tersimpan'></div>";
-echo '</div>';
+echo '</div>';*/
 echo  "</div>";
 
 echo '</div>';
@@ -1359,7 +1359,6 @@ foreach ($data_option->result_array() as $option){
 echo "<option>".$option['jenis_pilihan']."</option>";
 }
 echo "</select>";
-
 //INPUTAN DATE
 }else if($d['jenis_inputan'] == 'date'){
 echo "<label>".$d['nama_meta']."</label>"
