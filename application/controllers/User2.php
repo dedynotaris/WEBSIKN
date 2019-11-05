@@ -1290,11 +1290,8 @@ echo '
 
 echo "<div class=''>"
 . "<div class='row'>"
-<<<<<<< HEAD
 . "<div class='col  '>"
-=======
 . "<div class='col-md-5 mx-auto  '>"
->>>>>>> 85cf12a4c7ab51516e36ef6c1b98865bf97fea0c
         . "<form  class='card-header mb-1' id='form_berkas'>"
         . "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
         . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
@@ -1313,17 +1310,14 @@ echo '<div class="row">';
 echo '<div class="col data_terupload"></div>';
 
 
-<<<<<<< HEAD
 /*echo '<div class="col">';
 echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
 echo "<div class='data_tersimpan'></div>";
 echo '</div>';*/
-=======
 /*echo "<div class='card-header text-center text-theme1 h5'> Dokumen Penunjang yang sudah disimpan  </div>";
 echo "<div class='data_tersimpan'></div>";
 echo '</div>';*/
 
->>>>>>> 85cf12a4c7ab51516e36ef6c1b98865bf97fea0c
 echo  "</div>";
 
 echo '</div>';
