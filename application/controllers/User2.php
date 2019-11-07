@@ -1443,6 +1443,7 @@ echo "</div>"
 redirect(404);  
 }
 }
+
 public function update_client(){
 if($this->input->post()){    
 $input = $this->input->post();
@@ -1509,6 +1510,7 @@ echo json_encode($status);
     //redirect(404);    
 }    
 }
+
 function form_data_perizinan(){
 if($this->input->post()){
 $input              = $this->input->post();
@@ -1609,6 +1611,7 @@ echo  "</select>";
 redirect(404);    
 }    
 }
+
 function tampilkan_form_utama(){
 if($this->input->post()){    
 $input = $this->input->post();
@@ -1780,6 +1783,7 @@ echo json_encode($status);
 redirect(404);    
 }    
 }
+
 public function upload_berkas(){
 $input = $this->input->post(); 
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
@@ -1808,7 +1812,6 @@ $status[] = array(
 );
 }
 }
-
 echo json_encode($status);
 }
 
@@ -1865,5 +1868,7 @@ redirect(404);
 } 
     
 }
+
+
 
 }

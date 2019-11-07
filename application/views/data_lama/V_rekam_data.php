@@ -1,12 +1,14 @@
-<body onload="refresh();">
-<?php  $this->load->view('umum/V_sidebar_data_lama'); ?>
+<body onload="refresh()">
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_data_lama'); ?>
-<?php $static = $query->row_array(); ?>
-
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
+<?php $this->load->view('umum/user2/V_data_user2'); ?>
+<?php $static = $query->row_array(); 
+?>
 <div class="container text-theme1">    
 <div class="card-header text-theme1 mt-2 mb-2 text-center">
-LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
+HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
+<button class="btn btn-success btn-sm float-md-right "  onclick="lanjutkan_proses_selesai('<?php echo $this->uri->segment(3) ?>');">Selesaikan pekerjaan <span class="fa fa-check"></span></button>
 </div>
 
 
@@ -78,6 +80,8 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <?php echo $static['jenis_kontak'] ?>        
 </div>
 </div>
+    <hr>
+    <button onclick=form_edit_client("<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit client <span class="fa fa-edit"></span></button>    
 </div>
 
 <div class="col card-header ml-1">
@@ -100,6 +104,52 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 
+<div class="row">
+<div class="col">
+<label>Tanggal dibuat pekerjaan</label><br>    
+
+</div>
+<div class="col"> :
+<?php echo $static['tanggal_dibuat'] ?>        
+</div>
+</div>
+<div class="row">
+<div class="col">
+<label>Target selesai pekerjaan</label><br>    
+
+</div>
+<div class="col"> :
+    
+<?php
+if($static['target_kelar']  == date('Y/m/d')){
+echo "<b><span class='text-warning'>Hari ini</span></b>";    
+}else if($static['target_kelar']  <= date('Y/m/d')){
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($static['target_kelar'] );
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-danger'> Terlewat ".$numberDays." Hari </span></b>" ;
+}else{
+$startTimeStamp = strtotime(date('Y/m/d'));
+$endTimeStamp = strtotime($static['target_kelar'] );
+$timeDiff = abs($endTimeStamp - $startTimeStamp);
+$numberDays = $timeDiff/86400; 
+$numberDays = intval($numberDays);
+echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
+}
+?> 
+</div>
+</div>    
+<form id='form_update_pekerjaan' >
+<hr>
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo  $this->security->get_csrf_hash()  ?>" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_pekerjaan" value="<?php echo base64_encode($static['no_pekerjaan'])?>" readonly="" class="form-control required"  accept="text/plain">           
+<label>Jenis Pekerjaan</label>
+<select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
+</form>    
+<hr>
+<button onclick=update_pekerjaan(); class="btn btn-success btn-sm btn-block">Update jenis pekerjaan <span class="fa fa-edit"></span></button>    
 </div>
 
 </div>
@@ -109,7 +159,7 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 <div class=" card-header" >
 <div class="row">
-<div class="col-md-6">    
+<div class="col-md-5">    
 <div class="col ">
 <form id="form_pihak_terlibat">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
@@ -145,7 +195,6 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>    
 <hr>
 <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat</button>
-
 </div>
 
 <div class="col text-theme1 ">
@@ -164,10 +213,6 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
     
-    
-    
-</body>
-    
 <!--------------- data modal --------------->    
 <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -176,6 +221,9 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 </div>
 </div>
+
+    
+    
 <script type="text/javascript">
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
@@ -185,13 +233,12 @@ type:"post",
 url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
 data:"token="+token+"&id_data_berkas="+id_data_berkas,
 success:function(data){
-tampilkan_form(no_client,no_pekerjaan);
+data_terupload(no_client,no_pekerjaan);    
 read_response(data);
 }
 });    
     
-}    
-    
+}        
     
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
@@ -251,7 +298,7 @@ $("#form_pihak_terlibat").find("#"+key).removeClass("is-valid");
 }else{
 read_response(data);
 $("#form_pihak_terlibat").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
-
+refresh();
 }
 }
 
@@ -264,7 +311,7 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 $.ajax({
 type:"post",
 url:"<?php echo base_url('Data_lama/data_para_pihak/') ?>",
-data:"token="+token+"&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>",
+data:"token="+token+"&proses=perizinan&no_pekerjaan="+"<?php echo $this->uri->segment(3) ?>"+"&no_client=<?php echo $static['no_client'] ?>",
 success:function(data){
 $(".para_pihak").html(data);
 }
@@ -274,6 +321,286 @@ $(".para_pihak").html(data);
 function refresh(){
 para_pihak();
 regis_js();
+}
+
+
+function regis_js(){
+$(".Desimal").keyup(function(){
+var string = numeral(this.value).format('0,0');
+$("#"+this.id).val(string);
+});
+$(".Bulat").keyup(function(){
+var string = this.value;
+$("#"+this.id).val(string);
+});
+
+$(function() {
+$(".date").daterangepicker({ 
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    changeMonth: false,
+   changeYear: false,
+    maxYear: parseInt(moment().format('YYYY'),10),
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+});
+
+}
+
+
+
+function  form_edit_client(no_client,no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/form_edit_client') ?>",
+data:"token="+token+"&no_client="+no_client,
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+}
+});
+}
+
+function update_client(){
+$(".update_client").attr("disabled", true);
+$("#form_update_client").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("Data_lama/update_client") ?>",
+type : "post",
+data : $("#form_update_client").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_update_client").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_client").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+$('#data_modal').modal('hide');
+}
+$(".update_client").attr("disabled", false);
+}
+
+});
+}
+
+
+
+$(function(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan").select2({
+   ajax: {
+    url: '<?php echo site_url('Data_lama/cari_jenis_pekerjaan') ?>',
+    method : "post",
+    
+    data: function (params) {
+      var query = {
+        search: params.term,
+        token: token
+      };
+
+      return query;
+    },
+   processResults: function (data) {
+      // Transforms the top-level key of the response object from 'items' to 'results'
+      var data = JSON.parse(data);
+      console.log(data.results);
+      return {
+        results: data.results
+      };
+      
+    }
+      
+    }        
+   
+});
+});
+
+function update_pekerjaan(){
+$(".update_pekerjaan").attr("disabled", true);
+$("#form_update_pekerjaan").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+url  : "<?php echo base_url("Data_lama/update_pekerjaan") ?>",
+type : "post",
+data : $("#form_update_pekerjaan").serialize(),
+success: function(data) {
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_update_pekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_update_pekerjaan").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+$('#data_modal').modal('hide');
+}
+$(".update_pekerjaan").attr("disabled", false);
+}
+
+});
+}
+
+function lanjutkan_proses_selesai(no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
+url :"<?php echo base_url('Data_lama/update_selesaikan_pekerjaan') ?>",
+success:function(data){
+read_response(data);
+
+}
+
+});
+}
+
+function tampilkan_form_utama(no_client,no_pekerjaan){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/tampilkan_form_utama') ?>",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){
+$(".modal-content").html(data);    
+$('#data_modal').modal('show');
+tanggal_akta();
+
+}
+});
+}
+
+
+
+function hapus_perizinan(no_berkas_perizinan,no_client,no_pekerjaan){
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",	
+url:"<?php echo base_url('Data_lama/hapus_perizinan') ?>",	
+data:"token="+token+"&no_berkas_perizinan="+no_berkas_perizinan,
+success:function(data){	
+read_response(data);
+tampilkan_form_perizinan(no_client,no_pekerjaan);
+}
+});
+}
+
+
+
+
+function tanggal_akta(){
+$("input[name=tanggal_akta]").daterangepicker({
+    singleDatePicker: true,
+    dateFormat: 'yy/mm/dd',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10),
+    "locale": {
+        "format": "YYYY/MM/DD",
+        "separator": "-",
+      }
+});
+}
+
+
+
+function upload_utama(no_client,no_pekerjaan){
+
+$("#form_utama").find(".form-control").removeClass("is-invalid").addClass("is-valid");
+$("#form_utama").find('.form-control + p').remove();
+
+
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+formdata = new FormData();
+var x = $('#form_utama').serializeArray();
+$.each(x,function(prop,obj){
+formdata.append(obj.name, obj.value);
+});
+formdata.append("file_utama", $("#file_utama").prop('files')[0]);
+
+$.ajax({
+type:"post",
+data:formdata,
+processData: false,
+contentType: false,
+url:"<?php echo base_url('Data_lama/upload_utama') ?>",
+success:function(data){
+var r = JSON.parse(data); 
+
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#form_utama").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#form_utama").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+read_response(data);
+tampilkan_form_utama(no_client,no_pekerjaan);
+}    
+}
+});
+}
+
+
+function hapus_utama(id_data_dokumen_utama,no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+Swal.fire({
+title: 'Anda yakin',
+text: "file akan dihapus secara permanen",
+type: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya Hapus'
+}).then((result) => {
+if (result.value) {
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_dokumen_utama="+id_data_dokumen_utama,
+url:"<?php echo base_url('Data_lama/hapus_file_utama') ?>",
+success:function(data){
+read_response(data);
+tampilkan_form_utama(no_client,no_pekerjaan);
+
+}
+});
+}
+})
+
+}
+
+function download_utama(id_data_dokumen_utama){
+window.location.href="<?php echo base_url('Data_lama/download_utama/') ?>"+btoa(id_data_dokumen_utama);
+}
+
+
+
+function hapus_keterlibatan(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('Data_lama/hapus_keterlibatan') ?>",
+success:function(data){
+read_response(data);
+para_pihak();
+}
+});
+
 }
 
 
@@ -287,77 +614,144 @@ url:"<?php echo base_url('Data_lama/form_persyaratan') ?>",
 success:function(data){
 $('#data_modal').modal('show');
 $(".modal-content").html(data);
-
-
+data_terupload(no_client,no_pekerjaan);
 regis_js();
 }
 });    
 }
 
-function upload_data(no_nama_dokumen,no_client){
-
-$("#form"+no_nama_dokumen).find(".form-control").removeClass("is-invalid").addClass("is-valid");
-$("#form"+no_nama_dokumen).find('.form-control + p').remove();
-
-
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
-formdata = new FormData();
-var x = $('#form'+no_nama_dokumen).serializeArray();
-$.each(x,function(prop,obj){
-formdata.append(obj.name, obj.value);
+function simpan_meta(no_client,no_pekerjaan,no_nama_dokumen){
+$.ajax({
+type:"post",
+data:$("#form"+no_nama_dokumen).serialize(),
+url:"<?php echo base_url('Data_lama/simpan_meta') ?>",
+success:function(data){
+data_terupload(no_client,no_pekerjaan);
+}
 });
-formdata.append("file_berkas", $("#file"+no_nama_dokumen).prop('files')[0]);
+}
+function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
 $.ajax({
 type:"post",
-data:formdata,
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('Data_lama/form_edit_meta') ?>",
+success:function(data){
+$(".data"+no_berkas).slideDown().after(data); 
+$(".btn_edit"+no_berkas).hide();  
+regis_js();
+}
+});
+}
+function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+var data = $("#form"+no_berkas).serialize();
+
+$.ajax({
+type:"post",
+data:$("#form"+no_berkas).serialize(),
+url:"<?php echo base_url('Data_lama/update_meta') ?>",
+success:function(data){
+$(".data_edit"+no_berkas).slideUp().html(""); 
+$(".btn_edit"+no_berkas).show();  
+read_response(data);
+}
+});
+
+}
+
+function upload_file(){
+var formData = new FormData();
+var files = $("#file_berkas")[0].files;;
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+
+formData.append("token", token);
+formData.append("no_client", $(".no_client").val());
+formData.append("no_pekerjaan", $(".no_pekerjaan").val());
+
+for (var i = 0; i < files.length; i++) {
+formData.append("file_berkas"+i, $("#file_berkas").prop('files')[i]);
+}
+
+$.ajax({
+type:"post",
+data:formData,
+xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){
+                    myXhr.upload.addEventListener('progress',progress, false);
+                }
+                return myXhr;
+        },
 processData: false,
 contentType: false,
-url:"<?php echo base_url('Data_lama/simpan_persyaratan') ?>",
+url:"<?php echo base_url('Data_lama/upload_berkas') ?>",
 success:function(data){
-var r = JSON.parse(data); 
-console.log(r);
-if(r[0].status == 'error_validasi'){
-$.each(r[0].messages, function(key, value){
-$.each(value, function(key, value){
-$("#form"+no_nama_dokumen).find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
-$("#form"+no_nama_dokumen).find("#"+key).removeClass("is-valid");
+    var z = JSON.parse(data);
+for (i=0; i<z.length; i++){
+    
+if(z[i].status == "error"){
+toastr.error(z[i].messages, z[i].name_file);    
+}else if(z[i].status == "success"){
+toastr.success(z[i].messages, z[i].name_file);    
+}
+}
+$("#file_berkas").val("");
+data_terupload($(".no_client").val(),$(".no_pekerjaan").val());
+regis_js();
+$(".progress").hide();
+}
 });
+}
+function progress(e){
+    if(e.lengthComputable){
+        var max = e.total;
+        var current = e.loaded;
+
+        var Percentage = (current * 100)/max;
+        console.log(Percentage);
+        $(".progress").show();
+        $(".progress-bar").css({'width': +Percentage+'%'});
+
+        if(Percentage >= 100){
+        
+       }
+    }  
+ }
+function data_terupload(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('Data_lama/data_terupload') ?>",
+success:function(data){
+$(".data_terupload").html(data);    
+}
 });
-}else{
-read_response(data);
-tampilkan_form(r[0].no_client,btoa(r[0].no_pekerjaan));
-}    
+}
+
+
+
+function set_jenis_dokumen(no_client,no_pekerjaan,no_berkas){
+var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
+
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas,
+url:"<?php echo base_url('Data_lama/set_jenis_dokumen') ?>",
+success:function(data){
+data_terupload(no_client,no_pekerjaan);
 }
 });
 
-
+}
+function cancel_edit(no_berkas){
+$(".data_edit"+no_berkas ).slideUp().html();
+$(".btn_edit"+no_berkas).show();  
 }
 
-function regis_js(){
-$(".Desimal").keyup(function(){
-var string = numeral(this.value).format('0,0');
-$("#"+this.id).val(string);
-});
-$(".Bulat").keyup(function(){
-var string = numeral(this.value).format('0');
-$("#"+this.id).val(string);
-});
+</script>    
 
-$(function() {
-$(".date").daterangepicker({ 
-    singleDatePicker: true,
-    dateFormat: 'yy/mm/dd',
-    singleDatePicker: true,
-    showDropdowns: true,
-    minYear: 1901,
-    maxYear: parseInt(moment().format('YYYY'),10),
-    "locale": {
-        "format": "YYYY/MM/DD",
-        "separator": "-",
-      }
-});
-});
 
-}
-</script>   
+
