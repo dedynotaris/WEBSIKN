@@ -5,7 +5,7 @@
 <span class="navbar-toggler-icon"></span>
 </button>
 
- App Management       
+ App Management Document      
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
 <li class="nav-item active">
@@ -25,7 +25,7 @@ Pilihan
 </nav>
 <div class="container">
     <div class="row text-center mt-5 pt-5" style="color: #116466 ;"  >
-        <div class="col"><p><h3 style="color:#FF8C00;">Selamat Datang <?php echo $this->session->userdata("nama_lengkap"); ?></h3>Aplikasi Management Tempat penyimpanan dokumen  untuk mempermudah anda dalam mengelola dan mencari dokumen </p></div>
+        <div class="col"><p><h3 style="color:#FF8C00;">Selamat Datang <?php echo $this->session->userdata("nama_lengkap"); ?></h3><h5>Aplikasi Management Document Tempat penyimpanan dokumen  untuk mempermudah anda dalam mengelola dan mencari dokumen<h5> </p></div>
     </div>
     <br><br>
     <?php $status_app = $status_aplikasi->row_array(); ?>

@@ -60,7 +60,7 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
+  background-color:aliceblue;
 }
 
 [tabindex="-1"]:focus {
@@ -4121,7 +4121,7 @@ input[type="button"].btn-block {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #fff;
-  background-color:#FF8C00 !important;
+  background-color: goldenrod;
   border-color: #dee2e6 #dee2e6 #fff;
 }
 
@@ -4173,7 +4173,7 @@ input[type="button"].btn-block {
   align-items: center;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.39rem 1rem;
 }
 
 .navbar > .container,
@@ -5335,7 +5335,7 @@ a.badge-dark:hover, a.badge-dark:focus {
 .list-group-item-action:hover, .list-group-item-action:focus {
   color: #495057;
   text-decoration: none;
-  background-color: #FF8C00;
+  background-color: goldenrod;
 }
 
 .list-group-item-action:active {
@@ -6449,14 +6449,14 @@ button.bg-danger:focus {
   background-color: #f8f9fa !important;
 }
 .bg-theme {
-    background-color: #116466 !important;
+    background-color: darkcyan;
     color:#fff;
     //background-color: #2F4F4F !important;
    }
 
 .bg-theme2 {
     color:#fff;
-    background-color: #2F4F4F !important;
+    background-color:darkcyan;
    }
 a.bg-light:hover, a.bg-light:focus,
 button.bg-light:hover,
@@ -9900,10 +9900,10 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .bg_data_bawah{
-background-color: #2F4F4F;    
+background-color: darkcyan;    
 }
 .bg_data{
-background-color: #FF8C00;  
+background-color: goldenrod;  
 color:#fff;
 margin-top:3%;
 text-decoration:none;  
@@ -10049,10 +10049,10 @@ top:0.9em;
     width: 20rem;   
 }
 .bg_login{
-background-color:#696969;
+background-color:aliceblue;
 width: 100wh;
 height: 90vh;
-color: #DAA520;
+color: #000000;
 background-size: 400% 400%;
 -webkit-animation: Gradient 15s ease infinite;
 -moz-animation: Gradient 15s ease infinite;

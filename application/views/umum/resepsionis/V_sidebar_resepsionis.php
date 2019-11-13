@@ -1,8 +1,8 @@
 <div class="d-flex <?php if($this->session->userdata('toggled') == 'Aktif'){ echo "toggled"; } ?>" id="wrapper">
 <div class="bg-theme2" id="sidebar-wrapper">
 <div style="" class="sidebar-heading ">
-<div class="text-center" style="padding:0.890rem 1rem;">
-App Management
+<div class="text-center" style="padding:0.890rem 1rem; background-color:#2F4F4F; font-size:16px">
+App Management Document
    
 </div>
 

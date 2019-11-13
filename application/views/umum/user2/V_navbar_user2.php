@@ -8,7 +8,7 @@ form {
 <nav class="navbar navbar-expand-lg navbar-light bg-theme border-bottom">
 <div class="row col-md-12 align-items-center">
 <div class="col-xs-2">
-<button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> Menu</button>
+<button class="btn btn-success" id="menu-toggle"><span id="z" class="fa fa-chevron-left"> </span> </button>
 </div>
 <div class="col mx-auto ">
 <div class="input-group">
