@@ -61,10 +61,6 @@ $query = $this->db->get();
 return $query;
 }
 
-public function data_client_where($no_client){
-$query = $this->db->get_where('data_client',array('no_client'=> base64_decode($no_client)));
-return $query;
-}
 
 function json_data_berkas(){
     
@@ -379,6 +375,11 @@ $query = $this->db->get();
 return $query;
 }
 
+
+public function data_client_where($no_client){
+$query = $this->db->get_where('data_client',array('no_client'=> base64_decode($no_client)));
+return $query;
+}
 public function hapus_berkas($id_data_berkas){
 $this->db->select('data_client.nama_folder,'
         . 'data_berkas.nama_berkas,'
@@ -391,6 +392,25 @@ $query = $this->db->get();
 
 return $query;
 }
+public function data_edit($no_berkas,$nama_meta){
+$this->db->select('data_meta_berkas.value_meta');
+$this->db->from('data_meta_berkas');
+$this->db->where('data_meta_berkas.no_berkas',$no_berkas);
+$this->db->where('data_meta_berkas.nama_meta',$nama_meta);
 
+$query = $this->db->get();
+return $query;    
+    
+}
+public function data_dokumen_utama_where($id_data_dokumen_utama){
+$this->db->select("data_client.nama_folder,"
+        . "data_dokumen_utama.nama_file");
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan','left');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('data_dokumen_utama.id_data_dokumen_utama',$id_data_dokumen_utama);
+$query = $this->db->get();  
+return $query;    
+}
 }
 ?>

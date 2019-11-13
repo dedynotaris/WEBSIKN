@@ -232,6 +232,7 @@ type:"post",
 url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
 data:"token="+token+"&id_data_berkas="+id_data_berkas,
 success:function(data){
+data_terupload(no_client,no_pekerjaan);    
 read_response(data);
 }
 });    
@@ -498,16 +499,6 @@ regis_js();
 });    
 }
 
-function simpan_meta(no_client,no_pekerjaan,no_nama_dokumen){
-$.ajax({
-type:"post",
-data:$("#form"+no_nama_dokumen).serialize(),
-url:"<?php echo base_url('User2/simpan_meta') ?>",
-success:function(data){
-data_terupload(no_client,no_pekerjaan);
-}
-});
-}
 
 function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -517,24 +508,29 @@ type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
-$(".data"+no_berkas).html(data).slideDown(); 
+$(".data"+no_berkas).slideDown().after(data); 
+$(".btn_edit"+no_berkas).hide();  
 regis_js();
 }
 });
 }
+
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
 var data = $("#form"+no_berkas).serialize();
-
 
 $.ajax({
 type:"post",
 data:$("#form"+no_berkas).serialize(),
 url:"<?php echo base_url('User2/update_meta') ?>",
 success:function(data){
-$(".data"+no_berkas).slideUp().html(""); 
+$(".data_edit"+no_berkas).slideUp().html(""); 
+$(".btn_edit"+no_berkas).show();  
+read_response(data);
 }
 });
+
 }
+
 function upload_file(){
 var formData = new FormData();
 var files = $("#file_berkas")[0].files;;
@@ -572,12 +568,13 @@ toastr.success(z[i].messages, z[i].name_file);
 }
 }
 $("#file_berkas").val("");
-data_terupload($(".no_client").val(),$(".no_pekerjaan").val());
 regis_js();
 $(".progress").hide();
+data_terupload($(".no_client").val(),$(".no_pekerjaan").val());
 }
 });
 }
+
 function progress(e){
     if(e.lengthComputable){
         var max = e.total;
@@ -622,7 +619,8 @@ data_terupload(no_client,no_pekerjaan);
 
 }
 function cancel_edit(no_berkas){
-$( ".data"+no_berkas ).slideUp().html();
+$(".data_edit"+no_berkas ).slideUp().html();
+$(".btn_edit"+no_berkas).show();  
 }
 
 

@@ -1,23 +1,22 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan data arsip</h5>
 </div>
-    
-    
-    <div class="row card-header m-2">
+
+
 <form id="form_data_lama">
-        <div class="col-md-6">    
-<label>Nama Pekerjaan</label>
-<input type="text" placeholder="Nama Pekerjaan" name="jenis_pekerjaan" id="jenis_pekerjaan" class="form-control form-control-sm jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
-<input type="hidden" name="no_jenis_pekerjaan" class="form-control form-control-sm no_jenis_pekerjaan required" accept="text/plain" aria-describedby="basic-addon2">
+<div class="row card-header m-2">
+<div class="col">    
+<label>Jenis Pekerjaan</label>
+<select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
 
 <label>Nama Notaris</label>
 <select onchange="tambah_no_user();" name="no_user_pembuat"  id="no_user_pembuat" class="form-control form-control-sm no_user_pembuat required" accept="text/plain">
-    <option></option>
+<option></option>
 <?php 
 foreach ($nama_notaris->result_array() as $nama){
 echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";    
@@ -47,7 +46,7 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 </select>  
 </div>
 
-<div class="col-md-6">
+<div class="col">
 <label>Nama client yang bisa dihubungi</label>
 <input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
 
@@ -59,20 +58,20 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 <hr>
 
 <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Buat Berkas Arsip</button>
-            
+
 </div>        
 </form>        
 </div>                
 </div>
 </div>    
-    
+
 </body>
 <script type="text/javascript">
 function tambah_no_user(){
 var nama_notaris = $(".no_user_pembuat option:selected").text();
 $("#nama_notaris").val(nama_notaris);
 }    
-    
+
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
@@ -111,17 +110,35 @@ $("#contact_number").attr('readonly', false).val("");
 });
 });
 
+
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$(".jenis_pekerjaan").autocomplete({
-minLength:0,
-delay:0,
-source:'<?php echo site_url('Data_lama/cari_jenis_pekerjaan') ?>',
-select:function(event, ui){
-$(".no_jenis_pekerjaan").val(ui.item.no_jenis_pekerjaan);
-}
-}
-);
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan").select2({
+   ajax: {
+    url: '<?php echo site_url('Data_lama/cari_jenis_pekerjaan') ?>',
+    method : "post",
+    
+    data: function (params) {
+      var query = {
+        search: params.term,
+        token: token
+      };
+
+      return query;
+    },
+   processResults: function (data) {
+      // Transforms the top-level key of the response object from 'items' to 'results'
+      var data = JSON.parse(data);
+      console.log(data.results);
+      return {
+        results: data.results
+      };
+      
+    }
+      
+    }        
+   
+});
 });
 
 function simpan_pihak(){
@@ -143,6 +160,7 @@ $("#form_data_lama").find("#"+key).removeClass("is-valid");
 }else{
 read_response(data);
 $("#form_pihak_terlibat").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
+window.location.href='<?php echo base_url('Data_lama/rekam_data/') ?>'+btoa(r[0].no_pekerjaan);
 
 }
 }

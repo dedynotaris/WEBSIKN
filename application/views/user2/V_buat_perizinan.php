@@ -233,7 +233,7 @@ type:"post",
 url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
 data:"token="+token+"&id_data_berkas="+id_data_berkas,
 success:function(data){
-data_tersimpan(no_client,no_pekerjaan);
+    data_terupload(no_client,no_pekerjaan);    
 read_response(data);
 }
 });    
@@ -681,7 +681,6 @@ success:function(data){
 $('#data_modal').modal('show');
 $(".modal-content").html(data);
 data_terupload(no_client,no_pekerjaan);
-data_tersimpan(no_client,no_pekerjaan);
 regis_js();
 }
 });    
@@ -694,11 +693,9 @@ data:$("#form"+no_nama_dokumen).serialize(),
 url:"<?php echo base_url('User2/simpan_meta') ?>",
 success:function(data){
 data_terupload(no_client,no_pekerjaan);
-data_tersimpan(no_client,no_pekerjaan);
 }
 });
 }
-
 function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
@@ -707,7 +704,8 @@ type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
-$(".data"+no_berkas).html(data).slideDown(); 
+$(".data"+no_berkas).slideDown().after(data); 
+$(".btn_edit"+no_berkas).hide();  
 regis_js();
 }
 });
@@ -715,15 +713,17 @@ regis_js();
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
 var data = $("#form"+no_berkas).serialize();
 
-
 $.ajax({
 type:"post",
 data:$("#form"+no_berkas).serialize(),
 url:"<?php echo base_url('User2/update_meta') ?>",
 success:function(data){
-$(".data"+no_berkas).slideUp().html(""); 
+$(".data_edit"+no_berkas).slideUp().html(""); 
+$(".btn_edit"+no_berkas).show();  
+read_response(data);
 }
 });
+
 }
 
 function upload_file(){
@@ -796,17 +796,7 @@ $(".data_terupload").html(data);
 });
 }
 
-function data_tersimpan(no_client,no_pekerjaan){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/data_tersimpan') ?>",
-success:function(data){
-$(".data_tersimpan").html(data);    
-}
-});
-}
+
 
 function set_jenis_dokumen(no_client,no_pekerjaan,no_berkas){
 var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
@@ -823,7 +813,8 @@ data_terupload(no_client,no_pekerjaan);
 
 }
 function cancel_edit(no_berkas){
-$( ".data"+no_berkas ).slideUp().html();
+$(".data_edit"+no_berkas ).slideUp().html();
+$(".btn_edit"+no_berkas).show();  
 }
 
 </script>    

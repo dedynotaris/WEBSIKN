@@ -1,8 +1,7 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar_data_lama'); ?>
-    
+<?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-3x fas fa-clipboard-list"></span><br>Seluruh Data Arsip</h5>
