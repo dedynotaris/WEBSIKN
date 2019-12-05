@@ -170,7 +170,7 @@ window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_c
 
 function cari_jenis_pekerjaan(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
-$(".jenis_pekerjaan").select2({
+$(".jenis_pekerjaan2").select2({
    ajax: {
     url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
     method : "post",

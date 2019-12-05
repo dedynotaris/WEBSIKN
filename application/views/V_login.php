@@ -1,5 +1,16 @@
-<body class="bg_login">
-<br>
+<style>
+      @font-face {
+font-family: "fontweb";
+src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff");
+}
+
+</style>
+<body  style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-family: 'fontweb'; " class="bg_login">
 <br>
 <br>
 <div class="container ">
@@ -8,7 +19,7 @@
    
 <div class="col-md-4 mx-auto " >
 <div class='text-center'>
-<img style='width:240px;' src='<?php echo base_url('assets/icon.png') ?>'>      
+<img style='width:200px;' src='<?php echo base_url('assets/icon.png') ?>'>      
 </div>
 <label>Username</label>
 <input type="text" class="form-control" id="username" placeholder="username . . .">
@@ -27,7 +38,7 @@
 <div class="mt-5 pt-5">
 <div class="row">
 <div class="mx-auto">    
-    <p class="text-center">App Management Document <br> V.1.0.1</p>
+    <p class="text-center">App Management Document <br> V.2.1</p>
 </div>
 </div>
 </div>   

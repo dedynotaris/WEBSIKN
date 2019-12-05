@@ -96,8 +96,8 @@ $this->form_validation->set_rules('contact_person', 'Contact Person', 'required'
 $this->form_validation->set_rules('contact_number', 'Contact Number', 'required|numeric');
 $this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required');
 $this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('badan_hukum', 'Badan Hukum', 'required');
-$this->form_validation->set_rules('alamat_badan_hukum', 'Alamat', 'required');
+$this->form_validation->set_rules('badan_hukum', 'Nama Client', 'required');
+$this->form_validation->set_rules('no_identitas', 'Number Indetify', 'required');
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -106,22 +106,22 @@ $status[] = array(
 );
 echo json_encode($status);
 }else{
-if($input['jenis_client'] == "Perorangan"){
-$this->simpan_client($input);
-}else if($input['jenis_client'] == "Badan Hukum"){    
-$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($input['badan_hukum'])))->num_rows();        
-if($cek_badan_hukum == 0){
-$this->simpan_client($input);
+
+$cek_client = $this->db->get_where('data_client',array('no_identitas'=>strtoupper($input['no_identitas'])))->num_rows();        
+
+if($cek_client == 0){
+$this->simpan_client($input);    
 }else{
 $status[] = array(
 "status"       => "error_validasi",
-"messages"     =>[array("jenis_client"=>"Jenis Badan Hukum Sudah Tersedia","badan_hukum"=>"Nama Badan Hukum Sudah Tersedia")],    
+"messages"     =>[array("no_identitas"=>"no identitas sudah digunakan","badan_hukum"=>"Client Sudah Tersedia")],    
 );    
 echo json_encode($status);
-}   
 }
 }
+
 }
+
 public function simpan_client($data){ 
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
@@ -131,7 +131,7 @@ $data_client = array(
 'no_client'                 => $no_client,    
 'jenis_client'              => ucfirst($data['jenis_client']),    
 'nama_client'               => strtoupper($data['badan_hukum']),
-'alamat_client'             => ucfirst($data['alamat_badan_hukum']),    
+'no_identitas'              => ucfirst($data['no_identitas']),    
 'tanggal_daftar'            => date('Y/m/d'),    
 'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
 'no_user'                   => $this->session->userdata('no_user'), 
@@ -160,9 +160,11 @@ $data_pem = array(
 'no_pekerjaan'  =>$no_pekerjaan   
 );
 $this->db->insert('data_pemilik',$data_pem);
+
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
+
 $keterangan = $this->session->userdata('nama_lengkap')." Membuat client ".$data['badan_hukum'];
 $this->histori($keterangan);
 $status[] = array(
@@ -1333,7 +1335,7 @@ redirect(404);
 }        
 }
 public function form_tambah_pekerjaan(){
-if($this->input->post()){    
+if($this->input->post('no_client')){    
 $input = $this->input->post();    
 $data_client = $this->M_user2->data_client_where($input['no_client'])->row_array();    
 echo '<div class="modal-content">
@@ -1359,7 +1361,25 @@ echo '<form id="form_pekerjaan_baru">
 </div>
 ';    
 }else{
-redirect(404);    
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" >Buat Pekerjaan Baru <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body ">
+<label>*Jenis Pekerjaan</label>
+<select name="jenis_pekerjaan" id="jenis_pekerjaan2" class="form-control form-control-sm  jenis_pekerjaan2"></select>
+<label>*Nomor Identify NPWP / NIK</label>
+<input  onchange="cari_client();" type="text" class="form-control form-control-sm cari_client">
+</div>';    
+echo '<div class="modal-footer">
+<button onclick=simpan_pekerjaan_baru(); class="btn btn-sm btn-success simpan_pekerjaan btn-block">Simpan Pekerjaan <span class="fa fa-save"></span> </button>
+</form>
+</div>
+</div>';
+
 }
 }
 function form_edit_client(){

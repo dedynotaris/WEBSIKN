@@ -3,11 +3,11 @@
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
-    <style>
-        .is-invalid .select2-selection {
-    border-color: rgb(185, 74, 72) !important;
-        }
-    </style>
+<style>
+.is-invalid .select2-selection {
+border-color: rgb(185, 74, 72) !important;
+}
+</style>
 <div class="container-fluid p-2 ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan pekerjaan dan klien baru</h5>
@@ -16,79 +16,75 @@
 <div class="row text-theme1 rounded  m-2" >
 <div class="col-md-6">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="form-control required"  accept="text/plain">
-<label>Jenis Pekerjaan</label>
+<label>*Jenis Pekerjaan</label>
 <select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
-<label>Target selesai</label>
+<label>*Target selesai</label>
 <input type="text" placeholder="Target selesai pekerjaan" name="target_kelar" readonly="" id="target_kelar" class="form-control form-control-sm required"  accept="text/plain">
 
+<label>*Pilih Jenis client</label>
+<select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
+<option value="Perorangan">Perorangan</option>
+<option value="Badan Hukum">Badan Hukum</option>	
+</select>
 
-<label>Nama yang bisa dihubungi</label>
-<input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
-<label>Nomor Kontak Telephone / HP</label>
-<input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
-<label>Jenis Kontak</label>
+<div id="FormPeroranganBadanHukum">
+  <label>*Nama Perorangan</label>
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
+<label>*NIK KTP</label>
+<input type='text' id='no_identitas' class='form-control form-control-sm' placeholder='NIK KTP' name='no_identitas'>
+</div>
+</div>
+    
+
+<div class="col ">
+<label>*Jenis Kontak</label>
 <select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
 <option></option>
 <option value="Staff">Staff</option>
 <option value="Pribadi">Pribadi</option>	
 </select>  
 
-</div>
-<div class="col ">
-<label>Pilih Jenis client</label>
-<select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
-<option></option>
-<option value="Perorangan">Perorangan</option>
-<option value="Badan Hukum">Badan Hukum</option>	
-</select>    
-
-<div id="form_badan_hukum">
-<label  id="label_nama_perorangan">Nama Perorangan</label>
-<label  style="display: none;" id="label_nama_hukum">Nama Badan Hukum</label>
-<input type="text" placeholder="Nama Badan Hukum / Perorangan" name="badan_hukum" id="badan_hukum" class="form-control form-control-sm required"  accept="text/plain">
-</div>
-
-<div id="form_alamat_hukum">
-<label style="display: none;" id="label_alamat_hukum">Alamat Badan Hukum</label>
-<label  id="label_alamat_perorangan">Alamat Perorangan</label>
-<textarea name="alamat_badan_hukum" rows="6" placeholder="Alamat Badan Hukum / Perorangan" id="alamat_badan_hukum" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
-<hr>
+<label>*Nama yang bisa dihubungi</label>
+<input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
+<label>*Nomor Kontak Telephone / HP</label>
+<input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
+<label></label>
 <button type="button"  onclick="simpan_pekerjaan();" class="btn btn-success btn-sm mx-auto btn-block simpan_perizinan">Buat pekerjaan dan klien baru <i class="fa fa-save"></i></button>
-
-</div>
+<hr>
+<i style="font-size:14px;" class="text-danger">*Hanya Jika Client sudah tersedia</i>
+<button type="button"   onclick="buat_pekerjaan_baru();" class="btn btn-warning btn-sm mx-auto btn-block ">Buat Pekerjaan Baru Saja</button>
+   
 </div>
 </form>
 
 </div>
 </div>
-    
+
+<!------------- Modal ---------------->
+<div class="modal fade bd-example-modal-md" id="modal" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
+<div class="modal-dialog modal-md data_modal" role="document">
+
+</div>
+</div>
+
+</div>
 
 
 <script type="text/javascript">
 $("#jenis_client").on("change",function(){
 var client = $("#jenis_client option:selected").text();
-if(client == "Perorangan"){
-$("#form_client").show(100);
-$("#label_alamat_perorangan,#label_nama_perorangan").fadeIn(100);
-$("#label_alamat_hukum,#label_nama_hukum").fadeOut(100);
-}else if(client == "Badan Hukum"){
-$("#form_client").show(100);
-$("#label_alamat_hukum,#label_nama_hukum").fadeIn(100);
-$("#label_alamat_perorangan,#label_nama_perorangan").fadeOut(100);
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated tada'
-});
 
-Toast.fire({
-type: 'warning',
-title: 'Silahkan pilih jenis client terlebih dahulu.'
-})
+if(client == "Perorangan"){
+$("#FormPeroranganBadanHukum").html("<label>*Nama Perorangan</label>\n\
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>\n\
+<label>*NIK KTP</label>\n\
+<input type='text' class='form-control form-control-sm required'  accept='text/plain' id='no_identitas' placeholder='NIK KTP' name='no_identitas'>");
+
+}else if(client == "Badan Hukum"){
+$("#FormPeroranganBadanHukum").html("<label>Nama Badan Hukum</label>\n\
+<input type='text' placeholder='Nama Badan Hukum' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>\n\
+<label>*No NPWP</label>\n\
+<input type='text' class='form-control form-control-sm required'  accept='text/plain'id='no_identitas' placeholder='No NPWP' name='no_identitas'>");
 }
 });
 
@@ -96,6 +92,63 @@ title: 'Silahkan pilih jenis client terlebih dahulu.'
 $(function(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan").select2({
+ajax: {
+url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+method : "post",
+
+data: function (params) {
+var query = {
+search: params.term,
+token: token
+};
+
+return query;
+},
+processResults: function (data) {
+var data = JSON.parse(data);
+console.log(data.results);
+return {
+results: data.results
+};
+
+}
+
+}        
+
+});
+});
+
+
+$(function() {
+$("input[name='target_kelar']").datepicker({
+minDate:0,
+dateFormat: 'yy/mm/dd'
+});
+});
+
+function cari_client(){
+var a = $(".cari_client").val(); 
+console.log(a);
+}
+
+function buat_pekerjaan_baru(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/form_tambah_pekerjaan') ?>",
+data:"token="+token,
+success:function(data){
+$(".data_modal").html(data);    
+$('#modal').modal('show');
+cari_jenis_pekerjaan();
+cari_client();
+}
+});
+}
+
+function cari_jenis_pekerjaan(){
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".jenis_pekerjaan2").select2({
    ajax: {
     url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
     method : "post",
@@ -121,15 +174,7 @@ $(".jenis_pekerjaan").select2({
     }        
    
 });
-});
-
-
-$(function() {
-$("input[name='target_kelar']").datepicker({
-minDate:0,
-dateFormat: 'yy/mm/dd'
-});
-});
+}
 
 function simpan_pekerjaan(){
 $(".simpan_perizinan").attr("disabled", true);

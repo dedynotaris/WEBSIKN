@@ -191,3 +191,10 @@ title: r[0].messages
 <Title>App Management Document</Title>
 <link rel="icon" type="image/gif/png" href="<?php echo base_url('assets/icon.png') ?>">
 </Head>
+<style>
+      @font-face {
+font-family: "fontweb";
+src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff");
+}
+
+</style>
