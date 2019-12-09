@@ -28,10 +28,10 @@ border-color: rgb(185, 74, 72) !important;
 </select>
 
 <div id="FormPeroranganBadanHukum">
-  <label>*Nama Perorangan</label>
-<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
 <label>*NIK KTP</label>
 <input type='text' id='no_identitas' class='form-control form-control-sm' placeholder='NIK KTP' name='no_identitas'>
+<label>*Nama Perorangan</label>
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
 </div>
 </div>
     
@@ -81,7 +81,7 @@ $("#FormPeroranganBadanHukum").html("<label>*Nama Perorangan</label>\n\
 <input type='text' class='form-control form-control-sm required'  accept='text/plain' id='no_identitas' placeholder='NIK KTP' name='no_identitas'>");
 
 }else if(client == "Badan Hukum"){
-$("#FormPeroranganBadanHukum").html("<label>Nama Badan Hukum</label>\n\
+$("#FormPeroranganBadanHukum").html("<label>*Nama Badan Hukum</label>\n\
 <input type='text' placeholder='Nama Badan Hukum' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>\n\
 <label>*No NPWP</label>\n\
 <input type='text' class='form-control form-control-sm required'  accept='text/plain'id='no_identitas' placeholder='No NPWP' name='no_identitas'>");
@@ -128,12 +128,29 @@ dateFormat: 'yy/mm/dd'
 
 function cari_client(){
 var a = $(".cari_client").val(); 
-console.log(a);
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/cari_client') ?>",
+data:"token="+token+"&no_identitas="+a,
+success:function(data){
+var r = JSON.parse(data);
+if( r[0].status == "success"){
+$(".hasil_client").html(r[0].message);
+}else{
+$(".hasil_client").html("<hr><p class='text-center text-danger'>Data Client Tidak Tersedia</p>");    
 }
+
+}
+});
+
+}
+
 
 function buat_pekerjaan_baru(){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$.ajax({
+
+  $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/form_tambah_pekerjaan') ?>",
 data:"token="+token,
@@ -142,6 +159,7 @@ $(".data_modal").html(data);
 $('#modal').modal('show');
 cari_jenis_pekerjaan();
 cari_client();
+target_kelar();
 }
 });
 }
@@ -173,6 +191,62 @@ $(".jenis_pekerjaan2").select2({
       
     }        
    
+});
+}
+
+function simpan_pekerjaan_baru(){
+var no_jenis_pekerjaan = $(".jenis_pekerjaan2").val();
+var hasil_client       = $(".hasil_client").text();
+var target_kelar2      = $("#target_kelar2").val();
+var no_client          = $(".no_client2").val();
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$(".simpan_pekerjaan").attr("disabled",true);
+if(no_jenis_pekerjaan != null && hasil_client !='' && target_kelar2 != '' ){
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/buat_pekerjaan_baru') ?>",
+data:"token="+token+"&no_client="+no_client+"&target_kelar="+target_kelar2+"&jenis_pekerjaan="+no_jenis_pekerjaan,
+success:function(data){
+var r  = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+}).then(function(){
+window.location.href="<?php echo base_url('User2/pekerjaan_antrian/') ?>"+r[0].no_pekerjaan;
+});
+
+$('#modal').modal('hide');
+}
+});
+
+}else{
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+Toast.fire({
+type:"warning",
+title:"Jenis pekerjaan,data client,atau target selesai tidak tersedia"
+});
+}
+$(".simpan_pekerjaan").attr("disabled",false);
+}
+
+function target_kelar() {
+$("input[name='target_kelar2']").datepicker({ minDate:0,dateFormat: 'yy/mm/dd'
 });
 }
 

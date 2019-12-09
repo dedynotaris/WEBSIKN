@@ -14,11 +14,10 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <div class="col-md-6 card-header"> 
 
 <div class="row">
-
 <div class="col">
 <label>Pembuat Client</label><br>    
-
 </div>
+    
 <div class="col"> :
 <?php echo $static['pembuat_client'] ?>        
 </div>
@@ -162,37 +161,37 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <form id="form_pihak_terlibat">
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
+<input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
     
-<label>Pilih Jenis pihak</label>
+<label>*Pilih Jenis pihak terlibat</label>
 <select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
-<option></option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>    
 
-<label>Nama Pihak</label>
-<input type="text" placeholder="Nama Pihak" name="nama_pihak" id="nama_pihak" class="form-control form-control-sm required"  accept="text/plain">
-<input type="hidden" id="no_client" name="no_client" class="form-control">
-
-<label >Alamat Pihak</label>
-<textarea name="alamat_pihak" rows="6" placeholder="Alamat Pihak" id="alamat_pihak" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
-
-<label>Jenis pihak yang bisa dihubungi</label>
+<div id="FormPeroranganBadanHukum">
+<label>*NIK KTP</label>
+<input type='text' onkeyup="cari_client2()" id='no_identitas' class='form-control form-control-sm no_identitas' placeholder='NIK KTP' name='no_identitas'>
+<label>*Nama Perorangan</label>
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
+</div>
+    
+<label>*Jenis pihak yang bisa dihubungi</label>
 <select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
 <option></option>
 <option value="Staff">Staff</option>
 <option value="Pribadi">Pribadi</option>	
 </select>  
 
-<label>Nama pihak yang bisa dihubungi</label>
+<label>*Nama pihak yang bisa dihubungi</label>
 <input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
-<label>Nomor Kontak Telephone / HP</label>
+<label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
 </form>
 </div>    
 <hr>
-<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat</button>
+<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success simpan_pihak_baru btn-block"> Tambahkan pihak yang terlibat</button>
 
 </div>
 
@@ -224,8 +223,57 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
     
     
 <script type="text/javascript">
+function cari_client2(){
+var a = $(".no_identitas").val(); 
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/cari_client2') ?>",
+data:"token="+token+"&no_identitas="+a,
+success:function(data){
+var r = JSON.parse(data);
+if(r[0].status == "success"){
+$("#no_client").val(r[0].message.no_client).attr('readonly', true);;
+$("#contact_person").val(r[0].message.contact_person).attr('readonly', true);;
+$("#contact_number").val(r[0].message.contact_number).attr('readonly', true);;
+$("#badan_hukum").val(r[0].message.nama_client).attr('readonly', true);;
+$("#jenis_kontak option[value='"+r[0].message.jenis_kontak+"']").attr("selected","selected");
+$("#jenis_kontak").attr('readonly', true);
+
+}else{
+$("#no_client").attr('readonly', false).val("");
+$("#jenis_kontak").attr('readonly', false).removeAttr("selected","selected");
+$("#contact_person").attr('readonly', false).val("");
+$("#contact_number").attr('readonly', false).val("");
+$("#badan_hukum").val("").attr('readonly', false);;
+}    
+}
+});
+}
+
+    
+    
+$("#jenis_client").on("change",function(){
+var client = $("#jenis_client option:selected").text();
+
+if(client == "Perorangan"){
+$("#FormPeroranganBadanHukum").html("<label>*NIK KTP</label>\n\
+<input type='text' id='no_identitas' class='form-control no_identitas form-control-sm required' onkeyup='cari_client2()'  accept='text/plain' id='no_identitas' placeholder='NIK KTP' name='no_identitas'>\n\
+<label>*Nama Perorangan</label>\n\
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
+
+}else if(client == "Badan Hukum"){
+$("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
+<input type='text' id='no_identitas' class='form-control no_identitas form-control-sm required' onkeyup='cari_client2()'  accept='text/plain'id='no_identitas' placeholder='No NPWP' name='no_identitas'>\n\
+<label>*Nama Badan Hukum</label>\n\
+<input type='text' placeholder='Nama Badan Hukum'  name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
+}
+});
+    
+    
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
 $.ajax({
 type:"post",
@@ -239,46 +287,10 @@ read_response(data);
     
 }        
     
-$(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$("#nama_pihak").autocomplete({
-minLength:0,
-delay:0,
-source: function( request, rse ) {
-$.ajax({
-url: "<?php echo base_url('User2/cari_nama_client') ?>",
-method:'post',
-data: {
-token:token,  
-term: request.term,
-jenis_pemilik: $("#jenis_client option:selected").text()
-},success: function( data ) {
-var d = JSON.parse(data);
-rse(d);
-}
-});
-},select:function(event, ui){
-if(ui.item.no_client != null){
-$("#no_client").val(ui.item.no_client).attr('readonly', true);
-$("#alamat_pihak").val(ui.item.alamat_pihak).attr('readonly', true);
-$("#jenis_kontak option[value='"+ui.item.jenis_kontak+"']").attr("selected","selected");
-$("#jenis_kontak").attr('readonly', true);
-$("#contact_person").val(ui.item.contact_person).attr('readonly', true);
-$("#contact_number").val(ui.item.contact_number).attr('readonly', true);
-}else{
-$("#no_client").attr('readonly', false).val("");
-$("#alamat_pihak").attr('readonly', false).val("");
-$("#jenis_kontak option[value='"+ui.item.jenis_kontak+"']").attr("selected","selected");
-$("#jenis_kontak").attr('readonly', false).val("");
-$("#contact_person").attr('readonly', false).val("");
-$("#contact_number").attr('readonly', false).val("");
-}
-}
-});
-});
 
 
 function simpan_pihak(){
+$(".simpan_pihak_baru").attr("disabled",true);
 $("#form_pihak_terlibat").find(".form-control").removeClass("is-invalid").addClass("is-valid");
 $("#form_pihak_terlibat").find('.form-control + p').remove();
 $.ajax({
@@ -296,9 +308,16 @@ $("#form_pihak_terlibat").find("#"+key).removeClass("is-valid");
 });
 }else{
 read_response(data);
-$("#form_pihak_terlibat").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
+$("#no_identitas").attr('readonly', false).val("");
+$("#no_client").attr('readonly', false).val("");
+$("#jenis_kontak").attr('readonly', false).removeAttr("selected","selected");
+$("#contact_person").attr('readonly', false).val("");
+$("#contact_number").attr('readonly', false).val("");
+$("#badan_hukum").val("").attr('readonly', false);;
+$("#form_pihak_terlibat").find(".form-control").removeClass("is-valid");
 refresh();
 }
+$(".simpan_pihak_baru").attr("disabled",false);
 }
 
 });
@@ -341,8 +360,8 @@ $(".date").daterangepicker({
     singleDatePicker: true,
     showDropdowns: true,
     minYear: 1901,
-     changeMonth: false,
-   changeYear: false,
+    changeMonth: false,
+    changeYear: false,
    
     maxYear: parseInt(moment().format('YYYY'),10),
     "locale": {
@@ -415,7 +434,6 @@ $(".jenis_pekerjaan").select2({
       return query;
     },
    processResults: function (data) {
-      // Transforms the top-level key of the response object from 'items' to 'results'
       var data = JSON.parse(data);
       console.log(data.results);
       return {

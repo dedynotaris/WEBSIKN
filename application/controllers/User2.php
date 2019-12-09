@@ -21,19 +21,23 @@ public function keluar(){
 $this->session->sess_destroy();
 redirect (base_url('Login'));
 }
+
 public function asisten(){  
 $asisten = $this->M_user2->data_asisten($this->session->userdata('no_user'));
 $this->load->view('umum/V_header');
 $this->load->view('user2/V_data_asisten',['asisten'=>$asisten]);    
 }
+
 public function data_client_hukum(){
 $this->load->view('umum/V_header');
 $this->load->view('user2/V_data_client_hukum');
 }
+
 public function data_client_perorangan(){
 $this->load->view('umum/V_header');
 $this->load->view('user2/V_data_client_perorangan');
 }
+
 public function json_data_client(){
 if($this->uri->segment(3) == "Badan_hukum"){
 $jenis  ="Badan Hukum";   
@@ -586,6 +590,7 @@ if($this->input->post()){
 $input = $this->input->post();
 $this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
 $this->form_validation->set_rules('target_kelar', 'Target selesai', 'required');
+
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -607,6 +612,7 @@ $data_r = array(
 'pembuat_pekerjaan'  => $this->session->userdata('nama_lengkap'),    
 );
 $this->db->insert('data_pekerjaan',$data_r);
+
 $tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
 $no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
 $data_pem = array(
@@ -614,6 +620,7 @@ $data_pem = array(
 'no_client'     =>$input['no_client'],
 'no_pekerjaan'  =>$no_pekerjaan   
 );
+
 $this->db->insert('data_pemilik',$data_pem);
 $status[] = array(
 "status"        => "success",
@@ -627,6 +634,7 @@ echo json_encode($status);
 redirect(404);    
 }    
 }
+
 public function profil(){
 $no_user = $this->session->userdata('no_user');
 $data_user = $this->M_user2->data_user_where($no_user);
@@ -1156,11 +1164,11 @@ redirect(404);
 function simpan_pihak_terlibat(){
 $input = $this->input->post();
 $this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required');
-$this->form_validation->set_rules('nama_pihak', 'Nama Pihak', 'required');
-$this->form_validation->set_rules('alamat_pihak', 'Alamat Pihak', 'required');
+$this->form_validation->set_rules('badan_hukum', 'Nama Pihak', 'required');
 $this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
 $this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required');
-$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required|numeric');
+$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required');
+$this->form_validation->set_rules('no_identitas', 'No identitas NIK/NPWP', 'required|numeric');
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -1175,11 +1183,12 @@ $tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
 $h_berkas = $this->M_user2->hitung_pekerjaan()->num_rows()+1;
 $h_client = $this->M_user2->data_client()->num_rows()+1;
 $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+
 $data_client = array(
 'no_client'                 => $no_client,    
 'jenis_client'              => ucfirst($input['jenis_client']),    
-'nama_client'               => strtoupper($input['nama_pihak']),
-'alamat_client'             => ucfirst($input['alamat_pihak']),    
+'no_identitas'              => $input['no_identitas'],    
+'nama_client'               => strtoupper($input['badan_hukum']),
 'tanggal_daftar'            => date('Y/m/d'),    
 'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
 'no_user'                   => $this->session->userdata('no_user'), 
@@ -1189,16 +1198,20 @@ $data_client = array(
 'jenis_kontak'              => ucfirst($input['jenis_kontak']),    
 );   
 $this->db->insert('data_client',$data_client);
+
 $no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+
 $data_pem = array(
 'no_pemilik'    =>$no_pemilik,   
 'no_client'     =>$no_client,
 'no_pekerjaan'  => base64_decode($input['no_pekerjaan'])   
 );
 $this->db->insert('data_pemilik',$data_pem);
+
 if(!file_exists("berkas/"."Dok".$no_client)){
 mkdir("berkas/"."Dok".$no_client,0777);
 }
+
 $status[] =array(
 'status'    => 'success',
 'messages'  => 'Pihak terkait berhasil ditambahkan' 
@@ -1371,8 +1384,11 @@ echo '<div class="modal-content">
 <div class="modal-body ">
 <label>*Jenis Pekerjaan</label>
 <select name="jenis_pekerjaan" id="jenis_pekerjaan2" class="form-control form-control-sm  jenis_pekerjaan2"></select>
+<label>Target selesai</label>
+<input type="text" name="target_kelar2" readonly="" id="target_kelar2" class="form-control form-control-sm required"  accept="text/plain">
 <label>*Nomor Identify NPWP / NIK</label>
-<input  onchange="cari_client();" type="text" class="form-control form-control-sm cari_client">
+<input  onkeyup="cari_client();" type="text" class="form-control form-control-sm cari_client">
+<div class="hasil_client"><hr></div>
 </div>';    
 echo '<div class="modal-footer">
 <button onclick=simpan_pekerjaan_baru(); class="btn btn-sm btn-success simpan_pekerjaan btn-block">Simpan Pekerjaan <span class="fa fa-save"></span> </button>
@@ -1816,6 +1832,79 @@ $this->db->update('data_berkas',$data,array('no_berkas'=>$input['no_berkas']));
 }else{
 redirect(404);    
 } 
+}
+
+function cari_client(){
+if($this->input->post()){
+$no_identitas = $this->input->post('no_identitas');
+
+$cek = $this->db->get_where('data_client',array('no_identitas'=>$no_identitas));
+$no_client = $cek->row_array();
+if($cek->num_rows() != 0){
+$data  ="<input type='hidden' class='no_client2' id='no_client2' value='".$no_client['no_client']."'>";    
+$data  .= "<hr>";    
+$data  .="<table class='table table-sm table-bordered'>";
+
+foreach ($cek->result_array() as $d){
+$data .="<tr><td>Nama Client</td><td>".$d['nama_client']."</tr></td>";    
+$data .="<tr><td>No Identitas</td><td>".$d['no_identitas']."</tr></td>";    
+$data .="<tr><td>Jenis Client</td><td>".$d['jenis_client']."</tr></td>";    
+$data .="<tr><td>Tanggal Daftar</td><td>".$d['tanggal_daftar']."</tr></td>";    
+$data .="<tr><td>Pembuat Client</td><td>".$d['pembuat_client']."</tr></td>";    
+$data .="<tr><td>Contact Person</td><td>".$d['contact_person']."</tr></td>";    
+$data .="<tr><td>Contact Number</td><td>".$d['contact_number']."</tr></td>";    
+}
+$data .="</table>";
+
+$s    = "success";
+}else{
+$data ="Tidak Tersedia";
+$s    = "error";
+}
+
+$status[] = array(
+'message' =>$data,
+'status'  => $s    
+);
+
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}
     
 }
+function cari_client2(){
+if($this->input->post()){
+$no_identitas       = $this->input->post('no_identitas');
+$cek                = $this->db->get_where('data_client',array('no_identitas'=>$no_identitas));
+$no_client          = $cek->row_array();
+if($cek->num_rows() != 0){
+$data = array(
+'no_client'        =>$no_client['no_client'],
+'no_identitas'     =>$no_client['no_identitas'],
+'nama_client'      =>$no_client['nama_client'],
+'contact_person'   =>$no_client['contact_person'],
+'contact_number'   =>$no_client['contact_number'],
+'jenis_kontak'     =>$no_client['jenis_kontak']       
+);
+$s    = "success";
+}else{
+$data ="Tidak Tersedia";
+$s    = "error";
+}
+
+$status[] = array(
+'message' =>$data,
+'status'  => $s    
+);
+
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}
+    
+}
+
 }
