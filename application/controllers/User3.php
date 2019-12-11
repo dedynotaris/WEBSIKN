@@ -86,52 +86,6 @@ echo $this->M_user3->json_data_perizinan_selesai();
 
 
 
-public function lihat_persyaratan(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data = $this->M_user3->data_persyaratan($input['no_client']);
-echo '<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-<div class="modal-content ">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" >DATA DOKUMEN PERSYARATAN<span id="title"></span> </h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body " >
-<form id="form_penolakan_tugas">
-';
-echo "<table class='table text-theme1 text-center table-sm table-bordered table-striped'>"
-. "<thead>"
-        . "<tr>"
-        . "<th>Dokumen penunjang yang diberikan client</th>"
-        . "<th>Aksi</th>"
-        . "<tr>"
-        . "</thead>";
-foreach ($data->result_array() as $d){
-echo "<tr>"
-    . "<td>".$d['nama_dokumen']."</td>"
-    . "<td><button type='button' onclick=lihat_data_perekaman('".$d['no_nama_dokumen']."','".$d['no_pekerjaan']."','".$d['no_client']."'); class='btn btn-success btn-sm'>Lihat data <span class='fa fa-eye'></span></button></td>"
-    . "</tr>";  
-}
-
-echo"</table>";
-
-
-
-echo "</div>"
-. "</div>";
-
-
-}else{
-redirect(404);    
-}
-}
-
-
-
 public function form_rekam_dokumen(){
 if($this->input->post()){
 $input = $this->input->post();
@@ -890,6 +844,203 @@ echo "</div>"
 }else{
     redirect(404);    
 }
+}
+
+public function json_data_lampiran_client($no_client){
+echo $this->M_user3->json_data_lampiran_client($no_client);  
+}
+
+public function lihat_lampiran_client(){    
+$data_client = $this->M_user3->data_client_where($this->uri->segment(3));       
+
+$this->load->view('umum/V_header');
+$this->load->view('user3/V_lihat_lampiran_client',['data_client'=>$data_client]);   
+}
+
+
+
+function lihat_meta(){
+if($this->input->post()){ 
+$input = $this->input->post(); 
+$data = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
+    
+echo '<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body data_perekaman">';
+if($data->num_rows() == 0){
+echo "<p class='text-center'>Meta Data Tidak Tersedia</p><hr>";    
+}else{
+echo '<table class="table table-sm table-bordered ">';
+
+foreach ($data->result_array() as $d){
+echo "<tr><td>".str_replace('_', ' ',$d['nama_meta'])."</td><td>".$d['value_meta']."</td></tr>";    
+}
+
+echo "<table>"
+. "<hr>";
+}
+echo "<button onclick=cek_download('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-success '>Download lampiran <span class='fa fa-save'></span></button>";
+
+
+echo "<button onclick=edit_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_pekerjaan']."') class='btn btn-sm  mr-2  btn-warning  '>Meta lampiran <span class='fa fa-edit'></span></button>";
+
+echo "<button  onclick=hapus_lampiran('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-danger  '>Hapus lampiran <span class='fa fa-trash'></span></button>";
+echo'</div>'
+. '</div>';    
+
+
+}else{
+redirect(404);
+}    
+}
+
+
+public function hapus_lampiran(){
+if($this->input->post()){
+$input = $this->input->post();    
+$data = $this->M_user3->hapus_lampiran(base64_decode($input['no_berkas']))->row_array();
+
+$filename = './berkas/'.$data['nama_folder']."/".$data['nama_berkas'];
+
+if(file_exists($filename)){
+unlink($filename);
+}
+$this->db->delete('data_berkas',array('no_berkas'=> base64_decode($input['no_berkas'])));    
+
+$status[] = array(
+"status"        => "success",
+"messages"      => "Data persyaratan dihapus",    
+);
+echo json_encode($status);
+
+$keterangan = $this->session->userdata('nama_lengkap')." Menghapus File dokumen".$data['nama_dokumen'];  
+$this->histori($keterangan);
+
+
+}else{
+redirect(404);    
+}
+}
+
+
+function form_meta(){
+if($this->input->post()){ 
+$input = $this->input->post();    
+$this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
+
+$data_meta = $this->M_user3->data_meta($input['no_nama_dokumen']);
+
+echo '<div class="modal-content ">
+<div class="modal-header">
+<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body data_perekaman">
+<form id="form_edit_meta">';
+echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_berkas" value="'.$input['no_berkas'].'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_pekerjaan" value="'.$input['no_pekerjaan'].'" readonly="" class="required"  accept="text/plain">';
+echo '<input type="hidden" name="no_nama_dokumen" value="'.$input['no_nama_dokumen'].'" readonly="" class="required"  accept="text/plain">';
+
+
+foreach ($data_meta->result_array()  as $d ){
+$val = $this->M_user3->data_edit($input['no_berkas'],str_replace(' ', '_',$d['nama_meta']))->row_array();
+//INPUTAN SELECT   
+if($d['jenis_inputan'] == 'select'){
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+echo "<label>".$d['nama_meta']."</label>"
+."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+foreach ($data_option->result_array() as $option){
+echo "<option ";
+if($val['value_meta'] == $option['jenis_pilihan']){
+echo "selected";    
+}
+echo ">".$option['jenis_pilihan']."</option>";
+}
+echo "</select>";
+//INPUTAN DATE
+}else if($d['jenis_inputan'] == 'date'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input value='".$val['value_meta']."'  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+///INPUTAN NUMBER
+}else if($d['jenis_inputan'] == 'number'){
+echo "<label>".$d['nama_meta']."</label>"
+."<input value='".$val['value_meta']."' type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+//INPUTAN TEXTAREA
+}else if($d['jenis_inputan'] == 'textarea'){
+echo "<label>".$d['nama_meta']."</label>"
+. "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'>".$val['value_meta']."</textarea>";
+}else{
+echo "<label>".$d['nama_meta']."</label>"
+."<input  type='".$d['jenis_inputan']."' value='".$val['value_meta']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+}
+}
+echo "</form><hr>";
+echo "<button onclick=update_meta('".base64_encode($input['no_berkas'])."') class='btn btn-block btn-sm  mr-2 btn-success '>Simpan Meta <span class='fa fa-save'></span></button>";
+echo'</div>'
+. '</div>';    
+
+}else{
+redirect(404);
+}    
+}
+
+
+function update_meta(){
+if($this->input->post()){
+$input = $this->input->post();
+$cek_meta = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));
+if($cek_meta->num_rows() == 0){
+$this->simpan_meta($input);    
+}else{
+foreach ($input as $key=>$value){
+if($key != "no_berkas"){
+$data = array(
+'value_meta'=>$value    
+);
+$this->db->update('data_meta_berkas',$data,array('no_berkas'=>$input['no_berkas'],'nama_meta'=>$key));
+}
+}
+$status[] = array(
+'status'  => 'success',
+'messages'=> "Meta Data diperbaharui",    
+);
+echo json_encode($status);
+}
+}else{
+redirect(404);    
+}
+
+    
+}
+
+public function  simpan_meta(){
+$input = $this->input->post();
+foreach ($input as $key=>$value){
+if($key == 'no_berkas' || $key == "no_nama_dokumen" || $key == 'no_client' || $key == 'no_pekerjaan' || $key == 'file_berkas'){
+}else{
+$meta = array(
+'no_pekerjaan'      => $input['no_pekerjaan'],
+'no_nama_dokumen'   => $input['no_nama_dokumen'],
+'no_berkas'         => $input['no_berkas'],    
+'nama_meta'         => $key,
+'value_meta'        => $value,    
+);
+$this->db->insert('data_meta_berkas',$meta);
+}
+}
+$status[] = array(
+"status"        => "success",
+"messages"      => "Meta Berhasil disimpan",
+);
+echo json_encode($status);
 }
 
 }

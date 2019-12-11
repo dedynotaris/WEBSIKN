@@ -2,6 +2,8 @@
 <?php  $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user3/V_navbar_user3'); ?>
+    <?php $this->load->view('umum/user3/V_data_user3'); ?>
+
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
@@ -26,7 +28,7 @@
 
 <button onclick="form_laporan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Buat laporan"><i class="far fa-clipboard"></i></button>    
 <button onclick="form_rekam_dokumen('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>','<?php echo $data['no_client']?>');" class="btn btn-sm btn-success" title="Rekam perizinan"><i class="fa fa-pencil-alt"></i></button>    
-<button onclick="lihat_persyaratan('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
+<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
 <button onclick="selesaikan_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Selesaikan status perizinan"><i class="fa fa-check"></i></button>    
     
 </td>
@@ -47,6 +49,11 @@
 
 
 <script type="text/javascript">
+function lihat_dokumen_client(no_client){
+window.location.href ="<?php echo base_url('User3/lihat_lampiran_client/') ?>"+btoa(no_client);
+}
+    
+    
 function response(data){
 var r = JSON.parse(data);
 if(r.status == "success"){
@@ -122,25 +129,6 @@ $(".btn_simpan_laporan").attr("disabled", false);
 });
 }
 
-/*
-function aksi_option(no_pekerjaan,no_berkas_perizinan,no_nama_dokumen,no_client,no_pemilik){
-var aksi_option = $(".data_option"+no_berkas_perizinan+" option:selected").val();
-if(aksi_option == 1){
-$(".data_option"+no_berkas_perizinan).val("-- Klik untuk lihat menu --");
-}else if(aksi_option == 2){
-$('#modal_laporan').modal('show');
-$("#no_pekerjaan").val(no_pekerjaan);
-$("#no_berkas_perizinan").val(no_berkas_perizinan);
-}else if(aksi_option == 3){
-form_lihat_persyaratan(no_pekerjaan,no_pemilik);    
-}else if(aksi_option == 4){
-form_rekam_data(no_nama_dokumen,no_pekerjaan,no_client);
-}else if(aksi_option == 5){
-selesaikan_perizinan(no_berkas_perizinan);
-}
-$(".data_option"+no_berkas_perizinan).prop('selectedIndex',0);
-
-}*/
 function selesaikan_perizinan(no_berkas_perizinan){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 

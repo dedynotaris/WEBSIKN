@@ -52,11 +52,9 @@ border-color: rgb(185, 74, 72) !important;
 <button type="button"  onclick="simpan_pekerjaan();" class="btn btn-success btn-sm mx-auto btn-block simpan_perizinan">Buat pekerjaan dan klien baru <i class="fa fa-save"></i></button>
 <hr>
 <i style="font-size:14px;" class="text-danger">*Hanya Jika Client sudah tersedia</i>
-<button type="button"   onclick="buat_pekerjaan_baru();" class="btn btn-warning btn-sm mx-auto btn-block ">Buat Pekerjaan Baru Saja</button>
-   
+<button type="button"   onclick="buat_pekerjaan_baru();" class="btn btn-warning btn-sm mx-auto btn-block ">Buat Pekerjaan Baru Saja</button>  
 </div>
 </form>
-
 </div>
 </div>
 
@@ -158,7 +156,6 @@ success:function(data){
 $(".data_modal").html(data);    
 $('#modal').modal('show');
 cari_jenis_pekerjaan();
-cari_client();
 target_kelar();
 }
 });

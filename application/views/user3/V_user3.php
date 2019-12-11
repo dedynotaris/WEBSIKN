@@ -1,7 +1,9 @@
 <body >
 <?php $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
+    
 <?php $this->load->view('umum/user3/V_navbar_user3'); ?>
+<?php $this->load->view('umum/user3/V_data_user3'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1">Data Perizinan masuk<br><span class="fa-2x far fa-share-square"></span></h5>
@@ -32,7 +34,7 @@
 
 <button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas"><i class="fa fa-check"></i></button>    
 <button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas"><i class="fa fa-eject"></i></button>    
-<button onclick="lihat_persyaratan('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
+<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
 </td>
 </tr>
 
@@ -152,17 +154,8 @@ window.location.href = "<?php echo base_url('User3/halaman_proses'); ?>";
 });
 }
 
-function lihat_persyaratan(no_client){
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-url:"<?php echo base_url('User3/lihat_persyaratan') ?>",
-data:"token="+token+"&no_client="+no_client,
-success:function(data){
-$("#data_modal").html(data);    
-$('#data_modal').modal('show');
-}
-});
+function lihat_dokumen_client(no_client){
+window.location.href ="<?php echo base_url('User3/lihat_lampiran_client/') ?>"+btoa(no_client);
 }
 
 function download(id_data_berkas){

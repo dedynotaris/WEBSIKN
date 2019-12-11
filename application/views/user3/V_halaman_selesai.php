@@ -2,6 +2,8 @@
 <?php  $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user3/V_navbar_user3'); ?>
+    <?php $this->load->view('umum/user3/V_data_user3'); ?>
+
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
     <h5 align="center " class="text-theme1">Perizinan Selesai<br><span class="fa-2x fab fa-font-awesome-flag"></span></h5>

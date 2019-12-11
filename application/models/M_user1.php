@@ -78,7 +78,8 @@ return $query;
 public function data_user(){
 $this->db->select('no_user');
 $this->db->select('nama_lengkap');
-$query= $this->db->get_where('user',array('Level'=>'User')); 
+$this->db->order_by('user.nama_lengkap','ASC');
+$query= $this->db->get_where('user',array('level'=>'User','status'=>'Aktif')); 
 
 return $query;
 }

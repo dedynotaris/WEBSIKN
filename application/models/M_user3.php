@@ -31,6 +31,33 @@ $query = $this->db->get_where('data_client',array('no_client'=> base64_decode($n
 return $query;
 }
 
+function json_data_lampiran_client($no_client){
+$this->datatables->select('id_data_berkas,'
+.'data_berkas.nama_berkas as nama_lampiran,'
+.'data_berkas.no_pekerjaan as no_pekerjaan,'
+.'data_berkas.no_nama_dokumen as no_nama_dokumen,'
+.'nama_dokumen.nama_dokumen as jenis_dokumen,'
+.'data_berkas.pengupload as pengupload,'
+.'data_berkas.no_berkas as no_berkas'
+);
+$this->datatables->from('data_berkas');
+$this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
+$this->datatables->where('data_berkas.no_client',base64_decode($no_client));
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_meta('$1','$2','$3'); >Lihat data <i class='fa fa-eye'></i></button>",'no_berkas,no_nama_dokumen,no_pekerjaan');
+return $this->datatables->generate();
+}
+
+public function data_edit($no_berkas,$nama_meta){
+$this->db->select('data_meta_berkas.value_meta');
+$this->db->from('data_meta_berkas');
+$this->db->where('data_meta_berkas.no_berkas',$no_berkas);
+$this->db->where('data_meta_berkas.nama_meta',$nama_meta);
+
+$query = $this->db->get();
+return $query;    
+}
+
 
 function json_data_perizinan_selesai(){
 $this->datatables->select('no_berkas_perizinan,'
@@ -89,7 +116,17 @@ $this->db->like($array);
 $query = $this->db->get();
 return $query;
 }
-
+public function hapus_lampiran($no_berkas){
+$this->db->select('data_client.nama_folder,'
+        . 'data_berkas.nama_berkas,'
+        . 'nama_dokumen.nama_dokumen');
+$this->db->from('data_berkas');
+$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_berkas.no_berkas',$no_berkas);
+$query = $this->db->get();  
+return $query;
+}
 public function data_persyaratan($no_client){
 $this->db->select('*');
 $this->db->from('data_pemilik');

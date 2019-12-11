@@ -14,6 +14,7 @@
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >No NIK</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >jenis client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >asisten</th>
@@ -27,7 +28,7 @@
 
 <!------------- Modal ---------------->
 <div class="modal fade bd-example-modal-md" id="modal" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md data_modal" role="document">
+<div class="modal-dialog modal-lg data_modal" role="document">
 
 </div>
 </div>
@@ -77,6 +78,7 @@ columns: [
 "orderable": false
 },
 {"data": "no_client"},
+{"data": "no_identitas"},
 {"data": "nama_client"},
 {"data": "jenis_client"},
 {"data": "pembuat_client"},
@@ -104,26 +106,6 @@ $('td:eq(0)', row).html(index);
 
 <script type="text/javascript">
 
-
-function target_kelar() {
-$("input[name='target_kelar']").datepicker({ minDate:0,dateFormat: 'yy/mm/dd'
-});
-}
-function  form_tambah_pekerjaan(no_client){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-$.ajax({
-type:"post",
-url:"<?php echo base_url('User2/form_tambah_pekerjaan') ?>",
-data:"token="+token+"&no_client="+no_client,
-success:function(data){
-$(".data_modal").html(data);    
-$('#modal').modal('show');
-cari_jenis_pekerjaan();
-target_kelar();
-}
-});
-
-}
 
 function  form_edit_client(no_client){
 var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
@@ -156,6 +138,7 @@ $("#form_update_client").find("#"+key).removeClass("is-valid");
 });
 });
 }else{
+refresh_nama_dokumen();
 read_response(data);
 $('#modal').modal('hide');
 }
@@ -164,67 +147,16 @@ $(".update_client").attr("disabled", false);
 });
 }
 
+function refresh_nama_dokumen(){
+var table = $('#data_client').DataTable();
+table.ajax.reload( function ( json ) {
+$('#data_client').val( json.lastInput );
+});
+}
+
 function lihat_berkas(no_client){
 window.location.href= "<?php echo base_url('User2/lihat_berkas_client/')?>"+no_client ;        
 }
 
-function cari_jenis_pekerjaan(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
-$(".jenis_pekerjaan2").select2({
-   ajax: {
-    url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
-    method : "post",
-    
-    data: function (params) {
-      var query = {
-        search: params.term,
-        token: token
-      };
-
-      return query;
-    },
-   processResults: function (data) {
-      // Transforms the top-level key of the response object from 'items' to 'results'
-      var data = JSON.parse(data);
-      console.log(data.results);
-      return {
-        results: data.results
-      };
-      
-    }
-      
-    }        
-   
-});
-}
-
-function simpan_pekerjaan_baru(){
-
-$(".simpan_pekerjaan").attr("disabled", true);
-$("#form_pekerjaan_baru").find(".form-control").removeClass("is-invalid").addClass("is-valid");
-$('.form-control + p').remove();
-$.ajax({
-url  : "<?php echo base_url("User2/buat_pekerjaan_baru") ?>",
-type : "post",
-data : $("#form_pekerjaan_baru").serialize(),
-success: function(data) {
-var r  = JSON.parse(data);
-if(r[0].status == 'error_validasi'){
-$.each(r[0].messages, function(key, value){
-$.each(value, function(key, value){
-$("#form_pekerjaan_baru").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
-$("#form_pekerjaan_baru").find("#"+key).removeClass("is-valid");
-});
-});
-}else{
-
-}
-$(".simpan_pekerjaan").attr("disabled", false);
-
-read_response(data);
-window.location.href="<?php echo base_url('User2/lengkapi_persyaratan/') ?>"+r[0].no_pekerjaan;
-}
-});
-}
 </script>
 </body>

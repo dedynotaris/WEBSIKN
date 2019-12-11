@@ -33,11 +33,11 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 </div>
 <div class="row">
 <div class="col">
-<label>Alamat client</label><br>    
+<label>No Identitas</label><br>    
 
 </div>
 <div class="col"> :
-<?php echo $static['alamat_client'] ?>        
+<?php echo $static['no_identitas'] ?>        
 </div>
 </div>
 
@@ -77,7 +77,7 @@ LENGKAPI PERSYARATAN DOKUMEN <?php echo $static['nama_client'] ?>
 <?php echo $static['jenis_kontak'] ?>        
 </div>
 </div>
-    <hr>
+<hr>
     <button  onclick=form_edit_client("<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit client  <span class="fa fa-edit"></span></button>    
 </div>
 
@@ -139,15 +139,16 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
 </div>
 <form id='form_update_pekerjaan' >
-<hr>
+
 <input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo  $this->security->get_csrf_hash()  ?>" readonly="" class="form-control required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo base64_encode($static['no_pekerjaan'])?>" readonly="" class="form-control required"  accept="text/plain">           
-<label>Jenis Pekerjaan</label>
+<label>Update Jenis Pekerjaan</label>
 <select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
-</form>    
+</form>
 <hr>
-<button onclick=update_pekerjaan(); class="btn btn-success btn-sm btn-block">Update jenis pekerjaan <span class="fa fa-edit"></span></button>    
+<button onclick=update_pekerjaan(); class="btn btn-success btn-sm btn-block">Update jenis pekerjaan <span class="fa fa-edit"></span></button> 
 </div>
+
 
 </div>
     
@@ -277,7 +278,7 @@ var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->s
 
 $.ajax({
 type:"post",
-url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
+url:"<?php echo base_url('User2/hapus_berkas_persyaratan/') ?>",
 data:"token="+token+"&id_data_berkas="+id_data_berkas,
 success:function(data){
 data_terupload(no_client,no_pekerjaan);    
@@ -625,6 +626,7 @@ $(".data_terupload").html(data);
 function set_jenis_dokumen(no_client,no_pekerjaan,no_berkas){
 var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
 
+
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
@@ -639,6 +641,27 @@ data_terupload(no_client,no_pekerjaan);
 function cancel_edit(no_berkas){
 $(".data_edit"+no_berkas ).slideUp().html();
 $(".btn_edit"+no_berkas).show();  
+}
+function simpan_lampiran(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/simpan_lampiran') ?>",
+success:function(data){
+data_terupload(no_client,no_pekerjaan);
+}
+});
+}
+    
+function lihat_berkas_client(no_client){
+window.location.href="<?php echo base_url('User2/lihat_berkas_client/') ?>"+btoa(no_client);
+}
+
+
+function lihat_lampiran_client(no_client){
+window.location.href="<?php echo base_url('User2/lihat_lampiran_client/') ?>"+btoa(no_client);
 }
 
 
