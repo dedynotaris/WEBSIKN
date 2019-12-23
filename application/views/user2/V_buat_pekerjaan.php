@@ -15,7 +15,7 @@ border-color: rgb(185, 74, 72) !important;
 <form  id="form_pekerjaan" class="mt-2 p-2" method="post" action="#">
 <div class="row text-theme1 rounded  m-2" >
 <div class="col-md-6">
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="form-control required"  accept="text/plain">
 <label>*Jenis Pekerjaan</label>
 <select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
 <label>*Target selesai</label>
@@ -88,7 +88,7 @@ $("#FormPeroranganBadanHukum").html("<label>*Nama Badan Hukum</label>\n\
 
 
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan").select2({
 ajax: {
 url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
@@ -126,7 +126,7 @@ dateFormat: 'yy/mm/dd'
 
 function cari_client(){
 var a = $(".cari_client").val(); 
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/cari_client') ?>",
@@ -146,7 +146,7 @@ $(".hasil_client").html("<hr><p class='text-center text-danger'>Data Client Tida
 
 
 function buat_pekerjaan_baru(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
   $.ajax({
 type:"post",
@@ -162,7 +162,7 @@ target_kelar();
 }
 
 function cari_jenis_pekerjaan(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan2").select2({
    ajax: {
     url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
@@ -196,7 +196,7 @@ var no_jenis_pekerjaan = $(".jenis_pekerjaan2").val();
 var hasil_client       = $(".hasil_client").text();
 var target_kelar2      = $("#target_kelar2").val();
 var no_client          = $(".no_client2").val();
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".simpan_pekerjaan").attr("disabled",true);
 if(no_jenis_pekerjaan != null && hasil_client !='' && target_kelar2 != '' ){
 

@@ -160,7 +160,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <div class="col-md-6">    
 <div class="col ">
 <form id="form_pihak_terlibat">
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
+<input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
 <input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
     
@@ -226,7 +226,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <script type="text/javascript">
 function cari_client2(){
 var a = $(".no_identitas").val(); 
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
 $.ajax({
 type:"post",
@@ -274,7 +274,7 @@ $("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
     
     
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
 $.ajax({
 type:"post",
@@ -325,7 +325,7 @@ $(".simpan_pihak_baru").attr("disabled",false);
 }
 
 function para_pihak(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
 $.ajax({
 type:"post",
@@ -377,7 +377,7 @@ $(".date").daterangepicker({
 
 
 function  form_edit_client(no_client){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/form_edit_client') ?>",
@@ -420,7 +420,7 @@ $(".update_client").attr("disabled", false);
 
 
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan").select2({
    ajax: {
     url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
@@ -474,7 +474,7 @@ $(".update_pekerjaan").attr("disabled", false);
 }
 
 function lanjutkan_proses_perizinan(no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
@@ -503,7 +503,7 @@ para_pihak();
 
 
 function tampilkan_form(no_client,no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
 $.ajax({
 type:"post",

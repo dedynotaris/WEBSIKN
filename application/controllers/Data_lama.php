@@ -22,7 +22,6 @@ $this->load->view('data_lama/V_data_lama',['nama_notaris'=>$nama_notaris]);
 public function lihat_rekam_data(){ 
 $no_pekerjaan      = base64_decode($this->uri->segment(3));
 $data_perekaman    = $this->M_data_lama->data_perekaman_pekerjaan($no_pekerjaan);
-
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_rekaman_data',['data_perekaman'=>$data_perekaman]);
 }

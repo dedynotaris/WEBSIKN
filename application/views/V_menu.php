@@ -84,7 +84,7 @@ src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff"
 
 <script type="text/javascript">
 function check_akses(model,model2){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";      
+var token = "<?php echo $this->security->get_csrf_hash(); ?>";      
     
 $.ajax({
 type:"post",
