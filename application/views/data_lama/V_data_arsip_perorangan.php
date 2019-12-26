@@ -2,18 +2,19 @@
 <?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
+
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-3x fas fa-users"></span><br> Data Client perorangan</h5>
+<h5 align="center " class="text-theme1"><span class="fa-3x fa fa-users"></span><br>Data Client Perorangan</h5>
 </div>
 
-<div class="row card m-2 p-2">
+<div class="row  m-2 p-2">
 <div class="col ">
 <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Notaris</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
@@ -65,11 +66,10 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_pekerjaan",
+"data": "id_data_client",
 "orderable": false
 },
 {"data": "nama_client"},
-{"data": "nama_jenis"},
 {"data": "nama_lengkap"},
 {"data": "view"}
 

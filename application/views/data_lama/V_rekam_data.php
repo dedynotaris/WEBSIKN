@@ -1,8 +1,8 @@
 <body onload="refresh()">
-<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
+<?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
-<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
-<?php $this->load->view('umum/user2/V_data_user2'); ?>
+<?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
 <?php $static = $query->row_array(); 
 ?>
 <div class="container text-theme1">    
@@ -162,7 +162,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <div class="col-md-5">    
 <div class="col ">
 <form id="form_pihak_terlibat">
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
+<input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
     
 <label>Pilih Jenis pihak</label>
@@ -226,7 +226,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
     
 <script type="text/javascript">
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
 $.ajax({
 type:"post",
@@ -241,7 +241,7 @@ read_response(data);
 }        
     
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
 minLength:0,
 delay:0,
@@ -306,7 +306,7 @@ refresh();
 }
 
 function para_pihak(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
 $.ajax({
 type:"post",
@@ -355,7 +355,7 @@ $(".date").daterangepicker({
 
 
 function  form_edit_client(no_client,no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url('Data_lama/form_edit_client') ?>",
@@ -397,7 +397,7 @@ $(".update_client").attr("disabled", false);
 
 
 $(function(){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan").select2({
    ajax: {
     url: '<?php echo site_url('Data_lama/cari_jenis_pekerjaan') ?>',
@@ -454,7 +454,7 @@ $(".update_pekerjaan").attr("disabled", false);
 }
 
 function lanjutkan_proses_selesai(no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
@@ -468,7 +468,7 @@ read_response(data);
 }
 
 function tampilkan_form_utama(no_client,no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url('Data_lama/tampilkan_form_utama') ?>",
@@ -523,7 +523,7 @@ $("#form_utama").find(".form-control").removeClass("is-invalid").addClass("is-va
 $("#form_utama").find('.form-control + p').remove();
 
 
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 formdata = new FormData();
 var x = $('#form_utama').serializeArray();
 $.each(x,function(prop,obj){
@@ -605,7 +605,7 @@ para_pihak();
 
 
 function tampilkan_form(no_client,no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
 $.ajax({
 type:"post",

@@ -95,14 +95,14 @@ echo json_encode($json);
 }
 public function create_client(){
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
-$this->form_validation->set_rules('target_kelar', 'Target kelar', 'required');
-$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
-$this->form_validation->set_rules('contact_number', 'Contact Number', 'required|numeric');
-$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required');
-$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('badan_hukum', 'Nama Client', 'required');
-$this->form_validation->set_rules('no_identitas', 'Number Indetify', 'required');
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('target_kelar', 'Target kelar', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_person', 'Contact Person', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_number', 'Contact Number', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('badan_hukum', 'Nama Client', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_identitas', 'Number Indetify', 'required',array('required' => 'Data ini tidak boleh kosong'));
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -495,9 +495,9 @@ redirect(404);
 public function upload_utama(){
 if($this->input->post()){
 $input = $this->input->post();
-$this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required');
-$this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required');
-$this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required');
+$this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
 $this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required');
 $data_pekerjaan = $this->M_user2->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
 $config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
@@ -578,8 +578,8 @@ redirect(404);
 public function buat_pekerjaan_baru(){
 if($this->input->post()){    
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
-$this->form_validation->set_rules('target_kelar', 'Target selesai', 'required');
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('target_kelar', 'Target selesai', 'required',array('required' => 'Data ini tidak boleh kosong'));
 
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
@@ -1166,12 +1166,12 @@ redirect(404);
 }
 function simpan_pihak_terlibat(){
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required');
-$this->form_validation->set_rules('badan_hukum', 'Nama Pihak', 'required');
-$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required');
-$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required');
-$this->form_validation->set_rules('no_identitas', 'No identitas NIK/NPWP', 'required|numeric');
+$this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('badan_hukum', 'Nama Pihak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_identitas', 'No identitas NIK/NPWP', 'required',array('required' => 'Data ini tidak boleh kosong'));
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -1479,14 +1479,14 @@ redirect(404);
 public function update_client(){
 if($this->input->post()){    
 $input = $this->input->post();
-$this->form_validation->set_rules('contact_person', 'Contact Person', 'required');
-$this->form_validation->set_rules('contact_number', 'Contact Number', 'required|numeric');
-$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required');
-$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('badan_hukum', 'Badan Hukum', 'required');
-$this->form_validation->set_rules('alamat_badan_hukum', 'Alamat', 'required');
-$this->form_validation->set_rules('no_identitas', 'No Identitas NIK/NPWP', 'required');
-$this->form_validation->set_rules('email', 'Email Client', 'required');
+$this->form_validation->set_rules('contact_person', 'Contact Person', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_number', 'Contact Number', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_client', 'Jenis Client', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('badan_hukum', 'Badan Hukum', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('alamat_badan_hukum', 'Alamat', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_identitas', 'No Identitas NIK/NPWP', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('email', 'Email Client', 'required',array('required' => 'Data ini tidak boleh kosong'));
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(
@@ -1520,7 +1520,7 @@ redirect(404);
 function update_pekerjaan(){
 if($this->input->post()){
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan ', 'required');
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan ', 'required',array('required' => 'Data ini tidak boleh kosong'));
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
 $status[] = array(

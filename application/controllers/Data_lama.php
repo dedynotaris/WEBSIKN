@@ -31,6 +31,30 @@ $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_data_arsip');    
 }
 
+public function DataArsipClient(){
+
+    $query = $this->M_data_lama->data_pekerjaan_arsip('ArsipMasuk');
+   
+    $this->load->view('umum/V_header');
+    $this->load->view('data_lama/V_DataArsipClient',['query'=>$query]);    
+    }
+
+    public function DataArsipProses(){
+    
+        $query = $this->M_data_lama->data_pekerjaan_arsip('ArsipProses');
+       
+        $this->load->view('umum/V_header');
+        $this->load->view('data_lama/V_DataArsipProses',['query'=>$query]);    
+        }
+
+        public function DataArsipSelesai(){
+    
+            $query = $this->M_data_lama->data_pekerjaan_arsip('ArsipSelesai');
+           
+            $this->load->view('umum/V_header');
+            $this->load->view('data_lama/V_DataArsipSelesai',['query'=>$query]);    
+            }
+    
 public function perorangan(){
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_data_arsip_perorangan');    
@@ -124,14 +148,14 @@ echo json_encode($data);
 }
 function buat_arsip(){
 $input = $this->input->post();
-$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required');
-$this->form_validation->set_rules('jenis_client', 'Jenis Klien', 'required');
-$this->form_validation->set_rules('nama_pihak', 'Nama Klien', 'required');
-$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required');
-$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required|numeric');
-$this->form_validation->set_rules('alamat', 'Alamat', 'required');
-$this->form_validation->set_rules('no_user_pembuat', 'Nama Notaris', 'required');
+$this->form_validation->set_rules('jenis_pekerjaan', 'Jenis pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_client', 'Jenis Klien', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('badan_hukum', 'Nama Klien', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_user_pembuat', 'Nama Notaris', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_identitas', 'NIK / NPWP', 'required',array('required' => 'Data ini tidak boleh kosong'));
 
 if ($this->form_validation->run() == FALSE){
 $status_input = $this->form_validation->error_array();
@@ -140,32 +164,53 @@ $status[] = array(
 'messages'=>array($status_input),    
 );
 echo json_encode($status);
-}else{
 
-if($input['no_client']  == NULL){
-if($input['jenis_client'] == "Perorangan"){
-$this->simpan_client($input);
-}else if($input['jenis_client'] == "Badan Hukum"){    
-$cek_badan_hukum = $this->db->get_where('data_client',array('nama_client'=>strtoupper($input['nama_pihak'])))->num_rows();        
-if($cek_badan_hukum == 0){
-$this->simpan_client($input);
 }else{
-$status[] = array(
-"status"       => "error_validasi",
-"messages"     =>[array("jenis_client"=>"Jenis Badan Hukum Sudah Tersedia","nama_pihak"=>"Nama Badan Hukum Sudah Tersedia")],    
-);    
-echo json_encode($status);
-}
-}
-
-}else{    
+$cek_badan_hukum = $this->db->get_where('data_client',array('no_identitas'=>strtoupper($input['no_identitas'])));        
 
 $h_berkas = $this->M_data_lama->hitung_pekerjaan()->num_rows()+1;
 $no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
 
+
+
+if($cek_badan_hukum->num_rows() == 0){
+    $h_client = $this->M_data_lama->data_client()->num_rows()+1;
+    $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
+    
+    //buatpekerjaandanclienbaru
+$this->SimpanPekerjaanDanClienBaru($input,$no_pekerjaan,$no_client);
+}else{
+//buatpekerjaansaja
+$this->BuatPekerjaanSaja($input,$no_pekerjaan,$cek_badan_hukum);
+}
+}
+}
+
+public function SimpanPekerjaanDanClienBaru($input,$no_pekerjaan,$no_client){    
+$data_client = array(
+'no_client'                 => $no_client,    
+'no_identitas'              => $input['no_identitas'],    
+'jenis_client'              => ucwords($input['jenis_client']),    
+'nama_client'               => strtoupper($input['badan_hukum']),
+'tanggal_daftar'            => date('Y/m/d'),    
+'pembuat_client'            => $input['nama_notaris'],    
+'no_user'                   => $input['no_user_pembuat'], 
+'nama_folder'               => "Dok".$no_client,
+'contact_person'            => ucwords($input['contact_person']),    
+'contact_number'            => ucwords($input['contact_number']),    
+'jenis_kontak'              => $input['jenis_kontak'],    
+); 
+
+$this->db->insert('data_client',$data_client);
+
+if(!file_exists("berkas/"."Dok".$no_client)){
+mkdir("berkas/"."Dok".$no_client,0777);
+}
+
+
 $data_r = array(
-'no_client'          => $input['no_client'],    
-'status_pekerjaan'   => "Arsip",
+'no_client'          => $no_client,    
+'status_pekerjaan'   => "ArsipMasuk",
 'no_pekerjaan'       => $no_pekerjaan,    
 'tanggal_dibuat'     => date('Y/m/d'),
 'no_jenis_pekerjaan' => $input['jenis_pekerjaan'],   
@@ -175,68 +220,9 @@ $data_r = array(
 );
 $this->db->insert('data_pekerjaan',$data_r);
 
-$tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
-$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
-
-$data_pem = array(
-'no_pemilik'    =>$no_pemilik,   
-'no_client'     =>$input['no_client'],
-'no_pekerjaan'  =>$no_pekerjaan    
-);
-$this->db->insert('data_pemilik',$data_pem);
-    
-$status[] = array(
-"status"       => "success",
-"messages"     =>"Pekerjaan baru berhasil dibuat",
-"no_pekerjaan" => $no_pekerjaan       
-);    
-echo json_encode($status);
-}
-
-}
-}
-
-public function simpan_client($data){    
-$h_client = $this->M_data_lama->data_client()->num_rows()+1;
-$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
-
-$data_client = array(
-'no_client'                 => $no_client,    
-'jenis_client'              => ucwords($data['jenis_client']),    
-'nama_client'               => strtoupper($data['nama_pihak']),
-'alamat_client'             => ucwords($data['alamat']),    
-'tanggal_daftar'            => date('Y/m/d'),    
-'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
-'no_user'                   => $this->session->userdata('no_user'), 
-'nama_folder'               => "Dok".$no_client,
-'contact_person'            => ucwords($data['contact_person']),    
-'contact_number'            => ucwords($data['contact_number']),    
-'jenis_kontak'              => $data['jenis_kontak'],    
-);    
-$this->db->insert('data_client',$data_client);
-
-if(!file_exists("berkas/"."Dok".$no_client)){
-mkdir("berkas/"."Dok".$no_client,0777);
-}
-
-$h_berkas = $this->M_data_lama->hitung_pekerjaan()->num_rows()+1;
-$no_pekerjaan = "P".str_pad($h_berkas,6 ,"0",STR_PAD_LEFT);
-
-$data_r = array(
-'no_client'          => $no_client,    
-'status_pekerjaan'   => "Arsip",
-'no_pekerjaan'       => $no_pekerjaan,    
-'tanggal_dibuat'     => date('Y/m/d'),
-'no_jenis_pekerjaan' => $data['jenis_pekerjaan'],   
-'target_kelar'       => date('Y/m/d'),
-'no_user'            => $data['no_user_pembuat'],    
-'pembuat_pekerjaan'  => $data['nama_notaris'],    
-);
-$this->db->insert('data_pekerjaan',$data_r);
 
 $tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
 $no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
-
 $data_pem = array(
 'no_pemilik'    =>$no_pemilik,   
 'no_client'     =>$no_client,
@@ -244,16 +230,38 @@ $data_pem = array(
 );
 $this->db->insert('data_pemilik',$data_pem);
 
+
 $status[] = array(
 "status"       => "success",
 "messages"     =>"Arsip baru berhasil dibuat",
 "no_pekerjaan" => $no_pekerjaan,   
 );    
 echo json_encode($status);
-
 }
 
+public function BuatPekerjaanSaja($input,$no_pekerjaan,$cek_badan_hukum){
+$no_client = $cek_badan_hukum->row_array();
+    $data_r = array(
+        'no_client'          => $no_client['no_client'],    
+        'status_pekerjaan'   => "ArsipMasuk",
+        'no_pekerjaan'       => $no_pekerjaan,    
+        'tanggal_dibuat'     => date('Y/m/d'),
+        'no_jenis_pekerjaan' => $input['jenis_pekerjaan'],   
+        'target_kelar'       => date('Y/m/d'),
+        'no_user'            => $input['no_user_pembuat'],    
+        'pembuat_pekerjaan'  => $input['nama_notaris'],    
+        );
 
+$this->db->insert('data_pekerjaan',$data_r);
+
+        $status[] = array(
+            "status"       => "success",
+            "messages"     =>"Arsip baru berhasil dibuat",
+            "no_pekerjaan" => $no_pekerjaan,   
+            );    
+            echo json_encode($status);
+                    
+}
 
 public function data_pencarian(){
 if($this->input->post()){
@@ -449,9 +457,9 @@ echo '<div class="modal-content">
 </button>
 </div>
 <div class="modal-body " >';
-echo '<form id="form_update_client">
-    <input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
-    <label>Kontak yang bisa dihubungi</label>
+echo'<form id="form_update_client">
+<input type="hidden" name="'.$this->security->get_csrf_token_name().'"value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<label>Kontak yang bisa dihubungi</label>
 <input type="text" value="'.$data_client['contact_person'].'" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
 <input type="hidden" name="no_client" value="'.$data_client['no_client'].'" readonly="" class="form-control required"  accept="text/plain">
 <label>Nomor Kontak Telephone / HP</label>
@@ -1083,6 +1091,24 @@ echo json_encode($status);
 }else{
 redirect(404);    
 }    
+}
+
+function TambahkanProsesArsip(){
+if($this->input->post()){    
+$data = array(
+'status_pekerjaan' =>'ArsipProses'    
+);
+$this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=>base64_decode($this->input->post('no_pekerjaan'))));
+
+    $status[] = array(
+        'status'  => 'success',
+        'messages'=> "Berhasil Dimasukan Kedalam Proses Arsip",    
+        );
+        echo json_encode($status);
+            
+}else{
+redirect(404);    
+}
 }
 }
 

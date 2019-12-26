@@ -2,6 +2,7 @@
 <?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
+<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan data arsip</h5>
@@ -30,8 +31,6 @@
 
 <label>Jenis Pekerjaan</label>
 <select name='jenis_pekerjaan' id='jenis_pekerjaan' class="form-control form-control-sm  jenis_pekerjaan"></select>
-
-
 </div>
 
 <div class="col">
@@ -179,7 +178,7 @@ $("#form_data_lama").find("#"+key).removeClass("is-valid");
 }else{
 read_response(data);
 $("#form_pihak_terlibat").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
-window.location.href='<?php echo base_url('Data_lama/rekam_data/') ?>'+btoa(r[0].no_pekerjaan);
+window.location.href='<?php echo base_url('Data_lama/') ?>';
 
 }
 }

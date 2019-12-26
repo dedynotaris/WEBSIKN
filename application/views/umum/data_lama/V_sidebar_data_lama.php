@@ -38,7 +38,23 @@ App Management Document
 </li>
 </ul>
 </li>
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/data_arsip'); ?>"><i class="fas fa-clipboard-list"></i> Data Arsip</a></li>
+
+<li class="">
+<a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
+<i class="fas fa-users"></i> Arsip</a>
+<ul class="list-unstyled collapse show" id="homeSubmenu">
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipClient'); ?>">Arsip Masuk <i class="fa fa-users float-right"></i></a>
+</li>
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipProses'); ?>">Arsip Proses <i class="far fa-building float-right"></i></a>
+</li>
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipSelesai'); ?>">Arsip Selesai <i class="far fa-building float-right"></i></a>
+</li>
+</ul>
+</li>
+
 </ul>
 </div>
 </div>
