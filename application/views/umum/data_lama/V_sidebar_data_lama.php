@@ -40,17 +40,17 @@ App Management Document
 </li>
 
 <li class="">
-<a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
-<i class="fas fa-users"></i> Arsip</a>
-<ul class="list-unstyled collapse show" id="homeSubmenu">
+<a href="#arsipSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
+<i class="fas fa-folder"></i> Arsip</a>
+<ul class="list-unstyled collapse show" id="arsipSubmenu">
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipClient'); ?>">Arsip Masuk <i class="fa fa-users float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipClient'); ?>">Arsip Masuk <i class="fas fa-inbox  float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipProses'); ?>">Arsip Proses <i class="far fa-building float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipProses'); ?>">Arsip Proses <i class="fas fa-archive float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipSelesai'); ?>">Arsip Selesai <i class="far fa-building float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DataArsipSelesai'); ?>">Arsip Selesai <i class="fas fa-box  float-right"></i></a>
 </li>
 </ul>
 </li>

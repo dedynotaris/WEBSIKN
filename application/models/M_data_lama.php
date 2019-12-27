@@ -214,24 +214,19 @@ $query = $this->db->get();
 return $query;
 }
 public function data_perekaman2($no_nama_dokumen,$no_client){
-$this->db->select("data_meta_berkas.nama_meta,"
-                ."data_meta_berkas.value_meta,"
-                ."data_berkas.no_berkas,"
-                ."data_berkas.pengupload,"
-                ."data_berkas.tanggal_upload,"
-                ."data_berkas.id_data_berkas,"
-                ."data_meta_berkas.no_nama_dokumen,"
-                ."data_meta_berkas.no_pekerjaan,"
-                ."data_berkas.no_client");
-$this->db->from('data_berkas');
-$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','inner');
-$this->db->group_by('data_berkas.no_berkas');
-$this->db->where('data_berkas.no_client',$no_client);
-$this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
-$this->db->limit(3);
-$query = $this->db->get();  
-return $query;
-}
+        $this->db->select("data_berkas.no_berkas,"
+                        ."data_berkas.pengupload,"
+                        ."data_berkas.tanggal_upload,"
+                        ."data_berkas.nama_berkas,"
+                        ."data_berkas.no_client,"
+                        . "nama_dokumen.nama_dokumen");
+        $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+        $this->db->from('data_berkas');
+        $this->db->where('data_berkas.no_client',$no_client);
+        $this->db->where('data_berkas.no_nama_dokumen',$no_nama_dokumen);
+        $query = $this->db->get();  
+        return $query;
+        }
 public function pencarian_data_client($input){
 $this->db->select('data_client.nama_client,'
         . 'data_client.no_client');
@@ -314,6 +309,7 @@ $this->db->select('data_client.nama_client,'
         . 'data_client.no_client,'
         . 'data_client.jenis_client,'
         . 'data_client.alamat_client,'
+        . 'data_client.no_identitas,'
         . 'data_client.contact_person,'
         . 'data_client.contact_number,'
         . 'data_client.jenis_kontak,'
@@ -417,6 +413,66 @@ public function data_pekerjaan_arsip($param){
         
         return $query;
         }
+        public function jumlah_dokumen_dimiliki($no_client){
+                $this->db->group_by('no_nama_dokumen');
+        $query = $this->db->get_where('data_berkas',array('no_client'=>$no_client));
+        return $query;   
+        }
+        
+        public function jumlah_lampiran($no_client){
+        $query = $this->db->get_where('data_berkas',array('no_client'=>$no_client));
+        return $query;
+        }
 
+        function json_data_berkas_client($no_client){
+                $this->datatables->select('id_data_berkas,'
+                .'data_berkas.no_client as no_client,'
+                .'data_berkas.no_pekerjaan as no_pekerjaan,'
+                .'data_berkas.no_nama_dokumen as no_nama_dokumen,'
+                .'nama_dokumen.nama_dokumen as nama_file,'
+                .'data_berkas.pengupload as pengupload,'
+                . 'data_client.nama_client as nama_client'
+                );
+                $this->datatables->from('data_berkas');
+                $this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+                $this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
+                $this->datatables->group_by('data_berkas.no_nama_dokumen');
+                $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
+                $this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_data_perekaman('$1','$2','$3'); >Lihat data <i class='fa fa-eye'></i></button>",'no_nama_dokumen,no_pekerjaan,no_client');
+                return $this->datatables->generate();
+                }
+
+                function json_data_lampiran_client($no_client){
+                        $this->datatables->select('id_data_berkas,'
+                        .'data_berkas.nama_berkas as nama_lampiran,'
+                        .'data_berkas.no_pekerjaan as no_pekerjaan,'
+                        .'data_berkas.no_nama_dokumen as no_nama_dokumen,'
+                        .'nama_dokumen.nama_dokumen as jenis_dokumen,'
+                        .'data_berkas.pengupload as pengupload,'
+                        .'data_berkas.no_berkas as no_berkas'
+                        );
+                        $this->datatables->from('data_berkas');
+                        $this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+                        $this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
+                        $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
+                        $this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_meta('$1','$2','$3'); >Lihat data <i class='fa fa-eye'></i></button>",'no_berkas,no_nama_dokumen,no_pekerjaan');
+                        return $this->datatables->generate();
+                        }
+                        public function hapus_lampiran($no_berkas){
+                                $this->db->select('data_client.nama_folder,'
+                                        . 'data_berkas.nama_berkas,'
+                                        . 'nama_dokumen.nama_dokumen');
+                                $this->db->from('data_berkas');
+                                $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+                                $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+                                $this->db->where('data_berkas.no_berkas',$no_berkas);
+                                $query = $this->db->get();  
+                                return $query;
+                                }
+                                public function data_user_where($no_user){
+                                        $query = $this->db->get_where('user',array('no_user'=>$no_user));
+                                        return $query;
+                                        }
+                                        
 }       
 ?>

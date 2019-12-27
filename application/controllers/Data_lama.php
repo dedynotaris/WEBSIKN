@@ -75,6 +75,13 @@ $this->load->view('data_lama/V_rekam_data',['query'=>$query]);
 public function json_data_berkas(){
 echo $this->M_data_lama->json_data_berkas();       
 }
+public function json_data_berkas_client($no_client){
+    echo $this->M_data_lama->json_data_berkas_client($no_client);  
+    }
+    public function json_data_lampiran_client($no_client){
+        echo $this->M_data_lama->json_data_lampiran_client($no_client);  
+        }
+        
 
 public function json_data_arsip_perorangan(){
 echo $this->M_data_lama->json_data_arsip_perorangan();       
@@ -561,94 +568,101 @@ echo json_encode($status);
 }
 
 function form_persyaratan(){
-if($this->input->post()){    
-$input = $this->input->post();
-$data_client      = $this->M_data_lama->data_client_where(base64_encode($input['no_client']))->row_array();
+    if($this->input->post()){    
+    $input = $this->input->post();
+    $jumlah_dokumen_dimiliki    = $this->M_data_lama->jumlah_dokumen_dimiliki($input['no_client']);
+    $jumlah_lampiran            = $this->M_data_lama->jumlah_lampiran($input['no_client']);
+    $data_client                = $this->M_data_lama->data_client_where(base64_encode($input['no_client']))->row_array();
+    echo '
+    <div class="modal-header">
+    <h6 class="modal-title" id="exampleModalLabel text-center">UPLOAD DOKUMEN PENUNJANG MILIK '.strtoupper($data_client['nama_client']).' DIBAWAH INI <span class="i"><span></h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body overflow-auto" style="max-height:500px;" >';
+    echo "<div class=''>"
+    . "<div class='row'>"
+    . "<div class='col-md-6 '>"
+    . "<form  class='card-header ' id='form_berkas'>"
+    . "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
+    . "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
+    . "<label h6>Upload dokumen penunjang</label>"
+    . "<input type='file' id='file_berkas' name='file_berkas[]' multiple class='form-control form-control-sm '>"
+    .'<div class="progress" style="display:none">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    </div>'
+    . "<label>&nbsp;</label>"
+    . "<button type='button'  onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas  </button>"
+    . "</form>";
+    echo  "</div><div class='col-md-6'>
+    <div class='card-header'>
+    <table class='table table-sm  table-bordered'>
+    <tr><td>Jumlah Dokumen Dimiliki</td> <td>".$jumlah_dokumen_dimiliki->num_rows()."</td><td><button onclick=lihat_berkas_client('".$input['no_client']."'); class='btn btn-success btn-sm'> <span class='fa fa-eye'></span></button></td></tr>
+    <tr><td>Jumlah Lampiran yang ada</td> <td>".$jumlah_lampiran->num_rows()."</td><td><button onclick=lihat_lampiran_client('".$input['no_client']."'); class='btn btn-success btn-sm'> <span class='fa fa-eye'></span></button></td></tr>
+    </table>
+    </div>
+    </div>";
+    echo  "</div>";
+    echo '<div class="row">';
+    echo '<div class="col data_terupload"></div>';
+    echo  "</div>";
+    echo '</div>';
+    echo "</div>";
+    echo'</div>';   
+    }else{
+    redirect(404);    
+    }
+    }
+    public function data_terupload(){
+        if($this->input->post()){    
+        $input              = $this->input->post();    
+        $data_upload        = $this->db->get_where('data_berkas',array('no_client'=>$input['no_client'],'no_pekerjaan'=> base64_decode($input['no_pekerjaan']),'status_berkas !='=>'selesai'));
+        $data_client        = $this->M_data_lama->data_client_where(base64_encode($input['no_client']))->row_array();
+        $nama_persyaratan   = $this->M_data_lama->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
+        echo "<b><div class='row card-header mt-1 text-center'>"
+        . "<div class='col-md-1'>No</div>"
+        . "<div class='col'>Nama Lampiran</div>"
+        . "<div class='col'>Jenis dokumen</div>"
+        . "<div class='col'>Aksi</div>"
+        . "</div></b>";
+        $n=1;
+        if($data_upload->num_rows() != 0){   
+        echo "<div class='DataLampiran'> ";
+        foreach ($data_upload->result_array() as $data){
+        echo "<div class='row mt-1 card-header data".$data['no_berkas']."'>";
+        echo "<div class='col-md-1 text-center'>".$n++."</div>";
+        echo "<div class='col'>".substr($data['nama_berkas'],0,30)."</div>";
+        echo "<div class='col'>"
+        . "<select onchange=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control   form-control-sm no_berkas".$data['no_berkas']."'>";
+        echo "<option></option>";
+        foreach ($nama_persyaratan->result_array() as  $persyartan){     
+        echo "<option "; if($data['no_nama_dokumen'] == $persyartan['no_nama_dokumen']){ echo "selected ";}  echo "value='".$persyartan['no_nama_dokumen']."'>".$persyartan['nama_dokumen']."</option>";
+        }
+        echo "</select></div>";
+        echo '<div class="col text-center">';
+        if($data['no_nama_dokumen']){
+        echo '<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn btn_edit'.$data['no_berkas'].'  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>';
+        echo '<button  onclick=cek_download("'.base64_encode($data['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
+        }
+        echo '<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>';
+        echo '</div>';
+        echo "</div>";    
+        }
+        echo "<div class='row mt-1 card-header'>"
+        . "<div class='col'></div>"
+        . "<div class='col'></div>"
+        . "<div class='col'><button onclick=simpan_lampiran('".$input['no_client']."','".$input['no_pekerjaan']."') class='btn btn-sm btn-block btn-success'>Simpan lampiran <span class='fa fa-save'></span></button></div>"
+        . "</div>"
+        . "</div>";
+        }else{
+        echo "<div class='text-center  text-theme1 h5'>BELUM TERDAPAT FILE YANG DI UPLOAD <br> <span class='fa fa-file fa-3x'></span></div>";    
+        } 
+        }else{
+        redirect(404);    
+        }        
+        }
 
-echo '
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">UPLOAD DOKUMEN PENUNJANG MILIK '.strtoupper($data_client['nama_client']).' DIBAWAH INI <span class="i"><span></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body overflow-auto" style="max-height:500px;" >';
-echo "<div class=''>"
-. "<div class='row'>"
-. "<div class='col-md-5 mx-auto  '>"
-. "<form  class='card-header mb-1' id='form_berkas'>"
-. "<input type='hidden' class='no_client' name='no_client'    value='".$input['no_client']."'>"
-. "<input type='hidden' class='no_pekerjaan' name='no_pekerjaan' value='".$input['no_pekerjaan']."'>"
-. "<label h6>Upload dokumen penunjang</label>"
-. "<input type='file' id='file_berkas' name='file_berkas[]' multiple class='form-control form-control-sm '>"
-.'<div class="progress" style="display:none">
-<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-</div>'
-. "<hr>"
-. "<button type='button'  onclick='upload_file()' class='btn btn-success btn-block btn-sm'> Upload berkas  </button>"
-. "</form>";
-echo  "</div>";
-echo  "</div>";
-echo '<div class="row">';
-echo '<div class="col data_terupload"></div>';
-echo  "</div>";
-echo '</div>';
-echo "</div>";
-echo'</div>';   
-
-}else{
-redirect(404);    
-}
-}
-public function data_terupload(){
-if($this->input->post()){    
-$input              = $this->input->post();    
-$data_upload        = $this->db->get_where('data_berkas',array('no_client'=>$input['no_client'],'no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
-
-
-$data_client        = $this->M_data_lama->data_client_where(base64_encode($input['no_client']))->row_array();
-$nama_persyaratan   = $this->M_data_lama->nama_persyaratan(base64_decode($input['no_pekerjaan']),$data_client['jenis_client']);
-
-echo "<b><div class='row card-header mt-1 text-center'>"
-. "<div class='col-md-1'>No</div>"
-. "<div class='col'>Nama dokumen</div>"
-. "<div class='col'>Jenis dokumen</div>"
-. "<div class='col'>Aksi</div>"
-. "</div></b>";
-$n=1;
-
-if($data_upload->num_rows() != 0){   
-foreach ($data_upload->result_array() as $data){
-echo "<div class='row mt-1 card-header data".$data['no_berkas']."'>";
-echo "<div class='col-md-1 text-center'>".$n++."</div>";
-echo "<div class='col'>".substr($data['nama_berkas'],0,30)."</div>";
-echo "<div class='col'><select onchange=set_jenis_dokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$data['no_berkas']."') class='form-control form-control-sm no_berkas".$data['no_berkas']."'>";
-echo "<option></option>";
-
-foreach ($nama_persyaratan->result_array() as  $persyartan){     
-echo "<option "; if($data['no_nama_dokumen'] == $persyartan['no_nama_dokumen']){ echo "selected ";}  echo "value='".$persyartan['no_nama_dokumen']."'>".$persyartan['nama_dokumen']."</option>";
-}
-echo "</select></div>";
-echo '<div class="col text-center">';
-
-if($data['no_nama_dokumen']){
-echo '<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn btn_edit'.$data['no_berkas'].'  btn-warning ml-1 btn-sm" title="Edit data ini" ><i class="far fa-edit"></i></button>';
-}
-
-echo '<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['id_data_berkas'].'"); class="btn  btn-danger ml-1 btn-sm" title="Hapus data ini" ><i class="fa fa-trash"></i></button>'
-     .'<button  onclick=cek_download("'.base64_encode($data['no_berkas']).'"); class="btn  btn-primary ml-1 mt-1 btn-sm" title="Download lampiran ini" ><i class="fa fa-download"></i></button>';
-echo '</div>';
-
-
-echo "</div>";    
-}
-}else{
-echo "<div class='text-center  text-theme1 h5'>BELUM TERDAPAT FILE YANG DI UPLOAD <br> <span class='fa fa-file fa-3x'></span></div>";    
-} 
-}else{
-redirect(404);    
-}        
-}
 public function upload_berkas(){
 $input = $this->input->post(); 
 $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_client']))->row_array();
@@ -920,10 +934,10 @@ redirect(404);
 public function upload_utama(){
 if($this->input->post()){
 $input = $this->input->post();
-$this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required');
-$this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required');
-$this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required');
-$this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required');
+$this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required',array('required' => 'Data ini tidak boleh kosong'));
 $data_pekerjaan = $this->M_data_lama->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
 
 $config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
@@ -999,84 +1013,92 @@ $file_path = "./berkas/".$data['nama_folder']."/".$data['nama_file'];
 $info = new SplFileInfo($data['nama_file']);
 force_download($data['nama_berkas'].".".$info->getExtension(), file_get_contents($file_path));
 }
+
 function simpan_pihak_terlibat(){
-$input = $this->input->post();
-$this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required');
-$this->form_validation->set_rules('nama_pihak', 'Nama Pihak', 'required');
-$this->form_validation->set_rules('alamat_pihak', 'Alamat Pihak', 'required');
-$this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required');
-$this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required');
-$this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required|numeric');
-if ($this->form_validation->run() == FALSE){
-$status_input = $this->form_validation->error_array();
-$status[] = array(
-'status'  => 'error_validasi',
-'messages'=>array($status_input),    
-);
-echo json_encode($status);
-}else{
+    $input = $this->input->post();
+    $this->form_validation->set_rules('jenis_client', 'Jenis Pihak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    $this->form_validation->set_rules('badan_hukum', 'Nama Pihak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    $this->form_validation->set_rules('jenis_kontak', 'Jenis Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    $this->form_validation->set_rules('contact_person', 'Nama Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    $this->form_validation->set_rules('contact_number', 'Nomor Kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    $this->form_validation->set_rules('no_identitas', 'No identitas NIK/NPWP', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    if ($this->form_validation->run() == FALSE){
+    $status_input = $this->form_validation->error_array();
+    $status[] = array(
+    'status'  => 'error_validasi',
+    'messages'=>array($status_input),    
+    );
+    echo json_encode($status);
+    }else{
+        
+    if($input['no_client']  == NULL){
+    $tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
+    $h_berkas = $this->M_data_lama->hitung_pekerjaan()->num_rows()+1;
+    $h_client = $this->M_data_lama->data_client()->num_rows()+1;
+    $no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
     
-if($input['no_client']  == NULL){
-$tot_pemilik   = $this->M_user2->data_pemilik()->row_array();
-$h_berkas = $this->M_data_lama->hitung_pekerjaan()->num_rows()+1;
-$h_client = $this->M_data_lama->data_client()->num_rows()+1;
-$no_client    = "C".str_pad($h_client,6 ,"0",STR_PAD_LEFT);
-$data_client = array(
-'no_client'                 => $no_client,    
-'jenis_client'              => ucfirst($input['jenis_client']),    
-'nama_client'               => strtoupper($input['nama_pihak']),
-'alamat_client'             => ucfirst($input['alamat_pihak']),    
-'tanggal_daftar'            => date('Y/m/d'),    
-'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
-'no_user'                   => $this->session->userdata('no_user'), 
-'nama_folder'               =>"Dok".$no_client,
-'contact_person'            => ucfirst($input['contact_person']),    
-'contact_number'            => ucfirst($input['contact_number']),    
-'jenis_kontak'              => ucfirst($input['jenis_kontak']),    
-);   
-$this->db->insert('data_client',$data_client);
-$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
-$data_pem = array(
-'no_pemilik'    =>$no_pemilik,   
-'no_client'     =>$no_client,
-'no_pekerjaan'  => base64_decode($input['no_pekerjaan'])   
-);
-$this->db->insert('data_pemilik',$data_pem);
-if(!file_exists("berkas/"."Dok".$no_client)){
-mkdir("berkas/"."Dok".$no_client,0777);
-}
-$status[] =array(
-'status'    => 'success',
-'messages'  => 'Pihak terkait berhasil ditambahkan' 
-); 
-echo json_encode($status);    
+    $data_client = array(
+    'no_client'                 => $no_client,    
+    'jenis_client'              => ucfirst($input['jenis_client']),    
+    'no_identitas'              => $input['no_identitas'],    
+    'nama_client'               => strtoupper($input['badan_hukum']),
+    'tanggal_daftar'            => date('Y/m/d'),    
+    'pembuat_client'            => $this->session->userdata('nama_lengkap'),    
+    'no_user'                   => $this->session->userdata('no_user'), 
+    'nama_folder'               =>"Dok".$no_client,
+    'contact_person'            => ucfirst($input['contact_person']),    
+    'contact_number'            => ucfirst($input['contact_number']),    
+    'jenis_kontak'              => ucfirst($input['jenis_kontak']),    
+    );   
+    $this->db->insert('data_client',$data_client);
     
-}else{
-$tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
-$no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);    
-$cek_selaku = $this->db->get_where('data_pemilik',array('no_client' =>$input['no_client'],'no_pekerjaan'=>base64_decode($input['no_pekerjaan'])));
-if($cek_selaku->num_rows() == 0){
-$data_pem = array(
-'no_pemilik'    =>$no_pemilik,   
-'no_client'     =>$input['no_client'],
-'no_pekerjaan'  => base64_decode($input['no_pekerjaan']),   
-);
-$this->db->insert('data_pemilik',$data_pem);
-$status[] =array(
-'status'    => 'success',
-'messages'  => 'Pihak terkait berhasil ditambahkan' 
-); 
-echo json_encode($status);    
-}else{
-$status[] =array(
-'status'    => 'error',
-'messages'  => 'Pihak terkait sudah ditambahkan' 
-); 
-echo json_encode($status);    
-}
-}
-}
-}
+    $no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);
+    
+    $data_pem = array(
+    'no_pemilik'    =>$no_pemilik,   
+    'no_client'     =>$no_client,
+    'no_pekerjaan'  => base64_decode($input['no_pekerjaan'])   
+    );
+    $this->db->insert('data_pemilik',$data_pem);
+    
+    if(!file_exists("berkas/"."Dok".$no_client)){
+    mkdir("berkas/"."Dok".$no_client,0777);
+    }
+    
+    $status[] =array(
+    'status'    => 'success',
+    'messages'  => 'Pihak terkait berhasil ditambahkan' 
+    ); 
+    echo json_encode($status);    
+        
+    }else{
+    $tot_pemilik   = $this->M_data_lama->data_pemilik()->row_array();
+    $no_pemilik    = "PK".str_pad($tot_pemilik['id_data_pemilik'],6 ,"0",STR_PAD_LEFT);    
+    $cek_selaku = $this->db->get_where('data_pemilik',array('no_client' =>$input['no_client'],'no_pekerjaan'=>base64_decode($input['no_pekerjaan'])));
+    if($cek_selaku->num_rows() == 0){
+    $data_pem = array(
+    'no_pemilik'    =>$no_pemilik,   
+    'no_client'     =>$input['no_client'],
+    'no_pekerjaan'  => base64_decode($input['no_pekerjaan']),   
+    );
+    $this->db->insert('data_pemilik',$data_pem);
+    $status[] =array(
+    'status'    => 'success',
+    'messages'  => 'Pihak terkait berhasil ditambahkan' 
+    ); 
+    echo json_encode($status);    
+    }else{
+    $status[] =array(
+    'status'    => 'error',
+    'messages'  => 'Pihak terkait sudah ditambahkan' 
+    ); 
+    echo json_encode($status);    
+    }
+    }
+    }
+    }
+
+
 public function hapus_keterlibatan(){
 if($this->input->post()){
 $input = $this->input->post();
@@ -1110,6 +1132,312 @@ $this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=>base64_decode($th
 redirect(404);    
 }
 }
+function cari_client2(){
+    if($this->input->post()){
+    $no_identitas       = $this->input->post('no_identitas');
+    $cek                = $this->db->get_where('data_client',array('no_identitas'=>$no_identitas));
+    $no_client          = $cek->row_array();
+    if($cek->num_rows() != 0){
+    $data = array(
+    'no_client'        =>$no_client['no_client'],
+    'no_identitas'     =>$no_client['no_identitas'],
+    'nama_client'      =>$no_client['nama_client'],
+    'contact_person'   =>$no_client['contact_person'],
+    'contact_number'   =>$no_client['contact_number'],
+    'jenis_kontak'     =>$no_client['jenis_kontak']       
+    );
+    $s    = "success";
+    }else{
+    $data ="Tidak Tersedia";
+    $s    = "error";
+    }
+    $status[] = array(
+    'message' =>$data,
+    'status'  => $s    
+    );
+    echo json_encode($status);
+    
+    }else{
+    redirect(404);    
+    }    
+    }
+    function simpan_lampiran(){
+        $input = $this->input->post();
+        $data = $this->db->get_where('data_berkas',array('no_client'=>$input['no_client'],'no_pekerjaan'=> base64_decode($input['no_pekerjaan']),'no_nama_dokumen !='=>''));
+        
+        foreach ($data->result_array() as $d){
+        $data = array(
+        'status_berkas' =>'selesai'    
+        );
+        $this->db->update('data_berkas',$data,array('no_berkas'=>$d['no_berkas']));
+        }
+        }
+        
+        public function lihat_berkas_client(){    
+            $data_client = $this->M_data_lama->data_client_where($this->uri->segment(3));       
+            
+            $this->load->view('umum/V_header');
+            $this->load->view('data_lama/V_lihat_berkas_client',['data_client'=>$data_client]);   
+            }
+            public function lihat_lampiran_client(){    
+            $data_client = $this->M_data_lama->data_client_where($this->uri->segment(3));       
+            
+            $this->load->view('umum/V_header');
+            $this->load->view('data_lama/V_lihat_lampiran_client',['data_client'=>$data_client]);   
+            }
+
+            function lihat_meta(){
+                if($this->input->post()){ 
+                $input = $this->input->post(); 
+                $data = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
+                    
+                echo '<div class="modal-content ">
+                <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body data_perekaman">';
+                if($data->num_rows() == 0){
+                echo "<p class='text-center'>Meta Data Tidak Tersedia</p><hr>";    
+                }else{
+                echo '<table class="table table-sm table-bordered ">';
+                
+                foreach ($data->result_array() as $d){
+                echo "<tr><td>".str_replace('_', ' ',$d['nama_meta'])."</td><td>".$d['value_meta']."</td></tr>";    
+                }
+                
+                echo "<table>"
+                . "<hr>";
+                }
+                echo "<button onclick=cek_download('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-success '>Download lampiran <span class='fa fa-save'></span></button>";
+                
+                
+                echo "<button onclick=edit_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_pekerjaan']."') class='btn btn-sm  mr-2  btn-warning  '>Meta lampiran <span class='fa fa-edit'></span></button>";
+                
+                echo "<button  onclick=hapus_lampiran('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-danger  '>Hapus lampiran <span class='fa fa-trash'></span></button>";
+                echo'</div>'
+                . '</div>';    
+                
+                
+                }else{
+                redirect(404);
+                }    
+                }
+                function form_meta(){
+                    if($this->input->post()){ 
+                    $input = $this->input->post();    
+                    $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
+                    
+                    $data_meta = $this->M_data_lama->data_meta($input['no_nama_dokumen']);
+                    
+                    echo '<div class="modal-content ">
+                    <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body data_perekaman">
+                    <form id="form_edit_meta">';
+                    echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
+                    echo '<input type="hidden" name="no_berkas" value="'.$input['no_berkas'].'" readonly="" class="required"  accept="text/plain">';
+                    echo '<input type="hidden" name="no_pekerjaan" value="'.$input['no_pekerjaan'].'" readonly="" class="required"  accept="text/plain">';
+                    echo '<input type="hidden" name="no_nama_dokumen" value="'.$input['no_nama_dokumen'].'" readonly="" class="required"  accept="text/plain">';
+                    
+                    
+                    foreach ($data_meta->result_array()  as $d ){
+                    $val = $this->M_data_lama->data_edit($input['no_berkas'],str_replace(' ', '_',$d['nama_meta']))->row_array();
+                    //INPUTAN SELECT   
+                    if($d['jenis_inputan'] == 'select'){
+                    $data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+                    echo "<label>".$d['nama_meta']."</label>"
+                    ."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+                    foreach ($data_option->result_array() as $option){
+                    echo "<option ";
+                    if($val['value_meta'] == $option['jenis_pilihan']){
+                    echo "selected";    
+                    }
+                    echo ">".$option['jenis_pilihan']."</option>";
+                    }
+                    echo "</select>";
+                    //INPUTAN DATE
+                    }else if($d['jenis_inputan'] == 'date'){
+                    echo "<label>".$d['nama_meta']."</label>"
+                    ."<input value='".$val['value_meta']."'  type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+                    ///INPUTAN NUMBER
+                    }else if($d['jenis_inputan'] == 'number'){
+                    echo "<label>".$d['nama_meta']."</label>"
+                    ."<input value='".$val['value_meta']."' type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+                    //INPUTAN TEXTAREA
+                    }else if($d['jenis_inputan'] == 'textarea'){
+                    echo "<label>".$d['nama_meta']."</label>"
+                    . "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'>".$val['value_meta']."</textarea>";
+                    }else{
+                    echo "<label>".$d['nama_meta']."</label>"
+                    ."<input  type='".$d['jenis_inputan']."' value='".$val['value_meta']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+                    }
+                    }
+                    echo "</form><hr>";
+                    echo "<button onclick=update_meta('".base64_encode($input['no_berkas'])."') class='btn btn-block btn-sm  mr-2 btn-success '>Simpan Meta <span class='fa fa-save'></span></button>";
+                    echo'</div>'
+                    . '</div>';    
+                    
+                    }else{
+                    redirect(404);
+                    }    
+                    }
+                    public function hapus_lampiran(){
+                        if($this->input->post()){
+                        $input = $this->input->post();    
+                        $data = $this->M_data_lama->hapus_lampiran(base64_decode($input['no_berkas']))->row_array();
+                        
+                        $filename = './berkas/'.$data['nama_folder']."/".$data['nama_berkas'];
+                        
+                        if(file_exists($filename)){
+                        unlink($filename);
+                        }
+                        $this->db->delete('data_berkas',array('no_berkas'=> base64_decode($input['no_berkas'])));    
+                        
+                        $status[] = array(
+                        "status"        => "success",
+                        "messages"      => "Data persyaratan dihapus",    
+                        );
+                        echo json_encode($status);
+                        
+                        $keterangan = $this->session->userdata('nama_lengkap')." Menghapus File dokumen".$data['nama_dokumen'];  
+                        $this->histori($keterangan);
+                        
+                        
+                        }else{
+                        redirect(404);    
+                        }
+                        }
+                        public function histori($keterangan){
+                            $data = array(
+                            'no_user'   => $this->session->userdata('no_user'),
+                            'keterangan'=>$keterangan,
+                            'tanggal'   =>date('Y/m/d H:i:s'),
+                            );
+                            $this->db->insert('data_histori_pekerjaan',$data);
+                            }
+
+                            public function data_perekaman(){
+                                if($this->input->post()){
+                                $input = $this->input->post();
+                                $query     = $this->M_data_lama->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
+                                echo "<table class='table table-sm table-striped table-bordered'>";
+                                echo "<thead>"
+                                . "<th>Nama Dokumen</th>"
+                                . "<th>Jenis Dokumen</th>"
+                                . "<th>Aksi</th>"
+                                . "</thead>";
+                                foreach ($query->result_array() as $d){
+                                echo "<tr>"
+                                    . "<td>".$d['nama_berkas']."</td>"
+                                    . "<td>".$d['nama_dokumen']."</td>"
+                                    . "<td><button class='btn btn-success btn-sm' onclick=cek_download('". base64_encode($d['no_berkas'])."')><span class='fa fa-download'></span></button></td>"    
+                                    . "</tr>";
+                                }
+                                
+                                echo "<tbody></tbody>";
+                                echo"</table>";  
+                                }else{
+                                redirect(404);    
+                                }    
+                                }
+                                public function profil(){
+                                    $no_user = $this->session->userdata('no_user');
+                                    $data_user = $this->M_data_lama->data_user_where($no_user);
+                                    $this->load->view('umum/V_header');
+                                    $this->load->view('data_lama/V_profil',['data_user'=>$data_user]);
+                                    }
+
+
+                                    public function simpan_profile(){
+                                        $foto_lama = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user')))->row_array();
+                                        if(!file_exists('./uploads/user/'.$foto_lama['foto'])){
+                                            
+                                        }else{
+                                        if($foto_lama['foto'] != NULL){
+                                        unlink('./uploads/user/'.$foto_lama['foto']);    
+                                        }   
+                                        }
+                                        $img =  $this->input->post();
+                                        define('UPLOAD_DIR', './uploads/user/');
+                                        $image_parts = explode(";base64,", $img['image']);
+                                        $image_type_aux = explode("image/", $image_parts[0]);
+                                        $image_type = $image_type_aux[1];
+                                        $image_base64 = base64_decode($image_parts[1]);
+                                        $file_name = uniqid() . '.png';
+                                        $file = UPLOAD_DIR .$file_name;
+                                        file_put_contents($file, $image_base64);
+                                        $data = array(
+                                        'foto' =>$file_name,    
+                                        );
+                                        $this->db->update('user',$data,array('no_user'=>$this->session->userdata('no_user')));
+                                         $this->session->set_userdata($data);
+                                        $status = array(
+                                        "status"     => "success",
+                                        "pesan"      => "Foto profil berhasil diperbaharui"    
+                                        );
+                                        echo json_encode($status);
+                                        } 
+
+                                        public function update_user(){
+                                            if($this->input->post()){
+                                            $input= $this->input->post();
+                                            $data =array(
+                                            'email'         =>$input['email'],
+                                            'username'      =>$input['username'],
+                                            'nama_lengkap'  =>$input['nama_lengkap'],
+                                            'phone'         =>$input['phone']    
+                                            );
+                                            $this->db->where('no_user',$input['id_user']);
+                                            $this->db->update('user',$data);
+                                            $status = array(
+                                            "status"     => "success",
+                                            "pesan"      => "Data profil berhasil diperbaharui"    
+                                            );
+                                            echo json_encode($status);
+                                            }else{
+                                            redirect(404);    
+                                            }
+                                            }         
+                public function update_password(){
+if($this->input->post()){
+$data = array(
+'password' => md5($this->input->post('password'))
+);
+$this->db->update('user',$data,array('no_user'=>$this->input->post('no_user')));
+ 
+$status = array(
+"status"     => "success",
+"pesan"      => "Password diperbaharui"    
+);
+echo json_encode($status);
+}else{
+redirect(404);    
+}    
+}                        
+public function update_selesaikan_pekerjaan(){
+    if($this->input->post()){
+    $input = $this->input->post();
+    $data = array(
+    'status_pekerjaan'  =>'ArsipSelesai',    
+    'tanggal_selesai'    =>date('d/m/Y')    
+    );
+    $this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
+    $status[] = array(
+    "status"     => "success",
+    "messages"      => "Perizinan berhasil diselesaikan"    
+    );
+    echo json_encode($status);
+    }else{
+    redirect(404);    
+    }
+    }
 }
 
 

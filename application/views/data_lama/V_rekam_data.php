@@ -36,11 +36,11 @@ HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
 </div>
 <div class="row">
 <div class="col">
-<label>Alamat client</label><br>    
+<label>No Identitas</label><br>    
 
 </div>
 <div class="col"> :
-<?php echo $static['alamat_client'] ?>        
+<?php echo $static['no_identitas'] ?>        
 </div>
 </div>
 
@@ -164,31 +164,31 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <form id="form_pihak_terlibat">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
+<input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
     
-<label>Pilih Jenis pihak</label>
+<label>*Pilih Jenis pihak terlibat</label>
 <select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
-<option></option>
 <option value="Perorangan">Perorangan</option>
 <option value="Badan Hukum">Badan Hukum</option>	
 </select>    
 
-<label>Nama Pihak</label>
-<input type="text" placeholder="Nama Pihak" name="nama_pihak" id="nama_pihak" class="form-control form-control-sm required"  accept="text/plain">
-<input type="hidden" id="no_client" name="no_client" class="form-control">
-
-<label >Alamat Pihak</label>
-<textarea name="alamat_pihak" rows="6" placeholder="Alamat Pihak" id="alamat_pihak" class="form-control form-control-sm required" required="" accept="text/plain"></textarea>
-
-<label>Jenis pihak yang bisa dihubungi</label>
+<div id="FormPeroranganBadanHukum">
+<label>*NIK KTP</label>
+<input type='text' onkeyup="cari_client2()" id='no_identitas' class='form-control form-control-sm no_identitas' placeholder='NIK KTP' name='no_identitas'>
+<label>*Nama Perorangan</label>
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
+</div>
+    
+<label>*Jenis pihak yang bisa dihubungi</label>
 <select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
 <option></option>
 <option value="Staff">Staff</option>
 <option value="Pribadi">Pribadi</option>	
 </select>  
 
-<label>Nama pihak yang bisa dihubungi</label>
+<label>*Nama pihak yang bisa dihubungi</label>
 <input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
-<label>Nomor Kontak Telephone / HP</label>
+<label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
 </form>
@@ -225,6 +225,35 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
     
     
 <script type="text/javascript">
+function cari_client2(){
+var a = $(".no_identitas").val(); 
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('data_lama/cari_client2') ?>",
+data:"token="+token+"&no_identitas="+a,
+success:function(data){
+var r = JSON.parse(data);
+if(r[0].status == "success"){
+$("#no_client").val(r[0].message.no_client).attr('readonly', true);;
+$("#contact_person").val(r[0].message.contact_person).attr('readonly', true);;
+$("#contact_number").val(r[0].message.contact_number).attr('readonly', true);;
+$("#badan_hukum").val(r[0].message.nama_client).attr('readonly', true);;
+$("#jenis_kontak option[value='"+r[0].message.jenis_kontak+"']").attr("selected","selected");
+$("#jenis_kontak").attr('readonly', true);
+
+}else{
+$("#no_client").attr('readonly', false).val("");
+$("#jenis_kontak").attr('readonly', false).removeAttr("selected","selected");
+$("#contact_person").attr('readonly', false).val("");
+$("#contact_number").attr('readonly', false).val("");
+$("#badan_hukum").val("").attr('readonly', false);;
+}    
+}
+});
+}
+
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
 
@@ -461,7 +490,7 @@ data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
 url :"<?php echo base_url('Data_lama/update_selesaikan_pekerjaan') ?>",
 success:function(data){
 read_response(data);
-
+window.location.href="<?php echo base_url('data_lama/DataArsipSelesai') ?>";
 }
 
 });
@@ -750,6 +779,29 @@ function cancel_edit(no_berkas){
 $(".data_edit"+no_berkas ).slideUp().html();
 $(".btn_edit"+no_berkas).show();  
 }
+
+function simpan_lampiran(no_client,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('data_lama/simpan_lampiran') ?>",
+success:function(data){
+data_terupload(no_client,no_pekerjaan);
+}
+});
+}
+
+function lihat_berkas_client(no_client){
+window.location.href="<?php echo base_url('data_lama/lihat_berkas_client/') ?>"+btoa(no_client);
+}
+
+
+function lihat_lampiran_client(no_client){
+window.location.href="<?php echo base_url('data_lama/lihat_lampiran_client/') ?>"+btoa(no_client);
+}
+
 
 </script>    
 

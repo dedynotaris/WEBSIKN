@@ -653,7 +653,7 @@ $data = array(
 'foto' =>$file_name,    
 );
 $this->db->update('user',$data,array('no_user'=>$this->session->userdata('no_user')));
- 
+$this->session->set_userdata($data);
 $status = array(
 "status"     => "success",
 "pesan"      => "Foto profil berhasil diperbaharui"    
@@ -1705,6 +1705,8 @@ redirect(404);
 function form_edit_meta(){
 if($this->input->post()){
 $input = $this->input->post();
+$data_meta = $this->M_user2->data_meta($input['no_nama_dokumen']);
+
 echo "<div class='row border-top-0 mb-2 card border border-success p-3 data_edit".$input['no_berkas']."'>"
 . "<div class='col-md-6'>"
 . "<form id='form".$input['no_berkas']."'>";
