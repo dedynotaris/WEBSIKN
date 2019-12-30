@@ -5,6 +5,7 @@ public function __construct() {
 parent::__construct();
 $this->load->library('Session');      
 $this->load->model('M_proses_login');
+$this->load->library('form_validation');
 
 
 if($this->session->userdata('username')){
@@ -21,13 +22,22 @@ $this->load->view('V_login');
 
 public function proses_login(){
 if($this->input->post()){
-$data = $this->input->post();
-$query = $this->M_proses_login->proses_login($data['username'],$data['password']);
+$this->form_validation->set_rules('username', 'Username', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('password', 'Password', 'required',array('required' => 'Data ini tidak boleh kosong'));
 
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+ 
+$input = $this->input->post();
+$query = $this->M_proses_login->proses_login($input['username'],$input['password']);
 $data_sesi = $query->row_array();
-
 if($query->num_rows() > 0){
-
 $set_sesi = array(
 'no_user'       => $data_sesi['no_user'],
 'username'      => $data_sesi['username'],
@@ -38,21 +48,23 @@ $set_sesi = array(
 );
 $this->session->set_userdata($set_sesi);
 
-$status = array(
-"status"   => "Berhasil",
-"level"    => $data_sesi['level'],    
+$status[] = array(
+"status"     => "success",       
+"messages"   => "Selamat anda berhasil masuk",
+"level"      => $data_sesi['level'],    
 );
 echo json_encode($status);
 
 
 }else{
-$status = array(
-"status"=>"Gagal"
+$status[] = array(
+"status"=>"error_validasi",
+"messages" =>[array("username"=>"Username yang anda masukan salah","password"=>"Password yang anda masukan salah")]
 );
 echo json_encode($status);
+
 }
-
-
+}
 }else{
 redirect(404);	
 }
