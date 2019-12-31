@@ -620,7 +620,6 @@ $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas
 $this->db->group_by('data_meta_berkas.no_berkas');
 
 $this->db->like('data_meta_berkas.value_meta',$input);
-//$this->db->or_like('data_meta_berkas.nama_meta',$input);
 
 $query = $this->db->get();
 return $query;

@@ -98,10 +98,10 @@ echo "
         <div style='width:210px; height:210px;' class='card'>
          <div class='card-body'>";
          if($client['jenis_client'] =="Badan Hukum" ){
+          echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+        }else if($client['jenis_client'] =="Perorangan"){
             echo"<img style='width:80px; height:80px;'  src='".base_url('assets/peroranganicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-            }else if($client['jenis_client'] =="Perorangan"){
-            echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-            }
+          }
 
         echo "
         </div>

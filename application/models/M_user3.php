@@ -208,51 +208,56 @@ return $query;
 
 }
 
+
+
 public function pencarian_data_client($input){
-$this->db->select('data_client.nama_client,'
-        . 'data_client.no_client');
-$this->db->from('data_client');
-$this->db->like('data_client.nama_client',$input);
-$query = $this->db->get();
-return $query;
-}
-
-public function pencarian_data_dokumen($input){
-$this->db->select('data_meta_berkas.nama_meta,'
-        . 'data_meta_berkas.value_meta,'
-        . 'data_client.nama_client,'
-        . 'data_client.no_client,'
-        . 'nama_dokumen.nama_dokumen,'
-        . 'nama_dokumen.no_nama_dokumen,'
-        . 'data_meta_berkas.no_berkas,');
-$this->db->from('data_meta_berkas');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
-$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
-$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
-$this->db->group_by('data_meta_berkas.no_berkas');
-
-$this->db->like('data_meta_berkas.value_meta',$input);
-$this->db->or_like('data_meta_berkas.nama_meta',$input);
-
-$query = $this->db->get();
-return $query;
-}
-
-public function pencarian_data_dokumen_utama($input){
-$this->db->select('data_dokumen_utama.nama_berkas,'
-        . 'data_dokumen_utama.tanggal_akta,'
-        . 'data_client.nama_client,'
-        . 'data_dokumen_utama.id_data_dokumen_utama');
-$this->db->from('data_dokumen_utama');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
-$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
-
-$this->db->like('data_dokumen_utama.nama_berkas',$input);
-
-$query = $this->db->get();
-return $query;
-}
+        $this->db->select('data_client.nama_client,'
+                . 'data_client.jenis_client,'
+                . 'data_client.no_client');
+        $this->db->from('data_client');
+        $this->db->like('data_client.nama_client',$input);
+        $query = $this->db->get();
+        return $query;
+        }
+        
+        public function pencarian_data_dokumen($input){
+        $this->db->select('data_meta_berkas.nama_meta,'
+                . 'data_meta_berkas.value_meta,'
+                . 'data_client.nama_client,'
+                . 'data_client.no_client,'
+                . 'data_berkas.nama_berkas,'
+                . 'nama_dokumen.nama_dokumen,'
+                . 'nama_dokumen.no_nama_dokumen,'
+                . 'data_meta_berkas.no_berkas,');
+        $this->db->from('data_meta_berkas');
+        $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+        $this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
+        $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+        $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
+        $this->db->group_by('data_meta_berkas.no_berkas');
+        
+        $this->db->like('data_meta_berkas.value_meta',$input);
+        
+        $query = $this->db->get();
+        return $query;
+        }
+        
+        public function pencarian_data_dokumen_utama($input){
+        $this->db->select('data_dokumen_utama.nama_berkas,'
+                . 'data_dokumen_utama.tanggal_akta,'
+                . 'data_dokumen_utama.nama_file,'
+                . 'data_client.nama_client,'
+                . 'data_dokumen_utama.id_data_dokumen_utama,'
+                . 'data_dokumen_utama.jenis');
+        $this->db->from('data_dokumen_utama');
+        $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+        $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+        
+        $this->db->like('data_dokumen_utama.nama_berkas',$input);
+        
+        $query = $this->db->get();
+        return $query;
+        }
 
 public function data_berkas_where($no_berkas){
 $this->db->select('data_client.nama_folder,'
@@ -309,5 +314,45 @@ $this->db->where('nama_dokumen.perorangan',$jenis_client);
 $query = $this->db->get();  
 return $query;
 }
+
+public function DokumenPenunjang($no_berkas){
+        $this->db->select("data_berkas.no_berkas,"
+                        ."data_berkas.pengupload,"
+                        ."data_berkas.tanggal_upload,"
+                        ."data_berkas.nama_berkas,"
+                        ."data_berkas.no_client,"
+                        ."data_meta_berkas.nama_meta,"
+                        ."data_meta_berkas.value_meta,"
+                        ."data_client.nama_client,"
+                        ."data_client.nama_folder,"
+                        ."nama_dokumen.nama_dokumen");
+        $this->db->from('data_berkas');
+        $this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+        $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
+        $this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas');
+        $this->db->where('data_berkas.no_berkas',$no_berkas);
+        $query = $this->db->get();  
+        return $query;
+        }
+
+        public function DataDokumenUtama($input){
+                $this->db->select('data_dokumen_utama.nama_berkas,'
+                        . 'data_dokumen_utama.tanggal_akta,'
+                        . 'data_dokumen_utama.nama_file,'
+                        . 'data_client.nama_client,'
+                        . 'data_client.nama_folder,'
+                        . 'data_dokumen_utama.id_data_dokumen_utama,'
+                        . 'data_dokumen_utama.jenis');
+                $this->db->from('data_dokumen_utama');
+                $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+                $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+                
+                $this->db->where('data_dokumen_utama.id_data_dokumen_utama',$input);
+                
+                $query = $this->db->get();
+                return $query;
+                }
+
+
 }
 ?>
