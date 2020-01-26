@@ -6,14 +6,15 @@ $query = $this->db->insert('user',$data);
 return $query;    
 }
 public function data_user(){
+        $this->db->order_by("user.id_user",'DESC');
 $query = $this->db->get('user');   
 return $query;    
 }
 public function ambil_user($id_user){
 $query = $this->db->get_where('user',array('id_user'=>$id_user));
 return $query;
-
 }
+
 public function data_client_where($no_client){
 $query = $this->db->get_where('data_client',array('no_client'=> base64_decode($no_client)));
 return $query;
@@ -44,8 +45,8 @@ $this->datatables->from('data_histori_pekerjaan');
 return $this->datatables->generate();
 }
 
-public function update_user($data,$id_user){
-$this->db->update('user',$data,array('id_user'=>$id_user));                                                                                                                                                                                                                                                                                                                                                                             }
+public function UpdateUser($data,$no_user){
+$this->db->update('user',$data,array('no_user'=>$no_user));                                                                                                                                                                                                                                                                                                                                                                             }
 
 public function data_nama_dokumen(){
 $query = $this->db->get('nama_dokumen');
@@ -66,10 +67,11 @@ public function id_data_meta(){
 $query = $this->db->get('data_meta');
 return $query;        
 }
-public function simpan_nama_dokumen($data){
+public function SimpanNamaDokumen($data){
 $this->db->insert('nama_dokumen',$data);    
 }
 public function data_jenis(){
+         $this->db->order_by('id_jenis_pekerjaan','DESC');
 $query = $this->db->get('data_jenis_pekerjaan');
 return $query;            
 }
@@ -145,7 +147,7 @@ public function simpan_syarat($data){
 $this->db->insert('data_syarat_jenis_dokumen',$data);    
 }
 
-function json_data_jenis_pekerjaan(){
+function JsonDataJenisPekerjaan(){
 $this->datatables->select('id_jenis_pekerjaan,'
 . 'data_jenis_pekerjaan.id_jenis_pekerjaan as id_jenis_pekerjaan,'
 . 'data_jenis_pekerjaan.no_jenis_pekerjaan as no_jenis_pekerjaan,'
@@ -155,10 +157,8 @@ $this->datatables->select('id_jenis_pekerjaan,'
 
 $this->datatables->from('data_jenis_pekerjaan');
 $this->datatables->add_column('view',""
-         . "<button onclick=tambah_syarat_jenis('$1','$2'); class='btn btn-sm m-1 btn-success' title='Tambah Persyaratan'><span class='fa fa-plus'></span></button>"
-         . "<button onclick=tampilkan_data_persyaratan('$2'); class='btn btn-sm m-1 btn-success' title='Lihat Persyaratan'><span class='fa fa-eye'></span></button>"
-         . "<button onclick=edit_jenis_pekerjaan('$1'); class='btn btn-sm  m-1 btn-success' title='Edit Pekerjaan'><span class='fa fa-edit'></span></button>"
-         . "",'id_jenis_pekerjaan , no_jenis_pekerjaan');
+         . "<button onclick=DetailPekerjaan('$1'); class='btn btn-sm  m-1 btn-success' title='Lihat Persyaratan'>Persyaratan <span class='fa fa-eye'></span></button>"
+         . "",'no_jenis_pekerjaan');
 
 
 return $this->datatables->generate();
@@ -188,9 +188,8 @@ $this->datatables->select('id_user,'
 
 $this->datatables->from('user');
 $this->datatables->add_column('view',""
-        . "<button class='btn btn-sm btn-success'  onclick=getUser('$1'); data-toggle='modal' title='edit user' data-target='#exampleModal'> <i class='fa fa-edit'></i></button> "
-        . "<button class='btn btn-sm btn-success'  onclick=tambah_sublevel('$1','$2');  title='edit sublevel'>  <i class='fa fa-edit'></i></button>"
-        . "",'id_user,no_user');
+        . "<button class='btn btn-sm btn-success'  onclick=DetailDataUser('$1');  title='Detail User'>Detail User  <i class='fa fa-user'></i></button>"
+        . "",'no_user');
 return $this->datatables->generate();
 }
 function json_data_nama_dokumen(){
@@ -201,11 +200,8 @@ $this->datatables->select('id_nama_dokumen,'
 );
 $this->datatables->from('nama_dokumen');
 $this->datatables->add_column('view',""
-        . "<button onclick=tambah_meta('$2') title='Tambahkan meta' class='m-1 btn btn-sm btn-success'><span class='fas fa-pencil-alt'></span></button>"
-        . "<button onclick=edit_nama_dokumen('$1') title='Edit nama dokumen meta' class='m-1 btn btn-sm btn-success'><span class='fa fa-edit'></span></button>"
-        . "<button onclick=lihat_meta('$2') title='Lihat meta' class='m-1 btn btn-sm btn-success'><span class='fa fa-eye'></span></button>"
-        . "<button onclick=hapus_nama_dokumen('$1') title='Hapus dokumen' class='m-1 btn btn-sm btn-success'><span class='fa fa-trash'></span></button>"
-        . "",'id_nama_dokumen,no_nama_dokumen');
+        . "<button onclick=LihatDetailDokumen('$1') title='Lihat Detail Dokumen' class='m-1 btn btn-sm btn-success'> Detail Dokumen <span class='fa fa-eye'></span></button>"
+        . "",'no_nama_dokumen');
 
 return $this->datatables->generate();
 }
@@ -245,25 +241,38 @@ $this->datatables->add_column('view','<a href ="'.base_url('Dashboard/lihat_berk
 return $this->datatables->generate();
 }
 
-function json_data_client(){
+function json_data_client_hukum(){
     
 $this->datatables->select('id_data_client,'
 .'data_client.no_client as no_client,'
 .'data_client.pembuat_client as pembuat_client,'
 .'data_client.jenis_client as jenis_client,'
 .'data_client.nama_client as nama_client,'
+.'data_client.no_identitas as no_identitas,'
 );
 $this->datatables->from('data_client');
-$this->datatables->add_column('view',""
-        . "<select onchange=opsi_client('$1','$2') class='form-control opsi_pekerjaan$1'>"
-        . "<option>-- Klik untuk melihat menu --</option>"
-        . "<option value='1'>Lihat berkas</option>"
-        . "</select>"
-        . "",'id_data_client , base64_encode(no_client)');
-
+$this->datatables->where('data_client.jenis_client','Badan Hukum');
+$this->datatables->add_column('view',"<button onclick=DetailClient('$1') class='btn btn-sm btn-success'> Detail Client <span class='fa fa-eye'></span></button>",'no_client');
 return $this->datatables->generate();
 }
 
+
+
+function json_data_client_perorangan(){
+    
+        $this->datatables->select('id_data_client,'
+        .'data_client.no_client as no_client,'
+        .'data_client.pembuat_client as pembuat_client,'
+        .'data_client.jenis_client as jenis_client,'
+        .'data_client.nama_client as nama_client,'
+        .'data_client.no_identitas as no_identitas,'
+        );
+        $this->datatables->from('data_client');
+        $this->datatables->where('data_client.jenis_client','Perorangan');
+        $this->datatables->add_column('view',"<button onclick='DetailClient('$1')' class='btn btn-sm btn-success'> Detail Client <span class='fa fa-eye'></span></button>",'no_client');
+        return $this->datatables->generate();
+        }
+        
 function json_data_perorangan(){
     
 $this->datatables->select('id_perorangan,'
@@ -384,7 +393,7 @@ return $query;
     
 }
 public function data_user_where($no_user){
-
+        
 $query = $this->db->get_where('user',array('no_user'=>$no_user));
 
 return $query;
@@ -533,5 +542,53 @@ $this->db->group_by('nama_dokumen.no_nama_dokumen');
 $query = $this->db->get();  
 return $query;
 }
+
+
+public function JumlahDokumenPenunjangPekerjaan($no_jenis_pekerjaan){
+        $this->db->select('*');
+        $this->db->from('data_berkas');
+        $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
+        $this->db->where('data_pekerjaan.no_jenis_pekerjaan',$no_jenis_pekerjaan);
+        $query = $this->db->get();  
+         
+        return $query;
+}
+public function JumlahDokumenUtamaPekerjaan($no_jenis_pekerjaan){
+        $this->db->select('*');
+        $this->db->from('data_dokumen_utama');
+        $this->db->join('data_pekerjaan','data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+        $this->db->where('data_pekerjaan.no_jenis_pekerjaan',$no_jenis_pekerjaan);
+        $query = $this->db->get();  
+         
+        return $query;
+}
+
+
+public function data_meta($no_dokumen){
+        $query = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_dokumen));
+        return $query;
+}
+        
+public function TotJumlahLampiranUser($no_user){
+        $this->db->select('data_berkas.no_berkas');
+        $this->db->from('data_pekerjaan');
+        $this->db->join('data_berkas','data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
+        $this->db->where('data_pekerjaan.no_user',$no_user);
+        $query = $this->db->get();  
+         
+        return $query;
+}
+public function TotJumlahUtamaUser($no_user){
+        $this->db->select('data_dokumen_utama.nama_berkas');
+        $this->db->from('data_pekerjaan');
+        $this->db->join('data_dokumen_utama','data_dokumen_utama.no_pekerjaan = data_pekerjaan.no_pekerjaan');
+        $this->db->where('data_pekerjaan.no_user',$no_user);
+        $query = $this->db->get();  
+         
+        return $query;
+}
+
+
+
 }
 ?>

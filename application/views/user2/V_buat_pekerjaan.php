@@ -110,9 +110,7 @@ results: data.results
 };
 
 }
-
 }        
-
 });
 });
 

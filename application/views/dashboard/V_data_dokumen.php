@@ -1,173 +1,23 @@
 <table  id="data_nama_dokumen" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
-<th align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th align="center" aria-controls="datatable-fixed-header"  >no nama dokumen</th>
-<th align="center" aria-controls="datatable-fixed-header"  >nama dokumen</th>
-<th class='text-center' style="width: 1%;" align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th  aria-controls="datatable-fixed-header"  >No</th>
+<th  aria-controls="datatable-fixed-header"  >no nama dokumen</th>
+<th aria-controls="datatable-fixed-header"  >nama dokumen</th>
+<th class='text-center' style="width: 1%;"  aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
 <tbody >
 </table>
 
-<!------------- Modal Tambah jenis dokumen---------------->
-<div class="modal fade bd-example-modal-lg" id="tambah_data_dokumen" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" id="tambah_syarat1">Tambahkan Syarat <span id="title"> </span> </h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body">
-<label>Tambahkan Nama Dokumen</label> 
-<input type="text"  class="form-control form-control-sm" id="nama_dokumen" name="Nama Dokumen" placeholder="Nama Dokumen">
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-<button type="button" class="btn btn-sm btn-success"  id="simpan_dokumen">Simpan Nama Dokumen</button>
-</div>
-</div>
-</div>
-</div>
 
-
-<!------------- Modal Meta---------------->
-<div class="modal fade bd-example-modal-lg" id="modal_meta" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" >Tambahkan Data Meta</h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body">
-<input type="hidden" class="no_nama_dokumen ">
-<label>Masukan Nama Meta</label>
-<input type="text" placeholder="nama meta" class="form-control form-meta form-control-sm nama_meta">
-<label>Jenis inputan</label>
-<select onchange="check_inputan();"  class="form-control form-control-sm  form-meta jenis_input">
-<option>text</option>    
-<option>number</option>
-<option>select</option>
-<option>date</option>
-<option>textarea</option>
-</select>
-<label>Maksimal karakter</label>
-<input type="number" maxlength="3" placeholder="maksimal karakter" class="form-control form-meta maksimal_karakter form-control-sm">
-
-<div class="jenis_bilangan" style="display:none">
-<label>Jenis Bilangan</label>
-<select class="form-control form-meta form-control-sm jenis_bilangan">
-<option>Pilih Jenis Bilangan</option>    
-<option>Bulat</option>    
-<option>Desimal</option>
-</select>
-</div>
-
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-<button type="button" class="btn btn-success btn-sm"  id="simpan_meta">Simpan data Meta</button>
-</div>
-</div>
-</div>
-</div>
-
-
-<!------------- Modal Meta---------------->
-<div class="modal fade bd-example-modal-lg" id="lihat_meta" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" >Data Meta</h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body lihat_data_meta">
-
-</div>
+<!------------- Modal Detail Dokumen---------------->
+<div class="modal fade bd-example-modal-lg" id="ModalDetailDokumen" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document" id="DataDetailDokumen">
 
 </div>
 </div>
-</div>
 
-<!------------- Edit Dokumen---------------->
-<div class="modal fade bd-example-modal-lg" id="edit_dokumen" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-<div class="modal-body edit_dokumen">
-   
-</div>
-<div class="modal-footer">
-<button class="btn btn-success btn-sm update_nama_dokumen"> Update </button>    
-</div></div>
-</div>
-</div>
-
-<!------------- Edit Dokumen---------------->
-<div class="modal fade bd-example-modal-lg" id="tambah_option" tabindex="-1" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-md" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" >Data pilihan</h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>    
-<div class="modal-body data_option">
-   
-</div>
-<div class="modal-footer">
-<button class="btn btn-success btn-sm simpan_pilihan"> simpan pilihan </button>    
-</div></div>
-</div>
-</div>
 
 <script type="text/javascript">
-function check_inputan(){
-var inputan = $(".jenis_input option:selected").text();
-if(inputan == 'number'){
-$(".jenis_bilangan").show();    
-}else{
-$(".jenis_bilangan").hide();        
-}
-}
-
-
-function data_option(id_data_meta){
-var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
-$.ajax({
-type:"post",
-data:"token="+token+"&id_data_meta="+id_data_meta,
-url:"<?php echo base_url('Dashboard/data_option') ?>",
-success:function(data){
-$(".data_option").html(data);    
-$('#tambah_option').modal('show');    
-}
-});       
-}
-   
-function response(data){
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-});    
-}    
-    
-
-
 
 
 $(document).ready(function() {
@@ -231,125 +81,118 @@ $('td:eq(0)', row).html(index);
 }
 });
 });
+
+function LihatDetailDokumen(no_dokumen){
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
+$.ajax({
+type:"post",
+data:"token="+token+"&no_dokumen="+no_dokumen,
+url:"<?php echo base_url('Dashboard/DetailDokumen') ?>",
+success:function(data){
+$("#DataDetailDokumen").html(data);
+$('#ModalDetailDokumen').modal('show');
+check_inputan();
+}
+});       
+
+}
+
+function UpdateNamaDokumen(){
+$("#FormUpdateDokumen").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$('.form-check + p').remove();
+$.ajax({
+type:"post",
+data:$("#FormUpdateDokumen").serialize(),
+url:"<?php echo base_url('Dashboard/UpdateNamaDokumen') ?>",
+success:function(data){
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#FormUpdateDokumen").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#FormUpdateDokumen").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+refresh_nama_dokumen();
+
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+$('#ModalDetailDokumen').modal('hide');
+}  
+}
+});  
+}
+
 function refresh_nama_dokumen(){
 var table = $('#data_nama_dokumen').DataTable();
 table.ajax.reload( function ( json ) {
 $('#data_nama_dokumen').val( json.lastInput );
 });
 }
-function hapus_nama_dokumen(id_nama_dokumen){
-var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
 
-Swal.fire({
-title: 'Anda yakin ingin mengahpus nama dokumen ini?',
-text: "Seluruh data yang pernah tersimpan dengan nama dokumen ini akan dihapus",
-type: 'warning',
-showCancelButton: true,
-confirmButtonColor: '#3085d6',
-cancelButtonColor: '#d33',
-confirmButtonText: 'Hapus'
-}).then((result) => {
-if (result.value) {
+function SimpanFormMeta(no_dokumen){
+$("#FormMeta").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
 
 $.ajax({
 type:"post",
-data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
-url:"<?php echo base_url('Dashboard/hapus_nama_dokumen') ?>",
-success:function(){
-Swal.fire(
-'Terhapus!',
-'Nama Dokumen berhasil dihapus',
-'success'
-)
-refresh_nama_dokumen();
-}
-});                
-}
-});  
-}
-
-
-function edit_nama_dokumen(id_nama_dokumen){
-var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
-$.ajax({
-type:"post",
-url :"<?php echo base_url('Dashboard/data_dokumen') ?>",
-data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen,
+url :"<?php echo base_url('Dashboard/SimpanMeta') ?>",
+data:$("#FormMeta").serialize(),
 success:function(data){
-$('#edit_dokumen').modal('show');
-$('.edit_dokumen').html(data);
-
-$(".id_nama_dokumen_edit").val(id_nama_dokumen);
-}
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#FormMeta").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#FormMeta").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+LihatDetailDokumen(no_dokumen); 
+ 
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
 });
 
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
 }
-
-
-
-function tambah_meta(no_nama_dokumen){
-$('#modal_meta').modal('show');
-$(".no_nama_dokumen").val(no_nama_dokumen);
-
-}
-function lihat_meta(no_nama_dokumen){
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
-$.ajax({
-type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen,
-url:"<?php echo base_url('Dashboard/lihat_data_meta') ?>",
-success:function(data){
-$(".lihat_data_meta").html(data);
-$('#lihat_meta').modal('show');
 }
 });
 }
 
-function hapus_meta(id_data_meta){
+
+function hapus_meta(id_data_meta,no_dokumen){
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
 $.ajax({
 type:"post",
 data:"token="+token+"&id_data_meta="+id_data_meta,
-url:"<?php echo base_url('Dashboard/hapus_data_meta') ?>",
-success:function(){
-$('#lihat_meta').modal('hide');
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-
-Toast.fire({
-type: 'success',
-title: 'Data Meta berhasil dihapus'
-})
-}
-});
-}
-
-
-$(document).ready(function(){
-
-$(".update_nama_dokumen").click(function(){
-var id_nama_dokumen     = $(".id_nama_dokumen_edit").val();
-var no_nama_dokumen     = $(".no_nama_dokumen_edit").val();
-var nama_dokumen        = $(".nama_dokumen_edit").val();
-var badan_hukum         = $("input[name='badan_hukum']:checked").val();
-var perorangan          = $("input[name='perorangan']:checked").val();
-var token               = "<?php echo $this->security->get_csrf_hash() ?>";    
-
-
-$.ajax({
-type:"post",
-data:"token="+token+"&id_nama_dokumen="+id_nama_dokumen+"&nama_dokumen="+nama_dokumen+"&no_nama_dokumen="+no_nama_dokumen+"&badan_hukum="+badan_hukum+"&perorangan="+perorangan,
-url:"<?php echo base_url('Dashboard/update_nama_dokumen') ?>",
+url:"<?php echo base_url('Dashboard/HapusDataMeta') ?>",
 success:function(data){
-var r =JSON.parse(data);    
-refresh_nama_dokumen();
+var r  = JSON.parse(data);
 
+LihatDetailDokumen(no_dokumen); 
+ 
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -360,130 +203,190 @@ customClass: 'animated zoomInDown'
 });
 
 Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function(){
-$('#edit_dokumen').modal('hide');    
+type: r[0].status,
+title: r[0].messages
 });
-
 }
 });
+}
 
-});
+function check_inputan(){
+var inputan = $(".jenis_inputan option:selected").val();
+if(inputan == 'number'){
+$(".jenis_bilangan").attr("disabled", false);   
+}else{
+$(".jenis_bilangan").attr("disabled", true);        
+}
+}
 
-
-$("#simpan_meta").click(function(){
-var token                   = "<?php echo $this->security->get_csrf_hash() ?>";    
-var no_nama_dokumen         = $(".no_nama_dokumen").val();
-var nama_meta               = $(".nama_meta").val();
-var jenis_input             = $(".jenis_input option:selected").val();
-var maksimal_karakter       = $(".maksimal_karakter").val();
-var jenis_bilangan          = $(".jenis_bilangan option:selected").val();
-if(nama_meta != ''){
+function TambahkanOpsi(id_data_meta,no_dokumen){
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
 $.ajax({
 type:"post",
-url :"<?php echo base_url('Dashboard/simpan_meta') ?>",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&nama_meta="+nama_meta+"&jenis_input="+jenis_input+"&maksimal_karakter="+maksimal_karakter+"&jenis_bilangan="+jenis_bilangan,
+data:"token="+token+"&id_data_meta="+id_data_meta+"&no_dokumen="+no_dokumen,
+url:"<?php echo base_url('Dashboard/FormTambahOpsi') ?>",
 success:function(data){
-response(data);
-$(".form-meta").val("");
+$("#form"+id_data_meta).slideDown().after(data);
+$(".TmbhOpsi"+id_data_meta).hide();
 }
 });
-} else {
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
 
-Toast.fire({
-type: "warning",
-title: "Data Meta Masih Kosong"
-});
 }
 
-});
+function SimpanOpsiBaru(id_data_meta,no_dokumen){
+$("#TambahOpsi"+id_data_meta).find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
 
-
-
-
-$("#simpan_dokumen").click(function(){
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-var nama_dokumen    = $("#nama_dokumen").val();
-
-if(nama_dokumen != ''){
 $.ajax({
 type:"post",
-url:"<?php echo base_url('Dashboard/simpan_nama_dokumen') ?>",
-data:"token="+token+"&nama_dokumen="+nama_dokumen,
+url :"<?php echo base_url('Dashboard/SimpanOpsi') ?>",
+data:$("#TambahOpsi"+id_data_meta).serialize(),
 success:function(data){
-refresh_nama_dokumen();
-var r = JSON.parse(data);
-if(r.status =="Berhasil"){
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#TambahOpsi"+id_data_meta).find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#TambahOpsi"+id_data_meta).find("#"+key).removeClass("is-valid");
 });
-
-Toast.fire({
-type: 'success',
-title: 'Dokumen Berhasil Ditambahkan.'
 });
 }else{
+LihatDetailDokumen(no_dokumen); 
 const Toast = Swal.mixin({
 toast: true,
-position: 'top-end',
+position: 'center',
 showConfirmButton: false,
 timer: 3000,
 animation: false,
-customClass: 'animated tada'
-});
-Toast.fire({
-type: 'error',
-title: 'Kesalahan.'
-})
-}
-}    
-});
-}else{
-const Toast = Swal.mixin({
-toast: true,
-position: 'top-end',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated tada'
-});
-Toast.fire({
-type: 'warning',
-title: 'Nama Dokumen Belum di isikan.'
-})   
-}
+customClass: 'animated zoomInDown'
 });
 
-$(".simpan_pilihan").click(function(){
-var id_data_meta = $(".id_data_meta").val();
-var jenis_pilihan = $(".jenis_pilihan").val();
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+}
+}
+});
+}
+
+function HideFormOpsi(id_data_meta){
+$("#FormOpsi"+id_data_meta).slideUp().hide();
+$(".TmbhOpsi"+id_data_meta).show();
+}
+function HapusPilihan(id_data_input_pilihan,no_dokumen){
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";    
 
 $.ajax({
 type:"post",
-data:"token="+token+"&id_data_meta="+id_data_meta+"&jenis_pilihan="+jenis_pilihan,
-url:"<?php echo base_url('Dashboard/simpan_jenis_pilihan') ?>",
+url :"<?php echo base_url('Dashboard/HapusPilihan') ?>",
+data:"token="+token+"&id_data_input_pilihan="+id_data_input_pilihan,
 success:function(data){
-response(data);
-$(".jenis_pilihan").val("");
-data_option(id_data_meta);
+var r  = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+LihatDetailDokumen(no_dokumen); 
+
+}
+});
+}
+function HapusJenisDokumen(no_dokumen){
+  var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+  Swal.fire({
+  title: 'Kamu yakin ?',
+  text: "Dokumen yang terkait dengan jenis dokumen ini akan ikut terhapus",
+  icon: 'danger',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Ya Hapus Saja'
+}).then((result) => {
+  if (result.value) {
+$.ajax({
+type:'post',
+url:'<?php echo base_url('Dashboard/HapusJenisDokumen') ?>',
+data:"token="+token+"&no_dokumen="+no_dokumen,
+success:function(data){
+
+
+$('#ModalDetailDokumen').modal('hide');
+refresh_nama_dokumen();
+Swal.fire(
+      'Terhapus !',
+      'Seluruh Dokumen yang terkait jenis pekerjaan ini telah dihapus.',
+      'success'
+    )
 }
 });
 
+}
+})
+}
+
+function FormTambahDokumen(){
+var token = '<?php echo $this->security->get_csrf_hash(); ?>';  
+$.ajax({
+type:"post",
+data:"token="+token+"&asd=asd",
+url:"<?php echo base_url('Dashboard/FormTambahDokumen') ?>",
+success:function(data){
+$("#DataDetailDokumen").html(data);
+$('#ModalDetailDokumen').modal('show');
+}
+});       
+
+}
+
+
+
+function SimpanDokumenBaru(){
+$("#FormBuatDokumen").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+
+$.ajax({
+type:"post",
+url :"<?php echo base_url('Dashboard/SimpanNamaDokumen') ?>",
+data:$("#FormBuatDokumen").serialize(),
+success:function(data){
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#FormBuatDokumen").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#FormBuatDokumen").find("#"+key).removeClass("is-valid");
 });
 });
+}else{
+
+$('#ModalDetailDokumen').modal('hide');
+refresh_nama_dokumen();
+ 
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+}
+}
+});
+}
 </script> 

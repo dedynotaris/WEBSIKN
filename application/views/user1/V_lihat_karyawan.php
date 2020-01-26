@@ -2,6 +2,7 @@
 <?php  $this->load->view('umum/user1/V_sidebar_user1'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
+<?php  $this->load->view('umum/user1/V_data_user1'); ?>
 <div class="container-fluid text-theme1 ">
 <div class="card-header mt-2 text-center ">
 <h5 align="center">Data jumlah pekerjaan karyawan</h5>

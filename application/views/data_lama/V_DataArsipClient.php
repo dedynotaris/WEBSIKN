@@ -71,6 +71,7 @@ data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('data_lama/TambahkanProsesArsip') ?>",
 success:function(data){
 read_response(data);
+window.location.href="<?php echo base_url('DataArsipProses') ?>";
 }
 });    
 }

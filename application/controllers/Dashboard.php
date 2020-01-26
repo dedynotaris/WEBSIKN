@@ -27,23 +27,143 @@ redirect(404);
 }    
 }
 
-public function get_persyaratan(){
+public function HapusJenisPekerjaan(){
 if($this->input->post()){
 $input = $this->input->post();
-$data = $this->M_dashboard->data_persyaratan($input['no_jenis_pekerjaan']);
+$this->db->delete('data_jenis_pekerjaan',array('no_jenis_pekerjaan'=>$input['no_jenis_pekerjaan']));
+}else{
+redirect(404);    
+}    
+}
+public function HapusJenisDokumen(){
+  if($this->input->post()){
+  $input = $this->input->post();
+  $this->db->delete('nama_dokumen',array('no_nama_dokumen'=>$input['no_dokumen']));
+  }else{
+  redirect(404);    
+  }    
+  }
+
+public function DetailPekerjaan(){
+if($this->input->post()){
+$input                        = $this->input->post();
+$DataPekerjaan                = $this->db->get_where('data_jenis_pekerjaan',array('no_jenis_pekerjaan'=>$input['no_jenis_pekerjaan']))->row_array();
+$DataPersyaratan              = $this->M_dashboard->data_persyaratan($input['no_jenis_pekerjaan']);
+
+                                $this->db->group_by('data_pekerjaan.no_client');  
+$JumlahClient                 = $this->db->get_where('data_pekerjaan',array('no_jenis_pekerjaan'=>$input['no_jenis_pekerjaan']))->num_rows();
+
+$JumlahDokumenPenunjangPekerjaan = $this->M_dashboard->JumlahDokumenPenunjangPekerjaan($input['no_jenis_pekerjaan'])->num_rows();
+$JumlahDokumenUtamaPekerjaan     = $this->M_dashboard->JumlahDokumenUtamaPekerjaan($input['no_jenis_pekerjaan'])->num_rows();
+
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" id="tambah_syarat1">Detail Pekerjaan '.$DataPekerjaan['nama_jenis'].' <span id="title"> </span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body overflow-auto" style="max-height:500px;">
+<div class="row">
+<div class="col text-center">
+<div class="card">
+Jumlah Klien yang telah menggunakan pekerjaan ini
+<div class="card-footer">'.$JumlahClient.'</div>
+</div>
+</div>
+
+<div class="col text-center">
+<div class="card">
+ Jumlah Dokumen Penunjang yang ada dalam pekerjaan ini
+<div class="card-footer">'.$JumlahDokumenPenunjangPekerjaan.'</div>
+</div>
+</div>
+
+<div class="col text-center">
+<div class="card">
+Jumlah Dokumen Utama yang ada dalam pekerjaan ini
+<div class="card-footer">'.$JumlahDokumenUtamaPekerjaan.'</div>
+</div>
+</div>
+
+</div>
+<hr>
+<div class="row">
+<form id="FormUpdatePekerjaan">
+<div class="col">
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input  name="no_jenis_pekerjaan" type="hidden" value="'.$input['no_jenis_pekerjaan'].'" class="form-control form-control-sm block">
+<label>*Nama Pekerjaan </label>
+<input name="nama_jenis" type="text" value="'.$DataPekerjaan['nama_jenis'].'" id="nama_jenis" class="form-control nama_jenis form-control-sm block">
+</div>
+
+<div class="col">
+<label>* Pekerjaan Milik</label>
+<Select id="pekerjaan"  name="pekerjaan"  class="form-control pekerjaan form-control-sm">
+<option value="NOTARIS">NOTARIS</option>
+<option value="PPAT">PPAT</option>
+</Select>
+</div>
+
+<div class="col">
+<label>&nbsp;</label>
+<button type="button"  onclick="UpdatePekerjaan()" class="btn BtnUpdatePekerjaan btn-sm btn-success btn-block">Update <i class="fa fa-save"></i></button>
+</form>
+</div>
+
+</div>
+<hr>
+
+<div class="row">
+<form id="FormTambahPersyaratan">
+<div class="col">
+<Label>* Tambahkan Dokumen Persyaratan</Label>
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input  name="no_jenis_pekerjaan" type="hidden" value="'.$input['no_jenis_pekerjaan'].'" class="form-control form-control-sm block">
+<select name="jenis_dokumen" id="jenis_dokumen" class="form-control form-control-sm  jenis_dokumen"></select>
+</div>
+<div class="col">
+<label>&nbsp;</label>
+<button type="button" onclick="TambahPersyaratan()" class="btn BtnTambahPersyaratan btn-sm btn-success btn-block">Tambahkan Dokumen <i class="fa fa-plus"></i></button>
+</form>
+</div>
+</div>
+
+<hr>
+<div class="row">
+<div class="col">';
 
 echo "<table class='table table-sm table-bordered table-striped table-hover'>"
 . "<tr>"
-."<th>Nama File</th>"
+."<th>N0</th>"
+."<th>Nama Dokumen Persyaratan</th>"
 ."<th class='text-center'>Aksi</th>"
 . "</tr>";
-foreach ($data->result_array() as $d){
+$h =1;
+foreach ($DataPersyaratan->result_array() as $d){
 echo  "<tr class='hapus_syarat".$d['id_data_persyaratan']."'>"
+."<td >".$h++."</td>"
 ."<td >".$d['nama_dokumen']."</td>"
-."<td  class='text-center'><button onclick=hapus_syarat(".$d['id_data_persyaratan']."); class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>"
+."<td  class='text-center'><button onclick=hapus_syarat('".$d['id_data_persyaratan']."','".$input['no_jenis_pekerjaan']."'); class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>"
 . "</tr>";    
 }
 echo "</table>";
+echo '</div>
+</div>
+<hr>
+
+</div>
+<div class="modal-footer">
+<button ';
+if($JumlahClient == 0 ){
+  echo 'onclick=HapusJenisPekerjaan("'.$input['no_jenis_pekerjaan'].'")'; 
+  }else{
+  echo "disabled";  
+  }
+echo ' class="btn btn-sm btn-danger btn-block">Hapus Jenis Pekerjaan Ini <i class="fa fa-trash"></i></button>
+</div>
+</div>
+';
 }else{
 redirect(4);    
 }     
@@ -66,119 +186,48 @@ redirect(404);
 }
 }
 
-public function simpan_jenis_dokumen(){
+public function SimpanPekerjaanBaru(){
 if($this->input->post()){
+$input = $this->input->post();
 
-$jumlah_jenis        = $this->M_dashboard->data_jenis()->num_rows()+1;
-$no_jenis            = str_pad($jumlah_jenis,4,"0",STR_PAD_LEFT);
+$this->form_validation->set_rules('jenis_pekerjaan', 'jenis pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('pekerjaan_milik', 'pekerjaan_milik', 'required',array('required' => 'Data ini tidak boleh kosong'));
 
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+$jumlah_jenis        = $this->M_dashboard->data_jenis()->row_array();
+
+$no_jenis            = str_pad($jumlah_jenis['id_jenis_pekerjaan']+1,4,"0",STR_PAD_LEFT);
 
 $data = array(
-'no_jenis_pekerjaan' =>"J_".$no_jenis,
-'pekerjaan'        =>$this->input->post('pekerjaan'),
-'nama_jenis'       =>$this->input->post('jenis_dokumen'),
-'pembuat_jenis'    => $this->session->userdata('nama_lengkap'),  
+'no_jenis_pekerjaan'  =>"J_".$no_jenis,
+'pekerjaan'           =>$this->input->post('pekerjaan_milik'),
+'nama_jenis'          =>$this->input->post('jenis_pekerjaan'),
+'pembuat_jenis'       => $this->session->userdata('nama_lengkap'),  
 );    
 $this->M_dashboard->simpan_jenis($data);
 
-$status = array(
-"status"=>"Berhasil"
+$status[] = array(
+"status"    =>"success",
+"messages"  =>"Jenis Pekerjaan Baru Berhasil Ditambahkan",
 );
 echo json_encode($status);
 
-}else{
-redirect(404);    
 }
-}
-
-public function simpan_user(){
-if($this->input->post()){
-$input = $this->input->post();
-
-
-$jumlah_user        = $this->M_dashboard->data_user()->num_rows()+1;
-$angka              = 4;
-$no_user            = str_pad($jumlah_user, $angka ,"0",STR_PAD_LEFT);
-
-$data = array(
-'no_user'      => $no_user,  
-'username'     => $input['username'],  
-'nama_lengkap' => $input['nama_lengkap'],
-'level'        => $input['level'],
-'status'       => $input['status'],
-'email'        => $input['email'],
-'phone'        => $input['phone'],
-'password'     => md5($input['password'])
-);
-
-$this->M_dashboard->simpan_user($data);
-
-$status = array(
-"status"=>"Berhasil"
-);
-echo json_encode($status);
-}else{
-redirect(404);    
-}
-}
-public function getUser(){
-if($this->input->post()){
-$query = $this->M_dashboard->ambil_user($this->input->post('id_user'))->row_array();
-echo json_encode($query);
-
-}else{
-redirect(404);    
-}  
-
-}
-
-public function update_user(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data = array(
-'username'      => $input['username'],
-'nama_lengkap'  => $input['nama_lengkap'],
-'level'         => $input['level'],
-'status'        => $input['status'],        
-'email'         => $input['email'],        
-'phone'         => $input['phone'],        
-);
-
-$this->M_dashboard->update_user($data,$this->input->post('id_user'));
-$status = array(
-"status"=>"Berhasil"
-);
-echo json_encode($status);
 }else{
 redirect(404);    
 }
 }
 
 
-public function simpan_nama_dokumen(){
-if($this->input->post()){
 
-$jumlah_nama_dokumen        = $this->M_dashboard->hitung_nama_dokumen()->row_array();
-$no_nama_dokumen            = str_pad($jumlah_nama_dokumen['id_nama_dokumen'],4 ,"0",STR_PAD_LEFT);
 
-$data = array(
-'no_nama_dokumen'   => "N_".$no_nama_dokumen,
-'nama_dokumen'      => $this->input->post('nama_dokumen'),
-'pembuat'           => $this->session->userdata('nama_lengkap'),   
-);
-$this->M_dashboard->simpan_nama_dokumen($data);
-
-$status = array(
-"status"=>"Berhasil"
-);
-echo json_encode($status);
-
-}else{    
-redirect(404);    
-}    
-
-}
 public function getJenis(){
 if($this->input->post()){
 $data_jenis = $this->M_dashboard->getJenis($this->input->post('id_jenis_dokumen'))->row_array();
@@ -222,25 +271,27 @@ redirect(404);
 }
 
 }
-public function cari_nama_dokumen(){
-$term = strtolower($this->input->get('term'));    
+public function CariJenisDokumen(){
+$term = strtolower($this->input->post('search'));    
 $query = $this->M_dashboard->cari_nama_dokumen($term);
-
 foreach ($query as $d) {
-$json[]= array(
-'label'                    => $d->nama_dokumen,   
-'id_nama_dokumen'          => $d->id_nama_dokumen,
-'no_nama_dokumen'          => $d->no_nama_dokumen,
-'nama_dokumen'             => $d->nama_dokumen,
-);   
-}
-echo json_encode($json);
+  $json[]= array(
+  'text'                    => $d->nama_dokumen,   
+  'id'                      => $d->no_nama_dokumen,
+  );   
+  }
+  $data = array(
+  'results'=>$json,
+  );
+  echo json_encode($data);
+  
 }
 
 
-public function json_data_jenis_pekerjaan(){
-echo $this->M_dashboard->json_data_jenis_pekerjaan();       
+public function JsonDataJenisPekerjaan(){
+echo $this->M_dashboard->JsonDataJenisPekerjaan();       
 }
+
 public function json_data_daftar_persyaratan(){
 echo $this->M_dashboard->json_data_daftar_persyaratan();       
 }
@@ -252,9 +303,14 @@ public function json_data_jenis(){
 echo $this->M_dashboard->json_data_jenis();       
 }
 
-public function json_data_client(){
-echo $this->M_dashboard->json_data_client();       
+public function json_data_client_hukum(){
+echo $this->M_dashboard->json_data_client_hukum();       
 }
+
+public function json_data_client_perorangan(){
+echo $this->M_dashboard->json_data_client_perorangan();       
+}
+
 public function json_data_perorangan(){
 echo $this->M_dashboard->json_data_perorangan();       
 }
@@ -273,24 +329,6 @@ public function json_data_pekerjaan(){
 echo $this->M_dashboard->json_data_pekerjaan();       
 }
 
-public function data_dokumen(){
-$query = $this->db->get_where('nama_dokumen',array('id_nama_dokumen'=>$this->input->post('id_nama_dokumen')))->row_array();
-
-echo '<input type="hidden" class="id_nama_dokumen_edit form-control" value="'.$query['id_nama_dokumen'].'">
-<label>No Nama Dokumen</label>    
-<input type="text" class="no_nama_dokumen_edit  form-control" value="'.$query['no_nama_dokumen'].'">
-
-<label>Nama Dokumen</label>    
-<input type="text" class="nama_dokumen_edit form-control" value="'.$query['nama_dokumen'].'">
-
-<label>Jenis dokumen badan hukum</label>
-<input value="Badan Hukum" name="badan_hukum" type="checkbox"'; if($query['badan_hukum'] == 'Badan Hukum' ){ echo'checked '; } echo 'class="form-check badan_hukum">
-
-<label>Jenis dokumen perorangan</label>
-<input value="Perorangan" name="perorangan" type="checkbox"'; if($query['perorangan'] == 'Perorangan'){ echo'checked '; } echo'class="form-check perorangan">
-';
-
-}
 
 public function data_pekerjaan(){
 if($this->input->post()){
@@ -309,26 +347,36 @@ redirect(404);
 }
 
 }
-public function update_jenis_pekerjaan(){
+public function UpdatejenisPekerjaan(){
 if($this->input->post()){
+  $this->form_validation->set_rules('pekerjaan', 'Pekerjaan Milik', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('nama_jenis', 'Jenis Dokumen', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
 $input = $this->input->post();
 
 $data = array(
-'no_jenis_pekerjaan' =>$input['no_jenis_pekerjaan'],
 'pekerjaan'          =>$input['pekerjaan'],
 'nama_jenis'         =>$input['nama_jenis'],
 'pembuat_jenis'      => $this->session->userdata('nama_lengkap'),  
 );
 
-$this->db->update('data_jenis_pekerjaan',$data,array('id_jenis_pekerjaan'=>$input['id_jenis_pekerjaan']));
+$this->db->update('data_jenis_pekerjaan',$data,array('no_jenis_pekerjaan'=>$input['no_jenis_pekerjaan']));
 
-$status = array(
+$status[] = array(
 "status"=>"success",
-"pesan"=>"Data pekerjaan berhasil diperbaharui"
+"messages"=>"Data pekerjaan berhasil diperbaharui"
 );
 
 echo json_encode($status);
-    
+}  
 }else{
 redirect(404);    
 }       
@@ -479,11 +527,16 @@ $this->load->view('dashboard/V_pekerjaan_proses');
 
 
 
-public function data_client(){
+public function data_client_hukum(){
 $this->load->view('umum/V_header');
-$this->load->view('dashboard/V_data_client');
-
+$this->load->view('dashboard/V_data_client_hukum');
 }
+
+public function data_client_perorangan(){
+$this->load->view('umum/V_header');
+$this->load->view('dashboard/V_data_client_perorangan');
+}
+  
 
 
 public function getCLient(){
@@ -509,23 +562,45 @@ $this->load->view('dashboard/V_data_perorangan');
 
 }
 
-public function simpan_persyaratan(){
+public function SimpanPersyaratan(){
 if($this->input->post()){
 $input = $this->input->post();
+$this->form_validation->set_rules('jenis_dokumen', 'No Identitas NIK/NPWP', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('no_jenis_pekerjaan', 'Email Client', 'required',array('required' => 'Data ini tidak boleh kosong'));
 
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+
+}else{
+$cek_jenis_dokumen = $this->db->get_where('data_persyaratan',array('no_nama_dokumen'=>$input['jenis_dokumen'],'no_jenis_pekerjaan'  =>$input['no_jenis_pekerjaan']))->num_rows();
+if($cek_jenis_dokumen == 0){
 $data = array(
-'no_nama_dokumen'     =>$input['no_nama_dokumen'], 
+'no_nama_dokumen'     =>$input['jenis_dokumen'], 
 'no_jenis_pekerjaan'  =>$input['no_jenis_pekerjaan']   
 );
-
 $this->db->insert('data_persyaratan',$data);
-
-$status = array(
-"status"      =>"success",
-"pesan"       =>"Persyaratan berhasil ditambahkan" 
+$status[] = array(
+'status'                => 'success',
+'messages'              => "Dokumen Persyaratan Berhasil Ditambahkan",    
+'no_jenis_pekerjaan'    => $input['no_jenis_pekerjaan'],    
 );
-
 echo json_encode($status);
+}else{
+$status[] = array(
+'status'                => 'error',
+'messages'              => "Jenis Dokumen Ini Sudah Tersedia",    
+'no_jenis_pekerjaan'    => $input['no_jenis_pekerjaan'],    
+);
+echo json_encode($status);    
+}
+
+}
+
 }else{
 redirect(404);    
 } 
@@ -586,91 +661,11 @@ redirect(404);
 }       
 }
 
-public function lihat_data_meta(){
-if($this->input->post()){
-$data = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$this->input->post('no_nama_dokumen')));
-if($data->num_rows() >0){
-echo "<table class='table table-sm table-bordered table-striped table-hover'>"
-        . "<tr>"
-        . "<th>No</th>"
-        . "<th>Nama meta</th>"
-        . "<th>Maksimal karakter</th>"
-        . "<th>Jenis inputan</th>"
-        . "<th class='text-center'>Aksi</th>"
-        . "</tr>";
-$h =1;
-foreach ($data->result_array() as $d){
-echo "<tr>"
-    . "<td>".$h++."</td>"
-    . "<td>".$d['nama_meta']."</td>"
-    . "<td>".$d['maksimal_karakter']."</td>"
-    . "<td>".$d['jenis_inputan']."</td>"
-    . "<td class='text-center'>"
-        . "<button title='hapus meta' class='btn btn-danger m-1 btn-sm' onclick=hapus_meta('".$d['id_data_meta']."')><span class='fa fa-trash'></span></button>";
-        if($d['jenis_inputan'] == 'select'){
-            echo "<button onclick=data_option('".$d['id_data_meta']."') title='Tambahkan option' class='btn btn-success btn-sm'><span class='fa fa-plus'</button>";
-        }
-        echo "</td>"
-. "</tr>";
-}
-echo "</table>";
-}else{
-echo "<h3 align='center'>Tidak ada data meta yang bisa ditampilkan</h3>";    
-}   
-    
-}else{
-redirect(404);    
-}    
-}
-public function data_option(){
-if($this->input->post()){
-$input = $this->input->post();
-
-echo ""
-. "<input type='hidden' class='form-control form-control-sm id_data_meta' value='".$input['id_data_meta']."'>"
-. "<label>Jenis pilihan</label>"
-. "<input type='text' placeholder='Jenis pilihan' class='form-control form-control-sm jenis_pilihan'>";
-
-$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$input['id_data_meta']));
-echo "<hr>";
-echo "<ol>";
-foreach ($data_option->result_array() as $d){
-echo "<li>".$d['jenis_pilihan']."</li>";    
-}
-echo "</ol>";
-}else{
-redirect(404);    
-}    
-}
-public function simpan_jenis_pilihan(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data = array(
-'id_data_meta'   =>$input['id_data_meta'],
-'jenis_pilihan'  =>$input['jenis_pilihan']  
-);
-$this->db->insert('data_input_pilihan',$data);
-
-$status = array(
-"status"     => "success",
-"pesan"      => "Jenis Pilihan berhasil ditambahkan"    
-);
-echo json_encode($status);
-
-}else{
-redirect(404);    
-}    
-}
 
 
-public function hapus_data_meta(){
-if($this->input->post()){
-$this->db->delete('data_meta',array('id_data_meta'=>$this->input->post('id_data_meta')));    
-}else{
-redirect(404);    
-}    
-}
+
+
+
 
 
 
@@ -817,41 +812,6 @@ unset($_SESSION['toggled']);
 echo print_r($this->session->userdata());
 }
 
-public function simpan_sublevel(){
-if($this->input->post()){
-$input = $this->input->post();
-
-$data = array(
-'no_user'	=>$input['no_user'],
-'sublevel'	=>$input['sublevel'],
-);
-
-$query = $this->db->get_where('sublevel_user',$data);
-
-if($query->num_rows() == 0){
-$status = array(
-"status"     => "success",
-"pesan"      => "Sublevel berhasil disimpan"    
-);
-$this->db->insert('sublevel_user',$data);
-
-}else{
-
-$status = array(
-"status"     => "warning",
-"pesan"      => "Sublevel ".$input['sublevel']." Sudah dimasukan"    
-);
-
-}
-
-echo json_encode($status);
-
-
-}else{
-redirect(404);	
-}
-
-}
 public function data_sublevel(){
 if($this->input->post()){
 
@@ -1273,13 +1233,882 @@ redirect(404);
 public function hapus_nama_dokumen(){
 if($this->input->post()){
 $input = $this->input->post();
-
 $this->db->delete('nama_dokumen',array('id_nama_dokumen'=>$input['id_nama_dokumen']));    
-    
 }else{
-    redirect(404);    
+redirect(404);    
 }    
 }
+public function FormTambahJenisPekerjaan(){
+  echo '<div class="modal-content">
+  <div class="modal-header">
+  <h6 class="modal-title" id="tambah_pekerjaan">Buat Jenis Pekerjaan Baru</h6>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+  <div class="modal-body">
+  <Form id="FormBuatPekerjaanBaru">
+  <input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+  <label>Jenis Pekerjaan</label> 
+  <input type="text" id="jenis_pekerjaan" class="form-control form-control-sm" name="jenis pekerjaan" placeholder="Jenis Pekerjaan">
+  <label>Pekerjaan Milik</label>
+  <select name="pekerjaan_milik" id="pekerjaan_milik" class="form-control form-control-sm">
+  <option>NOTARIS</option>   
+  <option>PPAT</option>   
+  </select>
+  </div>
 
+  <div class="modal-footer">
+  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+  <button type="button" onclick="BuatPekerjaanBaru()" class="btn btn-success btn-sm"  id="simpan_jenis">Simpan Jenis Pekerjaan <span class="fa fa-save"></span></button>
+  </form>
+  </div>
+  </div>
+  </div>';
+  
+}
+
+function DetailDokumen(){
+if($this->input->post()){  
+$input          = $this->input->post();
+$DataDokumen    = $this->db->get_where('nama_dokumen',array('no_nama_dokumen'=>$input['no_dokumen']))->row_array();
+$jumlahlampiran = $this->db->get_where('data_berkas',array('no_nama_dokumen'=>$input['no_dokumen']))->num_rows();  
+
+echo '<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" id="tambah_syarat1">Detail Dokumen '.$DataDokumen['nama_dokumen'].' <span id="title"> </span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body overflow-auto" style="max-height:500px;">
+<div class="row">
+<div class="col-md-5 mx-auto text-center">
+<div class="card">
+Jumlah Lampiran yang ada dalam dokumen ini
+<div class="card-footer">'.$jumlahlampiran.'</div>
+</div>
+</div>
+</div>
+<hr>
+
+<div class="row">
+<div class="col ">
+<p class="text-center">Nama Dokumen </p>
+<form id="FormUpdateDokumen">
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_dokumen" value="'.$input['no_dokumen'].'" readonly="" class="form-control required"  accept="text/plain">
+<Label>Nama Dokumen</label>
+<input type="text" name="nama_dokumen" id="nama_dokumen" value="'.$DataDokumen['nama_dokumen'].'" class="form-control form-control-sm">
+
+<label>Entitas Badan hukum</label>
+<input value="Badan Hukum" id="badan_hukum" name="badan_hukum" type="checkbox"'; if($DataDokumen['badan_hukum'] == 'Badan Hukum' ){ echo'checked '; } echo 'class="form-check badan_hukum">
+
+<label>Entitas Perorangan</label>
+<input value="Perorangan" id="perorangan" name="perorangan" type="checkbox"'; if($DataDokumen['perorangan'] == 'Perorangan'){ echo'checked '; } echo'class="form-check perorangan">
+<hr>
+<button type="button" onclick="UpdateNamaDokumen()" class="btn btn-success btn-sm btn-block">Update Nama Dokumen <i class="fa fa-save"></i> </button>
+</form>
+</div>
+
+<div class="col">
+<p class="text-center">Buat Form Baru</p>
+<form id="FormMeta">
+<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_dokumen" value="'.$input['no_dokumen'].'" readonly="" class="form-control required"  accept="text/plain">
+<label>Masukan Nama Meta</label>
+<input type="text" name="nama_meta" id="nama_meta"  placeholder="nama meta" class="form-control form-meta form-control-sm nama_meta">
+<label>Maksimal karakter</label>
+<input type="number" name="maxlength" id="maxlength" maxlength="3" placeholder="maksimal karakter" class="form-control form-meta maksimal_karakter form-control-sm">
+
+<label>Jenis inputan</label>
+<select name="jenis_inputan" id="jenis_inputan" onchange="check_inputan();"  class="form-control form-control-sm  form-meta jenis_inputan">
+<option value="text">text</option>    
+<option value="number">angka</option>
+<option value="select">pilihan</option>
+<option value="date">tanggal</option>
+<option value="textarea">textarea</option>
+</select>
+
+<label>Jenis Bilangan</label>
+<select disabled name="jenis_bilangan" id="jenis_bilangan" class="form-control form-meta form-control-sm jenis_bilangan">
+<option>Bulat</option>    
+<option>Desimal</option>
+</select>
+<hr>
+<button type="button" onclick=SimpanFormMeta("'.$input['no_dokumen'].'") class="btn btn-success btn-sm btn-block">Simpan Form Baru <i class="fa fa-save"></i> </button>
+</form>
+
+</div>
+</div>
+<hr>
+
+
+<div class="row">
+<div class="col">
+<p class="text-center">Data Form </p>';
+$this->LihatDataMeta($input['no_dokumen']);
+echo '</div>
+<div class="col-md-5">
+<p class="text-center">Simulasi Form </p>';
+$this->FormMetaSimulation($input['no_dokumen']);
+echo '</div>
+
+</div>
+</div>
+
+
+<div class="modal-footer">
+<button '; 
+if($jumlahlampiran == 0 ){
+echo 'onclick=HapusJenisDokumen("'.$input['no_dokumen'].'")'; 
+}else{
+echo "disabled";  
+}
+echo ' class="btn btn-sm btn-danger btn-block">Hapus Jenis Dokumen Ini <i class="fa fa-trash"></i></button>
+</div>
+</div>';  
+}else{
+redirect(404);  
+}
+}
+
+public function FormMetaSimulation($no_dokumen){
+    $data_meta = $this->M_dashboard->data_meta($no_dokumen);
+    
+    
+    foreach ($data_meta->result_array()  as $d ){
+    //INPUTAN SELECT   
+    if($d['jenis_inputan'] == 'select'){
+    $data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$d['id_data_meta']));   
+    echo "<label>".$d['nama_meta']."</label>"
+    ."<select id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' class='form-control form_meta form-control-sm meta required' required='' accept='text/plain'>";
+    foreach ($data_option->result_array() as $option){
+    echo "<option>".$option['jenis_pilihan']."</option>";
+    }
+    echo "</select>";
+    //INPUTAN DATE
+    }else if($d['jenis_inputan'] == 'date'){
+    echo "<label>".$d['nama_meta']."</label>"
+    ."<input   type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_inputan']." meta required ' required='' accept='text/plain' >";    
+    ///INPUTAN NUMBER
+    }else if($d['jenis_inputan'] == 'number'){
+    echo "<label>".$d['nama_meta']."</label>"
+    ."<input type='text' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain' >";        
+    //INPUTAN TEXTAREA
+    }else if($d['jenis_inputan'] == 'textarea'){
+    echo "<label>".$d['nama_meta']."</label>"
+    . "<textarea  id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm ".$d['jenis_bilangan']." meta required ' required='' accept='text/plain'></textarea>";
+    }else{
+    echo "<label>".$d['nama_meta']."</label>"
+    ."<input  type='".$d['jenis_inputan']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
+    }
+    }
+ 
+}
+
+public function LihatDataMeta($no_dokumen){
+  $data = $this->db->get_where('data_meta',array('no_nama_dokumen'=>$no_dokumen));
+  if($data->num_rows() >0){
+  echo "<table class='table table-sm table-bordered table-striped '>"
+          . "<tr>"
+          . "<th>Nama meta</th>"
+          . "<th>karakter</th>"
+          . "<th> inputan</th>"
+          . "<th class='text-center'>Aksi</th>"
+          . "</tr>";
+  foreach ($data->result_array() as $d){
+  echo "<tr id=form".$d['id_data_meta'].">"
+      . "<td>".$d['nama_meta']."</td>"
+      . "<td>".$d['maksimal_karakter']."</td>"
+      . "<td>".$d['jenis_inputan']."</td>"
+      . "<td class='text-center'>"
+          . "<button title='hapus meta' class='btn btn-danger m-1 btn-sm' onclick=hapus_meta('".$d['id_data_meta']."','".$no_dokumen."')><span class='fa fa-trash'></span></button>";
+          if($d['jenis_inputan'] == 'select'){
+              echo "<button onclick=TambahkanOpsi('".$d['id_data_meta']."','".$no_dokumen."') title='Tambahkan option' class='btn TmbhOpsi".$d['id_data_meta']." btn-success btn-sm'><span class='fa fa-plus'</button>";
+          }
+          echo "</td>"
+  . "</tr>";
+  }
+  echo "</table>";
+  }else{
+  echo "<h3 align='center'>Tidak ada data meta yang bisa ditampilkan</h3>";    
+  }   
+  }
+
+  public function UpdateNamaDokumen(){
+    if($this->input->post()){    
+    $input = $this->input->post();
+
+$this->form_validation->set_rules('nama_dokumen', 'nama_dokumen', 'required',array('required' => 'Data ini tidak boleh kosong'));
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+
+if(!$this->input->post('badan_hukum') && !$this->input->post('perorangan')){
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>[array(
+'badan_hukum'=> "Tentukan Entitas Dokumen Ini",  
+'perorangan'=>"Tentukan Entitas Dokumen Ini",  
+)]    
+);
+echo json_encode($status);
+    
+}else{
+  $data = array(
+    'no_nama_dokumen'   =>$input['no_dokumen'],
+    'nama_dokumen'      =>$input['nama_dokumen'],
+    'pembuat'           =>$this->session->userdata('nama_lengkap'),   
+    'badan_hukum'       =>$this->input->post('badan_hukum'),
+    'perorangan'        =>$this->input->post('perorangan')   
+    );
+    $this->db->update('nama_dokumen',$data,array('no_nama_dokumen'=>$input['no_dokumen']));
+    
+    $status[] = array(
+    "status"=>"success",
+    "messages"=>"Nama dokumen berhasil diperbaharui"
+    );
+    
+    echo json_encode($status);
+
+}
+}
+    }else{
+    redirect(404);    
+    }    
+    }
+    
+
+    public function SimpanMeta(){
+      if($this->input->post()){
+      $input = $this->input->post();
+
+$this->form_validation->set_rules('nama_meta', 'nama_meta', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('maxlength', 'maksimal karakter', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('jenis_inputan', 'jenis inputan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+  $id_data_meta = $this->M_dashboard->id_data_meta()->row_array();
+  $id_meta = $id_data_meta['id_meta']+1;
+  
+  $data = array(
+  'id_data_meta'      => 'M_'.$id_meta,   
+  'no_nama_dokumen'   => $input['no_dokumen'],
+  'nama_meta'         => $input['nama_meta'],
+  'jenis_inputan'     => $input['jenis_inputan'],
+  'maksimal_karakter' => $input['maxlength'],
+  'jenis_bilangan'    => $this->input->post('jenis_bilangan')
+  );
+  $this->db->insert('data_meta',$data);    
+  
+  $status[] = array(
+  "status"        =>"success",
+  "messages"       =>"Form Meta dokumen berhasil ditambahkan" 
+  );
+  
+  echo json_encode($status);
+}
+      
+          
+      }else{
+      redirect(404);    
+      }       
+      }
+      
+      public function HapusDataMeta(){
+        if($this->input->post()){
+        $this->db->delete('data_meta',array('id_data_meta'=>$this->input->post('id_data_meta')));
+        $status[] = array(
+        "status"        =>"success",
+        "messages"      =>"Data meta Berhasil dihapus" 
+        );
+          
+          echo json_encode($status);
+            
+        }else{
+        redirect(404);    
+        }    
+        }
+  
+ function FormTambahOpsi(){
+if($this->input->post()){
+
+$input = $this->input->post();
+echo "<tr id=FormOpsi".$input['id_data_meta']."><td colspan='4'>
+<form id=TambahOpsi".$input['id_data_meta'].">
+<input type='hidden' name='". $this->security->get_csrf_token_name()."' value='".$this->security->get_csrf_hash()."' readonly='' class='form-control required'  accept='text/plain'>
+<input type='hidden' name='id_data_meta' value='".$input['id_data_meta']."' readonly='' class='form-control required'  accept='text/plain'>
+<Label>Masukan Pilihan</label>
+<input type='text' name='pilihan'  id='pilihan' class='form-control form-control-sm pilihan'>
+<hr>
+<button type='button' onclick=SimpanOpsiBaru('".$input['id_data_meta']."','".$input['no_dokumen']."') class='btn btn-sm btn-success btn-block'>Simpan pilihan <span class='fa fa-save'></span></button>
+</form>
+<hr>
+<p class='text-center'>Data Opsi</p>
+";
+
+$data_option = $this->db->get_where('data_input_pilihan',array('id_data_meta'=>$input['id_data_meta']));
+echo "<hr>";
+echo "<ol>";
+foreach ($data_option->result_array() as $d){
+echo "<li>".$d['jenis_pilihan']."</li> <button onclick=HapusPilihan('".$d['id_data_input_pilihan']."','".$input['no_dokumen']."') class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button>";    
+}
+echo "</ol>";
+
+
+echo "<hr>
+<button onclick=HideFormOpsi('".$input['id_data_meta']."') class='btn btn-sm btn-warning btn-block'>Close </button>
+</td></tr>";
+
+}else{
+redirect("404");  
+}
+}
+
+function SimpanOpsi(){
+if($this->input->post()){
+
+  $this->form_validation->set_rules('id_data_meta', 'id data meta', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('pilihan', 'pilihan', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  
+  if ($this->form_validation->run() == FALSE){
+  $status_input = $this->form_validation->error_array();
+  $status[] = array(
+  'status'  => 'error_validasi',
+  'messages'=>array($status_input),    
+  );
+  echo json_encode($status);
+  }else{
+
+$input = $this->input->post();
+$data = array(
+'id_data_meta'    =>$input['id_data_meta'],
+'jenis_pilihan'   =>$input['pilihan'], 
+);
+$this->db->insert('data_input_pilihan',$data);
+
+$status[] = array(
+  "status"        =>"success",
+  "messages"      =>"Data Pilhan Berhasil ditambahkan" 
+  );
+    
+    echo json_encode($status);
+  }
+}else{
+redirect(404);  
+}
+  
+}
+
+function HapusPilihan(){
+if($this->input->post()){
+ $input = $this->input->post();
+$this->db->delete('data_input_pilihan',array('id_data_input_pilihan'=>$input['id_data_input_pilihan']));
+$status[] = array(
+  "status"        =>"success",
+  "messages"      =>"Pilihan Berhasil dihapus" 
+  );
+    
+    echo json_encode($status);
+  
+}else{
+redirect("404");  
+}
+}
+
+function FormTambahDokumen(){
+  if($this->input->post()){
+  
+    echo '<div class="modal-content">
+    <div class="modal-header">
+    <h6 class="modal-title" id="tambah_syarat1">Buat Jenis Dokumen Baru</h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body overflow-auto" style="max-height:500px;">
+    <form id="FormBuatDokumen">
+    <input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'"  class="form-control required"  accept="text/plain">
+    <label>Nama Dokumen</label>
+    <input type="text" name="nama_dokumen" id="nama_dokumen" class="form-control form-control-sm  nama_dokumen" placeholder="nama dokumen">';
+    echo "</div>
+    <div class='modal-footer'>
+    <button type='button' onclick='SimpanDokumenBaru()' class='btn btn-success btn-block btn-sm'>Simpan Dokumen Baru</button>
+    </form>
+    </div>
+    </div>";
+  
+  }else{
+  redirect(404);    
+  }
+  
+}
+
+public function SimpanNamaDokumen(){
+  if($this->input->post()){
+    
+    $this->form_validation->set_rules('nama_dokumen', 'nama_dokumen', 'required',array('required' => 'Data ini tidak boleh kosong'));
+    
+    if ($this->form_validation->run() == FALSE){
+    $status_input = $this->form_validation->error_array();
+    $status[] = array(
+    'status'  => 'error_validasi',
+    'messages'=>array($status_input),    
+    );
+    echo json_encode($status);
+    }else{
+  $jumlah_nama_dokumen        = $this->M_dashboard->hitung_nama_dokumen()->row_array();
+  $no_nama_dokumen            = str_pad($jumlah_nama_dokumen['id_nama_dokumen']+1,4 ,"0",STR_PAD_LEFT);
+  
+  $data = array(
+  'no_nama_dokumen'   => "N_".$no_nama_dokumen,
+  'nama_dokumen'      => $this->input->post('nama_dokumen'),
+  'pembuat'           => $this->session->userdata('nama_lengkap'),   
+  );
+  $this->M_dashboard->SimpanNamaDokumen($data);
+  
+  $status[] = array(
+  "status"    =>"success",
+  "messages"  =>"Jenis Dokumen Baru Berhasil ditambahkan"
+  );
+  echo json_encode($status);
+}
+  }else{    
+  redirect(404);    
+  }    
+  
+  }
+
+ function FormTambahUser(){
+ echo '<div class="modal-content">
+ <div class="modal-header">
+ <h6 class="modal-title" >Form Untuk Menambahkan User Baru <span id="title"> </span> </h6>
+ <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+ <span aria-hidden="true">&times;</span>
+ </button>
+ </div>
+ <div class="modal-body p-3 " style="max-height:500px;">
+ <div class="row">
+ <form id="FormUserBaru">
+ <div class="col">
+ <input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+ <label>Username</label>
+ <input type="text" name="username" class=" username form-control form-control-sm" id="username" placeholder="Username ">
+ <label>Nama Lengkap</label>
+ <input type="text" name="nama_lengkap" class="nama_lengkap form-control form-control-sm" id="nama_lengkap" placeholder="Nama Lengkap ">
+ 
+ <label>Email</label>
+ <input type="text" name="email" class="email form-control form-control-sm" id="email" placeholder="Email ">
+ <label>Phone</label>
+ <input type="text" name="phone" class="phone form-control form-control-sm" id="phone" placeholder="Phone ">
+ </div>
+
+ <div class="col">
+ <label>Level</label>
+ <select name="level" class="level form-control form-control-sm" id="level">
+ <option value="User">User</option>
+ <option value="Admin">Admin</option>
+ <option Value="Super Admin">Super Admin</option>
+ </select>
+ 
+ 
+ <label>Status</label>
+ <select name="status"  class=" status form-control form-control-sm" id="status">
+ <option value="Admin">Aktif</option>
+ <option Value="Super Admin">Tidak Aktif</option>
+ </select>
+ <label>Password</label>
+ <input type="password" name="password1" id="password1" class="password1 form-control form-control-sm" placeholder="Masukan Password ">
+ <label>Ulangi Password</label>
+ <input type="password" name="password2" id="password2" class="password2 form-control form-control-sm" placeholder="Ulangi Password ">
+ </div>
+ </div>
+ </div>
+
+ <div class="modal-footer">
+ <button type="button" onclick="SimpanUserBaru()" class="btn btn-block  btn-sm btn-success" id="simpan_user">Simpan <span class="fa fa-save"></span></button> 
+ </form>
+ </div>
+ </div>
+ '; 
+ } 
+
+ public function SimpanUser(){
+  if($this->input->post()){
+  $input = $this->input->post();
+  $this->form_validation->set_rules('username', 'username', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('nama_lengkap', 'nama_lengkap', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('email', 'email', 'required|valid_email',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('phone', 'phone', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('level', 'level', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('status', 'status', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('password1', 'password1', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('password2', 'password2', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  
+  if ($this->form_validation->run() == FALSE){
+  $status_input = $this->form_validation->error_array();
+  $status[] = array(
+  'status'  => 'error_validasi',
+  'messages'=>array($status_input),    
+  );
+  echo json_encode($status);
+  }else{
+  $CekUsername = $this->db->get_where('user',array('username'=>$input['username']))->row_array();
+  if($CekUsername > 0 ){
+    $status[] = array(
+      'status'  => 'error_validasi',
+      'messages'=>[array('username'=>'Username Sudah Tersedia Gunakan Username Lain')],    
+      );
+      echo json_encode($status);
+  }else if($input['password1'] != $input['password2']){
+    $status[] = array(
+      'status'  => 'error_validasi',
+      'messages'=>[array('password1'=>'Password yang dimasukan tidak sama','password2'=>'Password yang dimasukan tidak sama')],    
+      );
+      echo json_encode($status);
+  }else{
+    $jumlah_user        = $this->M_dashboard->data_user()->row_array();
+    $no_user            = str_pad($jumlah_user['id_user']+1, 4 ,"0",STR_PAD_LEFT);
+    $data = array(
+      'no_user'      => $no_user,  
+      'username'     => $input['username'],  
+      'nama_lengkap' => $input['nama_lengkap'],
+      'level'        => $input['level'],
+      'status'       => $input['status'],
+      'email'        => $input['email'],
+      'phone'        => $input['phone'],
+      'password'     => md5($input['password1'])
+      );
+  $this->M_dashboard->simpan_user($data);     
+      $status[] = array(
+        "status"    =>"success",
+        "messages"  =>'User Baru Berhasil Ditambahkan'
+        );
+        echo json_encode($status);
+  }
+
+  } 
+  
+  
+  
+  
+ }else{
+  redirect(404);    
+  }
+  }
+
+ 
+  function DetailDataUser(){
+ if($this->input->post()){
+
+$input              = $this->input->post();
+$DataUser           = $this->db->get_where('user',array('no_user'=>$input['no_user']))->row_array();
+$TotDataPekerjaan   = $this->db->get_where('data_pekerjaan',array('no_user'=>$input['no_user']))->num_rows();
+$TotJumlahLampiran  = $this->M_dashboard->TotJumlahLampiranUser($input['no_user'])->num_rows();
+$TotJumlahUtama     = $this->M_dashboard->TotJumlahUtamaUser($input['no_user'])->num_rows();
+$Sublevel           = $this->db->get_where('sublevel_user',array('no_user'=>$input['no_user']));
+
+echo '<div class="modal-content">
+    <div class="modal-header">
+    <h6 class="modal-title" >Data User '.$DataUser['nama_lengkap'].' <span id="title"> </span> </h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body p-3 overflow-auto " style="max-height:500px;" >
+    <div class="row">
+    <div class="col-md-9">
+    
+    <div class="row">
+    <div class="col-sm-4">Username</div>
+    <div class="col"> : '.$DataUser['username'].'</div>
+    </div>
+    
+    <div class="row">
+    <div class="col-sm-4">Nama Lengkap</div>
+    <div class="col"> : '.$DataUser['nama_lengkap'].'</div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-4">Email</div>
+    <div class="col"> : '.$DataUser['email'].'</div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-4">No Hp</div>
+    <div class="col"> : '.$DataUser['phone'].'</div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-4">Level</div>
+    <div class="col"> : '.$DataUser['level'].'</div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-4">Status Akun</div>
+    <div class="col"> : '.$DataUser['status'].'</div>
+    </div>
+   
+    </div>
+    <div class="col text-center">';
+    if(!file_exists('./uploads/user/'.$DataUser['foto'])){ 
+      echo '<img style="width:130px; height: 130px;  border:3px solid #FFF;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class=" img rounded-circle" >';    
+      }else{ 
+      if($DataUser['foto'] != NULL){ 
+        echo '<img style="width:130px; height: 130px;  border:3px solid #FFF;" src="'.base_url('uploads/user/'.$DataUser['foto']).'" img="" class="img rounded-circle mb-3" >';    
+      }else{ 
+      echo '<img style="width:130px; height: 130px;  border:3px solid #FFF;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img rounded-circle" >';        
+      }  
+      
+      } 
+      
+    echo '</div>
+    </div>
+    <hr>
+    <div class="row">
+    <div class="col text-center">
+     <div class="card">
+     Jumlah Pekerjaan yang diselesaikan
+    <div class="card-footer">'.$TotDataPekerjaan.'</div>
+    </div>
+   </div>
+   <div class="col text-center">
+   <div class="card">
+   Jumlah Dokumen Penunjang yang diselesaikan
+  <div class="card-footer">'.$TotJumlahLampiran.'</div>
+  </div>
+ </div>
+  
+ <div class="col text-center">
+ <div class="card">
+ Jumlah Dokumen Utama Yang diselesaikan
+<div class="card-footer">'.$TotJumlahUtama.'</div>
+</div>
+</div>
+</div>
+<hr>
+<div class="row">
+<div class="col">
+<p class="text-center">Update User</p>
+<hr>
+<form id="FormUpdateUser">
+ <input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+ <input type="hidden" name="no_user" value="'.$input['no_user'].'" readonly="" class="form-control required"  accept="text/plain">
+ <label>Username</label>
+ <input type="text" disabled name="username" value="'.$DataUser['username'].'" class=" username form-control form-control-sm" id="username" placeholder="Username ">
+ <label>Nama Lengkap</label>
+ <input type="text" name="nama_lengkap" value="'.$DataUser['nama_lengkap'].'" class="nama_lengkap form-control form-control-sm" id="nama_lengkap" placeholder="Nama Lengkap ">
+ 
+ <label>Email</label>
+ <input type="text" name="email" value="'.$DataUser['email'].'" class="email form-control form-control-sm" id="email" placeholder="Email ">
+ <label>Phone</label>
+ <input type="text" name="phone" value="'.$DataUser['phone'].'" class="phone form-control form-control-sm" id="phone" placeholder="Phone ">
+ 
+
+ <label>Level</label>
+ <select name="level" class="level form-control form-control-sm" id="level">
+ <option value="User">User</option>
+ <option value="Admin">Admin</option>
+ <option Value="Super Admin">Super Admin</option>
+ </select>
+ 
+ 
+ <label>Status</label>
+ <select name="status"  class=" status form-control form-control-sm" id="status">
+ <option value="Admin">Aktif</option>
+ <option Value="Super Admin">Tidak Aktif</option>
+ </select>
+
+ <label>Password</label>
+ <input type="password" name="password1" id="password1" class="password1 form-control form-control-sm" placeholder="Masukan Password ">
+ <label>Ulangi Password</label>
+ <input type="password" name="password2" id="password2" class="password2 form-control form-control-sm" placeholder="Ulangi Password ">
+ 
+<hr>
+<button type="button" onclick="UpdateUser();" class="btn btn-sm btn-success btn-block">Update User <span class="fa fa-save"></span></button>
+</form>
+</div>
+<div class="col">
+<p class="text-center">Update Sublevel</p>
+<hr>
+<form id="FormSubLevel">
+<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">
+<input type="hidden" name="no_user" value="'.$input['no_user'].'" readonly="" class="form-control required"  accept="text/plain">
+ <label>Pilih Pekerjaan yang dikerjakan</label>    
+<select name="sublevel" id="sublevel" class="form-control form-control-sm sublevel">
+    <option value="Level 1" >Pengurus Admin </option>    
+    <option value="Level 2" >Pengurus Dokumen Utama </option>    
+    <option value="Level 3" >Pengurus Dokumen Perizinan </option>    
+    <option value="Level 4" >Pengurus Data Arsip</option>    
+</select>
+<hr>
+<button type="button" onclick=SimpanSubLevel("'.$input['no_user'].'"); class="btn btn-success btn-sm btn-block">Simpan Pekerjaan <span class="fa fa-save"></span></button>
+</form>
+<hr>';
+
+echo "<table class='table table-striped table-hover table-sm'><tr>
+<td>Tugas Pekerjaan</td>
+<td class='text-center'>Aksi</td>
+</tr>";
+foreach ($Sublevel->result_array() as $d){
+if($d['sublevel'] =="Level 1"){
+  echo "<tr><td>Pengurus Admin</td>
+  <td class='text-center'><button onclick=hapus_sublevel('".$d['id_sublevel_user']."','".$input['no_user']."') class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>
+  </tr>";
+  
+}else if($d['sublevel'] =="Level 2"){
+  echo "<tr><td>Pengurus Dokumen Utama</td>
+  <td class='text-center'><button onclick=hapus_sublevel('".$d['id_sublevel_user']."','".$input['no_user']."') class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>
+  </tr>";
+  
+}else if($d['sublevel'] =="Level 3"){
+  echo "<tr><td>Pengurus Dokumen Perizinan</td>
+  <td class='text-center'><button onclick=hapus_sublevel('".$d['id_sublevel_user']."','".$input['no_user']."') class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>
+  </tr>";
+  
+}else if($d['sublevel'] =="Level 4"){
+  echo "<tr><td>Pengurus Data Arsip</td>
+  <td class='text-center'><button onclick=hapus_sublevel('".$d['id_sublevel_user']."','".$input['no_user']."') class='btn btn-sm btn-danger'><span class='fa fa-trash'></span></button></td>
+  </tr>";
+  
+}
+
+}
+echo "</table>";
+
+echo '</div>
+</div>
+</div>
+
+<div class="modal-footer">
+    <button type="button"';
+    if($TotDataPekerjaan == 0 ){
+      echo 'onclick=HapusUser("'.$input['no_user'].'")'; 
+      }else{
+      echo "disabled";  
+      }
+    echo ' class="btn btn-block  btn-sm btn-danger" id="simpan_user">Hapus User <span class="fa fa-trash"></span></button> 
+    </form>
+    </div>
+</div>
+</div>
+    
+    '; 
+ }else{
+ redirect(404);  
+ }
+} 
+
+public function UpdateUser(){
+  if($this->input->post()){
+  $input = $this->input->post();
+  $this->form_validation->set_rules('nama_lengkap', 'nama_lengkap', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('email', 'email', 'required|valid_email',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('phone', 'phone', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('level', 'level', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('status', 'status', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('password1', 'password1', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  $this->form_validation->set_rules('password2', 'password2', 'required',array('required' => 'Data ini tidak boleh kosong'));
+  
+  if ($this->form_validation->run() == FALSE){
+  $status_input = $this->form_validation->error_array();
+  $status[] = array(
+  'status'  => 'error_validasi',
+  'messages'=>array($status_input),    
+  );
+  echo json_encode($status);
+  }else{
+  if($input['password1'] != $input['password2']){
+    $status[] = array(
+      'status'  => 'error_validasi',
+      'messages'=>[array('password1'=>'Password yang dimasukan tidak sama','password2'=>'Password yang dimasukan tidak sama')],    
+      );
+      echo json_encode($status);
+  }else{
+    $data = array(
+      'nama_lengkap' => $input['nama_lengkap'],
+      'level'        => $input['level'],
+      'status'       => $input['status'],
+      'email'        => $input['email'],
+      'phone'        => $input['phone'],
+      'password'     => md5($input['password1'])
+      );
+  $this->M_dashboard->UpdateUser($data,$input['no_user']);     
+      $status[] = array(
+        "status"    =>"success",
+        "messages"  =>'User Berhasil Di Perbaharui'
+        );
+        echo json_encode($status);
+  }
+ }
+}else{
+ redirect("404"); 
+} 
+} 
+
+public function SimpanSubLevel(){
+  if($this->input->post()){
+  $input = $this->input->post();
+  $data = array(
+  'no_user'	  =>$input['no_user'],
+  'sublevel'	=>$input['sublevel'],
+  );
+  $query = $this->db->get_where('sublevel_user',$data);
+  if($query->num_rows() == 0){
+  $status[] = array(
+  "status"     => "success",
+  "messages"      => "Sublevel berhasil disimpan"    
+  );
+  $this->db->insert('sublevel_user',$data);
+  }else{
+  $status[] = array(
+  "status"     => "warning",
+  "messages"      => "Sublevel Jenis Tersebut Sudah Ditambahkan"    
+  );
+  }
+  echo json_encode($status);
+  }else{
+  redirect(404);	
+  }
+  }
+
+ public function HapusUser(){
+if($this->input->post()){
+ $input = $this->input->post();
+
+$this->db->delete('user',array('no_user'=>$input['no_user']));
+$status[] = array(
+  "status"     => "success",
+  "messages"      => "User Berhasil Dihapus"    
+  );
+  
+  echo json_encode($status);
+
+}else{
+ redirect("404"); 
+}
+}
+
+public function DetailClient(){
+  $data_client      = $this->M_dashboard->data_client_where($this->uri->segment(3));
+  
+  $this->load->view('umum/V_header');
+  $this->load->view('dashboard/V_DetailClient',['DataClient'=>$data_client]);
+  }
+  
 }
 

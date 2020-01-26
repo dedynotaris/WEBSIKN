@@ -50,7 +50,7 @@ $('#data_perekaman').modal('show');
 }
 
 function hapus_lampiran(no_berkas){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url($this->uri->segment(1).'/hapus_lampiran') ?>",
@@ -100,7 +100,7 @@ $(".date").daterangepicker({
 
 }
 function edit_meta(no_berkas,no_nama_dokumen,no_pekerjaan){
-var <?php echo $this->security->get_csrf_token_name();?>  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
 $.ajax({
 type:"post",

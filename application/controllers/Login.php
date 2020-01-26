@@ -54,8 +54,6 @@ $status[] = array(
 "level"      => $data_sesi['level'],    
 );
 echo json_encode($status);
-
-
 }else{
 $status[] = array(
 "status"=>"error_validasi",
@@ -68,8 +66,9 @@ echo json_encode($status);
 }else{
 redirect(404);	
 }
+}
 
-
+public function berkas(){
 }
 
 }

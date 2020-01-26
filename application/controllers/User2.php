@@ -1774,7 +1774,7 @@ if($cek_meta->num_rows() == 0){
 $this->simpan_meta($input);    
 }else{
 foreach ($input as $key=>$value){
-if($key != "no_berkas"){
+if($key != "no_berkas" && $key != "ci_csrf_token"){
 $data = array(
 'value_meta'=>$value    
 );
@@ -1852,7 +1852,7 @@ $this->db->insert('data_berkas',$data_berkas);
 public function  simpan_meta(){
 $input = $this->input->post();
 foreach ($input as $key=>$value){
-if($key == 'no_berkas' || $key == "no_nama_dokumen" || $key == 'no_client' || $key == 'no_pekerjaan' || $key == 'file_berkas'){
+if($key == 'no_berkas' || $key == "no_nama_dokumen" || $key == 'no_client' || $key == 'no_pekerjaan' || $key == 'file_berkas' || $key == "ci_csrf_token"){
 }else{
 $meta = array(
 'no_pekerjaan'      => $input['no_pekerjaan'],
@@ -2141,4 +2141,7 @@ if($this->input->post()){
     redirect(404);    
     }
 }
+
+
+
 }

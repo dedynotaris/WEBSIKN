@@ -14,6 +14,7 @@
 <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >NIK</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Notaris</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
@@ -69,6 +70,7 @@ columns: [
 "data": "id_data_client",
 "orderable": false
 },
+{"data": "no_identitas"},
 {"data": "nama_client"},
 {"data": "nama_lengkap"},
 {"data": "view"}

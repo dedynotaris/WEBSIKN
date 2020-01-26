@@ -9,7 +9,6 @@ $this->load->model('M_user3');
 $this->load->library('Datatables');
 $this->load->library('form_validation');
 $this->load->library('upload');
-
 if($this->session->userdata('sublevel')  != 'Level 3' ){
 redirect(base_url('Menu'));
 }
@@ -17,7 +16,6 @@ redirect(base_url('Menu'));
 
 public function index(){
 $data_tugas = $this->M_user3->data_tugas('Masuk');
-
 $this->load->view('umum/V_header');
 $this->load->view('user3/V_user3',['data_tugas'=>$data_tugas]);
 }
@@ -273,17 +271,18 @@ $status[] = array(
 "status"=>"success",
 "messages" =>"laporan berhasil tersimpan",
 );
-echo json_encode($status);
-      
+echo json_encode($status);      
 }
 }  
- }
+}
+
 public function download_berkas_informasi(){
 $data = $this->db->get_where('data_informasi_pekerjaan',array('id_data_informasi_pekerjaan'=>$this->uri->segment(3)))->row_array();    
 $file_path = "./berkas/".$data['nama_folder']."/".$data['lampiran']; 
 $info = new SplFileInfo($data['lampiran']);
 force_download($data['nama_informasi'].".".$info->getExtension(), file_get_contents($file_path));
 }
+
 public function cari_file(){
 if($this->input->post()){
 

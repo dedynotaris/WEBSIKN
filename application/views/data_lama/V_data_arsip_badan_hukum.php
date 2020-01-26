@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-3x far fa-building"></span><br>Data Client Badan Hukum</h5>
+<h5 align="center" class="text-theme1"><span class="fa-3x far fa-building"></span><br>Data Client Badan Hukum</h5>
 </div>
 
 <div class="row  m-2 p-2">
@@ -14,6 +14,7 @@
 <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >NO NPWP</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Notaris</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
@@ -69,6 +70,7 @@ columns: [
 "data": "id_data_client",
 "orderable": false
 },
+{"data": "no_identitas"},
 {"data": "nama_client"},
 {"data": "nama_lengkap"},
 {"data": "view"}

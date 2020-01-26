@@ -2,6 +2,7 @@
 <?php  $this->load->view('umum/user1/V_sidebar_user1'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
+<?php  $this->load->view('umum/user1/V_data_user1'); ?>
 <div class="container-fluid text-theme1 ">
 <div class=" mt-2 text-center ">
 <h5 align="center"><i class="far fa-3x fa-share-square"></i><br>Pekerjaan Baru Masuk
@@ -45,11 +46,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 ?> 
 </tr>
 <?php } ?>
-
-
-
 </table>    
-
 </div>
 </div>
 </div>
