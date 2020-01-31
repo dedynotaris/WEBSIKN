@@ -3,7 +3,7 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
-<div class="mt-4 mb-2 text-center"><i class="far fa-building fa-4x"></i></span><br> Data Client Badan Hukum</div>
+<div class="mt-4 mb-2 text-theme1 text-center"><i class="far fa-building fa-4x"></i></span><br> Data Client Badan Hukum</div>
     
 <div class="row">    
 <div class="col mt-2">

@@ -1,4 +1,9 @@
 <?php
+
+require('vendor/autoload.php');
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class User1 extends CI_Controller{
 public function __construct() {
 parent::__construct();
@@ -8,7 +13,7 @@ $this->load->model('M_user1');
 $this->load->library('Datatables');
 $this->load->library('form_validation');
 $this->load->library('upload');
-
+$this->load->library('breadcrumbs');
 if($this->session->userdata('sublevel')  != 'Level 1' ){
 redirect(base_url('Menu'));
 }
@@ -16,12 +21,19 @@ redirect(base_url('Menu'));
 }
 
 public function index(){
-$data_tugas = $this->M_user1->data_tugas('Masuk');    
+$this->breadcrumbs->push('Beranda', '/User1');
+$asisten = $this->db->get_where('user',array('level'=>'User'));    
 $this->load->view('umum/V_header');
-$this->load->view('user1/V_user1',['data_tugas'=>$data_tugas]); 
+$this->load->view('user1/V_Dashboard',['asisten'=>$asisten]);    
 }
 
-
+public function pekerjaan_masuk(){
+$this->breadcrumbs->push('Beranda', '/User1');
+$this->breadcrumbs->push('Pekerjaan Masuk', '/User1/pekerjaan_masuk');   
+$data_tugas = $this->M_user1->data_tugas('Masuk');    
+$this->load->view('umum/V_header');
+$this->load->view('user1/V_pekerjaan_masuk',['data_tugas'=>$data_tugas]);    
+}
 
 public function download_berkas_informasi(){
 $data = $this->db->get_where('data_informasi_pekerjaan',array('id_data_informasi_pekerjaan'=>$this->uri->segment(3)))->row_array();    
@@ -57,14 +69,20 @@ redirect(404);
 
 }
 public function halaman_proses(){
+$this->breadcrumbs->push('Beranda', '/User1');
+$this->breadcrumbs->push('Pekerjaan Diproses', '/User1/halaman_proses');   
+    
 $data_tugas = $this->M_user1->data_tugas('Proses');    
 $this->load->view('umum/V_header');
 $this->load->view('user1/V_halaman_proses',['data_tugas'=>$data_tugas]);
 }
 
 public function halaman_selesai(){
-$data_tugas = $this->M_user1->data_tugas('Selesai');    
+$this->breadcrumbs->push('Beranda', '/User1');
+$this->breadcrumbs->push('Pekerjaan Selesai', '/User1/halaman_selesai');   
     
+    
+$data_tugas = $this->M_user1->data_tugas('Selesai');       
 $this->load->view('umum/V_header');
 $this->load->view('user1/V_halaman_selesai',['data_tugas'=>$data_tugas]);
     
@@ -90,6 +108,9 @@ redirect(404);
 }
 
 public function lihat_karyawan(){
+$this->breadcrumbs->push('Beranda', '/User1');
+$this->breadcrumbs->push('Lihat Asisten', '/User1/lihat_karyawan');
+    
 $karyawan = $this->M_user1->data_user();               
 $this->load->view('umum/V_header');
 $this->load->view('user1/V_lihat_karyawan',['karyawan'=>$karyawan]);    
@@ -780,6 +801,251 @@ public function histori($keterangan){
     }
     
 
+public function buat_laporan(){
+ if($this->input->post()){
+     $input = $this->input->post();
+
+$tanggal = $this->input->post('daterange');
+$range = explode(' ', $tanggal);
+$range1 = $range[0];
+$range2 = $range[2];
+
+if($this->input->post('output') == "Pdf"){
+
+$this->buat_laporan_pdf($range1, $range2,$input);
+}else{
+$this->buat_laporan_excel($range1, $range2,$input);    
+}    
+   
+}else{
+     redirect(404);   
+ }   
+}
+
+public function buat_laporan_pdf(){
+echo "maaf fungsi laporan pdf ini belum tersedia";    
+}
+
+public function buat_laporan_excel($range1,$range2,$input){
+    
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
+
+if($input['jenis_laporan'] == "Pekerjaan"){
+$data_pekerjaan = $this->M_user1->laporan_pekerjaan($range1,$range2,$input);
+if($data_pekerjaan->num_rows() == 0){
+echo "Tidak Ada Data Rentang Waktu Tersebut";  
+}else{
+$static = $data_pekerjaan->row_array();
+$judul = array("Laporan Jenis ".$input['jenis_laporan']." Milik Asisten".$static['nama_lengkap']." Periode ".$range1." Sampai ".$range2); 
+$sheet->fromArray([$judul], NULL, 'A1')->mergeCells('A1:H1');
+
+$header = array("No ","Nama Pekerjaan","Nama Client","Tanggal  Pekerjaan","Tanggal Selesai","Status", "Dokumen Utama","Dokumen Penunjang");
+$sheet->fromArray([$header], NULL, 'A2');
+$no =3;
+$h =1;
+foreach ($data_pekerjaan->result_array() as $pekerjaan){
+$jumlah_penunjang           = $this->db->get_where('data_berkas',array('no_pekerjaan'=>$pekerjaan['no_pekerjaan'],'no_pekerjaan !='=>NULL,'no_nama_dokumen !='=>NULL))->num_rows();
+$jumlah_utama               = $this->db->get_where('data_dokumen_utama',array('no_pekerjaan'=>$pekerjaan['no_pekerjaan']))->num_rows();   
+
+$dataarray = array(
+$h++,    
+$pekerjaan['nama_jenis'],    
+$pekerjaan['nama_client'],    
+$pekerjaan['tanggal_dibuat'],    
+$pekerjaan['tanggal_selesai'],    
+$pekerjaan['status_pekerjaan'],
+$jumlah_utama,
+$jumlah_penunjang    
+);    
+$sheet->fromArray([$dataarray], NULL, 'A'.$no++.'');    
+}
+$writer = new Xlsx($spreadsheet);
+ob_end_clean();
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="Laporan Jenis '.$input['jenis_laporan'].' '.$static['nama_lengkap'].'.xlsx"');
+header("Pragma: no-cache");
+header("Expires: 0");
+$writer->save('php://output');
+}
+}else if($input['jenis_laporan'] == "Dokumen Utama"){
+$data_utama = $this->M_user1->laporan_utama($range1,$range2,$input);
+if($data_utama->num_rows() == 0){
+echo "Tidak Ada Data Rentang Waktu Tersebut";  
+}else{
+$static = $data_utama->row_array();
+$judul = array("Laporan Jenis ".$input['jenis_laporan']." Milik Asisten".$static['nama_lengkap']." Periode ".$range1." Sampai ".$range2); 
+$sheet->fromArray([$judul], NULL, 'A1')->mergeCells('A1:G1');
+
+$header = array("No ","Nama Dokumen","Nama Client","Jenis Pekerjaan","Jenis File","No Akta ", "Tanggal Akta");
+$sheet->fromArray([$header], NULL, 'A2');
+$no =3;
+$h =1;
+foreach ($data_utama->result_array() as $utama){
+
+$dataarray = array(
+$h++,    
+$utama['nama_berkas'],    
+$utama['nama_client'],    
+$utama['nama_jenis'],    
+$utama['jenis'],    
+$utama['no_akta'],
+$utama['tanggal_akta'],
+);    
+$sheet->fromArray([$dataarray], NULL, 'A'.$no++.'');    
+}
+$writer = new Xlsx($spreadsheet);
+ob_end_clean();
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="Laporan Jenis '.$input['jenis_laporan'].' '.$static['nama_lengkap'].'.xlsx"');
+header("Pragma: no-cache");
+header("Expires: 0");
+$writer->save('php://output');
+}
+}else if($input['jenis_laporan'] == "Dokumen Pendukung"){
+$data_pendukung = $this->M_user1->laporan_pendukung($range1,$range2,$input);
+if($data_pendukung->num_rows() == 0){
+echo "Tidak Ada Data Rentang Waktu Tersebut";  
+}else{
+$static = $data_pendukung->row_array();
+$judul = array("Laporan Jenis ".$input['jenis_laporan']." Milik Asisten".$static['nama_lengkap']." Periode ".$range1." Sampai ".$range2); 
+$sheet->fromArray([$judul], NULL, 'A1')->mergeCells('A1:D1');
+
+$header = array("No ","Nama Berkas","Jenis Dokumen","Jenis Pekerjaan");
+$sheet->fromArray([$header], NULL, 'A2');
+$no =3;
+$h =1;
+foreach ($data_pendukung->result_array() as $utama){
+
+$dataarray = array(
+$h++,    
+$utama['nama_berkas'],    
+$utama['nama_dokumen'],    
+$utama['nama_jenis']
+);    
+$sheet->fromArray([$dataarray], NULL, 'A'.$no++.'');    
+}
+$writer = new Xlsx($spreadsheet);
+ob_end_clean();
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="Laporan Jenis '.$input['jenis_laporan'].' '.$static['nama_lengkap'].'.xlsx"');
+header("Pragma: no-cache");
+header("Expires: 0");
+$writer->save('php://output');
+  
+}
+}
+}
+
+function ShowGrafik(){    
+$this->db->select('user.nama_lengkap,'
+        . 'user.no_user,'
+        . 'user.username');
+$this->db->where('user.level','User');
+$this->db->where('user.status','Aktif');
+$this->db->where('sublevel_user.sublevel','Level 2');
+$this->db->from('user');
+$this->db->join('sublevel_user', 'sublevel_user.no_user = user.no_user');
+$namaasisten = $this->db->get();
+
+$data_asisten = array();
+$jumlah_berkas = array();
+$jumlah_pekerjaan = array();
+
+foreach ($namaasisten->result()  as $as) {
+$data_asisten[] = $as->nama_lengkap;
+}
+
+foreach ($namaasisten->result()  as $as) {
+$BerkasMilikAsisten = $this->M_user1->BerkasMilikAsisten($as->no_user)->num_rows();
+$jumlah_berkas[] = $BerkasMilikAsisten;
+}
+
+foreach ($namaasisten->result()  as $as) {
+$PekerjaanMilikAsisten = $this->M_user1->PekerjaanMilikAsisten($as->no_user)->num_rows();
+$jumlah_pekerjaan[] = $PekerjaanMilikAsisten;
+}
+
+$data = array(
+'asisten'   =>$data_asisten,    
+'jumlah'    =>$jumlah_berkas,
+'pekerjaan' =>$jumlah_pekerjaan    
+);
+
+echo json_encode($data);    
+}
+
+public function ShowGrafikBerkas(){
+if($this->input->post()){
+$input = $this->input->post();
+if($this->input->post('range')){
+$tanggal        = $this->input->post('range');
+$range          = explode(' ', $tanggal);
+$awal           = $range[0];
+$akhir          = $range[2];
+
+}else{
+$akhir   = date('Y/m/d');
+$c       = strtotime($akhir);
+$awal    = date("Y/m/d", strtotime("-1 month", $c));
+}
+
+$this->db->select('data_berkas.tanggal_upload');
+$this->db->group_by('data_berkas.tanggal_upload');
+$this->db->where('data_berkas.tanggal_upload >=', $awal);
+$this->db->where('data_berkas.tanggal_upload <=', $akhir);
+$this->db->from('data_berkas');
+$query = $this->db->get();
+
+$data_tanggal = array();
+$data_jumlah  = array();
+
+foreach ($query->result_array() as $t){
+$jumlah = $this->db->get_where('data_berkas',array('tanggal_upload'=>$t['tanggal_upload']))->num_rows(); 
+$data_jumlah[]  = $jumlah;    
+$data_tanggal[] = $t['tanggal_upload'];     
+}
+
+$data = array(
+'tanggal' =>$data_tanggal,
+'jumlah'  =>$data_jumlah,    
+);
+
+echo json_encode($data);
+
+}else{
+redirect(404);    
+}
+}
+
+function ShowGrafikPerizinan(){    
+$this->db->select('user.nama_lengkap,'
+        . 'user.no_user,'
+        . 'user.username');
+$this->db->where('user.level','User');
+$this->db->where('user.status','Aktif');
+$this->db->where('sublevel_user.sublevel','Level 3');
+$this->db->from('user');
+$this->db->join('sublevel_user', 'sublevel_user.no_user = user.no_user');
+$namaasisten = $this->db->get();
+
+$jumlah_perizinan = array();
+$nama              = array();
+foreach ($namaasisten->result()  as $as) {
+$JumlahPerizinan      = $this->M_user1->PekerjaanMilikPerizinan($as->no_user)->num_rows();
+$jumlah_perizinan[]   = $JumlahPerizinan;
+$nama[]               = $as->nama_lengkap;
+
+}
+
+$data = array(
+'nama'   =>$nama,
+'jumlah'  =>$jumlah_perizinan,    
+);
+
+echo json_encode($data);
+
+}
                 
 }
 

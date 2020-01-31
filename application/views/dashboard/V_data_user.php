@@ -3,10 +3,10 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
-<div class="card-header mt-2 mb-2 text-center">
-Seluruh data user
+<div class="mt-2  text-center  ">
+<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-users "></span><br> DATA USER APLIKASI</h5>
 </div>
-    
+
 <div class="row">    
 <div class="col mt-2">
 <table style="width:100%;" id="data_user" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>

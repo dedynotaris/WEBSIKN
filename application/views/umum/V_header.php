@@ -6,6 +6,8 @@
 <link href="<?php echo base_url() ?>assets/croppie/croppie.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/croppie/croppie.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/jquery/jquery-3.3.1.js" type="text/javascript"></script>
+<link href="<?php echo base_url() ?>assets/chart/chart.js/dist/Chart.css" rel="stylesheet" type="text/css"/>
+<script src="<?php echo base_url() ?>assets/chart/chart.js/dist/Chart.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/datatables/datatables.min.js" type="text/javascript"></script>
 <link href="<?php echo base_url() ?>assets/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/jquery-ui-1.12.1/jquery-ui.js" type="text/javascript"></script>

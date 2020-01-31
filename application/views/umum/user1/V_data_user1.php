@@ -1,7 +1,7 @@
 <div class="container-fluid">
 <div class="row">
 
-<div class="col-md-4 mb-1 "><a  style="text-decoration:none;" href="<?php echo base_url('User1/') ?>">
+<div class="col-md-4 mb-1 "><a  style="text-decoration:none;" href="<?php echo base_url('User1/pekerjaan_masuk') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
 <span class="fa fa-share-square float-right fa-3x sticky-top"></span>
@@ -47,6 +47,22 @@ Out <br>
 </div>
 </div></a>	
 </div>	
+</div>
+  <style>
+    .active{
+      color: #116466 !important;
+    }
+    .noactive{
+      color: #116466 !important
+    }
+    .divider{
+        color:#116466 !important;  
+        
+    }    
+</style>
+  
+<nav aria-label="breadcrumb">
+	  <?php echo $this->breadcrumbs->show(); ?>
 
-</div>	
+</nav>    
 </div>

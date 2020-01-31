@@ -346,7 +346,7 @@ if($this->input->post()){
 $input = $this->input->post();
 $data = array(
 'status_pekerjaan'  =>'Selesai',    
-'tanggal_selesai'    =>date('d/m/Y')    
+'tanggal_selesai'    => date('Y/m/d')    
 );
 $this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 $status[] = array(

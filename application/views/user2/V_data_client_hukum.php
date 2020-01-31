@@ -8,7 +8,7 @@
 
 <div class="row">
 <div class="col">
-<h5 align="center"><i class="fa fa-3x fa-user-tie"></i><br>Data client yang telah anda kerjakan</h5>
+<h5 align="center"><i class="fa fa-3x far fa-building"></i><br>Data client Badan Hukum</h5>
 
 <table style="width:100%;" id="data_client" class="table  text-theme1 table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">

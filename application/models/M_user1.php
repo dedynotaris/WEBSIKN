@@ -347,6 +347,102 @@ public function DokumenPenunjang($no_berkas){
 
 
 
+public function laporan_pekerjaan($range1,$range2,$input){
+$this->db->select('data_pekerjaan.tanggal_dibuat,'
+        . 'data_pekerjaan.tanggal_selesai,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'user.nama_lengkap,'
+        . 'data_pekerjaan.status_pekerjaan,'
+        . 'data_client.nama_client');
+$this->db->where('data_pekerjaan.tanggal_dibuat >=',$range1);
+$this->db->where('data_pekerjaan.tanggal_dibuat <=',$range2);
+$this->db->where('data_pekerjaan.status_pekerjaan !=','ArsipMasuk');
+$this->db->where('data_pekerjaan.status_pekerjaan !=','ArsipProses');
+$this->db->where('data_pekerjaan.status_pekerjaan !=','ArsipSelesai');
+$this->db->where('data_pekerjaan.no_user',$input['asisten']);
+$this->db->from('data_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$query = $this->db->get();
+
+return$query;
+} 
+public function laporan_utama($range1,$range2,$input){
+$this->db->select('data_pekerjaan.tanggal_dibuat,'
+        . 'data_pekerjaan.tanggal_selesai,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'user.nama_lengkap,'
+        . 'data_pekerjaan.status_pekerjaan,'
+        . 'data_client.nama_client,'
+        . 'data_dokumen_utama.nama_berkas,'
+        . 'data_dokumen_utama.no_akta,'
+        . 'data_dokumen_utama.jenis,'
+        . 'data_dokumen_utama.tanggal_akta');
+$this->db->where('data_dokumen_utama.waktu >=',$range1);
+$this->db->where('data_dokumen_utama.waktu <=',$range2);
+$this->db->where('data_pekerjaan.no_user',$input['asisten']);
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$query = $this->db->get();
+
+return$query;
+} 
+public function laporan_pendukung($range1,$range2,$input){
+$this->db->select('data_pekerjaan.tanggal_dibuat,'
+        . 'data_pekerjaan.tanggal_selesai,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'user.nama_lengkap,'
+        . 'data_pekerjaan.status_pekerjaan,'
+        . 'data_client.nama_client,'
+        . 'nama_dokumen.nama_dokumen,'
+        . 'data_berkas.nama_berkas');
+$this->db->where('data_berkas.tanggal_upload >=',$range1);
+$this->db->where('data_berkas.tanggal_upload <=',$range2);
+$this->db->where('data_pekerjaan.no_user',$input['asisten']);
+$this->db->from('data_berkas');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$query = $this->db->get();
+return$query;
+}
+
+public function BerkasMilikAsisten($no_user){
+$this->db->select('');
+$this->db->from('data_berkas');
+$this->db->where('data_pekerjaan.no_user',$no_user);
+$this->db->where_in('data_pekerjaan.status_pekerjaan',array('ArsipSelesai','Selesai'));
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
+$query = $this->db->get();
+return$query;    
+}
+
+public function PekerjaanMilikAsisten($no_user){
+$this->db->select('');
+$this->db->from('data_pekerjaan');
+$this->db->where('data_pekerjaan.no_user',$no_user);
+$this->db->where_in('status_pekerjaan',array('ArsipSelesai','Selesai'));
+$query = $this->db->get();
+return$query;    
+}
+
+public function PekerjaanMilikPerizinan($no_user){
+$this->db->select('');
+$this->db->from('data_berkas_perizinan');
+$this->db->where('data_berkas_perizinan.no_user_perizinan',$no_user);
+$this->db->where_in('status_berkas',array('Selesai'));
+$query = $this->db->get();
+return$query;    
+}
 
 }
 ?>

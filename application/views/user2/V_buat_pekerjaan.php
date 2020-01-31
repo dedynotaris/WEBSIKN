@@ -12,7 +12,8 @@ border-color: rgb(185, 74, 72) !important;
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br>Tambahkan pekerjaan dan klien baru</h5>
 </div>
-<form  id="form_pekerjaan" class="mt-2 p-2" method="post" action="#">
+
+    <form  id="form_pekerjaan" class="mt-2 p-2" method="post" action="#">
 <div class="row text-theme1 rounded  m-2" >
 <div class="col-md-6">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="form-control required"  accept="text/plain">

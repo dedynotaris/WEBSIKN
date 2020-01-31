@@ -3,22 +3,21 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
-<div class="card-header mt-2 mb-2 text-center">
-Seluruh Data Berkas
+<div class="mt-4  text-center  ">
+<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-box "></span><br> DATA BERKAS</h5>
 </div>
-    
 <div class="row">    
 <div class="col mt-2">
 <table style="width:100%;" id="data_berkas" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama file</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >pengupload</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >tanggal upload</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >milik</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Pengupload</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Tanggal Upload</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody align="center">
+<tbody>
 </table>            
 </div>
 </div>
@@ -63,7 +62,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_berkas",
+"data": "no_berkas",
 "orderable": false
 },
 {"data": "nama_file"},

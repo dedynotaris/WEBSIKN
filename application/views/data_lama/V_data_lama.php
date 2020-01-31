@@ -34,7 +34,7 @@
 </div>
 
 <div class="col">
-<label>Nama Notaris</label>
+<label>Nama Asisten</label>
 <select onchange="tambah_no_user();" name="no_user_pembuat"  id="no_user_pembuat" class="form-control form-control-sm no_user_pembuat required" accept="text/plain">
 <option></option>
 <?php 

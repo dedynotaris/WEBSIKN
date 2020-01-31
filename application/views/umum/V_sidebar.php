@@ -1,10 +1,9 @@
 <div class="d-flex <?php if($this->session->userdata('toggled') == 'Aktif'){ echo "toggled"; } ?>" id="wrapper">
 <div class="bg-theme2" id="sidebar-wrapper">
 <div style="" class="sidebar-heading ">
-<div class="text-center" style="padding:0.890rem 1rem; background-color:#2F4F4F; font-size:16px">
+<a style="text-decoration:none;" href="<?php echo base_url($this->uri->segment(1)) ?>"><div class="text-center" style="padding:0.890rem 1rem; background-color:#2F4F4F; font-size:16px">
 App Management Document
-   
-</div>
+</div></a>
 
 <div class="p-2 text-center" style="background-color:#116466 !important;">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
@@ -23,10 +22,10 @@ App Management Document
 
 </div>
 <div class="list-group list-group-flush">
-      
+
 <ul class="list-unstyled components">
 
-    
+
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_berkas'); ?>"><i class="fa fa-file-word"></i> Data berkas</a></li>
 <li class="active">
 <a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
@@ -43,7 +42,7 @@ App Management Document
 </li>
 
 
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/pekerjaan_proses'); ?>"><i class="fa fa-exchange-alt"></i> Pekerjaan diproses</a></li>
+<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/pekerjaan_proses'); ?>"><i class="fa fa-exchange-alt"></i> Pekerjaan </a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_user'); ?>"><i class="fas fa-users"></i> Data user</a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/setting'); ?>"><i class="fas fa-cogs"></i> Setting</a></li>
 </ul>

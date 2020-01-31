@@ -13,7 +13,7 @@ form {
     <form id="button_cari" action="<?php echo base_url($this->uri->segment(1)."/cari_file/") ?>" method="post" >       
         <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
         <input type="text" required="" name="kata_kunci" id="pencarian" class="form-control" placeholder="Cari Dokumen, Client, dan Akta" aria-label="Recipient's username" aria-describedby="button-addon2">
-  <div class="input-group-append">
+        <div class="input-group-append">
       <button   class="btn btn-success" type="submit" ><span class="fa fa-search"</button>
   </form>
 </div>
@@ -58,14 +58,14 @@ Data berkas <br>
 </div>
 <div class="footer p-2 bg_data_bawah">total data berkas<div class="float-right">
     <?php 
-$query3 = $this->db->get_where('data_berkas',array('pengupload !='=>NULL))->num_rows();
+$query3 = $this->db->get('data_berkas')->num_rows();
 
 echo $query3;
 ?>
 </div></div>
 </div></a>	
 </div>	
-<div class="col-md-3 "><a  style="text-decoration:none;" href="<?php echo base_url('Dashboard/data_client') ?>">
+<div class="col-md-3 "><a  style="text-decoration:none;" href="<?php echo base_url('Dashboard/data_client_hukum') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
 <span class="fa fa-user-tie float-right fa-3x sticky-top"></span>
@@ -90,9 +90,9 @@ echo $query1;
 Pekerjaan diproses<br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah">Total pekerjaan diproses 
+<div class="footer p-2 bg_data_bawah">Total Pekerjaan
 <div class="float-right"><?php 
-$query = $this->db->get_where('data_pekerjaan',array('status_pekerjaan'=>"Proses"))->num_rows();
+$query = $this->db->get('data_pekerjaan')->num_rows();
 
 echo $query;
 ?>

@@ -1,122 +1,145 @@
 <body>
-<?php  $this->load->view('umum/V_sidebar'); ?>
+<?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
-<?php  $this->load->view('umum/V_navbar'); ?>
+<?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <div class="container-fluid mt-2 text-theme1">
 <ul class="nav nav-tabs">
 <li class="nav-item">
-<a class="nav-link active" data-toggle="tab" href="#dokumen">Hasil Pencarian Dokumen <?php echo $data_dokumen->num_rows(); ?> </a>
+<a class="nav-link active" data-toggle="tab" href="#dokumen">Dokumen Penunjang (<?php echo $data_dokumen->num_rows(); ?>) </a>
 </li>
 
 <li class="nav-item ml-1">
-<a class="nav-link" data-toggle="tab" href="#utama">Hasil Pencarian Dokumen Utama  <?php echo $data_dokumen_utama->num_rows(); ?>    </a>
+<a class="nav-link" data-toggle="tab" href="#utama">Dokumen Utama  (<?php echo $data_dokumen_utama->num_rows(); ?>)    </a>
 </li>
 <li class="nav-item ml-1">
-<a class="nav-link" data-toggle="tab" href="#client">Hasil Pencarian Client <?php echo $data_client->num_rows(); ?>    </a>
+<a class="nav-link" data-toggle="tab" href="#client">Client (<?php echo $data_client->num_rows(); ?>)    </a>
 </li>
 
 </ul>    
 
 <div class="tab-content">
+
 <div class="tab-pane  active " id="dokumen">
-    <div class="container-fluid overflow-auto " style="max-height:1000px;">
-        <?php if($data_dokumen->num_rows() != 0){ ?>
-    <div class="row card-header rounded">
-            <div class="col">Nama client</div>
-            <div class="col">Nama Dokumen</div>
-            <div class="col">Hasil</div>
-            <div class="col-sm-2">Aksi</div>
-       
-        </div>   
-        
+<div class="container-fluid overflow-auto " style="max-height:1000px;">
+ <div class='row '>          
  <?php foreach ($data_dokumen->result_array() as $dokumen){
-echo "<div class='row mt-1 rounded card-header'>";
-echo "<div class='col'>".$dokumen['nama_client']."</div>"
-    ."<div class='col'>".$dokumen['nama_dokumen']."</div>"
-    ."<div class='col'>".$dokumen['nama_meta'].": ".$dokumen['value_meta']."</div>"
-    . "<div class='col-sm-2'>"
-    . "<button onclick=cek_download_berkas('".base64_encode($dokumen['no_berkas'])."'); class='btn btn-outline-success col-md-6 btn-sm'><span class='fa fa-download'></span></button>"
-    . "<button onclick=lihat_meta_berkas('".base64_encode($dokumen['no_nama_dokumen'])."','". base64_encode($dokumen['no_client'])."'); class='btn btn-outline-success  col-md-5 ml-1  btn-sm'><span class='fa fa-eye'></span></button>"
-    . "</div>"   
-    . "</div>";    
+$ext = pathinfo($dokumen['nama_berkas'], PATHINFO_EXTENSION);
+echo "<div onclick=LihatDokumenPenunjang('".$dokumen['no_berkas']."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
+<div style='width:210px; height:210px;' class='card'>
+<div class='card-body'>";
+if($ext =="docx" || $ext =="doc" ){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "xlx"  || $ext == "xlsx"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/excelicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "PDF"  || $ext == "pdf"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/pdficon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/imageicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else{
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.png')."' alt='MS WORD' class='  img-thumbnail'>";
 }
-        }
+
+echo "
+</div>
+<div class='card-footer'><span style='font-size:12px;'>".$dokumen['nama_dokumen']."<br>".$dokumen['nama_client']."</span></div>
+</div></div>";
+
+
+}
 ?>
 </div>    
+</div>    
 </div>
-
+<!------------------------------------------->
 <div class="tab-pane " id="utama"> 
     <div class="container-fluid overflow-auto " style="max-height:1000px;">
-    <?php if($data_dokumen_utama->num_rows() != 0){ ?>
+    <div class='row '>  
+      <?php if($data_dokumen_utama->num_rows() != 0){ ?>
 
-        <div class="row card-header rounded">
-            <div class="col">Nama Berkas</div>
-            <div class="col-sm-2">Tanggal akta</div>
-            <div class="col-sm-2 text-center">Aksi</div>
-        </div>   
-    
+     
    
 <?php foreach ($data_dokumen_utama->result_array() as $utama){
-echo "<div class='row mt-1 card-header rounded'>"
-    . "<div class='col'>".$utama['nama_berkas']."</div>"
-    . "<div class='col-sm-2'>".$utama['tanggal_akta']."</div>"
-    . "<div class='col-sm-2 text-center'>"
-    . "<button onclick=download_utama('".base64_encode($utama['id_data_dokumen_utama'])."') class='btn  col-md-6 btn-success btn-sm'>File <span class='fa fa-download'></span></button>"
-    . "</div>"
-     . "</div>";    
+$ext = pathinfo($utama['nama_file'], PATHINFO_EXTENSION);
+echo "<div onclick=LihatDokumenUtama('".$utama['id_data_dokumen_utama']."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
+<div style='width:210px; height:210px;' class='card'>
+<div class='card-body'>";
+if($ext =="docx" || $ext =="doc" ){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "xlx"  || $ext == "xlsx"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/excelicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "PDF"  || $ext == "pdf"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/pdficon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/imageicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+}else{
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.png')."' alt='MS WORD' class='  img-thumbnail'>";
 }
-    }
-?>
+
+echo "
 </div>
-    
+<div class='card-footer'><span style='font-size:12px;'>".$utama['nama_berkas']."</span></div>
+</div></div>";
+
+}
+}
+?>
+
+</div>
+</div>
 </div>
 
     
 <div class="tab-pane" id="client">
   <div class="container-fluid overflow-auto " style="max-height:1000px;">
-  
+  <div class='row '>  
 <?php if($data_client->num_rows() != 0){ ?>
-      <div class="row card-header rounded">
-            <div class="col">Nama Client</div>
-            <div class="col-sm-2 text-center">Aksi</div>
-        </div>   
-      
-      
-     <?php foreach ($data_client->result_array() as $client){ 
-       echo "<div class='row card-header rounded mt-1'>"
-    . "<div class='col'>".$client['nama_client']."</div>"
-    . "<div class='col-sm-2'>"
-    . "<button onclick=lihat_berkas_client('".base64_encode($client['no_client'])."'); class='btn  bt-block btn-success btn-sm'> Lihat berkas <span class='fa fa-eye'></span></button>"
-    . "</div>"
-    . "</div>";
-      
+    <?php foreach ($data_client->result_array() as $client){
+        echo "<div onclick=lihat_berkas_client('".base64_encode($client['no_client'])."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
+        <div style='width:210px; height:210px;' class='card'>
+         <div class='card-body'>";
+         if($client['jenis_client'] =="Badan Hukum" ){
+          echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+        }else if($client['jenis_client'] =="Perorangan"){
+            echo"<img style='width:80px; height:80px;'  src='".base_url('assets/peroranganicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+          }
+
+        echo "
+        </div>
+        <div class='card-footer'><span style='font-size:12px;'>".$client['nama_client']."</span></div>
+        </div></div>";
+ 
       }
-}?>
+   }
+   ?>
+   
       
+</div>     
       
 </div>
 </div>    
 </div>
 </div>
+
+
+
 <!------------------modal data perekaman------------->
 <div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content ">
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body data_perekaman">
-</div>
-</div>
+<div class="modal-dialog modal-md" role="document">
 </div>
 </div>    
     
 <script type="text/javascript">
-function cek_download_berkas(no_berkas){
+$(document).ready(function(){
+  $(".hasil").mouseover(function(){
+    $(this).find(" > div").css("background-color","#FF8C00").css('cursor', 'pointer');
+    $(this).mouseout(function(){
+   $(this).find(" > div").css("background-color","white");
+ });
+});
+ 
 
+});
+function cek_download_berkas(no_berkas){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
@@ -145,36 +168,45 @@ title: r.pesan
 });
 }
 
-function lihat_meta_berkas(no_nama_dokumen,no_client){
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
-url:"<?php echo base_url('Dashboard/data_perekaman_pencarian') ?>",
-success:function(data){
-  
-$('#data_perekaman').modal('show');  
-$(".data_perekaman").html(data);
-}
-});
-}
 function download_utama(id){
 window.location.href="<?php echo base_url('Dashboard/download_utama/'); ?>"+id 
 }
 
 function lihat_berkas_client(no_client){   
+window.location.href="<?php echo base_url($this->uri->segment(1)."/DetailClient/") ?>"+no_client;    
+}    
+
+function LihatDokumenPenunjang(NoBerkas){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_client="+no_client,
-url:"<?php echo base_url('Dashboard/data_perekaman_user_client') ?>",
-success:function(data){ 
+data:"token="+token+"&no_berkas="+NoBerkas,
+url:"<?php echo base_url('Dashboard/data_perekaman_pencarian') ?>",
+success:function(data){
 $('#data_perekaman').modal('show');  
-$(".data_perekaman").html(data);
+$(".modal-dialog").html(data);
+}})
 }
-});
-}    
-    
+
+function LihatDokumenUtama(id_data_dokumen_utama){
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_dokumen_utama="+id_data_dokumen_utama,
+url:"<?php echo base_url('Dashboard/data_perekaman_utama') ?>",
+success:function(data){
+$('#data_perekaman').modal('show');  
+$(".modal-dialog").html(data);
+}})
+}
+
+
+function lihat_gambar(nama_folder,nama_berkas){
+    window.open("<?php echo base_url('berkas/'); ?>"+nama_folder+"/"+nama_berkas, '_blank');
+}
+function lihat_pdf(nama_folder,nama_berkas){
+    window.open("<?php echo base_url('berkas/'); ?>"+nama_folder+"/"+nama_berkas, '_blank');
+}
 
 
 </script>        

@@ -3,7 +3,7 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
-<div class="mt-4 mb-2 text-center"><i class="fa fa-users fa-4x"></i></span><br> Data Client Perorangan</div>
+<div class="mt-4 mb-2 text-theme1 text-center"><i class="fa fa-users fa-4x"></i></span><br> Data Client Perorangan</div>
     
 <div class="row">    
 <div class="col mt-2">
@@ -85,6 +85,10 @@ $('td:eq(0)', row).html(index);
 }
 });
 });
+
+function DetailClient(no_client){
+window.location.href="<?php echo base_url('Dashboard/DetailClient/'); ?>"+btoa(no_client);    
+}
 </script>
 
 

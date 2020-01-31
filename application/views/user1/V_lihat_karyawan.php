@@ -4,9 +4,12 @@
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
 <div class="container-fluid text-theme1 ">
-<div class="card-header mt-2 text-center ">
-<h5 align="center">Data jumlah pekerjaan karyawan</h5>
+
+<div class="mt-2  text-center  ">
+<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-users "></span><br>Daftar Asisten Notaris</h5>
 </div>
+    
+    
 <div class="row  m-1">
 <table class="table text-theme1 table-sm  table-bordered table-condensed table-striped ">
     <tr class="text-center">
