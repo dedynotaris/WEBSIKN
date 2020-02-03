@@ -46,13 +46,11 @@ src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff"
        </div>
        <?php } ?>
         
-        <?php if($status_app['app_managemen'] == "on"){ ?>
         <div class="col-md-2 mt-5 mx-auto">
-        <a  class="menu_utama" onclick="check_akses('Level 4','Data_lama');"> 
+        <a  class="menu_utama" href="<?php echo base_url('DataArsip'); ?>"> 
             <span class="fa fa-upload fa-5x"></span><br>Data Arsip
         </a>    
         </div>
-       <?php } ?>
         
        
          <?php if($status_app['app_admin'] == "on"){ ?>

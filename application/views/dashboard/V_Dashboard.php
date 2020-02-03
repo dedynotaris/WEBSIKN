@@ -77,7 +77,7 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 <hr>    
 <canvas id="GrafikBerkas" width="200" height="80"></canvas>
 </div>
-    <div class="col">
+    <div class="col-m-4">
       <canvas id="GrafikPerizinan" width="200" height="180"></canvas>
     </div>    
 </div>
