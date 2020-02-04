@@ -9,7 +9,7 @@ $this->load->library('form_validation');
 
 
 if($this->session->userdata('username')){
-redirect(base_url('Menu'));
+redirect(base_url('DataArsip'));
 }
 
 
@@ -45,6 +45,7 @@ $set_sesi = array(
 'level'         => $data_sesi['level'],
 'status'        => $data_sesi['status'],
 'foto'          => $data_sesi['foto'],
+'email'         => $data_sesi['email'],
 );
 $this->session->set_userdata($set_sesi);
 

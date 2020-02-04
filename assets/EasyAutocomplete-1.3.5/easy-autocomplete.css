@@ -294,6 +294,8 @@
   display: block;
   font-weight: normal;
   word-break: break-all;
+  text-align: left;
+  padding: 10px;
 }
 .easy-autocomplete-container ul li b {
   font-weight: bold;
@@ -302,8 +304,8 @@
   font-color: #aaa;
   background-color: #116466 !important;
   color:#fff;
-  font-style: italic;
-  text-align: center;
+  padding: 10px;
+  text-align: left;
 }
 
 .eac-description .eac-item span {

@@ -80,7 +80,7 @@ Toast.fire({
 type: 'success',
 title: r[0].messages
 }).then(function() {
-window.location.href = "<?php echo base_url('Menu'); ?>";
+window.location.href = "<?php echo base_url('DataArsip'); ?>";
 });    
 }
 $('#proses_login').removeAttr("disabled");
