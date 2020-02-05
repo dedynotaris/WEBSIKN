@@ -19,28 +19,31 @@ $this->load->view('DataArsip/Search');
 }
 
 
-public function data_pencarian(){
-if($this->input->post()){
-$input = $this->input->post();
-if(strlen($input['kata_kunci']) > 0){
-$data_dokumen         = $this->M_data_arsip->pencarian_data_dokumen($input['kata_kunci']);
+public function cari_dokumen(){
+if($this->input->get()){
+$input = $this->input->get();
+if(strlen($input['term']) > 0){
+$data_dokumen         = $this->M_data_arsip->pencarian_data_dokumen($input['term']);
 
 if($data_dokumen->num_rows() == 0){
 $json_data_dokumen[] = array(
 "Tidak ditemukan data dokumen"    
 );
     
-}else{   
-
+}else{
+     
 foreach ($data_dokumen->result_array() as $d){
 $json_data_dokumen[] = array(    
-$d['nama_dokumen']." ".str_replace('_', ' ',$d['nama_meta'])." ".str_replace('_', ' ',$d['value_meta']));  
+'value'               =>$input['term'],
+'label'               =>$d['value_meta'],
+'nama_dokumen'        =>$d['nama_dokumen'],
+'nama_meta'           =>str_replace('_', ' ',$d['nama_meta']),
+'value_meta'          =>str_replace('_', ' ',$d['value_meta']),
+'nama_client'         =>$d['nama_client'],
+);  
 }
+echo json_encode($json_data_dokumen);
 
-$data = array(
- 'data_dokumen'         => $json_data_dokumen,
-);
-echo json_encode($data);
 }
 }
 }else{
@@ -92,4 +95,5 @@ public function keluar(){
 $this->session->sess_destroy();
 redirect (base_url('Login'));
 }
+
 }

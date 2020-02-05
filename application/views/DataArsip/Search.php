@@ -22,7 +22,7 @@ transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 
-.easy-autocomplete input:hover {
+.form-search:hover {
 -webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 -moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
@@ -30,12 +30,6 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 }
 
 
-.easy-autocomplete {
-position: relative;
-width: 90%;
-margin-left: auto !important;
-margin-right: auto !important;
-}
 </style>
 
 <div class="container-fluid">
@@ -134,7 +128,8 @@ margin-right: auto !important;
 <div class="row mt-1">
 <div class="col-md-2"></div>
 <div class="col mx-auto">
-<input type="text" id="cari" class="form-search mx-auto" placeholder="Masukan Dokumen yan ingin dicari"></div>
+<input type="text" id="project" class="form-search mx-auto" placeholder="Masukan Dokumen yan ingin dicari"></div>
+<p style="display:none;" id="project-description"></p>
 <div class="col-md-2"></div>
 </div>
 
@@ -148,8 +143,29 @@ margin-right: auto !important;
 </div>
 
 </div>
+ 
 </body>
-
+<script>
+$( function() {
+    $( "#project" ).autocomplete({
+      minLength: 3,
+      source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
+     focus: function( event, ui ) {
+        $( "#project" ).val( ui.item.value );
+        return false;
+      },
+      select: function( event, ui ) {
+        $( "#project" ).val(ui.item.label );
+        $( "#project-description" ).html( ui.item.desc );
+        return false;
+      }
+    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
+        .appendTo( ul );
+    };
+  } );
+  </script>
 
 <script type="text/javascript">
 $(document).ready(function(){

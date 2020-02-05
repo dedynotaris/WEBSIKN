@@ -2,7 +2,7 @@
 <div class="container-fluid bg-light">
 <div class="row">
 <style>
-.easy-autocomplete input {
+.form-search {
 display: block;
 height: calc(2.5rem + 2px);
 width: 100%;
@@ -19,7 +19,7 @@ transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 
-.easy-autocomplete input:hover {
+.form-search:hover {
 -webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 -moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
@@ -27,12 +27,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 }
 
 
-.easy-autocomplete {
-position: relative;
-width: 100%;
-margin-left: auto !important;
-margin-right: auto !important;
-}
+
 </style>
 
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
@@ -40,12 +35,13 @@ margin-right: auto !important;
 </div>
 
 <div class="col-md-6  align-items-center d-flex justify-content-start">
-    <input type="text" id="pencarian" class="form-search " placeholder="Masukan Dokumen yan ingin dicari">
+    <input type="text" id="project" class="form-search " placeholder="Masukan Dokumen yan ingin dicari">
+    <p style="display:none;" id="project-description"></p>
 </div>
 <div class="col"></div> 
 
-<div class="col-md-1   d-flex justify-content-start p-2">
-<div class="btn-group dropup ">
+<div class="col-md-2   d-flex justify-content-end ">
+<div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <i class="fas fa-th fa-1x"></i>
 </button>
@@ -82,7 +78,7 @@ margin-right: auto !important;
 </div>
 </div>
 
-<div class="btn-group ">
+<div class="btn-group pull-right  ">
     <button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
 <img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
@@ -131,3 +127,25 @@ margin-right: auto !important;
 </div>
 </div>
 </body>
+
+<script>
+$( function() {
+    $( "#project" ).autocomplete({
+      minLength: 3,
+      source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
+     focus: function( event, ui ) {
+        $( "#project" ).val( ui.item.value );
+        return false;
+      },
+      select: function( event, ui ) {
+        $( "#project" ).val(ui.item.label );
+        $( "#project-description" ).html( ui.item.desc );
+        return false;
+      }
+    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
+        .appendTo( ul );
+    };
+  } );
+  </script>
