@@ -1,5 +1,5 @@
-<body>
-<div class="container-fluid bg-light">
+<body onload="search();">
+<div class="container-fluid bg-light " id='navbar'>
 <div class="row">
 <style>
 .form-search {
@@ -28,15 +28,29 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 
 
 
+.ui-autocomplete {
+max-height: 500px;
+overflow-y: auto;
+/* prevent horizontal scrollbar */
+overflow-x: hidden;
+/* add padding to account for vertical scrollbar */
+padding-right: 20px;
+}
+.shadow-sticky{
+    
+    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+}        
+
 </style>
-
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
-    <img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'>    
+<a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
 </div>
-
 <div class="col-md-6  align-items-center d-flex justify-content-start">
-    <input type="text" id="project" class="form-search " placeholder="Masukan Dokumen yan ingin dicari">
-    <p style="display:none;" id="project-description"></p>
+<form method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="text" name="search" id="project" class="form-search " value="<?php echo $this->input->get('search') ?>" placeholder="Masukan Dokumen yan ingin dicari">
+<p style="display:none;" id="project-description"></p>
+
+</form>  
 </div>
 <div class="col"></div> 
 
@@ -79,7 +93,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 </div>
 
 <div class="btn-group pull-right  ">
-    <button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
+<button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
 <img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
@@ -89,7 +103,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
-    </button>
+</button>
 
 <div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
 <div class="text-center px-6 py-6 ">
@@ -115,37 +129,123 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 </div>
 </div> 
 </div>
+</div>  
 </div>
-<div class="container-fluid bg-light">
+
+
+<div class="container-fluid" style="background-color:#D3D3D3;">
 <div class="container">
-<div class="row p-2">
-<div class="col-md-1"></div>    
-<div class="col-md-2 ">Dokumen Penunjang</div>
-<div class="col-md-2 ">Dokumen Utama</div>
-<div class="col-md-2 ">Data Client</div>
+<div class="row text-theme1">
+<div class="col-md-3 mx-auto">
+<button class="btn btn-tranparent btn-block text-theme1" onclick="search('dokumen_penunjang');">Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
+</div>
+<div class="col-md-3 mx-auto">
+<button class="btn btn-tranparent btn-block text-theme1" onclick="search('dokumen_utama');">Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+</div>
+<div class="col-md-3 mx-auto">
+<button class="btn btn-tranparent btn-block text-theme1" onclick="search('data_client');">Data Client <i class="fas fa-users"></i></button>
 </div>
 </div>
 </div>
+</div>    
+<div class="container">
+<div class="row hasil_pencarian">
+
+</div>    
+</div>    
+
 </body>
 
 <script>
 $( function() {
-    $( "#project" ).autocomplete({
-      minLength: 3,
-      source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
-     focus: function( event, ui ) {
-        $( "#project" ).val( ui.item.value );
-        return false;
-      },
-      select: function( event, ui ) {
-        $( "#project" ).val(ui.item.label );
-        $( "#project-description" ).html( ui.item.desc );
-        return false;
-      }
-    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
-      return $( "<li>" )
-        .append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
-        .appendTo( ul );
-    };
-  } );
-  </script>
+$( "#project" ).autocomplete({
+minLength: 3,
+source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
+focus: function( event, ui ) {
+$( "#project" ).val( ui.item.value );
+return false;
+},
+select: function( event, ui ) {
+$( "#project" ).val(ui.item.label );
+$( "#project-description" ).html( ui.item.desc );
+$(this).closest("form").submit()
+
+return false;
+}
+}).autocomplete( "instance" )._renderItem = function( ul, item ) {
+return $( "<li>" )
+.append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
+.appendTo( ul );
+};
+});
+
+function search(kat){
+
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+var kata_kunci        = '<?php echo $this->input->get('search') ?>';
+if(kat != 'undefined'){
+var kategori          = kat;
+}else{
+var kategori          = "dokumen_penunjang";
+}
+$.ajax({
+type:"get",
+data:"token="+token+"&search="+kata_kunci+"&kategori="+kategori,
+url:"<?php echo base_url('DataArsip/ProsesPencarian') ?>",
+success:function(data){
+$(".hasil_pencarian").html(data);
+}
+});
+
+}
+function check_akses(model,model2){
+var token = "<?php echo $this->security->get_csrf_hash(); ?>";      
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('DataArsip/check_akses') ?>",
+data:"token="+token+"&model="+model,
+success:function(data){
+var r = JSON.parse(data);
+
+if(r.status == 'error'){
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan,
+});
+
+}else{
+window.location.href="<?php  echo base_url()?>"+model2
+}
+
+}
+
+});
+
+
+}
+
+window.onscroll = function() {myFunction()};
+
+var navbar = document.getElementById("navbar");
+var sticky = navbar.offsetTop;
+
+function myFunction() {
+if (window.pageYOffset > sticky) {
+navbar.classList.add("sticky-top")
+navbar.classList.add("shadow-sticky")
+} else {
+navbar.classList.remove("sticky-top")
+navbar.classList.remove("shadow-sticky")
+}
+}
+</script>

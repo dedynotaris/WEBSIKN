@@ -29,7 +29,14 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 
 }
 
-
+.ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+        } 
 </style>
 
 <div class="container-fluid">
@@ -124,21 +131,21 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <p>Pencarian Dokumen Arsip </p>
 </div>
 </div>
-
+    <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <div class="row mt-1">
 <div class="col-md-2"></div>
 <div class="col mx-auto">
-<input type="text" id="project" class="form-search mx-auto" placeholder="Masukan Dokumen yan ingin dicari"></div>
+    <input type="text" id="project" name="search" class="form-search mx-auto" placeholder="Masukan Dokumen yan ingin dicari"></div>
 <p style="display:none;" id="project-description"></p>
 <div class="col-md-2"></div>
 </div>
 
 <div class="row mt-4">
 <div class="col"></div>
-<div class="col-sm-3"><Button class="btn btn-light btn-block">Cari Berkas <i class="fas fa-search"></i></Button></div>
+<div class="col-sm-3"><Button type="submit" id="button_cari" class="btn btn-light btn-block">Cari Berkas <i class="fas fa-search"></i></Button></div>
 <div class="col"></div>
 </div>
-
+    </form>
 </div>
 </div>
 
@@ -157,6 +164,7 @@ $( function() {
       select: function( event, ui ) {
         $( "#project" ).val(ui.item.label );
         $( "#project-description" ).html( ui.item.desc );
+        $(this).closest("form").submit()
         return false;
       }
     }).autocomplete( "instance" )._renderItem = function( ul, item ) {
@@ -167,51 +175,6 @@ $( function() {
   } );
   </script>
 
-<script type="text/javascript">
-$(document).ready(function(){
-var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-
-var options = {
-url: function(kata_kunci) {
-return "<?php echo base_url('DataArsip/data_pencarian') ?>";
-},
-ajaxSettings: {
-dataType: "json",
-method: "POST",
-data: {
-token   : token
-}
-},
-
-preparePostData: function(data) {
-data.kata_kunci = $("#cari").val();
-return data;
-},
-list: {
-onChooseEvent: function(value,data) {
-var kata_kunci = $("#cari").val();
-$('#button_cari').submit();
-},showAnimation: {
-type: "slide", //normal|slide|fade
-time: 400,
-callback: function() {}
-},
-
-hideAnimation: {
-type: "slide", //normal|slide|fade
-time: 400,
-callback: function() {}
-}	
-},
-categories: [{  
-listLocation: "data_dokumen",
-header: "<div>Hasil Pencarian</div>"
-}]
-};
-
-$("#cari").easyAutocomplete(options);
-}); 
-</script>
 
 <script type="text/javascript">
 function check_akses(model,model2){
