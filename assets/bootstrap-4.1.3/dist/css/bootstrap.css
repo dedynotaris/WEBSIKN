@@ -9931,9 +9931,9 @@ color:#ccc;
     z-index:1000;
     cursor:default;
     margin-top:2px;
-    color:#fff;
+    color:#2F4F4F;
     list-style:none;
-    background-color:#2F4F4F !important;
+    background-color:#fff !important;
     border:1px solid #ccc;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -9945,12 +9945,12 @@ color:#ccc;
     padding:3px 20px
 }
 .ui-autocomplete>li.ui-state-focus{
-    background-color:rgba(244, 244, 245, 0.63);
-    color:#fff
+  background-color:#ccc;
+  color:#fff
 }
 .ui-autocomplete>li.ui-state-focus:hover{
-    background-color:#f60;
-    color:#fff
+    background-color:#ccc;
+    color:#000
 }
 .ui-helper-hidden-accessible{
     display:none
@@ -10014,13 +10014,6 @@ color-stop(0.5, #444444)
 * of the countdown that you don't need.
 */
 
-.countDays{ /* display:none !important;*/ }
-.countDiv0{ /* display:none !important;*/ }
-.countHours{}
-.countDiv1{}
-.countMinutes{}
-.countDiv2{}
-.countSeconds{}
 
 
 .countDiv{

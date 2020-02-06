@@ -136,25 +136,34 @@ $data_dokumen_penunjang = $this->db->get();
 
 foreach ($data_dokumen_penunjang->result_array() as $penunjang){
 $ext = pathinfo($penunjang['nama_berkas'], PATHINFO_EXTENSION);
-echo "<div onclick=LihatDokumenPenunjang('".$penunjang['no_berkas']."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
-<div style='width:210px; height:210px;' class='card'>
-<div class='card-body'>";
+echo "<div class='row  mt-2 mb-2'>
+<div class='col'>
+<div class='row'>
+<div class='col-md-9'>
+Nama Dokumen    : ".$penunjang['nama_dokumen']."<br>
+Nama Client     : ".$penunjang['nama_client']."</br>
+Hasil Pencarian : ".str_replace('_', ' ',$penunjang['nama_meta'])."  ".str_replace('_', ' ',$penunjang['value_meta'])."</br>
+</div>
+<div class='col text-center'>
+";
 if($ext =="docx" || $ext =="doc" ){
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-}else if($ext == "xlx"  || $ext == "xlsx"){
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/excelicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-}else if($ext == "PDF"  || $ext == "pdf"){
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/pdficon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/imageicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-}else{
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-}
+  echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }else if($ext == "xlx"  || $ext == "xlsx"){
+  echo"<img style='width:80px; height:80px;'  src='".base_url('assets/excelicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }else if($ext == "PDF"  || $ext == "pdf"){
+  echo"<img style='width:80px; height:80px;'  src='".base_url('assets/pdficon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
+  echo"<img style='width:80px; height:80px;'  src='".base_url('assets/imageicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }else{
+  echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }
 echo "
 </div>
-<div class='card-footer'><span style='font-size:12px;'>".$penunjang['nama_dokumen']."<br>".$penunjang['nama_client']."</span></div>
 </div>
-</div>";
+</div>
+</div>
+<hr>";
+
 }
 
 echo "</div>";
@@ -176,10 +185,19 @@ $this->db->like('data_dokumen_utama.nama_berkas',$input['search']);
 $dokumen_utama= $this->db->get();
 
 foreach ($dokumen_utama->result_array() as $utama){
+  echo "<div class='row  mt-2 mb-2'>
+  <div class='col'>
+  <div class='row'>
+  <div class='col-md-9'>
+  Jenis Dokumen    : ".$utama['jenis']."<br>
+  Nama Client     : ".$utama['nama_client']."</br>
+  Hasil Pencarian : ".$utama['nama_berkas']."</br>
+  </div>
+  <div class='col text-center'>
+  ";
+
 $ext = pathinfo($utama['nama_file'], PATHINFO_EXTENSION);
-echo "<div onclick=LihatDokumenPenunjang('".$utama['id_data_dokumen_utama']."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
-<div style='width:210px; height:210px;' class='card'>
-<div class='card-body'>";
+
 if($ext =="docx" || $ext =="doc" ){
 echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
 }else if($ext == "xlx"  || $ext == "xlsx"){
@@ -193,9 +211,7 @@ echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.pn
 }
 echo "
 </div>
-<div class='card-footer'><span style='font-size:12px;'>".$utama['nama_berkas']."<br>".$utama['nama_client']."</span></div>
-</div>
-</div>";
+</div><hr>";
 }
 
 echo "</div>";    
@@ -204,26 +220,31 @@ echo "</div>";
 public function HasilPencarianClient($input){
 $this->db->select('data_client.nama_client,'
 . 'data_client.jenis_client,'
-. 'data_client.no_client');
+. 'data_client.no_identitas');
 $this->db->from('data_client');
 $this->db->like('data_client.nama_client',$input['search']);
 $data_client = $this->db->get();
  foreach ($data_client->result_array() as $client){
-        echo "<div onclick=lihat_berkas_client('".base64_encode($client['no_client'])."'); class='col hasil  m-1 d-flex justify-content-center text-center'>
-        <div style='width:210px; height:210px;' class='card'>
-         <div class='card-body'>";
-         if($client['jenis_client'] =="Badan Hukum" ){
-          echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-        }else if($client['jenis_client'] =="Perorangan"){
-            echo"<img style='width:80px; height:80px;'  src='".base_url('assets/peroranganicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
-          }
 
-        echo "
-        </div>
-        <div class='card-footer'><span style='font-size:12px;'>".$client['nama_client']."</span></div>
-        </div></div>";
- 
-      }   
+  echo "<div class='row  mt-2 mb-2'>
+  <div class='col'>
+  <div class='row'>
+  <div class='col-md-9'>
+  Nama Client     : ".$client['nama_client']."</br>
+  Jenis Client    : ".$client['jenis_client']."<br>
+  No identitas    : ".$client['no_identitas']."<br>
+  </div>
+  <div class='col text-center'>
+  ";
+  if($client['jenis_client'] =="Badan Hukum" ){
+    echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }else if($client['jenis_client'] =="Perorangan"){
+      echo"<img style='width:80px; height:80px;'  src='".base_url('assets/peroranganicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+  }
+  echo "
+</div>
+</div><hr>";
+  }   
 }
 
 }

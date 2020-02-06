@@ -149,8 +149,42 @@ padding-right: 20px;
 </div>
 </div>    
 <div class="container">
-<div class="row hasil_pencarian">
-
+<div class="row mt-2">
+<div class="col-md-8  hasil_pencarian">
+</div>
+<div class="col">
+<div class='card'>
+<div class="card-header text-center">Detail Hasil Pencarian</div>
+<div class='card-body'>
+Jumlah Dokumen Penujang  : 
+<?php 
+$this->db->select('data_meta_berkas.nama_meta,'
+.'data_meta_berkas.value_meta');
+$this->db->from('data_meta_berkas');
+$this->db->group_by('data_meta_berkas.no_berkas');
+$this->db->like('data_meta_berkas.value_meta',$this->input->get('search'));
+echo $this->db->get()->num_rows();
+?>
+<br><hr>
+Jumlah Dokumen Utama     : 
+<?php 
+$this->db->select('data_dokumen_utama.nama_berkas');
+$this->db->from('data_dokumen_utama');
+$this->db->like('data_dokumen_utama.nama_berkas',$this->input->get('search'));
+echo $this->db->get()->num_rows();
+?>
+<br><hr>
+Jumlah Client            : 
+<?php 
+$this->db->select('data_client.nama_client');
+$this->db->from('data_client');
+$this->db->like('data_client.nama_client',$this->input->get('search'));
+echo  $this->db->get()->num_rows();
+?>
+<br>
+</div>
+</div>
+</div>    
 </div>    
 </div>    
 
