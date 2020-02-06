@@ -135,7 +135,8 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="row mt-1">
 <div class="col-md-2"></div>
 <div class="col mx-auto">
-    <input type="text" id="project" name="search" class="form-search mx-auto" placeholder="Masukan Dokumen yan ingin dicari"></div>
+    <input type="text" id="project" name="search" class="form-search mx-auto" placeholder="Masukan Nama Perorangan atau Badan Hukum"></div>
+    <input type="hidden" name="kategori" value="dokumen_penunjang">
 <p style="display:none;" id="project-description"></p>
 <div class="col-md-2"></div>
 </div>

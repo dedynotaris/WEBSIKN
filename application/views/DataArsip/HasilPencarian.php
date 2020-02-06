@@ -122,7 +122,6 @@ padding-right: 20px;
 <div class="dropdown-divider"></div>
 <button class="btn btn-tranparent btn-md rounded">Pengaturan Akun <i class="fas fa-cogs"></i> </button>
 <div class="dropdown-divider"></div>
-
 <a href='<?php echo base_url('DataArsip/keluar') ?>'><button class="btn btn-light btn-md btn-block">Keluar <i class="fas fa-sign-out-alt"></i> </button></a>
 </div>    
 
@@ -212,26 +211,53 @@ return $( "<li>" )
 .appendTo( ul );
 };
 });
-
-function search(kat){
-
+ 
+function set_page(){
+$('#pagination').on('click','a',function(e){
+e.preventDefault(); 
+var pageno = $(this).attr('href');
+next_page(pageno);
+});
+}
+function next_page(url){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 var kata_kunci        = '<?php echo $this->input->get('search') ?>';
-if(kat != 'undefined'){
-var kategori          = kat;
-}else{
-var kategori          = "dokumen_penunjang";
-}
+var kategori          = '<?php echo $this->input->get('kategori') ?>';
+
 $.ajax({
 type:"get",
 data:"token="+token+"&search="+kata_kunci+"&kategori="+kategori,
-url:"<?php echo base_url('DataArsip/ProsesPencarian') ?>",
+url:url,
 success:function(data){
 $(".hasil_pencarian").html(data);
+set_page();
 }
 });
-
 }
+
+function search(kat){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+var kata_kunci        = '<?php echo $this->input->get('search') ?>';
+var url = "<?php echo base_url('DataArsip/ProsesPencarian/') ?>"; 
+
+if(kat == 'undefined'){
+var kategori          = '<?php echo $this->input->get('kategori') ?>';
+
+}else{
+var kategori        =kat;
+}    
+
+ $.ajax({
+type:"get",
+data:"token="+token+"&search="+kata_kunci+"&kategori="+kategori,
+url:url,
+success:function(data){
+$(".hasil_pencarian").html(data);
+set_page();
+}
+});
+}
+
 function check_akses(model,model2){
 var token = "<?php echo $this->security->get_csrf_hash(); ?>";      
 

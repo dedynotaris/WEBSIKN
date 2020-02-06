@@ -77,7 +77,8 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
-	'password' => '',
+	'password' => 'notaris@123'
+    . '',
 	'database' => 'notaris',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

@@ -8,6 +8,7 @@ $this->load->model('M_data_arsip');
 $this->load->library('Datatables');
 $this->load->library('upload');
 $this->load->library('form_validation');
+$this->load->library('pagination');
 if(!$this->session->userdata('username')){
 redirect(base_url('Menu'));
 }
@@ -116,23 +117,38 @@ $this->HasilPencarianDokumenPenunjang($input);
 
 
 public function HasilPencarianDokumenPenunjang($input){
-    
-$this->db->select('data_meta_berkas.nama_meta,'
-. 'data_meta_berkas.value_meta,'
-. 'data_client.nama_client,'
-. 'data_client.no_client,'
-. 'data_berkas.nama_berkas,'
-. 'nama_dokumen.nama_dokumen,'
-. 'nama_dokumen.no_nama_dokumen,'
-. 'data_meta_berkas.no_berkas,');
-$this->db->from('data_meta_berkas');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
-$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
-$this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
-$this->db->group_by('data_meta_berkas.no_berkas');
-$this->db->like('data_meta_berkas.value_meta',$input['search']);
-$data_dokumen_penunjang = $this->db->get();
+$total                  = $this->M_data_arsip->pencarian_data_dokumen($input['search'])->num_rows();    
+$config['base_url']     = base_url('DataArsip/ProsesPencarian/');
+$config['total_rows']   = $total;
+$config['per_page']     = 15;
+$config['display_pages'] = TRUE;
+
+
+$from = $this->uri->segment(3);    
+
+// Membuat Style pagination untuk BootStrap v4
+$config['first_link']       = 'First';
+$config['last_link']        = 'Last';
+$config['next_link']        = 'Next';
+$config['prev_link']        = 'Prev';
+$config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
+$config['full_tag_close']   = '</ul></nav></div>';
+$config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+$config['num_tag_close']    = '</span></li>';
+$config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+$config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+$config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+$config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['prev_tagl_close']  = '</span>Next</li>';
+$config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+$config['first_tagl_close'] = '</span></li>';
+$config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['last_tagl_close']  = '</span></li>';
+
+$this->pagination->initialize($config);   
+
+$data_dokumen_penunjang  = $this->M_data_arsip->HasilPencarianDokumenPenunjang($input,$config['per_page'],$from);
 
 foreach ($data_dokumen_penunjang->result_array() as $penunjang){
 $ext = pathinfo($penunjang['nama_berkas'], PATHINFO_EXTENSION);
@@ -165,25 +181,44 @@ echo "
 <hr>";
 
 }
-
+echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";
 }
 
 public function HasilPencarianDokumenUtama($input){
-$this->db->select('data_dokumen_utama.nama_berkas,'
-. 'data_dokumen_utama.tanggal_akta,'
-. 'data_dokumen_utama.nama_file,'
-. 'data_client.nama_client,'
-. 'data_dokumen_utama.id_data_dokumen_utama,'
-. 'data_dokumen_utama.jenis');
-$this->db->from('data_dokumen_utama');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
-$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$total = $this->M_data_arsip->pencarian_data_dokumen_utama($input['search'])->num_rows();
+    
+$config['base_url']     = base_url('DataArsip/ProsesPencarian/');
+$config['total_rows']   = $total;
+$config['per_page']     = 15;
+$config['display_pages'] = TRUE;
 
-$this->db->like('data_dokumen_utama.nama_berkas',$input['search']);
 
-$dokumen_utama= $this->db->get();
+$from = $this->uri->segment(3);    
 
+// Membuat Style pagination untuk BootStrap v4
+$config['first_link']       = 'First';
+$config['last_link']        = 'Last';
+$config['next_link']        = 'Next';
+$config['prev_link']        = 'Prev';
+$config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
+$config['full_tag_close']   = '</ul></nav></div>';
+$config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+$config['num_tag_close']    = '</span></li>';
+$config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+$config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+$config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+$config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['prev_tagl_close']  = '</span>Next</li>';
+$config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+$config['first_tagl_close'] = '</span></li>';
+$config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['last_tagl_close']  = '</span></li>';
+
+$this->pagination->initialize($config);       
+
+$dokumen_utama = $this->M_data_arsip->HasilPencarianDokumenUtama($input,$config['per_page'],$from);
 foreach ($dokumen_utama->result_array() as $utama){
   echo "<div class='row  mt-2 mb-2'>
   <div class='col'>
@@ -213,17 +248,46 @@ echo "
 </div>
 </div><hr>";
 }
-
+echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";    
 }
 
 public function HasilPencarianClient($input){
-$this->db->select('data_client.nama_client,'
-. 'data_client.jenis_client,'
-. 'data_client.no_identitas');
-$this->db->from('data_client');
-$this->db->like('data_client.nama_client',$input['search']);
-$data_client = $this->db->get();
+    
+$total = $this->M_data_arsip->pencarian_data_client($input['search'])->num_rows();
+    
+$config['base_url']     = base_url('DataArsip/ProsesPencarian/');
+$config['total_rows']   = $total;
+$config['per_page']     = 15;
+$config['display_pages'] = TRUE;
+
+
+$from = $this->uri->segment(3);    
+
+// Membuat Style pagination untuk BootStrap v4
+$config['first_link']       = 'First';
+$config['last_link']        = 'Last';
+$config['next_link']        = 'Next';
+$config['prev_link']        = 'Prev';
+$config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
+$config['full_tag_close']   = '</ul></nav></div>';
+$config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+$config['num_tag_close']    = '</span></li>';
+$config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+$config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+$config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+$config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['prev_tagl_close']  = '</span>Next</li>';
+$config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+$config['first_tagl_close'] = '</span></li>';
+$config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+$config['last_tagl_close']  = '</span></li>';
+
+$this->pagination->initialize($config);    
+    
+
+$data_client = $this->M_data_arsip->HasilPencarianDataClient($input,$config['per_page'],$from);
  foreach ($data_client->result_array() as $client){
 
   echo "<div class='row  mt-2 mb-2'>
@@ -244,7 +308,10 @@ $data_client = $this->db->get();
   echo "
 </div>
 </div><hr>";
-  }   
+  }
+  echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
+echo "</div>";    
+
 }
 
 }
