@@ -13,7 +13,7 @@ $this->load->model('M_user1');
 $this->load->library('Datatables');
 $this->load->library('form_validation');
 $this->load->library('upload');
-$this->load->library('breadcrumbs');
+$this->load->library('Breadcrumbs');
 if($this->session->userdata('sublevel')  != 'Level 1' ){
 redirect(base_url('Menu'));
 }

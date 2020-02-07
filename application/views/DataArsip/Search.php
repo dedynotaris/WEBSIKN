@@ -9,7 +9,7 @@ font-family: 'fontweb'; " class="bg_login">
 display: block;
 width: 90%;
 height: calc(2.5rem + 2px);
-padding: 0.375rem 0.75rem;
+padding:0.375rem 1.75rem;
 font-size: 1rem;
 font-weight: 400;
 line-height: 1.5;
@@ -37,6 +37,9 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
             /* add padding to account for vertical scrollbar */
             padding-right: 20px;
         } 
+.input-group-append {
+    margin-left: -37px;
+}        
 </style>
 
 <div class="container-fluid">
@@ -62,7 +65,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="col-md-6 text-center mt-2 text-lowercase"  onclick="check_akses('Level 3','User3');" >
 <i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('DataArsip','data_lama');" >
+<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','data_lama');" >
 <i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip
 </div> 
 </div>
@@ -72,7 +75,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="col-md-6 text-center mt-2 text-lowercase" onclick="check_akses('Admin','Dashboard');" >
 <i class="fas fa-user-cog fa-2x"></i><br>Administrator
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','Resepsionis');" >
+<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 5','Resepsionis');" >
 <i class="fas fa-concierge-bell fa-2x"></i><br>Resepsionis
 </div> 
 
@@ -135,17 +138,21 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="row mt-1">
 <div class="col-md-2"></div>
 <div class="col mx-auto">
-    <input type="text" id="project" name="search" class="form-search mx-auto" placeholder="Masukan Nama Perorangan atau Badan Hukum"></div>
-    <input type="hidden" name="kategori" value="dokumen_penunjang">
-<p style="display:none;" id="project-description"></p>
-<div class="col-md-2"></div>
+    <form class="input-group">
+     <div class="input-group col-md-11 mx-auto ">
+         <input name="search" minlength="1" class="form-search py-2 border-right-0 border" type="text" placeholder="Masukan Nama Perorangan atau Badan Hukum" id="example-search-input">
+           <input type="hidden" name="kategori" value="dokumen_penunjang">
+           <span class="input-group-append">
+              <button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+                    <i class="fa fa-search"></i>
+              </button>
+            </span>
+        </div>
+    </form>     
 </div>
 
-<div class="row mt-4">
-<div class="col"></div>
-<div class="col-sm-3"><Button type="submit" id="button_cari" class="btn btn-light btn-block">Cari Berkas <i class="fas fa-search"></i></Button></div>
-<div class="col"></div>
-</div>
+<div class="col-md-2"></div>
+
     </form>
 </div>
 </div>
@@ -154,7 +161,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
  
 </body>
 <script>
-$( function() {
+/*$( function() {
     $( "#project" ).autocomplete({
       minLength: 3,
       source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
@@ -173,7 +180,7 @@ $( function() {
         .append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
         .appendTo( ul );
     };
-  } );
+  } );*/
   </script>
 
 

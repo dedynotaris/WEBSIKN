@@ -40,17 +40,25 @@ padding-right: 20px;
     
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
 }        
-
+.input-group-append {
+    margin-left: -41px;
+} 
 </style>
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
 <a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
 </div>
 <div class="col-md-6  align-items-center d-flex justify-content-start">
-<form method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-<input type="text" name="search" id="project" class="form-search " value="<?php echo $this->input->get('search') ?>" placeholder="Masukan Dokumen yan ingin dicari">
-<p style="display:none;" id="project-description"></p>
-
-</form>  
+    <form class="input-group " method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+            <div class="input-group col">
+                <input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
+            <input type="hidden" name="kategori" value="dokumen_penunjang">
+           <span class="input-group-append">
+            <button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+                    <i class="fa fa-search"></i>
+              </button>
+            </span>
+        </div>
+    </form>
 </div>
 <div class="col"></div> 
 
@@ -74,7 +82,7 @@ padding-right: 20px;
 <div class="col-md-6 text-center mt-2 text-lowercase"  onclick="check_akses('Level 3','User3');" >
 <i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('DataArsip','data_lama');" >
+<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','data_lama');" >
 <i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip
 </div> 
 </div>
@@ -84,7 +92,7 @@ padding-right: 20px;
 <div class="col-md-6 text-center mt-2 text-lowercase" onclick="check_akses('Admin','Dashboard');" >
 <i class="fas fa-user-cog fa-2x"></i><br>Administrator
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','Resepsionis');" >
+<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 5','Resepsionis');" >
 <i class="fas fa-concierge-bell fa-2x"></i><br>Resepsionis
 </div> 
 
@@ -190,7 +198,7 @@ echo  $this->db->get()->num_rows();
 </body>
 
 <script>
-$( function() {
+/*$( function() {
 $( "#project" ).autocomplete({
 minLength: 3,
 source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
@@ -210,7 +218,7 @@ return $( "<li>" )
 .append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
 .appendTo( ul );
 };
-});
+});*/
  
 function set_page(){
 $('#pagination').on('click','a',function(e){
