@@ -46,6 +46,7 @@ return $query;
 public function HasilPencarianDokumenPenunjang($input,$perpage,$from){
 $this->db->select('data_meta_berkas.nama_meta,'
 . 'data_meta_berkas.value_meta,'
+. 'data_meta_berkas.no_berkas,'
 . 'data_client.nama_client,'
 . 'data_client.no_client,'
 . 'data_berkas.nama_berkas,'

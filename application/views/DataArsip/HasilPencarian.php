@@ -42,7 +42,15 @@ padding-right: 20px;
 }        
 .input-group-append {
     margin-left: -41px;
+    
+    
 } 
+
+form {
+    display: block;
+    margin-top: 0em;
+    margin-block-end: 0em;
+}
 </style>
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
 <a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
@@ -61,7 +69,6 @@ padding-right: 20px;
     </form>
 </div>
 <div class="col"></div> 
-
 <div class="col-md-2   d-flex justify-content-end ">
 <div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -144,13 +151,27 @@ padding-right: 20px;
 <div class="container">
 <div class="row text-theme1">
 <div class="col-md-3 mx-auto">
-<button class="btn btn-tranparent btn-block text-theme1" onclick="search('dokumen_penunjang');">Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
+<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
+<input type="hidden" name="kategori" value="dokumen_penunjang">    
+<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
+</form>
 </div>
 <div class="col-md-3 mx-auto">
-<button class="btn btn-tranparent btn-block text-theme1" onclick="search('dokumen_utama');">Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+
+<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
+<input type="hidden" name="kategori" value="dokumen_utama">    
+<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+</form>
+
 </div>
 <div class="col-md-3 mx-auto">
-<button class="btn btn-tranparent btn-block text-theme1" onclick="search('data_client');">Data Client <i class="fas fa-users"></i></button>
+<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
+<input type="hidden" name="kategori" value="data_client">    
+<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Data Client <i class="fas fa-users"></i></button>
+</form>
 </div>
 </div>
 </div>
@@ -192,9 +213,30 @@ echo  $this->db->get()->num_rows();
 </div>
 </div>
 </div>    
+</div>
+<!-- Modal -->
+<div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="embed-responsive embed-responsive-16by9">
+     <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
+    </div>
+      </div>
+    </div>
+  </div>
 </div>    
+        
 </div>    
 
+
+    
 </body>
 
 <script>
@@ -220,18 +262,34 @@ return $( "<li>" )
 };
 });*/
  
-function set_page(){
+function LihatFile(jenis_dokumen,no_dokumen){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&jenis_dokumen="+jenis_dokumen+"&no_dokumen="+no_dokumen,
+url:"<?php echo base_url('DataArsip/BukaFile'); ?>",
+success:function(data){
+$('#DataModal').modal('show');
+}
+});
+//alert(no_dokumen);        
+//$('#DataModal').modal('show');
+} 
+ 
+function set_page(){   
 $('#pagination').on('click','a',function(e){
 e.preventDefault(); 
 var pageno = $(this).attr('href');
 next_page(pageno);
 });
 }
+
+
+
 function next_page(url){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 var kata_kunci        = '<?php echo $this->input->get('search') ?>';
-var kategori          = '<?php echo $this->input->get('kategori') ?>';
-
+var kategori          = "<?php echo $this->input->get('kategori') ?>";
 $.ajax({
 type:"get",
 data:"token="+token+"&search="+kata_kunci+"&kategori="+kategori,
@@ -243,19 +301,12 @@ set_page();
 });
 }
 
-function search(kat){
+function search(){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 var kata_kunci        = '<?php echo $this->input->get('search') ?>';
-var url = "<?php echo base_url('DataArsip/ProsesPencarian/') ?>"; 
-
-if(kat == 'undefined'){
-var kategori          = '<?php echo $this->input->get('kategori') ?>';
-
-}else{
-var kategori        =kat;
-}    
-
- $.ajax({
+var url               = "<?php echo base_url('DataArsip/ProsesPencarian/') ?>"; 
+var kategori          = "<?php echo $this->input->get('kategori') ?>";
+$.ajax({
 type:"get",
 data:"token="+token+"&search="+kata_kunci+"&kategori="+kategori,
 url:url,
@@ -264,6 +315,7 @@ $(".hasil_pencarian").html(data);
 set_page();
 }
 });
+
 }
 
 function check_akses(model,model2){

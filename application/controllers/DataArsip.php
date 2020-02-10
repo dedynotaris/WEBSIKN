@@ -92,7 +92,10 @@ if($this->input->get('search')){
 $this->load->view('umum/V_header');
 $this->load->view('DataArsip/HasilPencarian');
 }else{
-    redirect(base_url());    
+//    redirect(base_url());    
+
+    echo print_r($this->input->get());
+    
 }    
 }
 
@@ -160,7 +163,7 @@ Nama Dokumen    : ".$penunjang['nama_dokumen']."<br>
 Nama Client     : ".$penunjang['nama_client']."</br>
 Hasil Pencarian : ".str_replace('_', ' ',$penunjang['nama_meta'])."  ".str_replace('_', ' ',$penunjang['value_meta'])."</br>
 </div>
-<div class='col text-center'>
+<div class='col text-center' onclick=LihatFile('dokumen_penunjang','".$penunjang['no_berkas']."');>
 ";
 if($ext =="docx" || $ext =="doc" ){
   echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
@@ -312,6 +315,16 @@ $data_client = $this->M_data_arsip->HasilPencarianDataClient($input,$config['per
   echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";    
 
+}
+
+public function BukaFile(){
+if($this->input->post()){
+$input = $this->input->post();
+echo print_r($input);
+
+}else{
+redirect(404);
+}
 }
 
 }
