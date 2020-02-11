@@ -231,7 +231,7 @@ foreach ($dokumen_utama->result_array() as $utama){
   Nama Client     : ".$utama['nama_client']."</br>
   Hasil Pencarian : ".$utama['nama_berkas']."</br>
   </div>
-  <div class='col text-center'>
+  <div class='col text-center' onclick=LihatFile('dokumen_utama','".$utama['id_data_dokumen_utama']."') >
   ";
 
 $ext = pathinfo($utama['nama_file'], PATHINFO_EXTENSION);
@@ -320,8 +320,70 @@ echo "</div>";
 public function BukaFile(){
 if($this->input->post()){
 $input = $this->input->post();
-echo print_r($input);
+if($input['jenis_dokumen']== "dokumen_penunjang"){
+  $this->db->select('data_meta_berkas.nama_meta,'
+  . 'data_meta_berkas.value_meta,'
+  . 'nama_dokumen.nama_dokumen,'
+  . 'data_meta_berkas.no_berkas,'
+  . 'data_client.nama_client,'
+  . 'data_client.nama_folder,'
+  . 'data_berkas.nama_berkas');
+$this->db->from('data_meta_berkas');
+$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->group_by('data_meta_berkas.no_berkas');
+$this->db->where('data_meta_berkas.no_berkas',$input['no_dokumen']);
+$query = $this->db->get()->row_array();
 
+$ext = pathinfo($query['nama_berkas'], PATHINFO_EXTENSION);
+if($ext =="docx" || $ext =="doc" ){
+$data[] =array(
+'status'   =>'Dokumen Download',
+'messages' =>$query['nama_dokumen'].' Dokumen Berhasil di download',
+'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']),
+);
+}else{
+$data[] = array(
+'titel'  =>$query['nama_dokumen']." ".$query['nama_client'],
+'link'   =>base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']),
+'status' =>'Dokumen Lihat'
+);
+}
+}else if($input['jenis_dokumen'] == 'dokumen_utama'){
+  $this->db->select('data_dokumen_utama.nama_berkas,'
+  . 'data_dokumen_utama.tanggal_akta,'
+  . 'data_dokumen_utama.nama_file,'
+  . 'data_client.nama_client,'
+  . 'data_client.nama_folder,'
+  . 'data_dokumen_utama.id_data_dokumen_utama,'
+  . 'data_dokumen_utama.jenis');
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('data_dokumen_utama.id_data_dokumen_utama',$input['no_dokumen']);
+$query = $this->db->get()->row_array();
+
+  $ext = pathinfo($query['nama_file'], PATHINFO_EXTENSION);
+  if($ext =="docx" || $ext =="doc" ){
+  $data[] =array(
+  'status'   =>'Dokumen Download',
+  'messages' =>$query['jenis'].' Dokumen Berhasil di download',
+  'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
+  );
+  }else{
+  $data[] = array(
+  'titel'  =>$query['nama_file']." ".$query['nama_client'],
+  'link'   =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
+  'status' =>'Dokumen Lihat'
+  );
+  }
+  
+
+
+}
+echo json_encode($data);
 }else{
 redirect(404);
 }

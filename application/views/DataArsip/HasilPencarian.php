@@ -17,17 +17,11 @@ border: 1px solid #ced4da;
 border-radius: 2.25rem;
 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-
-
 .form-search:hover {
 -webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 -moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
-
 }
-
-
-
 .ui-autocomplete {
 max-height: 500px;
 overflow-y: auto;
@@ -37,19 +31,19 @@ overflow-x: hidden;
 padding-right: 20px;
 }
 .shadow-sticky{
-    
     box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
 }        
 .input-group-append {
     margin-left: -41px;
-    
-    
 } 
-
 form {
     display: block;
     margin-top: 0em;
     margin-block-end: 0em;
+}
+.aktifmenu{
+ background-color:darkcyan;
+ color:"#fff"; 
 }
 </style>
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
@@ -149,24 +143,24 @@ form {
 
 <div class="container-fluid" style="background-color:#D3D3D3;">
 <div class="container">
-<div class="row text-theme1">
-<div class="col-md-3 mx-auto">
+<div class="row ">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-light"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_penunjang">    
 <button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
 </form>
 </div>
-<div class="col-md-3 mx-auto">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-light"; } ?>">
 
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_utama">    
-<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+<button type="submit" class="btn btn-tranparent btn-block " >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
 </form>
 
 </div>
-<div class="col-md-3 mx-auto">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'data_client'){echo "bg-light"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="data_client">    
@@ -219,15 +213,15 @@ echo  $this->db->get()->num_rows();
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="judul">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
        <div class="embed-responsive embed-responsive-16by9">
-     <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
-    </div>
+       <iframe class="embed-responsive-item data_link" src=""  allowfullscreen></iframe>
+      </div>
       </div>
     </div>
   </div>
@@ -269,11 +263,30 @@ type:"post",
 data:"token="+token+"&jenis_dokumen="+jenis_dokumen+"&no_dokumen="+no_dokumen,
 url:"<?php echo base_url('DataArsip/BukaFile'); ?>",
 success:function(data){
+var r = JSON.parse(data);
+if(r[0].status == 'Dokumen Lihat'){
+$("#judul").html(r[0].titel);
+$(".data_link").prop("src",r[0].link);
 $('#DataModal').modal('show');
+}else{
+window.location.href=r[0].link;
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: 'success',
+title: r[0].messages,
+});
+}
+
 }
 });
-//alert(no_dokumen);        
-//$('#DataModal').modal('show');
 } 
  
 function set_page(){   
