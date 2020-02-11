@@ -87,14 +87,12 @@ redirect(404);
 }
 
 public function Pencarian(){
-if($this->input->get('search')){    
+if($this->input->get('search') && $this->input->get('kategori')){    
     
 $this->load->view('umum/V_header');
 $this->load->view('DataArsip/HasilPencarian');
 }else{
-//    redirect(base_url());    
-
-    echo print_r($this->input->get());
+    redirect(base_url());    
     
 }    
 }
@@ -130,10 +128,10 @@ $config['display_pages'] = TRUE;
 $from = $this->uri->segment(3);    
 
 // Membuat Style pagination untuk BootStrap v4
-$config['first_link']       = 'First';
-$config['last_link']        = 'Last';
-$config['next_link']        = 'Next';
-$config['prev_link']        = 'Prev';
+$config['first_link']       = 'Awal';
+$config['last_link']        = 'Terakhir';
+$config['next_link']        = 'Selanjutnya';
+$config['prev_link']        = 'Sebelumnya';
 $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
 $config['full_tag_close']   = '</ul></nav></div>';
 $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
@@ -200,10 +198,10 @@ $config['display_pages'] = TRUE;
 $from = $this->uri->segment(3);    
 
 // Membuat Style pagination untuk BootStrap v4
-$config['first_link']       = 'First';
-$config['last_link']        = 'Last';
-$config['next_link']        = 'Next';
-$config['prev_link']        = 'Prev';
+$config['first_link']       = 'Awal';
+$config['last_link']        = 'Terakhir';
+$config['next_link']        = 'Selanjutnya';
+$config['prev_link']        = 'Sebelumnya';
 $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
 $config['full_tag_close']   = '</ul></nav></div>';
 $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
@@ -268,10 +266,10 @@ $config['display_pages'] = TRUE;
 $from = $this->uri->segment(3);    
 
 // Membuat Style pagination untuk BootStrap v4
-$config['first_link']       = 'First';
-$config['last_link']        = 'Last';
-$config['next_link']        = 'Next';
-$config['prev_link']        = 'Prev';
+$config['first_link']       = 'Awal';
+$config['last_link']        = 'Terakhir';
+$config['next_link']        = 'Selanjutnya';
+$config['prev_link']        = 'Sebelumnya';
 $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-left">';
 $config['full_tag_close']   = '</ul></nav></div>';
 $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
@@ -338,16 +336,22 @@ $this->db->where('data_meta_berkas.no_berkas',$input['no_dokumen']);
 $query = $this->db->get()->row_array();
 
 $ext = pathinfo($query['nama_berkas'], PATHINFO_EXTENSION);
-if($ext =="docx" || $ext =="doc" ){
+if($ext =="docx" || $ext =="doc" || $ext =="pptx" ){
 $data[] =array(
 'status'   =>'Dokumen Download',
 'messages' =>$query['nama_dokumen'].' Dokumen Berhasil di download',
 'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']),
 );
-}else{
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
 $data[] = array(
 'titel'  =>$query['nama_dokumen']." ".$query['nama_client'],
-'link'   =>base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']),
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url('DataArsip/BukaGambar/dokumen_penunjang/'.$query['no_berkas']).'"></iframe>',
+'status' =>'Dokumen Lihat'
+);
+}else{    
+$data[] = array(
+'titel'  =>$query['nama_dokumen']." ".$query['nama_client'],
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'" ></iframe>',
 'status' =>'Dokumen Lihat'
 );
 }
@@ -374,7 +378,7 @@ $query = $this->db->get()->row_array();
   );
   }else{
   $data[] = array(
-  'titel'  =>$query['nama_file']." ".$query['nama_client'],
+  'titel'  =>$query['jenis']." ".$query['nama_client'],
   'link'   =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
   'status' =>'Dokumen Lihat'
   );
@@ -386,6 +390,31 @@ $query = $this->db->get()->row_array();
 echo json_encode($data);
 }else{
 redirect(404);
+}
+}
+
+public function BukaGambar($jenis_dokumen,$no_berkas){
+if($jenis_dokumen == 'dokumen_penunjang'){
+$this->db->select('data_meta_berkas.nama_meta,'
+  . 'data_meta_berkas.value_meta,'
+  . 'nama_dokumen.nama_dokumen,'
+  . 'data_meta_berkas.no_berkas,'
+  . 'data_client.nama_client,'
+  . 'data_client.nama_folder,'
+  . 'data_berkas.nama_berkas');
+$this->db->from('data_meta_berkas');
+$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->group_by('data_meta_berkas.no_berkas');
+$this->db->where('data_meta_berkas.no_berkas',$no_berkas);
+$query = $this->db->get()->row_array();    
+echo '​<div class="container" >'
+. '<div class="row">'
+. '<div class="col-md-6">'
+. '<img  src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'">'
+. '​</div></div></div>';
 }
 }
 

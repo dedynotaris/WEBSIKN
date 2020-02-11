@@ -1,4 +1,4 @@
-<body onload="search();">
+<body onload="search();">    
 <div class="container-fluid bg-light " id='navbar'>
 <div class="row">
 <style>
@@ -41,10 +41,24 @@ form {
     margin-top: 0em;
     margin-block-end: 0em;
 }
-.aktifmenu{
- background-color:darkcyan;
- color:"#fff"; 
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.1rem cornflowerblue;
 }
+.btn:hover {
+    color: cornflowerblue;
+    text-decoration: none;
+}
+.bg-lightaktif {
+    background-color: #f8f9fa !important; 
+     color: cornflowerblue;
+    }
+    
+.bg-lightaktif .btn {
+     color: cornflowerblue;
+    }
+  
+    
 </style>
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
 <a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
@@ -66,7 +80,7 @@ form {
 <div class="col-md-2   d-flex justify-content-end ">
 <div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-<i class="fas fa-th fa-1x"></i>
+    <i style="font-size: 1.4em;" class="fas fa-th text-theme1"></i>
 </button>
 <div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
 <div class="row text-theme1 text-center text-lowercase">
@@ -116,7 +130,6 @@ form {
 
 <div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
 <div class="text-center px-6 py-6 ">
-
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
 <img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
@@ -133,38 +146,36 @@ form {
 <div class="dropdown-divider"></div>
 <a href='<?php echo base_url('DataArsip/keluar') ?>'><button class="btn btn-light btn-md btn-block">Keluar <i class="fas fa-sign-out-alt"></i> </button></a>
 </div>    
-
 </div>
 </div> 
 </div>
 </div>  
 </div>
 
-
 <div class="container-fluid" style="background-color:#D3D3D3;">
 <div class="container">
 <div class="row ">
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-light"; } ?>">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-lightaktif"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_penunjang">    
 <button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
 </form>
 </div>
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-light"; } ?>">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-lightaktif"; } ?>">
 
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_utama">    
-<button type="submit" class="btn btn-tranparent btn-block " >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
 </form>
 
 </div>
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'data_client'){echo "bg-light"; } ?>">
+<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'data_client'){echo "bg-lightaktif"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="data_client">    
-<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Data Client <i class="fas fa-users"></i></button>
+<button type="submit" class="btn btn-tranparent btn-block " >Data Client <i class="fas fa-users"></i></button>
 </form>
 </div>
 </div>
@@ -219,9 +230,9 @@ echo  $this->db->get()->num_rows();
         </button>
       </div>
       <div class="modal-body">
-       <div class="embed-responsive embed-responsive-16by9">
-       <iframe class="embed-responsive-item data_link" src=""  allowfullscreen></iframe>
-      </div>
+       <div class="embed-responsive embed-responsive-16by9 data_link">
+    
+       </div>
       </div>
     </div>
   </div>
@@ -229,7 +240,16 @@ echo  $this->db->get()->num_rows();
         
 </div>    
 
-
+    <div class="container-fluid card-footer ">
+        <div class="container">
+        <div class="row">
+            <div class="col text-theme1">
+                &COPY; 2020 
+                Notaris Dewantari Handayani SH.MPA
+            </div>
+        </div>
+        </div>
+    </div>
     
 </body>
 
@@ -266,7 +286,7 @@ success:function(data){
 var r = JSON.parse(data);
 if(r[0].status == 'Dokumen Lihat'){
 $("#judul").html(r[0].titel);
-$(".data_link").prop("src",r[0].link);
+$(".data_link").html(r[0].link);
 $('#DataModal').modal('show');
 }else{
 window.location.href=r[0].link;

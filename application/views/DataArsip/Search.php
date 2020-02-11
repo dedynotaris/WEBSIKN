@@ -48,7 +48,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="col text-right bg-transparent   m-2">
 <div class="btn-group dropup mr-1">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-<i class="fas fa-th fa-1x"></i>
+<i style="font-size: 1.4em;" class="fas fa-th  text-theme1"></i>
 </button>
 <div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
 <div class="row text-theme1 text-center text-lowercase">
