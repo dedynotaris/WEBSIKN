@@ -150,7 +150,7 @@ $config['last_tagl_close']  = '</span></li>';
 $this->pagination->initialize($config);   
 
 $data_dokumen_penunjang  = $this->M_data_arsip->HasilPencarianDokumenPenunjang($input,$config['per_page'],$from);
-
+if($data_dokumen_penunjang->num_rows() > 0){
 foreach ($data_dokumen_penunjang->result_array() as $penunjang){
 $ext = pathinfo($penunjang['nama_berkas'], PATHINFO_EXTENSION);
 echo "<div class='row  mt-2 mb-2'>
@@ -184,6 +184,13 @@ echo "
 }
 echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";
+}else{
+echo "<div class='row  mt-2 mb-2'>
+<div class='col mt-5 text-center justify-content-center'>";
+echo "<img style='width:auto; height:100px;' src=". base_url('assets/404.png').">";    
+echo"</div></div>";
+
+}
 }
 
 public function HasilPencarianDokumenUtama($input){
@@ -220,6 +227,7 @@ $config['last_tagl_close']  = '</span></li>';
 $this->pagination->initialize($config);       
 
 $dokumen_utama = $this->M_data_arsip->HasilPencarianDokumenUtama($input,$config['per_page'],$from);
+if($dokumen_utama->num_rows() > 0){
 foreach ($dokumen_utama->result_array() as $utama){
   echo "<div class='row  mt-2 mb-2'>
   <div class='col'>
@@ -251,6 +259,13 @@ echo "
 }
 echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";    
+}else{
+echo "<div class='row  mt-2 mb-2'>
+<div class='col mt-5 text-center justify-content-center'>";
+echo "<img style='width:auto; height:100px;' src=". base_url('assets/404.png').">";    
+echo"</div></div>";
+
+}
 }
 
 public function HasilPencarianClient($input){
@@ -289,7 +304,8 @@ $this->pagination->initialize($config);
     
 
 $data_client = $this->M_data_arsip->HasilPencarianDataClient($input,$config['per_page'],$from);
- foreach ($data_client->result_array() as $client){
+ if($data_client->num_rows() > 0){
+foreach ($data_client->result_array() as $client){
 
   echo "<div class='row  mt-2 mb-2'>
   <div class='col'>
@@ -312,6 +328,13 @@ $data_client = $this->M_data_arsip->HasilPencarianDataClient($input,$config['per
   }
   echo " <div id='pagination'>".$this->pagination->create_links()."</div>";
 echo "</div>";    
+}else{
+echo "<div class='row  mt-2 mb-2'>
+<div class='col mt-5 text-center justify-content-center'>";
+echo "<img style='width:auto; height:100px;' src=". base_url('assets/404.png').">";    
+echo"</div></div>";
+
+}
 
 }
 

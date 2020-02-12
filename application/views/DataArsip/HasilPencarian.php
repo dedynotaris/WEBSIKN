@@ -31,56 +31,56 @@ overflow-x: hidden;
 padding-right: 20px;
 }
 .shadow-sticky{
-    box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
 }        
 .input-group-append {
-    margin-left: -41px;
+margin-left: -41px;
 } 
 form {
-    display: block;
-    margin-top: 0em;
-    margin-block-end: 0em;
+display: block;
+margin-top: 0em;
+margin-block-end: 0em;
 }
 .btn:focus, .btn.focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.1rem cornflowerblue;
+outline: 0;
+box-shadow: 0 0 0 0.1rem cornflowerblue;
 }
 .btn:hover {
-    color: cornflowerblue;
-    text-decoration: none;
+color: cornflowerblue;
+text-decoration: none;
 }
 .bg-lightaktif {
-    background-color: #f8f9fa !important; 
-     color: cornflowerblue;
-    }
-    
+background-color: #f8f9fa !important; 
+color: cornflowerblue;
+}
+
 .bg-lightaktif .btn {
-     color: cornflowerblue;
-    }
-  
-    
+color: cornflowerblue;
+}
+
+
 </style>
 <div class="col-md-2 text-right d-flex justify-content-start p-2">
 <a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
 </div>
 <div class="col-md-6  align-items-center d-flex justify-content-start">
-    <form class="input-group " method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-            <div class="input-group col">
-                <input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
-            <input type="hidden" name="kategori" value="dokumen_penunjang">
-           <span class="input-group-append">
-            <button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
-                    <i class="fa fa-search"></i>
-              </button>
-            </span>
-        </div>
-    </form>
+<form class="input-group " method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<div class="input-group col">
+<input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
+<input type="hidden" name="kategori" value="dokumen_penunjang">
+<span class="input-group-append">
+<button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+<i class="fa fa-search"></i>
+</button>
+</span>
+</div>
+</form>
 </div>
 <div class="col"></div> 
 <div class="col-md-2   d-flex justify-content-end ">
 <div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i style="font-size: 1.4em;" class="fas fa-th text-theme1"></i>
+<i style="font-size: 1.4em;" class="fas fa-th text-theme1"></i>
 </button>
 <div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
 <div class="row text-theme1 text-center text-lowercase">
@@ -221,36 +221,50 @@ echo  $this->db->get()->num_rows();
 </div>
 <!-- Modal -->
 <div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="judul">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-       <div class="embed-responsive embed-responsive-16by9 data_link">
-    
-       </div>
-      </div>
-    </div>
-  </div>
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="judul">Modal title</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<div class="embed-responsive embed-responsive-16by9 data_link">
+
+</div>
+</div>
+</div>
+</div>
 </div>    
-        
 </div>    
 
-    <div class="container-fluid card-footer ">
-        <div class="container">
-        <div class="row">
-            <div class="col text-theme1">
-                &COPY; 2020 
-                Notaris Dewantari Handayani SH.MPA
-            </div>
-        </div>
-        </div>
+    <div class="container-fluid bg-light p-3  " style="margin-top:7%;">
+<div class="container">
+<div class ="row p-2 " style="background-color:'#ccc;'">
+    <div class="col ">Total Dokumen Penunjang<hr>
+        <h1><?php echo number_format($this->db->get('data_berkas')->num_rows()); ?></h1>
     </div>
-    
+    <div class="col">Total Dokumen Utama<hr>
+         <h1><?php echo number_format($this->db->get('data_dokumen_utama')->num_rows()); ?></h1>
+   </div>
+    <div class="col">Total Data Client<hr>
+         <h1><?php echo number_format($this->db->get('data_client')->num_rows()); ?></h1>
+   </div>
+</div>
+</div>
+</div>
+    <div class="container-fluid" style="background-color:#D3D3D3;">
+        <div class="container">       
+<div class="row " >
+<div class="col p-2 m-2 text-theme1">
+&COPY; 2020 
+Notaris Dewantari Handayani SH.MPA
+</div>
+</div>
+</div>  
+</div>
+
 </body>
 
 <script>
@@ -275,7 +289,7 @@ return $( "<li>" )
 .appendTo( ul );
 };
 });*/
- 
+
 function LihatFile(jenis_dokumen,no_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -308,7 +322,7 @@ title: r[0].messages,
 }
 });
 } 
- 
+
 function set_page(){   
 $('#pagination').on('click','a',function(e){
 e.preventDefault(); 
