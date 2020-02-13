@@ -315,7 +315,7 @@ foreach ($data_client->result_array() as $client){
   Jenis Client    : ".$client['jenis_client']."<br>
   No identitas    : ".$client['no_identitas']."<br>
   </div>
-  <div class='col text-center'>
+  <div class='col text-center' onclick=LihatClient('".$client['no_client']."')>
   ";
   if($client['jenis_client'] =="Badan Hukum" ){
     echo"<img style='width:80px; height:80px;'  src='".base_url('assets/badanhukumicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
@@ -341,6 +341,7 @@ echo"</div></div>";
 public function BukaFile(){
 if($this->input->post()){
 $input = $this->input->post();
+/* dokumen penunjang */
 if($input['jenis_dokumen']== "dokumen_penunjang"){
   $this->db->select('data_meta_berkas.nama_meta,'
   . 'data_meta_berkas.value_meta,'
@@ -378,6 +379,8 @@ $data[] = array(
 'status' =>'Dokumen Lihat'
 );
 }
+/* dokumen utama */
+
 }else if($input['jenis_dokumen'] == 'dokumen_utama'){
   $this->db->select('data_dokumen_utama.nama_berkas,'
   . 'data_dokumen_utama.tanggal_akta,'
@@ -393,21 +396,26 @@ $this->db->where('data_dokumen_utama.id_data_dokumen_utama',$input['no_dokumen']
 $query = $this->db->get()->row_array();
 
   $ext = pathinfo($query['nama_file'], PATHINFO_EXTENSION);
-  if($ext =="docx" || $ext =="doc" ){
-  $data[] =array(
-  'status'   =>'Dokumen Download',
-  'messages' =>$query['jenis'].' Dokumen Berhasil di download',
-  'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
-  );
-  }else{
-  $data[] = array(
-  'titel'  =>$query['jenis']." ".$query['nama_client'],
-  'link'   =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
-  'status' =>'Dokumen Lihat'
-  );
-  }
   
-
+ if($ext =="docx" || $ext =="doc" || $ext =="pptx" ){
+$data[] =array(
+'status'   =>'Dokumen Download',
+'messages' =>$query['jenis'].' Dokumen Berhasil di download',
+'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_file']),
+);
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
+$data[] = array(
+'titel'  =>$query['jenis']." ".$query['nama_client'],
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_file']).'"></iframe>',
+'status' =>'Dokumen Lihat'
+);
+}else{    
+$data[] = array(
+'titel'  =>$query['jenis']." ".$query['nama_client'],
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_file']).'" ></iframe>',
+'status' =>'Dokumen Lihat'
+);
+}
 
 }
 echo json_encode($data);
@@ -439,6 +447,123 @@ echo '​<div class="container" >'
 . '<img  src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'">'
 . '​</div></div></div>';
 }
+}
+
+public function LihatClient(){
+if($this->input->post()){
+$input  = $this->input->post();
+
+$this->db->select('data_client.nama_client,'
+  . 'data_client.nama_folder,'
+  . 'data_client.no_client,'
+  . 'data_pekerjaan.no_pekerjaan,'
+  . 'data_pekerjaan.tanggal_dibuat,'
+  . 'user.nama_lengkap as asisten,'
+  . 'data_jenis_pekerjaan.nama_jenis');
+$this->db->from('data_client');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_client = data_client.no_client');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
+$this->db->where('data_client.no_client',$input['no_client']);
+$query = $this->db->get();    
+$static  = $query->row_array();    
+
+
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'data_berkas.no_berkas');
+$this->db->from('data_client');
+$this->db->join('data_berkas', 'data_berkas.no_client = data_client.no_client');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->where('data_client.no_client',$input['no_client']);
+
+$penunjang = $this->db->get();    
+
+$html = "<div class='row'>"
+        . "<div class='col-md-8'>";
+$html .="<table class='table  table-sm table-bordered table-hover'>"
+        . "<tr>"
+        . "<td>Jenis Pekerjaan</td>"
+        . "<td>Dokumen Utama</td>"
+        . "<td>Tanggal </td>"
+        . "<td>Asisten</td>"
+        . "<td>Pihak Terlibat</td>"
+        . "</tr>";
+    
+foreach ($query->result_array() as $pekerjaan){
+$html .="<tr id='".$pekerjaan['no_pekerjaan']."'>"
+      ."<td>".$pekerjaan['nama_jenis']."</td>"
+      ."<td><button onclick=LihatDokumenUtama('".$pekerjaan['no_pekerjaan']."','".$pekerjaan['no_client']."'); class='btn btn-light btn-sm btn-block btnutama".$pekerjaan['no_pekerjaan']."'>Lihat <i class='fa fa-eye'></i> </button></td>"
+      ."<td>".$pekerjaan['tanggal_dibuat']."</td>"
+      ."<td>".$pekerjaan['asisten']."</td>"
+      ."<td><button class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
+      . "<tr>";    
+}
+
+$html  .="</table></div>";
+
+$html .="<div class='col'>"
+        . "<table class='table  table-sm table-bordered table-hover'>"
+        . "<tr>"
+        . "<td>Jenis Dokumen</td>"
+        . "<td>Aksi</td>"
+        . "</tr>";
+
+foreach ($penunjang->result_array() as $penunjang){
+   $html .="<tr >"
+      ."<td>".$penunjang['nama_dokumen']."</td>"
+      ."<td><button class='btn btn-light btn-sm btn-block'><i class='fa fa-download'></i> </button></td>"
+      . "<tr>";    
+}
+
+$html .="</div></div></table>";
+
+$data[] =array(
+'titel'     =>$static['nama_client'],    
+'linkhtml'  => $html,
+);
+
+echo json_encode($data);
+    
+}else{
+redirect(404);    
+}
+}
+
+function LihatDokumenUtama(){
+if($this->input->post()){
+$input = $this->input->post();
+         $this->db->select('data_dokumen_utama.jenis,'
+                            . 'data_dokumen_utama.tanggal_akta,'
+                            . 'data_dokumen_utama.no_akta');
+$utama  = $this->db->get_where('data_dokumen_utama',array('no_pekerjaan'=>$input['no_pekerjaan']));
+
+$data = "<tr id='toggle".$input['no_pekerjaan']."'><td colspan='5'>";
+$data .="<table class='table  table-sm table-bordered table-hover bg-cuccess'>"
+        . "<tr>"
+        . "<td colspan='5' class='text-center'>Dokumen Utama</td>"
+        . "</tr>"
+        . "<tr>"
+        . "<td>Jenis </td>"
+        . "<td>No Akta</td>"
+        . "<td>Tanggal Akta</td>"
+        . "<td>Aksi</td>"
+        . "</tr>";
+
+foreach ($utama->result_array() as $a){
+$data .="<tr>"
+        . "<td>".$a['jenis']."</td>"
+        . "<td>".$a['no_akta']."</td>"
+        . "<td>".$a['tanggal_akta']."</td>"
+        . "<td><button class='btn btn-light btn-sm btn-block'><i class='fa fa-download'></i> </button></td>"
+        . "</tr>";    
+}
+      
+$data .="</table>"; 
+        
+echo $data;    
+}else{
+redirect(404);    
+}    
 }
 
 }

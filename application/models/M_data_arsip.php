@@ -88,6 +88,7 @@ return $dokumen_utama;
 public function HasilPencarianDataClient($input,$perpage,$from){
 $this->db->select('data_client.nama_client,'
 . 'data_client.jenis_client,'
+. 'data_client.no_client,'
 . 'data_client.no_identitas');
 $this->db->from('data_client');
 $this->db->like('data_client.nama_client',$input['search']);

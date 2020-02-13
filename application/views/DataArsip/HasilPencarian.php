@@ -219,30 +219,12 @@ echo  $this->db->get()->num_rows();
 </div>
 </div>    
 </div>
-<!-- Modal -->
-<div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="judul">Modal title</h5>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body">
-<div class="embed-responsive embed-responsive-16by9 data_link">
-
-</div>
-</div>
-</div>
-</div>
-</div>    
 </div>    
 
     <div class="container-fluid bg-light p-3  " style="margin-top:7%;">
 <div class="container">
 <div class ="row p-2 " style="background-color:'#ccc;'">
-    <div class="col ">Total Dokumen Penunjang<hr>
+    <div class="col-md-7 ">Total Dokumen Penunjang<hr>
         <h1><?php echo number_format($this->db->get('data_berkas')->num_rows()); ?></h1>
     </div>
     <div class="col">Total Dokumen Utama<hr>
@@ -264,31 +246,50 @@ Notaris Dewantari Handayani SH.MPA
 </div>
 </div>  
 </div>
+    
+</div>
+    
+    
+
+<!-- Modal -->
+<div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" id="judul">Modal title</h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<div class="embed-responsive embed-responsive-16by9 data_link">
+
+</div>
+</div>
+</div>
+</div>
+</div>    
+</div>    
+<!-- Modal -->
+<div class="modal fade" id="LihatClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" id="titelclient"></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body lihat_client">
+
+</div>
+</div>
+</div>
+</div>    
 
 </body>
 
 <script>
-/*$( function() {
-$( "#project" ).autocomplete({
-minLength: 3,
-source:'<?php echo site_url('DataArsip/cari_dokumen') ?>',
-focus: function( event, ui ) {
-$( "#project" ).val( ui.item.value );
-return false;
-},
-select: function( event, ui ) {
-$( "#project" ).val(ui.item.label );
-$( "#project-description" ).html( ui.item.desc );
-$(this).closest("form").submit()
-
-return false;
-}
-}).autocomplete( "instance" )._renderItem = function( ul, item ) {
-return $( "<li>" )
-.append( "<div>" + item.label+ "<br>"+item.nama_client+" <br> "+item.nama_dokumen+"<br>" + item.nama_meta + " : "+item.value_meta+ "</div>" )
-.appendTo( ul );
-};
-});*/
 
 function LihatFile(jenis_dokumen,no_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -415,4 +416,41 @@ navbar.classList.remove("sticky-top")
 navbar.classList.remove("shadow-sticky")
 }
 }
+
+function LihatClient(no_client){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client,
+url:"<?php echo base_url('DataArsip/LihatClient'); ?>",
+success:function(data){
+var r = JSON.parse(data);
+
+$("#titelclient").html(r[0].titel);
+$(".lihat_client").html(r[0].linkhtml);
+$('#LihatClient').modal('show');
+
+}
+});
+}
+function LihatDokumenUtama(no_pekerjaan,no_client){
+var $attrib = $("#"+no_pekerjaan);
+if($('#toggle'+no_pekerjaan).length > 0 ){
+$('#toggle'+no_pekerjaan).slideUp("slow").remove();
+$(".btnutama"+no_pekerjaan).html("Lihat <i class='fa fa-eye'></i>");
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('DataArsip/LihatDokumenUtama'); ?>",
+success:function(data){
+$("#"+no_pekerjaan).slideDown().after(data);
+$(".btnutama"+no_pekerjaan).html("Tutup <i class='fa fa-times-circle'></i>");
+}
+});
+}    
+
+}
+
 </script>
