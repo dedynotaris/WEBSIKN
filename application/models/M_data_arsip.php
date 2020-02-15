@@ -91,6 +91,7 @@ $this->db->select('data_client.nama_client,'
 . 'data_client.no_client,'
 . 'data_client.no_identitas');
 $this->db->from('data_client');
+$this->db->order_by('data_client.no_client','DESC');
 $this->db->like('data_client.nama_client',$input['search']);
 $data_client = $this->db->get('',$perpage,$from);
 

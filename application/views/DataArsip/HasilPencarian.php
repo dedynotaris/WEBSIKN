@@ -248,8 +248,40 @@ Notaris Dewantari Handayani SH.MPA
 </div>
     
 </div>
-    
-    
+<!-- Modal -->
+<div class="modal fade" id="LihatClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header ">
+<h6 class="modal-title" id="titelclient"></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+    <div class="modal-body lihat_client overflow-auto" style="max-height:500px;">
+
+</div>
+</div>
+</div>
+</div>        
+
+<!-- Modal keterlibatan -->
+<div class="modal fade" id="ModalKeterlibatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header ">
+<h6 class="modal-title" id="titelterlibat"></h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+    <div class="modal-body lihat_keterlibatan overflow-auto" style="max-height:500px;">
+
+</div>
+</div>
+</div>
+</div>        
+
 
 <!-- Modal -->
 <div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -268,24 +300,8 @@ Notaris Dewantari Handayani SH.MPA
 </div>
 </div>
 </div>
-</div>    
-</div>    
-<!-- Modal -->
-<div class="modal fade" id="LihatClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h6 class="modal-title" id="titelclient"></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body lihat_client">
+</div>   
 
-</div>
-</div>
-</div>
-</div>    
 
 </body>
 
@@ -437,7 +453,7 @@ function LihatDokumenUtama(no_pekerjaan,no_client){
 var $attrib = $("#"+no_pekerjaan);
 if($('#toggle'+no_pekerjaan).length > 0 ){
 $('#toggle'+no_pekerjaan).slideUp("slow").remove();
-$(".btnutama"+no_pekerjaan).html("Lihat <i class='fa fa-eye'></i>");
+$(".btnutama"+no_pekerjaan).addClass("btn-light").removeClass( "btn-info" ).html("Lihat <i class='fa fa-eye'></i>");
 }else{
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -446,10 +462,63 @@ data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('DataArsip/LihatDokumenUtama'); ?>",
 success:function(data){
 $("#"+no_pekerjaan).slideDown().after(data);
-$(".btnutama"+no_pekerjaan).html("Tutup <i class='fa fa-times-circle'></i>");
+$(".btnutama"+no_pekerjaan).addClass("btn-info").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
 }
 });
 }    
+}
+
+
+function LihatTerlibat(no_pekerjaan,no_client){
+var $attrib = $("#"+no_pekerjaan);
+if($('#terlibat'+no_pekerjaan).length > 0 ){
+$('#terlibat'+no_pekerjaan).slideUp("slow").remove();
+$(".btnterlibat"+no_pekerjaan).addClass("btn-light").removeClass( "btn-primary" ).html("Lihat <i class='fa fa-eye'></i>");
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('DataArsip/LihatPihakTerlibat'); ?>",
+success:function(data){
+$("#"+no_pekerjaan).slideDown().after(data);
+$(".btnterlibat"+no_pekerjaan).addClass("btn-primary").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
+}
+});
+}    
+
+}
+function LihatKeterlibatan(no_client,no_client_awal){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_client_awal="+no_client_awal,
+url:"<?php echo base_url('DataArsip/LihatKeterlibatan'); ?>",
+success:function(data){
+var r = JSON.parse(data);
+
+$("#titelterlibat").html(r[0].titel);
+$(".lihat_keterlibatan").html(r[0].linkhtml);
+$('#ModalKeterlibatan').modal('show');
+
+}
+});
+
+}
+function LihatClientBaru(no_pekerjaan,no_client){
+Swal.fire({
+  text: "kamu yakin ingin berpindah client ?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Ya, Yakin!'
+}).then((result) => {
+  if (result.value) {
+    LihatClient(no_client);
+  $('#ModalKeterlibatan').modal('hide');
+}
+})
 
 }
 
