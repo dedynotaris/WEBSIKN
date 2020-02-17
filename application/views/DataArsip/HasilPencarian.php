@@ -506,6 +506,25 @@ $('#ModalKeterlibatan').modal('show');
 
 }
 function LihatClientBaru(no_pekerjaan,no_client){
+        
+var $attrib = $("#"+no_pekerjaan);
+if($('#terlibat'+no_pekerjaan).length > 0 ){
+$('#terlibat'+no_pekerjaan).slideUp("slow").remove();
+$(".btnterlibat"+no_pekerjaan).addClass("btn-light").removeClass( "btn-primary" ).html("Lihat <i class='fa fa-eye'></i>");
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('DataArsip/LihatPihakTerlibatKedua'); ?>",
+success:function(data){
+$("#"+no_pekerjaan).slideDown().after(data);
+$(".btnterlibat"+no_pekerjaan).addClass("btn-primary").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
+}
+});
+}    
+}
+function BukaClientBaru(no_client){
 Swal.fire({
   text: "kamu yakin ingin berpindah client ?",
   icon: 'warning',
@@ -518,8 +537,7 @@ Swal.fire({
     LihatClient(no_client);
   $('#ModalKeterlibatan').modal('hide');
 }
-})
-
+});
 }
 
 </script>

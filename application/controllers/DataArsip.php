@@ -346,7 +346,7 @@ if($input['jenis_dokumen']== "dokumen_penunjang"){
   $this->db->select('data_meta_berkas.nama_meta,'
   . 'data_meta_berkas.value_meta,'
   . 'nama_dokumen.nama_dokumen,'
-  . 'data_meta_berkas.no_berkas,'
+  . 'data_berkas.no_berkas,'
   . 'data_client.nama_client,'
   . 'data_client.nama_folder,'
   . 'data_berkas.nama_berkas');
@@ -424,7 +424,10 @@ redirect(404);
 }
 }
 
-public function BukaGambar($jenis_dokumen,$no_berkas){
+public function BukaGambar(){
+ $jenis_dokumen = $this->uri->segment(3);
+ $no_berkas     = $this->uri->segment(4);
+
 if($jenis_dokumen == 'dokumen_penunjang'){
 $this->db->select('data_meta_berkas.nama_meta,'
   . 'data_meta_berkas.value_meta,'
@@ -433,19 +436,20 @@ $this->db->select('data_meta_berkas.nama_meta,'
   . 'data_client.nama_client,'
   . 'data_client.nama_folder,'
   . 'data_berkas.nama_berkas');
-$this->db->from('data_meta_berkas');
-$this->db->join('data_berkas', 'data_berkas.no_berkas = data_meta_berkas.no_berkas');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_meta_berkas.no_nama_dokumen');
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_meta_berkas.no_pekerjaan');
+$this->db->from('data_berkas');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','left');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
 $this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
-$this->db->group_by('data_meta_berkas.no_berkas');
-$this->db->where('data_meta_berkas.no_berkas',$no_berkas);
+$this->db->where('data_berkas.no_berkas',$no_berkas);
 $query = $this->db->get()->row_array();    
 echo '​<div class="container" >'
 . '<div class="row">'
 . '<div class="col-md-6">'
 . '<img  src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'">'
 . '​</div></div></div>';
+
+
 }
 }
 
@@ -608,7 +612,54 @@ foreach ($data_pemilik->result_array() as $terlibat){
     if($terlibat['no_client'] != $input['no_client']){
        $data .="<tr>"
       . "<td>".$terlibat['nama_client']."</td>"
-      . "<td><button  onclick=LihatKeterlibatan('".$terlibat['no_client']."','".$input['no_client']."');  class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
+      . "<td><button  onclick=LihatKeterlibatan('".$terlibat['no_client']."','".$input['no_pekerjaan']."');  class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
+      . "</tr>";
+    }else if($data_pemilik->num_rows() < 2 ){
+         $data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+        
+    }
+    
+ }
+}else{
+     $data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+}
+ 
+    
+$data .="</table>"; 
+echo $data;    
+}else{
+redirect(404);    
+}    
+}
+
+public function LihatPihakTerlibatKedua(){
+if($this->input->post()){
+$input = $this->input->post();
+
+
+$this->db->select('data_client.nama_client,'
+        . 'data_client.no_client');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->where('data_pemilik.no_pekerjaan',$input['no_pekerjaan']);
+
+$data_pemilik = $this->db->get();  
+$static = $data_pemilik->row_array();
+$data = "<tr class='bg-primary' id='terlibat".$input['no_pekerjaan']."'><td colspan='5'>";
+$data .="<table class='table  table-sm table-bordered table-striped bg-cuccess'>"
+        . "<tr>"
+        . "<td colspan='5' class='text-center'>Pihak Terlibat</td>"
+        . "</tr>"
+        . "<tr>"
+        . "<th>Nama</th>"
+        . "<th>Aksi</th>"
+        . "</tr>";
+if($static['nama_client'] !=NULL){
+foreach ($data_pemilik->result_array() as $terlibat){
+    if($terlibat['no_client'] != $input['no_client']){
+       $data .="<tr>"
+      . "<td>".$terlibat['nama_client']."</td>"
+      . "<td><button  onclick=BukaClientBaru('".$terlibat['no_client']."','".$input['no_pekerjaan']."');  class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
       . "</tr>";
     }else if($data_pemilik->num_rows() < 2 ){
          $data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
