@@ -15,6 +15,12 @@ redirect(base_url('Menu'));
 
 public function index(){
 $this->load->view('umum/V_header');
+$this->load->view('user2/V_dashboarduser2');
+}
+
+
+public function buat_pekerjaan(){
+$this->load->view('umum/V_header');
 $this->load->view('user2/V_buat_pekerjaan');
 }
  
@@ -2143,5 +2149,95 @@ if($this->input->post()){
 }
 
 
+function ShowGrafik(){    
+$this->db->select('user.nama_lengkap,'
+        . 'user.no_user,'
+        . 'user.username');
+$this->db->where('user.level','User');
+$this->db->where('user.status','Aktif');
+$this->db->where('sublevel_user.sublevel','Level 2');
+$this->db->from('user');
+$this->db->join('sublevel_user', 'sublevel_user.no_user = user.no_user');
+$namaasisten = $this->db->get();
+
+$data_asisten = array();
+$jumlah_berkas = array();
+$jumlah_pekerjaan = array();
+
+foreach ($namaasisten->result()  as $as) {
+$data_asisten[] = $as->nama_lengkap;
+}
+
+foreach ($namaasisten->result()  as $as) {
+$BerkasMilikAsisten = $this->M_user2->BerkasMilikAsisten($as->no_user)->num_rows();
+$jumlah_berkas[] = $BerkasMilikAsisten;
+}
+
+foreach ($namaasisten->result()  as $as) {
+$PekerjaanMilikAsisten = $this->M_user2->PekerjaanMilikAsisten($as->no_user)->num_rows();
+$jumlah_pekerjaan[] = $PekerjaanMilikAsisten;
+}
+
+$data = array(
+'asisten'   =>$data_asisten,    
+'jumlah'    =>$jumlah_berkas,
+'pekerjaan' =>$jumlah_pekerjaan    
+);
+
+echo json_encode($data);    
+}
+public function ShowGrafikBerkas(){
+if($this->input->post()){
+$input = $this->input->post();
+if($this->input->post('range')){
+$tanggal        = $this->input->post('range');
+$range          = explode(' ', $tanggal);
+$awal           = $range[0];
+$akhir          = $range[2];
+
+}else{
+$akhir   = date('Y/m/d');
+$c       = strtotime($akhir);
+$awal    = date("Y/m/d", strtotime("-1 month", $c));
+}
+
+$this->db->select('data_berkas.tanggal_upload,'
+                 .'data_pekerjaan.no_user');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
+$this->db->group_by('data_berkas.tanggal_upload');
+$this->db->where('data_berkas.tanggal_upload >=', $awal);
+$this->db->where('data_berkas.tanggal_upload <=', $akhir);
+$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
+$query = $this->db->get();
+
+$data_tanggal = array();
+$data_jumlah  = array();
+
+foreach ($query->result_array() as $t){
+
+$this->db->select('data_berkas.tanggal_upload,'
+                 .'data_pekerjaan.no_user');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_berkas', 'data_berkas.no_pekerjaan = data_pekerjaan.no_pekerjaan');
+$this->db->where('data_berkas.tanggal_upload ', $t['tanggal_upload']);
+$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
+$jumlah = $this->db->get()->num_rows();
+
+$data_jumlah[]  = $jumlah;    
+$data_tanggal[] = $t['tanggal_upload'];     
+}
+
+$data = array(
+'tanggal' =>$data_tanggal,
+'jumlah'  =>$data_jumlah,    
+);
+
+echo json_encode($data);
+
+}else{
+redirect(404);    
+}
+}
 
 }

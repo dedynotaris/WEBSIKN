@@ -141,7 +141,8 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
     <form class="input-group">
      <div class="input-group col-md-11 mx-auto ">
          <input name="search" minlength="1" class="form-search py-2 border-right-0 border" type="text" placeholder="Masukan Nama Perorangan atau Badan Hukum" id="example-search-input">
-           <input type="hidden" name="kategori" value="dokumen_penunjang">
+           <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
+        <input type="hidden" name="kategori" value="dokumen_penunjang">
            <span class="input-group-append">
               <button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
                     <i class="fa fa-search"></i>

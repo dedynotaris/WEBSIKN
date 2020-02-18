@@ -11,6 +11,7 @@
 <table style="width:100%;" id="data_berkas" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >No berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Pengupload</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Tanggal Upload</th>
@@ -65,6 +66,7 @@ columns: [
 "data": "no_berkas",
 "orderable": false
 },
+{"data": "no_berkas"},
 {"data": "nama_file"},
 {"data": "pengupload"},
 {"data": "tanggal_upload"},

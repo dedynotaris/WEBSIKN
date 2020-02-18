@@ -4,7 +4,7 @@
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
 <div class="container-fluid text-theme1">
-<div class="card p-2 mt-2">
+<div class="p-2 mt-2">
 
 <div class="row">
 <div class="col">

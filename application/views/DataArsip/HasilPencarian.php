@@ -157,6 +157,7 @@ color: cornflowerblue;
 <div class="row ">
 <div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-lightaktif"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_penunjang">    
 <button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
@@ -165,6 +166,7 @@ color: cornflowerblue;
 <div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-lightaktif"; } ?>">
 
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_utama">    
 <button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
@@ -173,6 +175,7 @@ color: cornflowerblue;
 </div>
 <div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'data_client'){echo "bg-lightaktif"; } ?>">
 <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
+<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="data_client">    
 <button type="submit" class="btn btn-tranparent btn-block " >Data Client <i class="fas fa-users"></i></button>

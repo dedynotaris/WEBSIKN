@@ -710,6 +710,9 @@ public function DokumenPenunjang($no_berkas){
                 $query = $this->db->get();
                 return $query;
                 }
+  
+
+                
 
 }
 ?>

@@ -26,7 +26,6 @@ App Management Document
 <ul class="list-unstyled components">
 
 
-<li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_berkas'); ?>"><i class="fa fa-file-word"></i> Data berkas</a></li>
 <li class="active">
 <a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
 <i class="fas fa-users"></i> Client</a>
@@ -41,11 +40,28 @@ App Management Document
 </ul>
 </li>
 
+<li class="active">
+<a href="#homeberkas"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
+<i class="fas fa-file-word"></i> Data Berkas</a>
+<ul class="list-unstyled collapse show" id="homeberkas">
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_berkas'); ?>">Keseluruhan Berkas<i class="fa fa-list-alt float-right"></i></a>
+</li>
+<li>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_client_perorangan'); ?>">Tidak ada lampiran<i class="float-right"> 404 </i></a>
+</li>
+
+</ul>
+</li>
+
 
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/pekerjaan_proses'); ?>"><i class="fa fa-exchange-alt"></i> Pekerjaan </a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/data_user'); ?>"><i class="fas fa-users"></i> Data user</a></li>
 <li><a class="list-group-item list-group-item-action " href="<?php echo base_url('Dashboard/setting'); ?>"><i class="fas fa-cogs"></i> Setting</a></li>
 </ul>
+    
+    
+    
 </div>
 </div>
 
