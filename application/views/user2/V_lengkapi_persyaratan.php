@@ -152,14 +152,13 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 
 </div>
     
-<!-----------------------------PIHAK2 YANG TERLIBAT--------------------------------------------------->    
-<div class="card-header text-theme1 mt-2 mb-2 text-center">Daftar Pihak-pihak yang terlibat
-</div>
-<div class=" card-header" >
-<div class="row">
-<div class="col-md-6">    
-<div class="col ">
-<form id="form_pihak_terlibat">
+
+<div class="row m-1 mt-2">
+<div class="col-md-5">
+    <div class="card">
+        <div class="card-header text-center">Form penambahan pihak terlibat</div>
+        <div class="card-body">
+            <form id="form_pihak_terlibat">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
 <input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
@@ -189,27 +188,27 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
-</form>
-</div>    
-<hr>
-<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success simpan_pihak_baru btn-block"> Tambahkan pihak yang terlibat</button>
+</form> 
+        </div>
+        <div class="card-footer">
+            <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat <span class="fa fa-user"></span></button>
+
+        </div>
+    </div>    
 
 </div>
 
 <div class="col text-theme1 ">
-<div class="row text-center">
-<div class="col"><b>Nama</div>
-<div class="col">Aksi</b></div>
-</div>
-<div class="para_pihak">
+<div class="card">
+    <div class="card-header text-center">Nama para pihak terlibat</div>    
+<div class=" card-body para_pihak">
 
 </div>    
-    
 </div>    
+</div>     
 </div>
 </div>
 
-</div>
 </div>
     
 <!--------------- data modal --------------->    
@@ -271,24 +270,6 @@ $("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
 <input type='text' placeholder='Nama Badan Hukum'  name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
 }
 });
-    
-    
-function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-
-$.ajax({
-type:"post",
-url:"<?php echo base_url('User2/hapus_berkas_persyaratan/') ?>",
-data:"token="+token+"&id_data_berkas="+id_data_berkas,
-success:function(data){
-data_terupload(no_client,no_pekerjaan);    
-read_response(data);
-}
-});    
-    
-}        
-    
-
 
 function simpan_pihak(){
 $(".simpan_pihak_baru").attr("disabled",true);
@@ -664,6 +645,19 @@ function lihat_lampiran_client(no_client){
 window.location.href="<?php echo base_url('User2/lihat_lampiran_client/') ?>"+btoa(no_client);
 }
 
+function hapus_berkas_persyaratan(no_client,no_pekerjaan,no_berkas){
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/hapus_berkas_persyaratan/') ?>",
+data:"token="+token+"&no_berkas="+no_berkas,
+success:function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+}
+});     
+}  
 
 </script>    
 

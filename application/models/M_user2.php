@@ -382,14 +382,13 @@ return $query;
 
 
 
-public function hapus_berkas($id_data_berkas){
+public function hapus_berkas($no_berkas){
 $this->db->select('data_client.nama_folder,'
-        . 'data_berkas.nama_berkas,'
-        . 'nama_dokumen.nama_dokumen');
+        . 'data_berkas.nama_berkas');
+
 $this->db->from('data_berkas');
 $this->db->join('data_client', 'data_client.no_client = data_berkas.no_client');
-$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
-$this->db->where('data_berkas.id_data_berkas',$id_data_berkas);
+$this->db->where('data_berkas.no_berkas',$no_berkas);
 $query = $this->db->get();  
 return $query;
 }

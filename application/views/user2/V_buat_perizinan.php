@@ -151,17 +151,14 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <hr>
 <button onclick=update_pekerjaan(); class="btn btn-success btn-sm btn-block">Update jenis pekerjaan <span class="fa fa-edit"></span></button>    
 </div>
-
 </div>
-    
 <!-----------------------------PIHAK2 YANG TERLIBAT--------------------------------------------------->    
-<div class="card-header text-theme1 mt-2 mb-2 text-center">Daftar Pihak-pihak yang terlibat
-</div>
-<div class=" card-header" >
-<div class="row">
-<div class="col-md-5">    
-<div class="col ">
-<form id="form_pihak_terlibat">
+<div class="row m-1 mt-2 ">
+<div class="col-md-5">
+    <div class="card">
+        <div class="card-header text-center">Form penambahan pihak terlibat</div>
+        <div class="card-body">
+            <form id="form_pihak_terlibat">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
 <input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
@@ -191,28 +188,30 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
-</form>
-</div>    
-<hr>
-<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat</button>
+</form> 
+        </div>
+        <div class="card-footer">
+            <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat <span class="fa fa-user"></span></button>
+
+        </div>
+    </div>    
+
 </div>
 
 <div class="col text-theme1 ">
-<div class="row text-center">
-<div class="col"><b>Nama</div>
-<div class="col">Aksi</b></div>
-</div>
-<div class="para_pihak">
+<div class="card">
+    <div class="card-header text-center">Nama para pihak terlibat</div>    
+<div class=" card-body para_pihak">
 
 </div>    
-    
 </div>    
-</div>
+</div>   
 </div>
 
 </div>
 </div>
-    
+
+
 <!--------------- data modal --------------->    
 <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -221,7 +220,15 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
 </div>
 </div>
-
+<!--------------- data modal --------------->    
+<div class="modal fade" id="modalcek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+<div class="modal-content modalcek ">
+    
+</div>
+</div>
+</div>
+    
     
     
 <script type="text/javascript">
@@ -272,20 +279,7 @@ $("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
 <input type='text' placeholder='Nama Badan Hukum'  name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
 }
 });
-function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
-
-$.ajax({
-type:"post",
-url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
-data:"token="+token+"&id_data_berkas="+id_data_berkas,
-success:function(data){
-    data_terupload(no_client,no_pekerjaan);    
-read_response(data);
-}
-});    
-    
-}        
+        
     
 $(function(){
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
@@ -851,14 +845,30 @@ var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client,
 url:"<?php echo base_url('User2/set_jenis_dokumen') ?>",
 success:function(data){
 data_terupload(no_client,no_pekerjaan);
+var r = JSON.parse(data);
+if(r[0].status  =='warning'){
+openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas);
+}
 }
 });
-
 }
+function openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client,
+url:"<?php echo base_url('User2/modal_cek_dokumen') ?>",
+success:function(data){
+$(".modalcek").html(data);    
+$('#modalcek').modal('show');
+}
+});
+}
+
 function cancel_edit(no_berkas){
 $(".data_edit"+no_berkas ).slideUp().html();
 $(".btn_edit"+no_berkas).show();  
@@ -884,6 +894,21 @@ success:function(data){
 data_terupload(no_client,no_pekerjaan);
 }
 });
+}
+
+function hapus_berkas_persyaratan(no_client,no_pekerjaan,no_berkas){
+$(".btnhapus"+no_berkas).attr('disabled',true);
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/hapus_berkas_persyaratan/') ?>",
+data:"token="+token+"&no_berkas="+no_berkas,
+success:function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+$(".btnhapus"+no_berkas).attr('disabled',false);
+}
+});     
 }
 </script>    
 

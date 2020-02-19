@@ -4,8 +4,8 @@
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
 <?php $this->load->view('umum/user2/V_data_user2'); ?>
 <div class="container-fluid">
- <div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
+<div class="mt-2  text-center  ">
+<h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
 </div>
 <div class="row">    
 <div class="col mt-2">

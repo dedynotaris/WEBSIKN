@@ -47,9 +47,9 @@
 
 
 <li class="active">
-<a href="#homepkerjaan"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
+<a href="#homepekerjaan"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
 <i class="fa fa-briefcase"></i> Pekerjaan</a>
-<ul class="list-unstyled collapse " id="homeSubmenu">
+<ul class="list-unstyled collapse " id="homepekerjaan">
 <li>
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_antrian') ?>">Pekerjaan Masuk <i class="fa fa-hourglass-start float-right"></i></a>
 </li>
