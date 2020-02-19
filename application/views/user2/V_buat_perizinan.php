@@ -851,16 +851,16 @@ success:function(data){
 data_terupload(no_client,no_pekerjaan);
 var r = JSON.parse(data);
 if(r[0].status  =='warning'){
-openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas);
+openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan);
 }
 }
 });
 }
-function openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas){
+function openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/modal_cek_dokumen') ?>",
 success:function(data){
 $(".modalcek").html(data);    
@@ -907,9 +907,30 @@ success:function(data){
 data_terupload(no_client,no_pekerjaan);    
 read_response(data);
 $(".btnhapus"+no_berkas).attr('disabled',false);
+$('#modalcek').modal('hide')
 }
 });     
 }
+function PerbaharuiDokumen(no_client,no_pekerjaan,no_berkas){
+Swal.fire({
+  text: "Kamu yakin ingin memperbaharui jenis dokumen ini dengan yang baru, jika ya maka dokumen yang sebelumnya akan dihapus",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Ya, Perbaharui',
+  cancelButtonText: 'Batalkan',
+ }).then((result) => {
+  if (result.value) {
+    Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    )
+  }
+})
+}
+
 </script>    
 
 

@@ -2296,8 +2296,9 @@ echo "<tr>"
 }
 echo'</table></div>';    
 echo "<div class='card-footer text-center'>"
-. "<button class='btn btn-sm  btn-warning col-md-6'>Duplicate dokumen </button>"
-. "<button class='btn btn-sm ml-1 btn-warning col-md-5 '>Perbaharui Dokumen</button>"
+. "<button onclick=DuplicateDokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm  btn-warning col-md-3'>Duplicate dokumen </button>"
+. "<button onclick=PerbaharuiDokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm ml-1 btn-warning col-md-3 '>Perbaharui Dokumen</button>"
+. "<button onclick=hapus_berkas_persyaratan('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm ml-1 btn-danger col-md-3 '>Hapus lampiran</button>"
 . "</div></div></div>";
 
 }else{
