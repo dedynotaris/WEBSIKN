@@ -80,8 +80,8 @@ HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
 <?php echo $static['jenis_kontak'] ?>        
 </div>
 </div>
-    <hr>
-    <button onclick=form_edit_client("<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit client <span class="fa fa-edit"></span></button>    
+<hr>
+<button onclick=form_edit_client("<?php echo base64_encode($static['no_client']) ?>"); class="btn btn-success btn-sm btn-block">Edit client <span class="fa fa-edit"></span></button>    
 </div>
 
 <div class="col card-header ml-1">
@@ -119,7 +119,7 @@ HALAMAN BUAT PERIZINAN <?php echo $static['nama_client'] ?>
 
 </div>
 <div class="col"> :
-    
+
 <?php
 if($static['target_kelar']  == date('Y/m/d')){
 echo "<b><span class='text-warning'>Hari ini</span></b>";    
@@ -155,14 +155,14 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <!-----------------------------PIHAK2 YANG TERLIBAT--------------------------------------------------->    
 <div class="row m-1 mt-2 ">
 <div class="col-md-5">
-    <div class="card">
-        <div class="card-header text-center">Form penambahan pihak terlibat</div>
-        <div class="card-body">
-            <form id="form_pihak_terlibat">
+<div class="card">
+<div class="card-header text-center">Form penambahan pihak terlibat</div>
+<div class="card-body">
+<form id="form_pihak_terlibat">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
 <input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
-    
+
 <label>*Pilih Jenis pihak terlibat</label>
 <select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
 <option value="Perorangan">Perorangan</option>
@@ -175,7 +175,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <label>*Nama Perorangan</label>
 <input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
 </div>
-    
+
 <label>*Jenis pihak yang bisa dihubungi</label>
 <select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
 <option></option>
@@ -189,18 +189,18 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
 </form> 
-        </div>
-        <div class="card-footer">
-            <button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat <span class="fa fa-user"></span></button>
+</div>
+<div class="card-footer">
+<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat <span class="fa fa-user"></span></button>
 
-        </div>
-    </div>    
+</div>
+</div>    
 
 </div>
 
 <div class="col text-theme1 ">
 <div class="card">
-    <div class="card-header text-center">Nama para pihak terlibat</div>    
+<div class="card-header text-center">Nama para pihak terlibat</div>    
 <div class=" card-body para_pihak">
 
 </div>    
@@ -216,7 +216,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
 <div class="modal-content ">
-    
+
 </div>
 </div>
 </div>
@@ -224,15 +224,15 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <div class="modal fade" id="modalcek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
 <div class="modal-content modalcek ">
-    
+
 </div>
 </div>
 </div>
-    
-    
-    
+
+
+
 <script type="text/javascript">
-    function cari_client2(){
+function cari_client2(){
 var a = $(".no_identitas").val(); 
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 
@@ -261,8 +261,8 @@ $("#badan_hukum").val("").attr('readonly', false);;
 });
 }
 
-    
-    
+
+
 $("#jenis_client").on("change",function(){
 var client = $("#jenis_client option:selected").text();
 
@@ -279,8 +279,8 @@ $("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
 <input type='text' placeholder='Nama Badan Hukum'  name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
 }
 });
-        
-    
+
+
 $(function(){
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $("#nama_pihak").autocomplete({
@@ -377,17 +377,17 @@ $("#"+this.id).val(string);
 
 $(function() {
 $(".date").daterangepicker({ 
-    dateFormat: 'yy/mm/dd',
-    singleDatePicker: true,
-    showDropdowns: true,
-    minYear: 1901,
-    changeMonth: false,
-   changeYear: false,
-    maxYear: parseInt(moment().format('YYYY'),10),
-    "locale": {
-        "format": "YYYY/MM/DD",
-        "separator": "-",
-      }
+dateFormat: 'yy/mm/dd',
+singleDatePicker: true,
+showDropdowns: true,
+minYear: 1901,
+changeMonth: false,
+changeYear: false,
+maxYear: parseInt(moment().format('YYYY'),10),
+"locale": {
+"format": "YYYY/MM/DD",
+"separator": "-",
+}
 });
 });
 
@@ -440,30 +440,30 @@ $(".update_client").attr("disabled", false);
 $(function(){
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
 $(".jenis_pekerjaan").select2({
-   ajax: {
-    url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
-    method : "post",
-    
-    data: function (params) {
-      var query = {
-        search: params.term,
-        token: token
-      };
+ajax: {
+url: '<?php echo site_url('User2/cari_jenis_pekerjaan') ?>',
+method : "post",
 
-      return query;
-    },
-   processResults: function (data) {
-      // Transforms the top-level key of the response object from 'items' to 'results'
-      var data = JSON.parse(data);
-      console.log(data.results);
-      return {
-        results: data.results
-      };
-      
-    }
-      
-    }        
-   
+data: function (params) {
+var query = {
+search: params.term,
+token: token
+};
+
+return query;
+},
+processResults: function (data) {
+// Transforms the top-level key of the response object from 'items' to 'results'
+var data = JSON.parse(data);
+console.log(data.results);
+return {
+results: data.results
+};
+
+}
+
+}        
+
 });
 });
 
@@ -609,16 +609,16 @@ $('#data_modal').modal('show');
 
 function tanggal_akta(){
 $("input[name=tanggal_akta]").daterangepicker({
-    singleDatePicker: true,
-    dateFormat: 'yy/mm/dd',
-    singleDatePicker: true,
-    showDropdowns: true,
-    minYear: 1901,
-    maxYear: parseInt(moment().format('YYYY'),10),
-    "locale": {
-        "format": "YYYY/MM/DD",
-        "separator": "-",
-      }
+singleDatePicker: true,
+dateFormat: 'yy/mm/dd',
+singleDatePicker: true,
+showDropdowns: true,
+minYear: 1901,
+maxYear: parseInt(moment().format('YYYY'),10),
+"locale": {
+"format": "YYYY/MM/DD",
+"separator": "-",
+}
 });
 }
 
@@ -738,19 +738,26 @@ data_terupload(no_client,no_pekerjaan);
 });
 }
 function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$(".btn_meta"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
 $(".data"+no_berkas).slideDown().after(data); 
-$(".btn_edit"+no_berkas).hide();  
+$(".btn_meta"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
 regis_js();
 }
 });
 }
+}
+
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
 var data = $("#form"+no_berkas).serialize();
 
@@ -784,19 +791,19 @@ $.ajax({
 type:"post",
 data:formData,
 xhr: function() {
-                var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){
-                    myXhr.upload.addEventListener('progress',progress, false);
-                }
-                return myXhr;
-        },
+var myXhr = $.ajaxSettings.xhr();
+if(myXhr.upload){
+myXhr.upload.addEventListener('progress',progress, false);
+}
+return myXhr;
+},
 processData: false,
 contentType: false,
 url:"<?php echo base_url('User2/upload_berkas') ?>",
 success:function(data){
-    var z = JSON.parse(data);
+var z = JSON.parse(data);
 for (i=0; i<z.length; i++){
-    
+
 if(z[i].status == "error"){
 toastr.error(z[i].messages, z[i].name_file);    
 }else if(z[i].status == "success"){
@@ -811,20 +818,20 @@ $(".progress").hide();
 });
 }
 function progress(e){
-    if(e.lengthComputable){
-        var max = e.total;
-        var current = e.loaded;
+if(e.lengthComputable){
+var max = e.total;
+var current = e.loaded;
 
-        var Percentage = (current * 100)/max;
-        console.log(Percentage);
-        $(".progress").show();
-        $(".progress-bar").css({'width': +Percentage+'%'});
+var Percentage = (current * 100)/max;
+console.log(Percentage);
+$(".progress").show();
+$(".progress-bar").css({'width': +Percentage+'%'});
 
-        if(Percentage >= 100){
-        
-       }
-    }  
- }
+if(Percentage >= 100){
+
+}
+}  
+}
 function data_terupload(no_client,no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
@@ -897,6 +904,16 @@ data_terupload(no_client,no_pekerjaan);
 }
 
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,no_berkas){
+Swal.fire({
+text: "Kamu yakin ingin menghapus lampiran ini",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, hapus',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {    
 $(".btnhapus"+no_berkas).attr('disabled',true);
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
@@ -909,28 +926,102 @@ read_response(data);
 $(".btnhapus"+no_berkas).attr('disabled',false);
 $('#modalcek').modal('hide')
 }
-});     
+}); 
 }
-function PerbaharuiDokumen(no_client,no_pekerjaan,no_berkas){
-Swal.fire({
-  text: "Kamu yakin ingin memperbaharui jenis dokumen ini dengan yang baru, jika ya maka dokumen yang sebelumnya akan dihapus",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Ya, Perbaharui',
-  cancelButtonText: 'Batalkan',
- }).then((result) => {
-  if (result.value) {
-    Swal.fire(
-      'Deleted!',
-      'Your file has been deleted.',
-      'success'
-    )
-  }
 })
 }
 
+function PerbaharuiDokumen(no_client,no_pekerjaan,no_berkas){
+Swal.fire({
+text: "Kamu yakin ingin memperbaharui jenis dokumen ini dengan yang baru, jika ya maka dokumen yang sebelumnya akan dihapus",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, Perbaharui',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {
+
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type:"post",
+url:"<?php echo base_url('User2/perbaharuidokumen/') ?>",
+data:"token="+token+"&no_berkas="+no_berkas,
+success:function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+$('#modalcek').modal('hide')
+}
+}); 
+
+}
+})
+}
+
+function DuplicateDokumen(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+Swal.fire({
+text: "Kamu yakin ingin menduplikasi dokumen ini, jika ya maka client tersebut akan memiliki lebih dari satu jenis dokumen yang sama",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, Duplikasi',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {
+
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('User2/DuplikasiDokumen/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+$('#modalcek').modal('hide')
+}
+}); 
+
+
+}
+})
+}
+
+function hapus_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('User2/hapus_meta/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+}
+}); 
+}
+
+function form_edit_meta_tersedia(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$("#trtersedia"+no_berkas).remove();
+$(".btn_tersedia"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/form_edit_meta') ?>",
+success:function(data){
+$("#tersedia"+no_berkas).slideDown().after("<tr id='trtersedia"+no_berkas+"'><td class='pr-3 pl-3' colspan='5'>"+data+"</tr></td>"); 
+$(".btn_tersedia"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
+regis_js();
+}
+});
+}
+}
 </script>    
 
 

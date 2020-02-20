@@ -1360,7 +1360,7 @@ echo "</select></div>";
 echo '<div class="col-md-2 text-center">';
 echo '<button  onclick=hapus_berkas_persyaratan("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'"); class="btn  btn-danger btn-block btn-sm btnhapus'.$data['no_berkas'].'"  title="Hapus data ini" >Hapus Lampiran <i class="fa fa-trash"></i></button>';
 if($data['no_nama_dokumen']){
-echo '<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn btn_edit'.$data['no_berkas'].'  btn-warning mt-1 btn-block btn-sm" title="Edit data ini" >Tambah Meta <i class="fa fa-plus"></i></button>';
+echo '<button  onclick=form_edit_meta("'.$input['no_client'].'","'.$input['no_pekerjaan'].'","'.$data['no_berkas'].'","'.$data['no_nama_dokumen'].'"); class="btn btn_meta'.$data['no_berkas'].'  btn-warning mt-1 btn-block btn-sm" title="Edit data ini" >Lihat Meta <i class="fa fa-eye"></i></button>';
 }
 echo '</div>';
 echo "</div>";    
@@ -1718,8 +1718,32 @@ function form_edit_meta(){
 if($this->input->post()){
 $input = $this->input->post();
 $data_meta = $this->M_user2->data_meta($input['no_nama_dokumen']);
+$cek_meta  = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));
+if($cek_meta->num_rows() > 0){
+$this->DataMeta($input,$data_meta);    
+}else{
+$this->FormMasukanMetaDokumen($input,$data_meta);
+}    
+}else{
+redirect(404);    
+} 
+}
+function DataMeta($input){
+$data_meta = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
+echo "<div class='row  bg-info p-2 data_edit".$input['no_berkas']."'>"
+. "<div class='col-md-6 text-white'>";
+foreach ($data_meta->result_array()  as $d ){
+echo str_replace('_', ' ',$d['nama_meta'])." : ".$d['value_meta'] ."<br>";   
+}
 
-echo "<div class='row border-top-0 mb-2 card border border-success p-3 data_edit".$input['no_berkas']."'>"
+echo "<hr>"
+. "<button type='button' onclick=hapus_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='btn  btn-sm btn-danger btn-block '>Hapus meta dokumen <i class='fa fa-trash'></i></button>"
+. "</form>"
+. "</div></div>";
+}
+
+function FormMasukanMetaDokumen($input,$data_meta){
+echo "<div class='row bg-info text-white p-2 data_edit".$input['no_berkas']."'>"
 . "<div class='col-md-6'>"
 . "<form id='form".$input['no_berkas']."'>";
 echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
@@ -1757,17 +1781,15 @@ echo "<label>".$d['nama_meta']."</label>"
 echo "<label>".$d['nama_meta']."</label>"
 ."<input  type='".$d['jenis_inputan']."' value='".$val['value_meta']."' id='".str_replace(' ', '_',$d['nama_meta'])."' name='".$d['nama_meta']."' placeholder='".$d['nama_meta']."'  maxlength='".$d['maksimal_karakter']."' class='form-control form_meta form-control-sm  meta required ' required='' accept='text/plain' >";    
 }
-}
-echo "<hr>"
-. "<button type='button' onclick=cancel_edit('".$input['no_berkas']."') class='btn col-md-3  btn-sm btn-danger  '>Cancel <i class='fas fa-arrow-up'></i></button>"
-. "<button type='button' onclick=update_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='btn col-md-8  float-right ml-1 btn-sm btn-success '>Simpan Perubahahan <i class='fa fa-save'></i></button>"
+
+
+}echo "<hr>"
+. "<button type='button' onclick=update_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_client']."','".$input['no_pekerjaan']."') class='btn  btn-sm btn-warning btn-block '>Simpan Perubahan <i class='fa fa-save'></i></button>"
 . "</form>"
 . "</div></div>";
-    
-}else{
-redirect(404);    
-} 
+
 }
+
 function update_meta(){
 if($this->input->post()){
 $input = $this->input->post();
@@ -2258,6 +2280,7 @@ $input = $this->input->post();
 
 $this->db->select('data_berkas.no_berkas,'
         . 'nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
         . 'data_berkas.tanggal_upload,'
         . 'data_berkas.nama_berkas,'
         . 'user.nama_lengkap');
@@ -2279,30 +2302,68 @@ echo '<div class="modal-content ">
 <div class="modal-body ">
 <table class="table table-sm table-bordered table-stripped">
 <tr>
-<td>Jenis dokumen</td>
+<td>Dokumen lama</td>
 <td>Nama lampiran</td>
 <td>Pengupload</td>
 <td>Tanggal upload</td>
 <td>Aksi</td>
 </tr>';
 foreach ($data->result_array() as $d){
-echo "<tr>"
+echo "<tr id='tersedia".$d['no_berkas']."'>"
     . "<td>".$d['nama_dokumen']."</td>"
     . "<td>".$d['nama_berkas']."</td>"
     . "<td>".$d['nama_lengkap']."</td>"
     . "<td>".$d['tanggal_upload']."</td>"
-    . "<td><button class='btn btn-sm btn-block btn-success'>Lihat Dokumen </button></td>"
+    . "<td>"
+        . "<button  onclick=form_edit_meta_tersedia('".$input['no_client']."','".$input['no_pekerjaan']."','".$d['no_berkas']."','".$d['no_nama_dokumen']."'); class='btn btn-sm btn-block btn-warning btn_tersedia".$d['no_berkas']."'>Lihat Meta </button>"
+        . "<button onclick=hapus_berkas_persyaratan('".$input['no_client']."','".$input['no_pekerjaan']."','".$d['no_berkas']."') class='btn btn-sm mt-1 btn-danger btn-block'>Hapus </button>"
+        . "</td>"
     . "</tr>";    
 }
 echo'</table></div>';    
 echo "<div class='card-footer text-center'>"
-. "<button onclick=DuplicateDokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm  btn-warning col-md-3'>Duplicate dokumen </button>"
-. "<button onclick=PerbaharuiDokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm ml-1 btn-warning col-md-3 '>Perbaharui Dokumen</button>"
-. "<button onclick=hapus_berkas_persyaratan('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."') class='btn btn-sm ml-1 btn-danger col-md-3 '>Hapus lampiran</button>"
+. "<button onclick=DuplicateDokumen('".$input['no_client']."','".$input['no_pekerjaan']."','".$input['no_berkas']."','".$input['no_nama_dokumen']."') class='btn btn-sm  btn-warning btn-block '>Duplicate dokumen </button>"
 . "</div></div></div>";
 
 }else{
 redirect(404);    
+}
+}
+public function perbaharuidokumen(){
+if($this->input->post()){
+$input = $this->input->post();
+echo print_r($input);
+    
+}else{
+redirect(404);    
+}    
+}
+
+public function DuplikasiDokumen(){
+if($this->input->post()){
+$input = $this->input->post();
+$data = array(
+'no_nama_dokumen' => $input['no_nama_dokumen']    
+);
+$response [] =array(
+  'status'   =>'success',
+    'messages' =>'Dokumen Terduplikasi'   
+  );
+$this->db->update('data_berkas',$data,array('no_berkas'=> $input['no_berkas']));
+echo json_encode($response);    
+}else{
+redirect(404);    
+}    
+}
+public function hapus_meta(){
+if($this->input->post()){    
+$input = $this->input->post();
+$response [] =array(
+'status'   =>'success',
+'messages' =>'Meta Dokumen Terhapus'   
+);
+$this->db->delete('data_meta_berkas',array('no_berkas'=> $input['no_berkas']));
+echo json_encode($response);    
 }
 }
 }

@@ -24,9 +24,6 @@
 </div>
 <div class="list-group list-group-flush">   
 <ul class="list-unstyled components">
-<li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2'); ?>">Beranda <i class="fa fa-home float-right"></i></a>
-</li>
 
 <li class="active">
 <a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">

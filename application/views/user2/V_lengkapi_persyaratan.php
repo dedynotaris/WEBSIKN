@@ -220,6 +220,15 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
 </div>
 
+<!--------------- data modal --------------->    
+<div class="modal fade" id="modalcek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+<div class="modal-content modalcek ">
+
+</div>
+</div>
+</div>
+
     
     
 <script type="text/javascript">
@@ -501,20 +510,46 @@ regis_js();
 
 
 function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$(".btn_meta"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('User2/form_edit_meta') ?>",
 success:function(data){
 $(".data"+no_berkas).slideDown().after(data); 
-$(".btn_edit"+no_berkas).hide();  
+$(".btn_meta"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
 regis_js();
 }
 });
 }
+}
+function form_edit_meta_tersedia(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
 
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$("#trtersedia"+no_berkas).remove();
+$(".btn_tersedia"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/form_edit_meta') ?>",
+success:function(data){
+$("#tersedia"+no_berkas).slideDown().after("<tr id='trtersedia"+no_berkas+"'><td class='pr-3 pl-3' colspan='5'>"+data+"</tr></td>"); 
+$(".btn_tersedia"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
+regis_js();
+}
+});
+}
+}
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
 var data = $("#form"+no_berkas).serialize();
 
@@ -607,17 +642,43 @@ $(".data_terupload").html(data);
 function set_jenis_dokumen(no_client,no_pekerjaan,no_berkas){
 var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
 
-
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client,
 url:"<?php echo base_url('User2/set_jenis_dokumen') ?>",
 success:function(data){
 data_terupload(no_client,no_pekerjaan);
+var r = JSON.parse(data);
+if(r[0].status  =='warning'){
+openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan);
+}
 }
 });
-
+}
+function openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('User2/modal_cek_dokumen') ?>",
+success:function(data){
+$(".modalcek").html(data);    
+$('#modalcek').modal('show');
+}
+});
+}
+function hapus_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('User2/hapus_meta/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+}
+}); 
 }
 function cancel_edit(no_berkas){
 $(".data_edit"+no_berkas ).slideUp().html();
@@ -646,8 +707,18 @@ window.location.href="<?php echo base_url('User2/lihat_lampiran_client/') ?>"+bt
 }
 
 function hapus_berkas_persyaratan(no_client,no_pekerjaan,no_berkas){
+Swal.fire({
+text: "Kamu yakin ingin menghapus lampiran ini",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, hapus',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {    
+$(".btnhapus"+no_berkas).attr('disabled',true);
 var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
-
 $.ajax({
 type:"post",
 url:"<?php echo base_url('User2/hapus_berkas_persyaratan/') ?>",
@@ -655,9 +726,41 @@ data:"token="+token+"&no_berkas="+no_berkas,
 success:function(data){
 data_terupload(no_client,no_pekerjaan);    
 read_response(data);
+$(".btnhapus"+no_berkas).attr('disabled',false);
+$('#modalcek').modal('hide')
 }
-});     
-}  
+}); 
+}
+})
+}
+function DuplicateDokumen(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+Swal.fire({
+text: "Kamu yakin ingin menduplikasi dokumen ini, jika ya maka client tersebut akan memiliki lebih dari satu jenis dokumen yang sama",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, Duplikasi',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {
+
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('User2/DuplikasiDokumen/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+$('#modalcek').modal('hide')
+}
+}); 
+
+
+}
+})
+}
 
 </script>    
 

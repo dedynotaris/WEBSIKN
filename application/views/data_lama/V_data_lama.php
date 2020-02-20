@@ -10,7 +10,7 @@
 
 
 <form id="form_data_lama">
-<div class="row card-header m-2">
+<div class="row card-header text-theme1 m-2">
 <div class="col">
 <input type="hidden" name="nama_notaris" id="nama_notaris" class="form-control form-control-sm nama_notaris required" accept="text/plain" aria-describedby="basic-addon2">
 

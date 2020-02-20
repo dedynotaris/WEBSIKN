@@ -20,7 +20,7 @@ border-color: rgb(185, 74, 72) !important;
 </div>
   
 <div class="col">
-<button onclick="ShowGrafikBerkasHarian()" class="btn btn-sm btn-warning btn-block ">Tampilkan Berkas Grafik Berkas <i class="fas fa-chart-line"></i></button>  
+<button onclick="ShowGrafikBerkasHarian()" class="btn btn-sm btn-warning btn-block ">Tampilkan Berkas Grafik Harian <i class="fas fa-chart-line"></i></button>  
 </div>    
 </div>    
 
@@ -44,7 +44,7 @@ $perizinan = $this->db->get();
 echo $perizinan->num_rows();    
     ?></h5>   
 </div>
-<div class="footer p-2 bg-dark text-center" >Perizinan sedang dikerjakan <div class="float-right">
+<div class="footer p-2 bg-dark text-white text-center" >Perizinan sedang dikerjakan <div class="float-right">
 </div></div>
 </div>
             
@@ -64,7 +64,7 @@ $query = $this->db->get();
 echo $query->num_rows();    
     ?></h5>   
 </div>
-<div class="footer p-2 bg-dark text-center" >Total data berkas <div class="float-right">
+<div class="footer p-2 bg-dark text-white text-center" >Total data berkas <div class="float-right">
 </div></div>
 </div>
             
@@ -80,7 +80,7 @@ $this->db->where_in('status_pekerjaan',array('ArsipSelesai','Selesai'));
 echo $pekerjaan = $this->db->get()->num_rows();
     ?></h5>   
 </div>
-<div class="footer p-2 bg-dark text-center" >Total pekerjaan selesai<div class="float-right">
+<div class="footer p-2 bg-dark text-white text-center" >Total pekerjaan selesai<div class="float-right">
 
 </div></div>
 </div>

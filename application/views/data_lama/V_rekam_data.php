@@ -155,17 +155,16 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
     
 <!-----------------------------PIHAK2 YANG TERLIBAT--------------------------------------------------->    
-<div class="card-header text-theme1 mt-2 mb-2 text-center">Daftar Pihak-pihak yang terlibat
-</div>
-<div class=" card-header" >
-<div class="row">
-<div class="col-md-5">    
-<div class="col ">
+<div class="row m-1 mt-2 ">
+<div class="col-md-5">
+<div class="card">
+<div class="card-header text-center">Form penambahan pihak terlibat</div>
+<div class="card-body">
 <form id="form_pihak_terlibat">
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash(); ?>" readonly="" class="required"  accept="text/plain">
 <input type="hidden" name="no_pekerjaan" value="<?php echo $this->uri->segment(3) ?>" readonly="" class="required"  accept="text/plain">   
 <input type="hidden" id="no_client" name="no_client" value="" readonly="" class="required"  accept="text/plain">   
-    
+
 <label>*Pilih Jenis pihak terlibat</label>
 <select name="jenis_client" id="jenis_client" class="form-control form-control-sm required" accept="text/plain">
 <option value="Perorangan">Perorangan</option>
@@ -178,7 +177,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <label>*Nama Perorangan</label>
 <input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>
 </div>
-    
+
 <label>*Jenis pihak yang bisa dihubungi</label>
 <select name="jenis_kontak" id="jenis_kontak" class="form-control form-control-sm required" accept="text/plain">
 <option></option>
@@ -191,26 +190,27 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 <label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
 
-</form>
+</form> 
+</div>
+<div class="card-footer">
+<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat <span class="fa fa-user"></span></button>
+
+</div>
 </div>    
-<hr>
-<button type="button" onclick="simpan_pihak();" class="btn btn-sm btn-success btn-block"> Tambahkan pihak yang terlibat</button>
+
 </div>
 
 <div class="col text-theme1 ">
-<div class="row text-center">
-<div class="col"><b>Nama</div>
-<div class="col">Aksi</b></div>
-</div>
-<div class="para_pihak">
+<div class="card">
+<div class="card-header text-center">Nama para pihak terlibat</div>    
+<div class=" card-body para_pihak">
 
 </div>    
-    
 </div>    
+</div>   
 </div>
 </div>
 
-</div>
 </div>
     
 <!--------------- data modal --------------->    
@@ -221,7 +221,14 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span></b>" ;
 </div>
 </div>
 </div>
+<!--------------- data modal --------------->    
+<div class="modal fade" id="modalcek" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+<div class="modal-content modalcek ">
 
+</div>
+</div>
+</div>
     
     
 <script type="text/javascript">
@@ -254,19 +261,32 @@ $("#badan_hukum").val("").attr('readonly', false);;
 });
 }
 
-function hapus_berkas_persyaratan(no_client,no_pekerjaan,id_data_berkas){
-var token  = "<?php echo $this->security->get_csrf_hash(); ?>" ;      
-
+function hapus_berkas_persyaratan(no_client,no_pekerjaan,no_berkas){
+Swal.fire({
+text: "Kamu yakin ingin menghapus lampiran ini",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, hapus',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {    
+$(".btnhapus"+no_berkas).attr('disabled',true);
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>"       
 $.ajax({
 type:"post",
 url:"<?php echo base_url('Data_lama/hapus_berkas_persyaratan/') ?>",
-data:"token="+token+"&id_data_berkas="+id_data_berkas,
+data:"token="+token+"&no_berkas="+no_berkas,
 success:function(data){
 data_terupload(no_client,no_pekerjaan);    
 read_response(data);
+$(".btnhapus"+no_berkas).attr('disabled',false);
+$('#modalcek').modal('hide')
 }
-});    
-    
+}); 
+}
+})
 }        
     
 $(function(){
@@ -660,18 +680,24 @@ data_terupload(no_client,no_pekerjaan);
 });
 }
 function form_edit_meta(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$(".btn_meta"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('Data_lama/form_edit_meta') ?>",
 success:function(data){
 $(".data"+no_berkas).slideDown().after(data); 
-$(".btn_edit"+no_berkas).hide();  
+$(".btn_meta"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
 regis_js();
 }
 });
+}
 }
 function update_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
 var data = $("#form"+no_berkas).serialize();
@@ -767,14 +793,43 @@ var no_nama_dokumen = $(".no_berkas"+no_berkas +" option:selected").val();
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas,
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client,
 url:"<?php echo base_url('Data_lama/set_jenis_dokumen') ?>",
 success:function(data){
 data_terupload(no_client,no_pekerjaan);
+var r = JSON.parse(data);
+if(r[0].status  =='warning'){
+openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan);
+}
 }
 });
-
 }
+function openmodalcekdokumen(no_client,no_nama_dokumen,no_berkas,no_pekerjaan){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('Data_lama/modal_cek_dokumen') ?>",
+success:function(data){
+$(".modalcek").html(data);    
+$('#modalcek').modal('show');
+}
+});
+}
+function hapus_meta(no_berkas,no_nama_dokumen,no_client,no_pekerjaan){
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('Data_lama/hapus_meta/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+}
+}); 
+}
+
+
 function cancel_edit(no_berkas){
 $(".data_edit"+no_berkas ).slideUp().html();
 $(".btn_edit"+no_berkas).show();  
@@ -801,8 +856,73 @@ window.location.href="<?php echo base_url('data_lama/lihat_berkas_client/') ?>"+
 function lihat_lampiran_client(no_client){
 window.location.href="<?php echo base_url('data_lama/lihat_lampiran_client/') ?>"+btoa(no_client);
 }
+$("#jenis_client").on("change",function(){
+var client = $("#jenis_client option:selected").text();
+
+if(client == "Perorangan"){
+$("#FormPeroranganBadanHukum").html("<label>*NIK KTP</label>\n\
+<input type='text' id='no_identitas' class='form-control no_identitas form-control-sm required' onkeyup='cari_client2()'  accept='text/plain' id='no_identitas' placeholder='NIK KTP' name='no_identitas'>\n\
+<label>*Nama Perorangan</label>\n\
+<input type='text' placeholder='Nama Perorangan' name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
+
+}else if(client == "Badan Hukum"){
+$("#FormPeroranganBadanHukum").html("<label>*No NPWP</label>\n\
+<input type='text' id='no_identitas' class='form-control no_identitas form-control-sm required' onkeyup='cari_client2()'  accept='text/plain'id='no_identitas' placeholder='No NPWP' name='no_identitas'>\n\
+<label>*Nama Badan Hukum</label>\n\
+<input type='text' placeholder='Nama Badan Hukum'  name='badan_hukum' id='badan_hukum' class='form-control form-control-sm required'  accept='text/plain'>");
+}
+});
 
 
+function DuplicateDokumen(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+Swal.fire({
+text: "Kamu yakin ingin menduplikasi dokumen ini, jika ya maka client tersebut akan memiliki lebih dari satu jenis dokumen yang sama",
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Ya, Duplikasi',
+cancelButtonText: 'Batalkan',
+}).then((result) => {
+if (result.value) {
+
+var token  = "<?php echo $this->security->get_csrf_hash(); ?>";       
+$.ajax({
+type    :"post",
+url     :"<?php echo base_url('Data_lama/DuplikasiDokumen/') ?>",
+data    :"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_nama_dokumen="+no_nama_dokumen,
+success :function(data){
+data_terupload(no_client,no_pekerjaan);    
+read_response(data);
+$('#modalcek').modal('hide')
+}
+}); 
+
+
+}
+})
+}
+function form_edit_meta_tersedia(no_client,no_pekerjaan,no_berkas,no_nama_dokumen){
+
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.data_edit'+no_berkas).slideUp("slow").remove();
+$("#trtersedia"+no_berkas).remove();
+$(".btn_tersedia"+no_berkas).addClass("btn-warning").removeClass("btn-info").html("Lihat Meta <i class='fa fa-eye'></i>");
+
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('Data_lama/form_edit_meta') ?>",
+success:function(data){
+$("#tersedia"+no_berkas).slideDown().after("<tr id='trtersedia"+no_berkas+"'><td class='pr-3 pl-3' colspan='5'>"+data+"</tr></td>"); 
+$(".btn_tersedia"+no_berkas).addClass("btn-info").removeClass("btn-warning").html("Tutup  <i class='fa fa-eye'></i>");
+regis_js();
+}
+});
+}
+}
 </script>    
 
 

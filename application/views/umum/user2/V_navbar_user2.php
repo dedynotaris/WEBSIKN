@@ -30,7 +30,7 @@ form {
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
 <li class="nav-item active">
-<a class="nav-link" href="<?php echo base_url('User2') ?>">Beranda <span class="fa fa-home "></span></a>
+<a class="nav-link" href="<?php echo base_url() ?>">Beranda <span class="fa fa-home "></span></a>
 </li>
 </ul>
 </div> 
