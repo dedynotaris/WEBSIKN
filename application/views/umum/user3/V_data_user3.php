@@ -19,7 +19,7 @@ In <br>
     <div class="col-md-4  " ><a   style="text-decoration:none;"  href="<?php echo base_url('User3/halaman_proses') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fa fa-retweet float-right fa-3x sticky-top"></span>
+<span class="fa fa-arrow-right float-right fa-3x sticky-top"></span>
 Proses <br>
 <h4>&nbsp;</h4>
 </div>

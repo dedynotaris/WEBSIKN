@@ -35,16 +35,18 @@ function json_data_lampiran_client($no_client){
 $this->datatables->select('id_data_berkas,'
 .'data_berkas.nama_berkas as nama_lampiran,'
 .'data_berkas.no_pekerjaan as no_pekerjaan,'
+.'data_berkas.tanggal_upload as tanggal_upload,'
 .'data_berkas.no_nama_dokumen as no_nama_dokumen,'
 .'nama_dokumen.nama_dokumen as jenis_dokumen,'
-.'data_berkas.pengupload as pengupload,'
+.'user.nama_lengkap as pengupload,'
 .'data_berkas.no_berkas as no_berkas'
 );
 $this->datatables->from('data_berkas');
 $this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
+$this->datatables->join('user','user.no_user = data_berkas.pengupload');
 $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
-$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success '  onclick=lihat_meta('$1','$2','$3'); >Lihat data <i class='fa fa-eye'></i></button>",'no_berkas,no_nama_dokumen,no_pekerjaan');
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-block btn-sm btn-success btn-lihat$1'  onclick=lihat_meta('$1','$2','$3'); >Lihat Lampiran <i class='fa fa-eye'></i></button>",'no_berkas,no_nama_dokumen,no_pekerjaan');
 return $this->datatables->generate();
 }
 
