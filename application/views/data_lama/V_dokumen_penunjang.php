@@ -1,34 +1,18 @@
-<body>
-<?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
-<div id="page-content-wrapper">
-<?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
-<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
-<?php $static = $data_client->row_array(); ?>   
-<div class="container-fluid mt-2"></div>
-<div class="col ">
-<div class="mt-2   text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-list-alt"></span>
-<br>Data lampiran <?php echo  $static['nama_client'] ?></h5>
-</div>
 
 <table style="width:100%;" id="data_berkas" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama lampiran</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody >
 </table>
 
-
-</div>
-</div>
     
 
 <div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-md" role="document">
-
 </div>
 </div>    
 
@@ -53,8 +37,6 @@ success:function(data){
 $("."+no_berkas).after(data);    
 $(".btn-lihat"+no_berkas).addClass("btn-warning").removeClass("btn-dark").html("Tutup ");
     
-//$(".modal-dialog").html(data);    
-//$('#data_perekaman').modal('show');
 }
 });
 }
@@ -206,4 +188,3 @@ $('td:eq(0)', row).html(index);
 
 </script>    
     
-</body>    

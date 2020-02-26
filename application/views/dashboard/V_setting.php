@@ -95,8 +95,6 @@ success:function(){
 </div>
 </div>
 </div>
-</div>
-</div>
 
 </body>
 

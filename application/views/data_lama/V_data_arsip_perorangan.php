@@ -5,21 +5,24 @@
 <?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
 
 <div class="container-fluid">
+    
+    
 <div class="mt-2  text-center  ">
 <h5 align="center " class="text-theme1"><span class="fa-3x fa fa-users"></span><br>Data Client Perorangan</h5>
 </div>
 
-<div class="row  m-2 p-2">
+<div class="row ">
 <div class="col ">
 <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >No Client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >NIK</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama Notaris</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama Asisten</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody align="center">
+<tbody >
 </table> 
 </div>
 </div>    
@@ -70,6 +73,7 @@ columns: [
 "data": "id_data_client",
 "orderable": false
 },
+{"data": "no_client"},
 {"data": "no_identitas"},
 {"data": "nama_client"},
 {"data": "nama_lengkap"},

@@ -85,6 +85,11 @@ public function json_data_lampiran_client($no_client){
 echo $this->M_data_lama->json_data_lampiran_client($no_client);  
 }
 
+public function json_data_utama_client($no_client){
+echo $this->M_data_lama->json_data_utama_client($no_client);  
+}
+
+
 
 public function json_data_arsip_perorangan(){
 echo $this->M_data_lama->json_data_arsip_perorangan();       
@@ -998,8 +1003,8 @@ $data_pekerjaan = $this->M_data_lama->data_pekerjaan(base64_decode($input['no_pe
 
 $config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
 $config['allowed_types']        = 'pdf|docx|doc|xlxs';
-$config['encrypt_name']         = TRUE;
-$config['max_size']             = 50000;
+$config['encrypt_name']         = false;
+$config['max_size']             = 5000000;
 $this->upload->initialize($config);   
 
 if ($this->form_validation->run() == FALSE){
@@ -1235,11 +1240,11 @@ $data_client = $this->M_data_lama->data_client_where($this->uri->segment(3));
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_lihat_berkas_client',['data_client'=>$data_client]);   
 }
-public function lihat_lampiran_client(){    
+public function lihat_client(){    
 $data_client = $this->M_data_lama->data_client_where($this->uri->segment(3));       
 
 $this->load->view('umum/V_header');
-$this->load->view('data_lama/V_lihat_lampiran_client',['data_client'=>$data_client]);   
+$this->load->view('data_lama/V_lihat_client',['data_client'=>$data_client]);   
 }
 
 function lihat_meta(){
