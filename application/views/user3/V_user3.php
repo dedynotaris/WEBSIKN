@@ -33,7 +33,7 @@
 <td>
 
 <button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas">Terima tugas <i class="fa fa-check"></i></button>    
-<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas">Tolak tugas <i class="fa fa-backward"></i></button>    
+<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas">Tolak tugas <i class="fa fa-arrow-circle-left"></i></button>    
 <button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary mt-2" title="Dokumen Pemilik">Dokumen Penunjang <i class="fa fa-archive"></i></button>    
 </td>
 </tr>

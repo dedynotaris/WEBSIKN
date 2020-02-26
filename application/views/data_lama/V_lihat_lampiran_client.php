@@ -11,14 +11,14 @@
 <br>Data lampiran <?php echo  $static['nama_client'] ?></h5>
 </div>
 
-<table style="width:100%;" id="data_berkas" class="table  text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_berkas" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
 <tr role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama lampiran</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
 </thead>
-<tbody align="center">
+<tbody >
 </table>
 
 
@@ -36,17 +36,28 @@
 
 <script type="text/javascript">
 function lihat_meta(no_berkas,no_nama_dokumen,no_pekerjaan){
+    
+
+if($(".hasil"+no_berkas).length > 0 ){
+$('.hasil'+no_berkas).slideUp("slow").remove();
+$(".btn-lihat"+no_berkas).addClass("btn-dark").removeClass("btn-warning").html("Lihat");
+
+}else{    
+    
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('data_lama/lihat_meta') ?>",
 success:function(data){
-$(".modal-dialog").html(data);    
-$('#data_perekaman').modal('show');
+$("."+no_berkas).after(data);    
+$(".btn-lihat"+no_berkas).addClass("btn-warning").removeClass("btn-dark").html("Tutup ");
+    
+//$(".modal-dialog").html(data);    
+//$('#data_perekaman').modal('show');
 }
 });
-
+}
 }
 
 function hapus_lampiran(no_berkas){
@@ -145,6 +156,9 @@ return {
 };
 
 var t = $("#data_berkas").dataTable({
+ 'createdRow': function( row, data, dataIndex ) {
+      $(row).addClass( data.no_berkas );
+  },    
 initComplete: function() {
 var api = this.api();
 $('#data_berkas')
@@ -169,13 +183,12 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 columns: [
 {
 "data": "id_data_berkas",
-"orderable": false
+"orderable": false,
+"class":"id_data_berkas"
 },
 {"data": "nama_lampiran"},
 {"data": "jenis_dokumen"},
 {"data": "view"}
-
-
 ],
 order: [[0, 'desc']],
 rowCallback: function(row, data, iDisplayIndex) {
@@ -185,7 +198,10 @@ var length = info.iLength;
 var index = page * length + (iDisplayIndex + 1);
 $('td:eq(0)', row).html(index);
 }
+
+ 
 });
+
 });
 
 </script>    
