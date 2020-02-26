@@ -16,7 +16,7 @@
 <?php } else{ ?> 
 <table class="table mt-2 text-theme1 table-hover table-sm table-bordered text-center table-striped ">
 <tr>
-    <th>No</th>    
+<th>No</th>    
 <th>Nama client</th>
 <th>Nama Tugas</th>
 <th>Tugas Dari</th>
@@ -32,12 +32,11 @@
 <td><?php echo $data['tanggal_penugasan'] ?></td>
 <td>
 
-<button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas"><i class="fa fa-check"></i></button>    
-<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas"><i class="fa fa-eject"></i></button>    
-<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
+<button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas">Terima tugas <i class="fa fa-check"></i></button>    
+<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas">Tolak tugas <i class="fa fa-arrow-circle-left"></i></button>    
+<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary mt-2" title="Dokumen Pemilik">Dokumen Penunjang <i class="fa fa-archive"></i></button>    
 </td>
 </tr>
-
 <?php } ?>
 </table>
 <?php } ?>
@@ -45,14 +44,25 @@
 </div>
 
 </div>
-
-<!-------------modal--------------------->
-<div class="modal fade text-theme1" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="modal_dinamis" aria-hidden="true">
 </div>
-
-
-
-  
+</div>
+    
+<!-------------modal--------------------->
+<div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalScrollableTitle"></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+     
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
 .swal2-overflow {
@@ -71,7 +81,7 @@ type:"post",
 data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan+"&no_client="+no_client,
 url:"<?php echo base_url('User3/data_perekaman') ?>",
 success:function(data){
-$("#data_modal").html(data);    
+//$("#data_modal").html(data);    
 $('#data_modal').modal('show');
 }
 
@@ -96,7 +106,7 @@ $('#data_modal').modal('show');
 
 function terima_perizinan(no_berkas_perizinan){
 swal.fire({
-title: 'Target Selesai Perizinan <br><hr>',
+title: 'Target Selesai Perizinan',
 html: '<input class="form-control" readonly="" id="target_kelar">',
 showCancelButton: true,
 confirmButtonColor: '#3085d6',
@@ -113,18 +123,6 @@ dateFormat: 'yy/mm/dd'
 }).then((result) => {
 
 if($("#target_kelar").val() == ''){
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated zoomInDown'
-});
-Toast.fire({
-type: "warning",
-title: "Anda belum memasukan target"
-});
 }else{
 var target_kelar = $("#target_kelar").val();
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -155,7 +153,20 @@ window.location.href = "<?php echo base_url('User3/halaman_proses'); ?>";
 }
 
 function lihat_dokumen_client(no_client){
-window.location.href ="<?php echo base_url('User3/lihat_lampiran_client/') ?>"+btoa(no_client);
+//window.location.href ="<?php echo base_url('User3/lihat_lampiran_client/') ?>"+btoa(no_client);
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client,
+url:"<?php echo base_url('User3/lihat_dokumen_client') ?>",
+success:function(data){
+var r  =JSON.parse(data);
+$(".modal-title").html(r[0].title);
+$(".modal-body").html(r[0].data);
+$('#data_modal').modal('show');
+}
+});
+
 }
 
 function download(id_data_berkas){

@@ -15,8 +15,8 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >No Pekerjaaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Asisten</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody align="center">
 </table> 
@@ -68,8 +68,8 @@ columns: [
 },
 {"data": "no_pekerjaan"},
 {"data": "nama_client"},
-{"data": "nama_jenis"},
-{"data": "view"}
+{"data": "nama_lengkap"},
+{"data": "nama_jenis"}
 
 
 ],

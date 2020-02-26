@@ -2,7 +2,7 @@
 <div class="bg-theme2 " id="sidebar-wrapper">
 <div style="" class="sidebar-heading ">
 <div class="text-center" style="padding:0.890rem 1rem; background-color:darkcyan; font-size:16px">
-    <a href="<?php echo base_url('User2'); ?>"><span style="color:#fff;">App Management Document</span></a>
+    <a href="<?php echo base_url('User2'); ?>"><span style="color:#fff;">Divisi Asisten</span></a>
    
 </div>
 

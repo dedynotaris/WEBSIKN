@@ -1244,7 +1244,46 @@ $this->load->view('data_lama/V_lihat_lampiran_client',['data_client'=>$data_clie
 
 function lihat_meta(){
 if($this->input->post()){ 
-$input = $this->input->post(); 
+$input = $this->input->post();
+$data = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));
+$this->db->select('data_meta_berkas.nama_meta,'
+  . 'data_meta_berkas.value_meta,'
+  . 'nama_dokumen.nama_dokumen,'
+  . 'data_berkas.no_berkas,'
+  . 'data_client.nama_client,'
+  . 'data_client.nama_folder,'
+  . 'data_berkas.nama_berkas');
+$this->db->from('data_berkas');
+$this->db->join('data_meta_berkas', 'data_meta_berkas.no_berkas = data_berkas.no_berkas','left');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->group_by('data_meta_berkas.no_berkas');
+$this->db->where('data_berkas.no_berkas',$input['no_berkas']);
+$query = $this->db->get()->row_array();
+
+
+
+echo "<tr class='hasil".$input['no_berkas']."'><td colspan='4'>";
+foreach ($data->result_array() as $d){
+echo str_replace('_', ' ',$d['nama_meta'])." : ".$d['value_meta']."<br>";    
+}
+echo "<br>";
+$ext = pathinfo($query['nama_berkas'], PATHINFO_EXTENSION);
+if($ext =="docx" || $ext =="doc" || $ext =="pptx" ){
+echo '<div class="text-center">'
+    . '<H5 class="text-danger">Maaf Kami tidak dapat menampilkan file silahkan klik tombol dibawah ini</H5>'
+    . '<button onclick=cek_download("'.base64_encode($input['no_berkas']).'") class="btn btn-success btn-sm">Download file <i class="fa fa-download"></i></button>'
+    . '</div>';
+  
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG" ||$ext == "PDF" ||$ext == "pdf"){
+echo '<div class="embed-responsive embed-responsive-16by9">'
+    . '<iframe cols="100%" class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'" ></iframe>'
+        . '</div>';
+}
+
+echo"</td></tr>";
+/* 
 $data = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
 
 echo '<div class="modal-content ">
@@ -1275,7 +1314,7 @@ echo "<button onclick=edit_meta('".$input['no_berkas']."','".$input['no_nama_dok
 echo "<button  onclick=hapus_lampiran('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-danger  '>Hapus lampiran <span class='fa fa-trash'></span></button>";
 echo'</div>'
 . '</div>';    
-
+*/
 
 }else{
 redirect(404);
