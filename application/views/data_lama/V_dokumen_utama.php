@@ -12,6 +12,28 @@
 </table>
 
 <script type="text/javascript">
+function lihat_utama(id_data_dokumen_utama){
+if($(".utama"+id_data_dokumen_utama).length > 0 ){
+$('.utama'+id_data_dokumen_utama).slideUp("slow").remove();
+$(".btn-utama"+id_data_dokumen_utama).addClass("btn-dark").removeClass("btn-warning").html("Lihat");
+
+}else{    
+    
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&id_data_dokumen_utama="+id_data_dokumen_utama,
+url:"<?php echo base_url('data_lama/lihat_utama') ?>",
+success:function(data){
+$("."+id_data_dokumen_utama).after(data);    
+$(".btn-utama"+id_data_dokumen_utama).addClass("btn-warning").removeClass("btn-dark").html("Tutup ");
+    
+}
+});
+}
+}
+    
+    
 $(document).ready(function() {
 $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings)
 {
@@ -28,7 +50,7 @@ return {
 
 var t = $("#data_utama").dataTable({
  'createdRow': function( row, data, dataIndex ) {
-      $(row).addClass( data.no_berkas );
+      $(row).addClass( data.id_data_dokumen_utama );
   },    
 initComplete: function() {
 var api = this.api();

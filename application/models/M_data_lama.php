@@ -159,7 +159,7 @@ $query = $this->db->get();
 return $query;    
 }
 
-public function data_pekerjaan($no_pekerjaan){
+public function data_pekerjaan($no_pekerjaan,$no_client){
 $this->db->select('data_client.nama_folder,'
 . 'data_client.no_client,'
 . 'data_pekerjaan.no_pekerjaan,'
@@ -192,12 +192,13 @@ $query = $this->db->get();
 return $query;
 }
 
-public function dokumen_utama($no_pekerjaan){
+public function dokumen_utama($no_pekerjaan,$no_client){
 $this->db->select("*");
 $this->db->from('data_dokumen_utama');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan','left');
 $this->db->join('user', 'user.no_user = data_pekerjaan.no_user','left');
 $this->db->where('data_dokumen_utama.no_pekerjaan',base64_decode($no_pekerjaan));
+$this->db->where('data_pekerjaan.no_client',$no_client);
 $query = $this->db->get();  
 return $query;    
 }
@@ -483,7 +484,8 @@ return $this->datatables->generate();
 }
 
 function json_data_utama_client($no_client){
-$this->datatables->select('data_jenis_pekerjaan.nama_jenis,'
+$this->datatables->select('id_data_dokumen_utama,'
+        . 'data_jenis_pekerjaan.nama_jenis,'
         . 'data_dokumen_utama.id_data_dokumen_utama,'
         . 'data_dokumen_utama.no_akta,'
         . 'data_dokumen_utama.tanggal_akta,'
@@ -493,7 +495,7 @@ $this->datatables->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pe
 $this->datatables->join('data_dokumen_utama','data_dokumen_utama.no_pekerjaan = data_pekerjaan.no_pekerjaan');
 $this->datatables->join('data_client','data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->where('data_pekerjaan.no_client',base64_decode($no_client));
-$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-lihat$1'  onclick=lihat_utama('$1'); >Lihat </button>",'id_data_dokumen_utama');
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat </button>",'id_data_dokumen_utama');
 return $this->datatables->generate();
 }
 

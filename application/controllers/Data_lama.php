@@ -943,6 +943,7 @@ echo  '<div class="row">
 <h5 class ="text-center"> Upload dokumen utama </h5>
 <hr>
 <form id="form_utama">
+<input type="hidden" value="'.$input['no_client'].'" name="no_client">
 <input type="hidden" value="'.$input['no_pekerjaan'].'" name="no_pekerjaan">
 <input type="hidden" value="'.$this->security->get_csrf_hash().'" name="token">
 <label>Tanggal akta</label>
@@ -964,7 +965,7 @@ echo  '<div class="row">
 <div class="col overflow-auto" style="max-height:355px;">    
 <h5 class ="text-center">Daftar dokumen utama  yang sudah diupload</h5>
 <hr>';
-$dokumen_utama = $this->M_data_lama->dokumen_utama($input['no_pekerjaan']);
+$dokumen_utama = $this->M_data_lama->dokumen_utama($input['no_pekerjaan'],$input['no_client']);
 echo '<table class="table text-theme1 table-sm table-striped table-bordered text-center table-hover">
 <tr>
 <th>nama file</th>
@@ -995,11 +996,12 @@ redirect(404);
 public function upload_utama(){
 if($this->input->post()){
 $input = $this->input->post();
+
 $this->form_validation->set_rules('no_pekerjaan', 'No pekerjaan', 'required',array('required' => 'Data ini tidak boleh kosong'));
 $this->form_validation->set_rules('tanggal_akta', 'Tanggal akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
 $this->form_validation->set_rules('no_akta', 'Nomor Akta', 'required',array('required' => 'Data ini tidak boleh kosong'));
 $this->form_validation->set_rules('jenis_utama', 'Jenis file utama', 'required',array('required' => 'Data ini tidak boleh kosong'));
-$data_pekerjaan = $this->M_data_lama->data_pekerjaan(base64_decode($input['no_pekerjaan']))->row_array();
+$data_pekerjaan = $this->M_data_lama->data_pekerjaan(base64_decode($input['no_pekerjaan']),$input['no_client'])->row_array();
 
 $config['upload_path']          = './berkas/'.$data_pekerjaan['nama_folder'];
 $config['allowed_types']        = 'pdf|docx|doc|xlxs';
@@ -1288,38 +1290,6 @@ echo '<div class="embed-responsive embed-responsive-16by9">'
 }
 
 echo"</td></tr>";
-/* 
-$data = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$input['no_berkas']));    
-
-echo '<div class="modal-content ">
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-<div class="modal-body data_perekaman">';
-if($data->num_rows() == 0){
-echo "<p class='text-center'>Meta Data Tidak Tersedia</p><hr>";    
-}else{
-echo '<table class="table table-sm table-bordered ">';
-
-foreach ($data->result_array() as $d){
-echo "<tr><td>".str_replace('_', ' ',$d['nama_meta'])."</td><td>".$d['value_meta']."</td></tr>";    
-}
-
-echo "<table>"
-. "<hr>";
-}
-echo "<button onclick=cek_download('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-success '>Download lampiran <span class='fa fa-save'></span></button>";
-
-
-echo "<button onclick=edit_meta('".$input['no_berkas']."','".$input['no_nama_dokumen']."','".$input['no_pekerjaan']."') class='btn btn-sm  mr-2  btn-warning  '>Meta lampiran <span class='fa fa-edit'></span></button>";
-
-echo "<button  onclick=hapus_lampiran('".base64_encode($input['no_berkas'])."') class='btn btn-sm  mr-2 btn-danger  '>Hapus lampiran <span class='fa fa-trash'></span></button>";
-echo'</div>'
-. '</div>';    
-*/
 
 }else{
 redirect(404);
@@ -1707,6 +1677,44 @@ echo json_encode($response);
 redirect(404);    
 }    
 }
+
+function lihat_utama(){
+if($this->input->post()){ 
+$input = $this->input->post();
+echo print_r($input);
+
+$this->db->select('data_dokumen_utama.nama_file,'
+        . 'data_client.nama_folder'
+        . '');
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
+$this->db->where('data_dokumen_utama.id_data_dokumen_utama',$input['id_data_dokumen_utama']);
+$query = $this->db->get()->row_array();
+
+
+echo "<tr class='utama".$input['id_data_dokumen_utama']."'><td colspan='6'>";
+
+$ext = pathinfo($query['nama_file'], PATHINFO_EXTENSION);
+if($ext =="docx" || $ext =="doc" || $ext =="pptx" ){
+echo '<div class="text-center">'
+    . '<H5 class="text-danger">Maaf Kami tidak dapat menampilkan file silahkan klik tombol dibawah ini</H5>'
+    . '<button onclick=cek_download_utama("'.base64_encode($input['id_data_dokumen_utama']).'") class="btn btn-success btn-sm">Download file <i class="fa fa-download"></i></button>'
+    . '</div>';
+  
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG" ||$ext == "PDF" ||$ext == "pdf"){
+echo '<div class="embed-responsive embed-responsive-16by9">'
+    . '<iframe cols="100%" class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_file']).'" ></iframe>'
+        . '</div>';
+}
+
+echo"</td></tr>";
+
+}else{
+redirect(404);
+}    
+}
+
 }
 
 
