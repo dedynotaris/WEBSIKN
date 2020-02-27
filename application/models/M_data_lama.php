@@ -79,10 +79,10 @@ return $this->datatables->generate();
 
 function json_data_arsip(){
 $this->datatables->select('id_data_pekerjaan,'
-. 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
-. 'data_client.nama_client as nama_client,'
-. 'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
-. 'user.nama_lengkap as nama_lengkap');
+.'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
+.'data_client.nama_client as nama_client,'
+.'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
+.'user.nama_lengkap as nama_lengkap');
 $this->datatables->from('data_pekerjaan');
 $this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->join('user', 'user.no_user = data_pekerjaan.no_user');
@@ -473,13 +473,30 @@ $this->datatables->select('id_data_berkas,'
 .'data_berkas.no_nama_dokumen as no_nama_dokumen,'
 .'nama_dokumen.nama_dokumen as jenis_dokumen,'
 .'data_berkas.pengupload as pengupload,'
+.'data_client.no_client as no_client,'
 .'data_berkas.no_berkas as no_berkas'
 );
 $this->datatables->from('data_berkas');
 $this->datatables->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->datatables->join('data_client','data_client.no_client = data_berkas.no_client');
 $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
-$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-lihat$1'  onclick=lihat_meta('$1','$2','$3'); >Lihat </button>",'no_berkas,no_nama_dokumen,no_pekerjaan');
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-lihat$2'  onclick=lihat_meta('$1','$2','$3'); >Lihat </button>",'no_pekerjaan,no_berkas,no_client');
+return $this->datatables->generate();
+}
+
+function json_data_pekerjaan_client($no_client){
+$this->datatables->select('no_pekerjaan,'
+        . 'data_pekerjaan.no_pekerjaan,'
+        . 'data_pekerjaan.no_client,'
+        . 'data_pekerjaan.status_pekerjaan,'
+        . 'data_pekerjaan.tanggal_dibuat,'
+        . 'user.nama_lengkap,'
+        . 'data_jenis_pekerjaan.nama_jenis');
+$this->datatables->from('data_pekerjaan');
+$this->datatables->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->datatables->join('user','user.no_user = data_pekerjaan.no_user');
+$this->datatables->where('data_pekerjaan.no_client',base64_decode($no_client));
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-lihat$2'  onclick=lihat_terlibat('$1','$2'); >Lihat Terlibat </button>",'no_client,no_pekerjaan');
 return $this->datatables->generate();
 }
 

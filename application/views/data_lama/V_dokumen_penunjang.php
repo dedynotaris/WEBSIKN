@@ -19,24 +19,19 @@
 
 
 <script type="text/javascript">
-function lihat_meta(no_berkas,no_nama_dokumen,no_pekerjaan){
-    
-
+function lihat_meta(no_pekerjaan,no_berkas,no_client){
 if($(".hasil"+no_berkas).length > 0 ){
 $('.hasil'+no_berkas).slideUp("slow").remove();
 $(".btn-lihat"+no_berkas).addClass("btn-dark").removeClass("btn-warning").html("Lihat");
-
 }else{    
-    
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_berkas="+no_berkas+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_berkas="+no_berkas+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
 url:"<?php echo base_url('data_lama/lihat_meta') ?>",
 success:function(data){
 $("."+no_berkas).after(data);    
 $(".btn-lihat"+no_berkas).addClass("btn-warning").removeClass("btn-dark").html("Tutup ");
-    
 }
 });
 }

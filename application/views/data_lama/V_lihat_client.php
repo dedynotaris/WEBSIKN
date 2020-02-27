@@ -15,7 +15,7 @@
 <a class="nav-link " data-toggle="tab" href="#dokumen">Detail Dokumen Utama </a>
 </li>
 <li class="nav-item ml-1">
-<a class="nav-link" data-toggle="tab" href="#aplikasi">Detail Pekerjaan </a>
+<a class="nav-link " data-toggle="tab" href="#pekerjaan">Detail Pekerjaan </a>
 </li>
 </ul>
 
@@ -36,14 +36,12 @@
 </div>
 </div>
 </div>
-<!----------------------------Aplikasi------------------------------>
-<div class="tab-pane container-fluid fade" id="aplikasi">
-<div class="row ">
-<div class="col">
-<button onclick="TambahDataUser()" class="btn btn-success btn-sm float-right" >Tambahkan Data User <i class="fa fa-plus"></i></button>
-<h5 align="center">&nbsp;</h5>
-<hr>
-<?php //$this->load->view('dashboard/V_data_user_setting'); ?>
+
+<!----------------------------Pekerjaan------------------------------>
+<div class="tab-pane  container-fluid fade" id="pekerjaan">
+<div class="row">
+<div class="col mt-2">
+<?php $this->load->view('data_lama/V_pekerjaan_client'); ?>
 </div>
 </div>
 </div>
