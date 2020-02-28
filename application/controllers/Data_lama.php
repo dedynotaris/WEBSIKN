@@ -1747,6 +1747,11 @@ echo"</td></tr>";
 redirect(404);
 }    
 }
+public function PengaturanArsipLoker(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_pengaturan_arsip_loker');
+}
+
 
 }
 

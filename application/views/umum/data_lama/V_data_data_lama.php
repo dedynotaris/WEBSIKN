@@ -3,7 +3,7 @@
 <div class="col-md-4 "><a   style="text-decoration:none;" href="<?php echo base_url('data_lama/DataArsipClient') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fas fa-inbox float-right fa-3x sticky-top"></span>
+<span class="fas fa-arrow-circle-right  float-right fa-3x sticky-top"></span>
 In <br>
 <h4>&nbsp;</h4>
 </div>
@@ -18,7 +18,7 @@ In <br>
 <div class="col-md-4  "><a  style="text-decoration:none;" href="<?php echo base_url('data_lama/DataArsipProses') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fas fa-archive float-right fa-3x sticky-top"></span>
+<span class="fa fa-arrow-circle-right float-right fa-3x sticky-top"></span>
 Proses <br>
 <h4>&nbsp;</h4>
 </div>
@@ -34,7 +34,7 @@ Proses <br>
 <div class="col-md-4 "><a  style="text-decoration:none;" href="<?php echo base_url('data_lama/DataArsipSelesai') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fas fa-box float-right fa-3x sticky-top"></span>
+<span class="fa fa-flag-checkered  float-right fa-3x sticky-top"></span>
 Out <br>
 <h4>&nbsp;</h4>
 </div>
