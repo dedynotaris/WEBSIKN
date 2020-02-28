@@ -93,6 +93,14 @@ public function json_data_pekerjaan_client($no_client){
 echo $this->M_data_lama->json_data_pekerjaan_client($no_client);  
 }
 
+public function json_daftar_lemari(){
+echo $this->M_data_lama->json_daftar_lemari();  
+}
+
+public function json_daftar_pekerjaan_selesai(){
+echo $this->M_data_lama->json_daftar_pekerjaan_selesai();  
+}
+
 
 public function json_data_arsip_perorangan(){
 echo $this->M_data_lama->json_data_arsip_perorangan();       
@@ -1722,7 +1730,6 @@ function lihat_terlibat(){
 if($this->input->post()){ 
 $input = $this->input->post();
 
-echo print_r($input);
 
 $pihak = $this->db->get_where('data_pemilik',array('no_pekerjaan'=>$input['no_pekerjaan']));
 
@@ -1751,7 +1758,109 @@ public function PengaturanArsipLoker(){
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_pengaturan_arsip_loker');
 }
+public function simpanlemari(){
+if($this->input->post()){
+$input = $this->input->post();
+$this->form_validation->set_rules('nama_tempat', 'Nama Tempat', 'required',array('required' => 'Data ini tidak boleh kosong'));
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
 
+}else{
+$tot_lemari = $this->db->get_where('data_daftar_lemari')->num_rows();    
+$no_lemari    = "LM".str_pad($tot_lemari+1,3 ,"0",STR_PAD_LEFT);    
+
+$data = array(
+'no_lemari'     =>$no_lemari,
+'nama_tempat'   =>$input['nama_tempat']
+);
+
+$this->db->insert('data_daftar_lemari',$data);
+$status_input = $this->form_validation->error_array();
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'Tempat penyimpanan arsip fisik berhasil dibuat',    
+);
+echo json_encode($status);
+
+}    
+}else{
+redirect(404);    
+}    
+}
+public function simpanloker(){
+if($this->input->post()){
+$input = $this->input->post();
+
+echo print_r($input);
+    
+}else{
+redirect(404);    
+}    
+}
+
+public function PekerjaanBaruSelesai(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_pekerjaan_baru_selesai');
+}
+
+public function setting_lemari(){
+if($this->input->post()){
+$input      = $this->input->post();
+    
+$jumlah_loker = $this->db->get_where('data_daftar_loker',array('no_lemari'=>$input['no_lemari']))->num_rows() +1;    
+echo "<tr class=' bg-warning lemari".$input['no_lemari']."'><td colspan='7'>";
+echo "<div class='row'>"
+.    "<div class='col'>"
+. "<form id='formbuatloker".$input['no_lemari']."'>";
+echo "<label>No Loker</label>";
+echo "<input name='no_lemari' class='form-control form-control-sm' readonly type='hidden' value='".$input['no_lemari']."' >";
+echo "<input name='no_loker' class='form-control form-control-sm' readonly type='text' value='".$jumlah_loker."' >";
+echo "<label>Status Loker</label>";
+echo "<select class='form-control form-control-sm'>";
+echo "<option>Tersedia</option>";
+echo "<option>Penuh</option>";
+echo "</select>"
+. "<hr></form>"
+. "<button type='button' onclick=simpanloker('".$input['no_lemari']."'); class='btn btn-sm btn-block btn-dark'>Simpan Loker <i class='fa fa-save'></i></button>";
+echo "</div>"
+. "</div>";
+echo "</td></tr>";
+    
+}else{
+redirect(404);    
+}    
+    
+}
+
+public function setting_loker(){
+if($this->input->post()){
+$input      = $this->input->post();
+$data_loker = $this->db->get_where('data_daftar_loker');
+echo "<tr class=' bg-warning settingloker".$input['no_pekerjaan']."'><td colspan='7'>";
+echo "<div class='row'>"
+.    "<div class='col'>";
+echo "<label>Pilih Lokasi Penyimpanan</label>";
+echo "<select class='form-control form-control-sm'>";
+
+
+echo "</select>";
+echo "<div class='datalokertersedia'></div>";
+echo "</div>"
+. "<div class='col'></div>"
+. "</div>";
+echo "</td></tr>";
+    
+}else{
+redirect(404);    
+}    
+    
+}
 
 }
 

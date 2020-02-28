@@ -9,7 +9,7 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >Asisten</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody >
+<tbody>
 </table>
 
 <script type="text/javascript">
@@ -111,10 +111,7 @@ var length = info.iLength;
 var index = page * length + (iDisplayIndex + 1);
 $('td:eq(0)', row).html(index);
 }
-
- 
 });
-
 });
 
 </script>    

@@ -77,6 +77,17 @@ $this->datatables->add_column('view','<button onclick="download($1)" class="btn 
 return $this->datatables->generate();
 }
 
+function json_daftar_lemari(){
+
+$this->datatables->select('no_lemari,'
+        . 'data_daftar_lemari.no_lemari,'
+        . 'data_daftar_lemari.nama_tempat');
+$this->datatables->from('data_daftar_lemari');
+$this->datatables->add_column('view','<button onclick=buatlokerlemari("$1") class="btn btn-sm btn-dark btn-block btn-lemari$1">Masukan Loker <span class="fa fa-edit"></span></button>', 'no_lemari');
+return $this->datatables->generate();
+}
+
+
 function json_data_arsip(){
 $this->datatables->select('id_data_pekerjaan,'
 .'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
@@ -513,6 +524,23 @@ $this->datatables->join('data_dokumen_utama','data_dokumen_utama.no_pekerjaan = 
 $this->datatables->join('data_client','data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->where('data_pekerjaan.no_client',base64_decode($no_client));
 $this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat </button>",'id_data_dokumen_utama');
+return $this->datatables->generate();
+}
+
+function json_daftar_pekerjaan_selesai(){
+$this->datatables->select('no_pekerjaan,'
+        .'data_pekerjaan.no_pekerjaan,'
+        .'data_jenis_pekerjaan.nama_jenis,'
+        .'data_client.nama_client');
+$this->datatables->from('data_pekerjaan');
+$this->datatables->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->datatables->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->add_column('penunjang',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('utama',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('terlibat',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-loker$1'  onclick=settingloker('$1'); >Loker <i class='fa fa-cogs'></i></button>",'no_pekerjaan');
+$this->datatables->where_in('data_pekerjaan.status_pekerjaan',array('Selesai','ArsipSelesai'));
+$this->datatables->where_in('data_pekerjaan.no_loker',array('',NULL));
 return $this->datatables->generate();
 }
 

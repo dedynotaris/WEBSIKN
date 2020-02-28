@@ -135,7 +135,7 @@ return {
 var t = $("#data_berkas").dataTable({
  'createdRow': function( row, data, dataIndex ) {
       $(row).addClass( data.no_berkas );
-  },    
+  },  
 initComplete: function() {
 var api = this.api();
 $('#data_berkas')
