@@ -463,11 +463,15 @@ $this->db->select('data_client.nama_client,'
 . 'data_pekerjaan.no_pekerjaan,'
 . 'data_pekerjaan.tanggal_dibuat,'
 . 'user.nama_lengkap as asisten,'
+. 'data_daftar_lemari.nama_tempat,'
+. 'data_daftar_loker.no_loker,'
 . 'data_jenis_pekerjaan.nama_jenis');
 $this->db->from('data_client');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_client = data_client.no_client','left');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan','left');
 $this->db->join('user', 'user.no_user = data_pekerjaan.no_user','left');
+$this->db->join('data_daftar_loker', 'data_daftar_loker.id_no_loker = data_pekerjaan.id_no_loker');
+$this->db->join('data_daftar_lemari', 'data_daftar_lemari.no_lemari = data_daftar_loker.no_lemari');
 $this->db->where('data_client.no_client',$input['no_client']);
 $query = $this->db->get();    
 $static  = $query->row_array();    
@@ -484,14 +488,16 @@ $this->db->where('data_client.no_client',$input['no_client']);
 $penunjang = $this->db->get();    
 
 $html = "<div class='row'>"
-. "<div class='col-md-8'>";
+. "<div class='col-md-12'>";
 $html .="<table class='table  table-sm table-bordered table-striped'>"
 . "<tr>"
 . "<th>Pekerjaan</th>"
 . "<th>Dokumen Utama</th>"
-. "<th>Tanggal </th>"
+. "<th>Tanggal Pekerjaan</th>"
 . "<th>Asisten</th>"
 . "<th>Pihak Terlibat</th>"
+. "<th>Lokasi Fisik</th>"
+. "<th>No Loker</th>"
 . "</tr>";
 if($static['no_pekerjaan']  != NULL){        
 foreach ($query->result_array() as $pekerjaan){
@@ -501,17 +507,19 @@ $html .="<tr id='".$pekerjaan['no_pekerjaan']."'>"
 ."<td>".$pekerjaan['tanggal_dibuat']."</td>"
 ."<td>".$pekerjaan['asisten']."</td>"
 ."<td><button onclick=LihatTerlibat('".$pekerjaan['no_pekerjaan']."','".$pekerjaan['no_client']."');  class='btn btn-light btn-sm btn-block btnterlibat".$pekerjaan['no_pekerjaan']."' '>Lihat <i class='fa fa-eye'></i> </button></td>"
+."<td>".$pekerjaan['nama_tempat']."</td>"
+."<td>".$pekerjaan['no_loker']."</td>"
 . "<tr>";
 }
 }else{
-$html .="<tr><td colspan='5' class='text-center'>Tidak ada pekerjaan tersedia</td></tr>";   
+$html .="<tr><td colspan='7' class='text-center'>Tidak ada pekerjaan tersedia</td></tr>";   
 }
 
 
 $html  .="</table></div>";
 
 $html .="<div class='col'>" 
-. "<table class='table  table-sm table-bordered table-hover'>"
+. "<table class='table  table-sm table-bordered table-hover table-striped'>"
 . "<tr>"
 . "<th class='text-center'>Daftar Dokumen Penunjang</th>"
 . "</tr>";
@@ -554,10 +562,10 @@ $this->db->select('data_dokumen_utama.jenis,'
 . 'data_dokumen_utama.no_akta');
 $utama  = $this->db->get_where('data_dokumen_utama',array('no_pekerjaan'=>$input['no_pekerjaan']));
 
-$data = "<tr class='bg-info' id='toggle".$input['no_pekerjaan']."'><td colspan='5'>";
+$data = "<tr class='bg-info' id='toggle".$input['no_pekerjaan']."'><td colspan='7'>";
 $data .="<table class='table  table-sm table-bordered table-hover bg-cuccess'>"
 . "<tr>"
-. "<td colspan='5' class='text-center'>Dokumen Utama</td>"
+. "<td colspan='7' class='text-center'>Dokumen Utama</td>"
 . "</tr>"
 . "<tr>"
 . "<td>Jenis </td>"
@@ -573,7 +581,7 @@ $data .="<tr onclick=LihatFile('dokumen_utama','".$a['id_data_dokumen_utama']."'
 . "</tr>";    
 }
 }else{
-$data .="<tr><td colspan='3' class='text-center'>Dokumen utama tidak tersedia</td></tr>";   
+$data .="<tr><td colspan='7' class='text-center'>Dokumen utama tidak tersedia</td></tr>";   
 
 }
 
@@ -598,10 +606,10 @@ $this->db->where('data_pemilik.no_pekerjaan',$input['no_pekerjaan']);
 
 $data_pemilik = $this->db->get();  
 $static = $data_pemilik->row_array();
-$data = "<tr class='bg-primary' id='terlibat".$input['no_pekerjaan']."'><td colspan='5'>";
+$data = "<tr class='bg-primary' id='terlibat".$input['no_pekerjaan']."'><td colspan='7'>";
 $data .="<table class='table  table-sm table-bordered table-striped bg-cuccess'>"
 . "<tr>"
-. "<td colspan='5' class='text-center'>Pihak Terlibat</td>"
+. "<td colspan='7' class='text-center'>Pihak Terlibat</td>"
 . "</tr>"
 . "<tr>"
 . "<th>Nama</th>"
@@ -615,13 +623,13 @@ $data .="<tr>"
 . "<td><button  onclick=LihatKeterlibatan('".$terlibat['no_client']."','".$input['no_pekerjaan']."');  class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
 . "</tr>";
 }else if($data_pemilik->num_rows() < 2 ){
-$data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+$data .="<tr><td colspan='7' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
 
 }
 
 }
 }else{
-$data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+$data .="<tr><td colspan='7' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
 }
 
 
@@ -645,10 +653,10 @@ $this->db->where('data_pemilik.no_pekerjaan',$input['no_pekerjaan']);
 
 $data_pemilik = $this->db->get();  
 $static = $data_pemilik->row_array();
-$data = "<tr class='bg-primary' id='terlibat".$input['no_pekerjaan']."'><td colspan='5'>";
+$data = "<tr class='bg-primary' id='terlibat".$input['no_pekerjaan']."'><td colspan='7'>";
 $data .="<table class='table  table-sm table-bordered table-striped bg-cuccess'>"
 . "<tr>"
-. "<td colspan='5' class='text-center'>Pihak Terlibat</td>"
+. "<td colspan='7' class='text-center'>Pihak Terlibat</td>"
 . "</tr>"
 . "<tr>"
 . "<th>Nama</th>"
@@ -662,13 +670,13 @@ $data .="<tr>"
 . "<td><button  onclick=BukaClientBaru('".$terlibat['no_client']."','".$input['no_pekerjaan']."');  class='btn btn-light btn-sm btn-block'>Lihat <i class='fa fa-eye'></i> </button></td>"
 . "</tr>";
 }else if($data_pemilik->num_rows() < 2 ){
-$data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+$data .="<tr><td colspan='7' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
 
 }
 
 }
 }else{
-$data .="<tr><td colspan='5' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
+$data .="<tr><td colspan='7' class='text-center'>Pihak terlibat tidak tersedia</td></tr>";   
 }
 
 
@@ -694,6 +702,8 @@ $this->db->from('data_client');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_client = data_client.no_client','left');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan','left');
 $this->db->join('user', 'user.no_user = data_pekerjaan.no_user','left');
+$this->db->join('data_daftar_loker', 'data_daftar_loker.id_no_loker = data_pekerjaan.id_no_loker');
+$this->db->join('data_daftar_lemari', 'data_daftar_lemari.no_lemari = data_daftar_loker.no_lemari');
 $this->db->where('data_client.no_client',$input['no_client']);
 $query = $this->db->get();    
 $static  = $query->row_array();    
@@ -710,7 +720,7 @@ $this->db->where('data_client.no_client',$input['no_client']);
 $penunjang = $this->db->get();    
 
 $html = "<div class='row'>"
-. "<div class='col-md-8'>";
+. "<div class='col-md-12'>";
 $html .="<table class='table  table-sm table-bordered table-striped'>"
 . "<tr>"
 . "<th>Pekerjaan</th>"
@@ -718,6 +728,8 @@ $html .="<table class='table  table-sm table-bordered table-striped'>"
 . "<th>Tanggal </th>"
 . "<th>Asisten</th>"
 . "<th>Pihak Terlibat</th>"
+. "<th>Lokasi Fisik</th>"
+. "<th>No Loker</th>"
 . "</tr>";
 
 foreach ($query->result_array() as $pekerjaan){
@@ -730,14 +742,14 @@ $html .="<tr id='".$pekerjaan['no_pekerjaan']."'>"
 ."<td><button onclick=LihatClientBaru('".$pekerjaan['no_pekerjaan']."','".$pekerjaan['no_client']."');  class='btn btn-light btn-sm btn-block btnterlibat".$pekerjaan['no_pekerjaan']."' '>Lihat <i class='fa fa-eye'></i> </button></td>"
 . "<tr>";
 }else{
-$html .="<tr><td colspan='5' class='text-center'>Tidak ada pekerjaan tersedia</td></tr>";   
+$html .="<tr><td colspan='7' class='text-center'>Tidak ada pekerjaan tersedia</td></tr>";   
 }
 }
 
 $html  .="</table></div>";
 
 $html .="<div class='col'>" 
-. "<table class='table  table-sm table-bordered table-hover'>"
+. "<table class='table  table-sm table-bordered table-striped table-hover'>"
 . "<tr>"
 . "<th class='text-center'>Daftar Dokumen Penunjang</th>"
 . "</tr>";

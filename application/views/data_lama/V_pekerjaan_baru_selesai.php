@@ -16,6 +16,7 @@
 <th  align="center" aria-controls="datatable-fixed-header"  >Pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Asisten</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Setting loker</th>
 </thead>
 <tbody>
@@ -26,6 +27,48 @@
 </div>    
 
 <script type="text/javascript">
+function pilihloker(id_no_loker,no_loker,no_pekerjaan){
+var nama_lemari = $(".no_lemari"+no_pekerjaan+" option:selected").text();    
+Swal.fire({
+  text: "Arsip Fisik akan dimasukan "+nama_lemari+" di loker nomor "+no_loker +" Kamu yakin ?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Ya, Yakin!'
+}).then((result) => {
+if (result.value) {
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&id_no_loker="+id_no_loker+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('data_lama/simpan_arsip_fisik') ?>",
+success:function(data){
+read_response(data);    
+var table = $('#daftar_pekerjaan').DataTable();
+table.ajax.reload( function ( json ) {
+$('#daftar_pekerjaan').val( json.lastInput );
+}); 
+}
+});
+}
+});    
+    
+}    
+function tampilkanloker(no_pekerjaan){
+var no_lemari = $(".no_lemari"+no_pekerjaan+" option:selected").val();
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_lemari="+no_lemari,
+url:"<?php echo base_url('data_lama/tampilkan_loker') ?>",
+success:function(data){
+$(".daftarloker"+no_pekerjaan).html(data);    
+}
+});
+}    
+    
+    
 function settingloker(no_pekerjaan){
 if($(".settingloker"+no_pekerjaan).length > 0 ){
 $('.settingloker'+no_pekerjaan).slideUp("slow").remove();
@@ -123,6 +166,7 @@ columns: [
 {"data": "no_pekerjaan"},
 {"data": "nama_jenis"},
 {"data": "nama_client"},
+{"data": "asisten"},
 {"data": "view"}
 ],
 order: [[0, 'desc']],

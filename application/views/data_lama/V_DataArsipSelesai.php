@@ -5,7 +5,7 @@
 <?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-box "></span><br>Arsip Selesai</h5>
+<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-flag-checkered "></span><br>Arsip Selesai</h5>
 </div>
 
 <div class="row">

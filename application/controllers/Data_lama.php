@@ -1,4 +1,8 @@
 <?php 
+defined('BASEPATH') OR exit('No direct script access allowed');
+require APPPATH.'libraries/dompdf/autoload.inc.php';
+use Dompdf\Dompdf;
+
 class Data_lama extends CI_Controller{
 public function __construct() {
 parent::__construct();
@@ -99,6 +103,9 @@ echo $this->M_data_lama->json_daftar_lemari();
 
 public function json_daftar_pekerjaan_selesai(){
 echo $this->M_data_lama->json_daftar_pekerjaan_selesai();  
+}
+public function json_daftar_arsip(){
+echo $this->M_data_lama->json_daftar_arsip();  
 }
 
 
@@ -1797,8 +1804,24 @@ public function simpanloker(){
 if($this->input->post()){
 $input = $this->input->post();
 
-echo print_r($input);
-    
+$h_loker     =$this->db->get('data_daftar_loker')->num_rows()+1;
+$no_loker = "LK".str_pad($h_loker,3 ,"0",STR_PAD_LEFT);
+
+$data =array(
+'id_no_loker'   =>$no_loker,
+'no_loker'      =>$input['no_loker'],    
+'no_lemari'     =>$input['no_lemari'],    
+'status_loker'  =>$input['status_loker'],    
+);
+
+$this->db->insert('data_daftar_loker',$data);
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'Loker baru berhasil ditambahkan',    
+);
+echo json_encode($status);
+
 }else{
 redirect(404);    
 }    
@@ -1812,54 +1835,213 @@ $this->load->view('data_lama/V_pekerjaan_baru_selesai');
 public function setting_lemari(){
 if($this->input->post()){
 $input      = $this->input->post();
-    
-$jumlah_loker = $this->db->get_where('data_daftar_loker',array('no_lemari'=>$input['no_lemari']))->num_rows() +1;    
-echo "<tr class=' bg-warning lemari".$input['no_lemari']."'><td colspan='7'>";
+
+$loker = $this->db->get_where('data_daftar_loker',array('no_lemari'=>$input['no_lemari']));
+$no_loker = $loker->num_rows()+1;
+echo "<tr class='text-dark bg-light lemari".$input['no_lemari']."'><td colspan='7'>";
 echo "<div class='row'>"
-.    "<div class='col'>"
+.    "<div class='col-md-5'>"
 . "<form id='formbuatloker".$input['no_lemari']."'>";
 echo "<label>No Loker</label>";
 echo "<input name='no_lemari' class='form-control form-control-sm' readonly type='hidden' value='".$input['no_lemari']."' >";
-echo "<input name='no_loker' class='form-control form-control-sm' readonly type='text' value='".$jumlah_loker."' >";
+echo "<input name='no_loker' class='form-control form-control-sm' readonly type='text' value='".$no_loker."'>";
 echo "<label>Status Loker</label>";
-echo "<select class='form-control form-control-sm'>";
+echo "<select name='status_loker' class='form-control form-control-sm'>";
 echo "<option>Tersedia</option>";
 echo "<option>Penuh</option>";
 echo "</select>"
 . "<hr></form>"
-. "<button type='button' onclick=simpanloker('".$input['no_lemari']."'); class='btn btn-sm btn-block btn-dark'>Simpan Loker <i class='fa fa-save'></i></button>";
-echo "</div>"
-. "</div>";
+. "<button type='button' onclick=simpanloker('".$input['no_lemari']."'); class='btn btn-sm btn-block btn-dark'>Buat Loker Baru <i class='fa fa-save'></i></button>";
+echo "</div>";
+echo "<div class='col'>";
+echo "<table class='table table-sm table-bordered table-hover'>"
+. "<tr >"
+. "<td class='text-center'>No Loker </td>"
+. "<td class='text-center' >Update status loker</td>"
+. "<td class='text-center' >Print Label</td>"
+. "</tr>";
+foreach ($loker->result_array() as $d){
+echo"<tr>"
+. "<td>".$d['no_loker']."</td>"
+. "<td><select  onchange=UpdateLoker('".$d['id_loker']."') class='form-control status_loker".$d['id_loker']." form-control-sm'>"
+. "<option ";
+if($d['status_loker'] =='Tersedia'){echo "selected";}
+echo ">Tersedia</option>"
+. "<option ";
+if($d['status_loker'] =='Penuh'){echo "selected";}
+echo">Penuh</option>"
+. "</select></td>"
+. "<td><button onclick=printlabelloker('".$d['id_no_loker']."'); class='btn btn-success btn-sm btn-light btn-block'>Print <i class='fa fa-print'></i></button></td>"
+. "</tr>";
+}
+echo "</table></div></div>";
+
 echo "</td></tr>";
-    
+
 }else{
 redirect(404);    
 }    
-    
+
 }
 
 public function setting_loker(){
 if($this->input->post()){
 $input      = $this->input->post();
-$data_loker = $this->db->get_where('data_daftar_loker');
-echo "<tr class=' bg-warning settingloker".$input['no_pekerjaan']."'><td colspan='7'>";
+$data_lemari = $this->db->get_where('data_daftar_lemari');
+echo "<tr class='text-dark bg-light settingloker".$input['no_pekerjaan']."'><td colspan='7'>";
 echo "<div class='row'>"
-.    "<div class='col'>";
+.    "<div class='col-md-4'>";
 echo "<label>Pilih Lokasi Penyimpanan</label>";
-echo "<select class='form-control form-control-sm'>";
-
-
+echo "<select onchange=tampilkanloker('".$input['no_pekerjaan']."'); class='form-control no_lemari".$input['no_pekerjaan']." form-control-sm'>";
+echo "<option></option>";
+foreach ($data_lemari->result_array() as $lemari){
+echo "<option value=".$lemari['no_lemari'].">".$lemari['nama_tempat']."</option>";    
+}
 echo "</select>";
-echo "<div class='datalokertersedia'></div>";
 echo "</div>"
-. "<div class='col'></div>"
-. "</div>";
+. "<div class='col '>";
+echo "<div class='text-center  daftarloker".$input['no_pekerjaan']."'></div>"
+. "</div></div>";
 echo "</td></tr>";
-    
+
 }else{
 redirect(404);    
 }    
-    
+
+}
+public function update_loker(){
+if($this->input->post()){
+$input      = $this->input->post();
+
+$data = array(
+'status_loker' =>$input['status_loker']    
+);
+$this->db->update('data_daftar_loker',$data,array('id_loker'=>$input['id_loker']));
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'status loker diperbaharui',    
+);
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}       
+}
+
+function tampilkan_loker(){
+if($this->input->post()){
+$input        = $this->input->post();
+$daftar_loker = $this->db->get_where('data_daftar_loker',array('no_lemari' =>$input['no_lemari']));
+if($daftar_loker->num_rows() >0){
+echo "Pilih Loker Penyimpanan Fisik";
+echo "<div class='row'>";
+foreach ($daftar_loker->result_array() as $arsip){
+echo "<div class='col-md-3'>";
+if($arsip['status_loker'] == 'Penuh'){    
+echo "<div class='card m-3 bg-danger text-center text-white'>";
+echo "Loker ".$arsip['no_loker']."<br>";  
+echo $arsip['status_loker'];  
+}else{
+echo "<div onclick=pilihloker('".$arsip['id_no_loker']."','".$arsip['no_loker']."','".$input['no_pekerjaan']."'); class='card m-3 bg-success text-center text-white'>";
+echo "Loker ".$arsip['no_loker']."<br>";  
+echo $arsip['status_loker'];      
+}
+
+echo "</div></div>";
+}
+
+}else{
+   
+echo "Anda Belum Memilih Nama Lemari";
+
+}
+echo "</div>";
+}else{
+redirect(404);    
+}    
+}
+public function simpan_arsip_fisik(){
+if($this->input->post()){
+$input        = $this->input->post();
+
+$data = array(
+'no_petugas_arsip' =>$this->session->userdata('no_user'),   
+'tanggal_arsip'    =>date('Y/m/d'),   
+'id_no_loker'      => $input['id_no_loker'],    
+);
+$this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=>$input['no_pekerjaan']));
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'Arsip Fisik Berhasil Disimpan',    
+);
+echo json_encode($status);
+
+}else{
+redirect(404);    
+}     
+}
+
+public function DokumenArsip(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_dokumen_arsip');    
+}
+
+public function  PrintLabelLoker(){
+$id_no_loker = base64_decode($this->uri->segment(3));
+
+$this->db->select('data_daftar_loker.no_loker,'
+        . 'data_daftar_lemari.no_lemari,'
+        . 'data_daftar_lemari.nama_tempat');
+$this->db->from('data_daftar_loker');
+$this->db->join('data_daftar_lemari', 'data_daftar_lemari.no_lemari = data_daftar_loker.no_lemari');
+$this->db->where('data_daftar_loker.id_no_loker',$id_no_loker);
+$query = $this->db->get();
+$static = $query->row_array();
+$html  = '<link href="'.base_url().'assets/bootstrap-4.1.3/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>';
+$html .= "<table class='table table-bordered table-striped table-sm   text-center'>"
+                . "<tr><td colspan='4'  align='center' ><b style='font-size:20px;'>NOTARIS DEWANTARI HANDAYANI SH.MPA</b></h4></td><td><h4><b style='font-size:30px;'>No Loker</b><h4></td></tr>"
+                . "<tr><td colspan='4'><b style='font-size:40px;'>".$static['nama_tempat']."</b></td><td><b style='font-size:40px;'>".$static['no_loker']."</b></td></tr>";
+
+$html   .='<tr>'
+        . '<td>No Urut</td>'
+        . '<td>Nama Client</td>'
+        . '<td>Asisten</td>'
+        . '<td>Tanggal</td>'
+        . '<td>Petugas Arsip</td>'
+        . '</tr>';
+
+$this->db->select('data_client.nama_client,'
+        . 'asisten.nama_lengkap as asisten,'
+        . 'petugas.nama_lengkap as petugas,'
+       . 'data_pekerjaan.tanggal_arsip');
+$this->db->from('data_daftar_loker');
+$this->db->join('data_pekerjaan','data_pekerjaan.id_no_loker = data_daftar_loker.id_no_loker');
+$this->db->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('user as asisten','asisten.no_user = data_pekerjaan.no_user');
+$this->db->join('user as petugas','petugas.no_user = data_pekerjaan.no_petugas_arsip');
+
+$this->db->where('data_daftar_loker.id_no_loker',$id_no_loker);
+$data_client = $this->db->get();
+$h =1;
+foreach ($data_client->result_array() as $d){
+$html.="<tr>"
+    . "<td>".$h++."</td>"
+    . "<td>".$d['nama_client']."</td>"
+     . "<td>".$d['asisten']."</td>"
+     . "<td>".$d['tanggal_arsip']."</td>"
+     . "<td>".$d['petugas']."</td>"
+   . "</tr>";    
+}
+
+
+$dompdf = new Dompdf(array('enable_remote'=>true));
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4','landscape');
+$dompdf->render();
+$dompdf->stream('INV.pdf',array('Attachment'=>0));
+
 }
 
 }

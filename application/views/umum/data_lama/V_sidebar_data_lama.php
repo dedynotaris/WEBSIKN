@@ -2,8 +2,7 @@
 <div class="bg-theme2" id="sidebar-wrapper">
 <div style="" class="sidebar-heading ">
 <div class="text-center" style="padding:0.890rem 1rem; background-color:darkcyan; font-size:16px">
-    <a href="<?php echo base_url('User2'); ?>"><span style="color:#fff;">Divisi Arsip</span></a>
-   
+<a href="<?php echo base_url(); ?>"><span style="color:#fff;">Divisi Arsip</span></a>
 </div>
 
 <div class="p-2 text-center bg-light">
@@ -65,7 +64,7 @@
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/PekerjaanBaruSelesai'); ?>">Pekerjaan Baru Selesai <i class="fas fa-flag-checkered  float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/PeminjamanArsip'); ?>">Peminjaman Arsip <i class="fas fa-retweet float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/DokumenArsip'); ?>">Dokumen Arsip <i class="fas fa-folder-open float-right"></i></a>
 </li>
 <li>
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('Data_lama/PengaturanArsipLoker'); ?>">Pengaturan Arsip Loker <i class="fas fa-cogs  float-right"></i></a>

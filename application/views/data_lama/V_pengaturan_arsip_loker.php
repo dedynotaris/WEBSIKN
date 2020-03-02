@@ -38,10 +38,31 @@
 </div>    
 
 <script type="text/javascript">
+function printlabelloker(id_no_loker){
+window.open("<?php echo base_url('Data_lama/PrintLabelLoker/')  ?>"+btoa(id_no_loker));    
+}     
+function UpdateLoker(id_loker){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+var status_loker      = $(".status_loker"+id_loker+" option:selected").text();
+$.ajax({
+type:"post",
+data:"token="+token+"&id_loker="+id_loker+"&status_loker="+status_loker,
+url:"<?php echo base_url('data_lama/update_loker') ?>",
+success:function(data){
+read_response(data);
+$("#formbuatlemari").find(".form-control").val("").attr('readonly', false).removeClass("is-valid");
+var table = $('#daftar_lemari').DataTable();
+table.ajax.reload( function ( json ) {
+$('#daftar_lemari').val( json.lastInput );
+});    
+}
+});
+}
+
 function buatlokerlemari(no_lemari){
 if($(".lemari"+no_lemari).length > 0 ){
 $('.lemari'+no_lemari).slideUp("slow").remove();
-$(".btn-lemari"+no_lemari).addClass("btn-dark").removeClass("btn-warning").html("Masukan Loker <i class='fa fa-cogs'></i>");
+$(".btn-lemari"+no_lemari).addClass("btn-dark").removeClass("btn-warning").html("Buat Loker <i class='fa fa-cogs'></i>");
 }else{        
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
