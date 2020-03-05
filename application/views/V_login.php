@@ -1,15 +1,9 @@
-<style>
-      @font-face {
-font-family: "fontweb";
-src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff");
-}
-</style>
+
 <body  style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
-  font-family: 'fontweb'; " class="bg_login">
+  background-size: cover; " class="bg_login">
 <br>
 <br>
 <div class="container ">

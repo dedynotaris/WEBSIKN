@@ -107,6 +107,9 @@ echo $this->M_data_lama->json_daftar_pekerjaan_selesai();
 public function json_daftar_arsip(){
 echo $this->M_data_lama->json_daftar_arsip();  
 }
+public function json_daftar_arsip_pinjam(){
+echo $this->M_data_lama->json_daftar_arsip_pinjam();  
+}
 
 
 public function json_data_arsip_perorangan(){
@@ -1842,6 +1845,7 @@ echo "<tr class='text-dark bg-light lemari".$input['no_lemari']."'><td colspan='
 echo "<div class='row'>"
 .    "<div class='col-md-5'>"
 . "<form id='formbuatloker".$input['no_lemari']."'>";
+echo '<input type="hidden" name="'.$this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="required"  accept="text/plain">';
 echo "<label>No Loker</label>";
 echo "<input name='no_lemari' class='form-control form-control-sm' readonly type='hidden' value='".$input['no_lemari']."' >";
 echo "<input name='no_loker' class='form-control form-control-sm' readonly type='text' value='".$no_loker."'>";
@@ -1888,7 +1892,7 @@ public function setting_loker(){
 if($this->input->post()){
 $input      = $this->input->post();
 $data_lemari = $this->db->get_where('data_daftar_lemari');
-echo "<tr class='text-dark bg-light settingloker".$input['no_pekerjaan']."'><td colspan='7'>";
+echo "<tr class='text-dark bg-light settingloker".$input['no_pekerjaan']."'><td colspan='8'>";
 echo "<div class='row'>"
 .    "<div class='col-md-4'>";
 echo "<label>Pilih Lokasi Penyimpanan</label>";
@@ -1902,6 +1906,30 @@ echo "</div>"
 . "<div class='col '>";
 echo "<div class='text-center  daftarloker".$input['no_pekerjaan']."'></div>"
 . "</div></div>";
+echo "</td></tr>";
+
+}else{
+redirect(404);    
+}    
+
+}
+
+public function pinjamarsip(){
+if($this->input->post()){
+$input      = $this->input->post();
+$data_user = $this->db->get_where('user',array('level'=>'User','status'=>'Aktif'));
+echo "<tr class='text-dark bg-light pinjamarsip".$input['no_pekerjaan']."'><td colspan='8'>";
+echo "<div class='row'>"
+.    "<div class='col-md-4'>";
+echo "<label>Nama Asisten yang akan meminjam arsip</label>";
+echo "<select onchange=simpan_peminjam('".$input['no_pekerjaan']."'); class='form-control no_peminjam".$input['no_pekerjaan']." form-control-sm'>";
+echo "<option></option>";
+foreach ($data_user->result_array() as $user){
+echo "<option value=".$user['no_user'].">".$user['nama_lengkap']."</option>";    
+}
+echo "</select>";
+echo "</div>"
+. "</div>";
 echo "</td></tr>";
 
 }else{
@@ -1987,6 +2015,10 @@ public function DokumenArsip(){
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_dokumen_arsip');    
 }
+public function PeminjamanArsip(){
+$this->load->view('umum/V_header');
+$this->load->view('data_lama/V_arsip_dipinjam');    
+}
 
 public function  PrintLabelLoker(){
 $id_no_loker = base64_decode($this->uri->segment(3));
@@ -2044,6 +2076,47 @@ $dompdf->stream('INV.pdf',array('Attachment'=>0));
 
 }
 
+function simpan_peminjam(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$data = array(
+'no_user_peminjam'      => $input['no_peminjam'],    
+);
+$this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=>$input['no_pekerjaan']));
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'Arsip Fisik Berhasil Dipinjamkan',    
+);
+echo json_encode($status);
+
+
+}else{
+redirect(404);    
+}     
 }
 
+function balikan_arsip(){
+if($this->input->post()){
+$input = $this->input->post();
+
+$data = array(
+'no_user_peminjam'      => NULL,    
+);
+$this->db->update('data_pekerjaan',$data,array('no_pekerjaan'=>$input['no_pekerjaan']));
+
+$status[] = array(
+'status'   => 'success',
+'messages' => 'Arsip Fisik Berhasil Dipinjamkan',    
+);
+echo json_encode($status);
+
+
+}else{
+redirect(404);    
+}     
+}
+
+}
 

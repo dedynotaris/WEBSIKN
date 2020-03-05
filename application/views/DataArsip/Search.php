@@ -2,8 +2,7 @@
 -webkit-background-size: cover;
 -moz-background-size: cover;
 -o-background-size: cover;
-background-size: cover;
-font-family: 'fontweb'; " class="bg_login">
+background-size: cover; " class="bg_login">
 <style>
 .form-search {
 display: block;
@@ -110,7 +109,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
 <?php echo $this->session->userdata('email'); ?>
 <div class="dropdown-divider"></div>
-<button class="btn btn-tranparent btn-md rounded">Pengaturan Akun <i class="fas fa-cogs"></i> </button>
+<button onclick=PengaturanAkun(); class="btn btn-tranparent btn-md rounded">Pengaturan Akun <i class="fas fa-cogs"></i> </button>
 <div class="dropdown-divider"></div>
 
 <a href='<?php echo base_url('DataArsip/keluar') ?>'><button class="btn btn-light btn-md btn-block">Keluar <i class="fas fa-sign-out-alt"></i> </button></a>
@@ -221,4 +220,9 @@ window.location.href="<?php  echo base_url()?>"+model2
 
 
 }
+
+function PengaturanAkun(){
+window.location.href="<?php echo base_url('DataArsip/PengaturanAkun') ?>";    
+}
+
 </script> 

@@ -775,12 +775,15 @@ $data[] =array(
 'titel'     =>"Keterlibatan ".$static['nama_client'],    
 'linkhtml'  => $html,
 );
-
 echo json_encode($data);
-
 }else{
 redirect(404);    
 }
+}
+public function PengaturanAkun(){
+$this->load->view('umum/V_header');
+
+    
 }
 
 }

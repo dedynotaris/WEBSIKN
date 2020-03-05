@@ -142,7 +142,7 @@ color: cornflowerblue;
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
 <?php echo $this->session->userdata('email'); ?>
 <div class="dropdown-divider"></div>
-<button class="btn btn-tranparent btn-md rounded">Pengaturan Akun <i class="fas fa-cogs"></i> </button>
+<button onclick=PengaturanAkun(); class="btn btn-tranparent btn-md rounded">Pengaturan Akun <i class="fas fa-cogs"></i> </button>
 <div class="dropdown-divider"></div>
 <a href='<?php echo base_url('DataArsip/keluar') ?>'><button class="btn btn-light btn-md btn-block">Keluar <i class="fas fa-sign-out-alt"></i> </button></a>
 </div>    
@@ -542,5 +542,10 @@ Swal.fire({
 }
 });
 }
+
+function PengaturanAkun(){
+window.location.href="<?php echo base_url('DataArsip/PengaturanAkun') ?>";    
+}
+
 
 </script>

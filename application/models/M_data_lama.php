@@ -542,7 +542,7 @@ $this->datatables->add_column('utama',"<button class='btn btn-dark btn-sm btn-su
 $this->datatables->add_column('terlibat',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
 $this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-loker$1'  onclick=settingloker('$1'); >Loker <i class='fa fa-cogs'></i></button>",'no_pekerjaan');
 $this->datatables->where_in('data_pekerjaan.status_pekerjaan',array('Selesai','ArsipSelesai'));
-$this->datatables->where_in('data_pekerjaan.id_no_loker ',array('',NULL));
+$this->datatables->where('data_pekerjaan.id_no_loker',NULL);
 return $this->datatables->generate();
 }
 
@@ -563,11 +563,46 @@ $this->datatables->join('user','user.no_user = data_pekerjaan.no_user');
 $this->datatables->add_column('penunjang',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
 $this->datatables->add_column('utama',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
 $this->datatables->add_column('terlibat',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
-$this->datatables->add_column('view',"<button class='btn btn-dark btn-sm btn-success btn-block btn-loker$1'  onclick=settingloker('$1'); >Pinjam berkas <i class='fa fa-retweet'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('view',""
+        . "<button class='btn btn-dark btn-sm btn-success btn-block btn-pinjam$1'  onclick=pinjamarsip('$1'); >Pinjam Arsip</button>"
+        . "<button class='btn btn-dark btn-sm btn-success btn-block btn-loker$1'  onclick=settingloker('$1'); >Pindah Loker </button>"
+        . "",'no_pekerjaan');
+$this->datatables->group_by('data_client.no_client');
 $this->datatables->where_in('data_pekerjaan.status_pekerjaan',array('Selesai','ArsipSelesai'));
 $this->datatables->where('data_pekerjaan.id_no_loker !=',NULL);
+$this->datatables->where('data_pekerjaan.no_user_peminjam ',NULL);
 return $this->datatables->generate();
 }
+
+function json_daftar_arsip_pinjam(){
+$this->datatables->select('no_pekerjaan,'
+        .'data_pekerjaan.no_pekerjaan,'
+        .'data_jenis_pekerjaan.nama_jenis,'
+        .'asisten.nama_lengkap as asisten,'
+        .'peminjam.nama_lengkap as nama_peminjam,'
+        .'data_daftar_loker.no_loker,'
+        .'data_daftar_lemari.nama_tempat,'
+        .'data_client.nama_client');
+$this->datatables->from('data_pekerjaan');
+$this->datatables->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->datatables->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$this->datatables->join('data_daftar_loker','data_daftar_loker.id_no_loker = data_pekerjaan.id_no_loker');
+$this->datatables->join('data_daftar_lemari','data_daftar_lemari.no_lemari = data_daftar_loker.no_lemari');
+$this->datatables->join('user as asisten','asisten.no_user = data_pekerjaan.no_user');
+$this->datatables->join('user as peminjam','peminjam.no_user = data_pekerjaan.no_user_peminjam');
+$this->datatables->add_column('penunjang',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('utama',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('terlibat',"<button class='btn btn-dark btn-sm btn-success btn-block btn-utama$1'  onclick=lihat_utama('$1'); >Lihat <i class='fa fa-eye'></i></button>",'no_pekerjaan');
+$this->datatables->add_column('view',""
+        . "<button class='btn btn-dark btn-sm btn-success btn-block btn-balikan$1'  onclick=balikanarsip('$1'); >Balikan Arsip</button>"
+        . "",'no_pekerjaan');
+$this->datatables->group_by('data_client.no_client');
+$this->datatables->where_in('data_pekerjaan.status_pekerjaan',array('Selesai','ArsipSelesai'));
+$this->datatables->where('data_pekerjaan.id_no_loker !=',NULL);
+$this->datatables->where('data_pekerjaan.no_user_peminjam !=',NULL);
+return $this->datatables->generate();
+}
+
 
 public function hapus_lampiran($no_berkas){
 $this->db->select('data_client.nama_folder,'
