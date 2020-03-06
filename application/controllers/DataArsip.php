@@ -782,6 +782,11 @@ redirect(404);
 }
 public function PengaturanAkun(){
 $this->load->view('umum/V_header');
+$this->load->view('DataArsip/PengaturanAkun');
+}
+
+public function PengaturanPersonal(){
+echo "<div class='col-md-7  mt-5'>asdasd</div>";
 
     
 }

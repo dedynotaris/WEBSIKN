@@ -44,9 +44,7 @@ $this->load->view('data_lama/V_DataArsipClient',['query'=>$query]);
 }
 
 public function DataArsipProses(){
-
 $query = $this->M_data_lama->data_pekerjaan_arsip('ArsipProses');
-
 $this->load->view('umum/V_header');
 $this->load->view('data_lama/V_DataArsipProses',['query'=>$query]);    
 }
