@@ -38,8 +38,6 @@
 <link href="<?php echo base_url() ?>assets/select2-4.0.11/dist/css/select2.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/select2-4.0.11/dist/js/select2.js" type="text/javascript"></script>
 </head>
-
-
 <script type="text/javascript">
 jQuery( document ).ajaxStart(function() {
 NProgress.start();
@@ -70,77 +68,77 @@ console.log(data);
 });
 
 function setTooltip(btn, message) {
-  $(btn).tooltip('hide')
-    .attr('data-original-title', message)
-    .tooltip('show');
+$(btn).tooltip('hide')
+.attr('data-original-title', message)
+.tooltip('show');
 }
 
 function hideTooltip(btn) {
-  setTimeout(function() {
-    $(btn).tooltip('hide');
-  }, 1000);
+setTimeout(function() {
+$(btn).tooltip('hide');
+}, 1000);
 }
 </script>
 
 
 <script type="text/javascript">
 $(document).ready(function(){
- var token           = "<?php echo $this->security->get_csrf_hash() ?>";
-  
- var options = {
-    url: function(kata_kunci) {
-    return "<?php echo base_url($this->uri->segment(1).'/data_pencarian') ?>";
-  },
-   ajaxSettings: {
-    dataType: "json",
-    method: "POST",
-    data: {
-      token   : token
-    }
-  },
+var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 
-  preparePostData: function(data) {
-    data.kata_kunci = $("#pencarian").val();
-    return data;
-  },
-          list: {
-		onChooseEvent: function(value,data) {
-    var kata_kunci = $("#pencarian").val();
-    $('#button_cari').submit();
+var options = {
+url: function(kata_kunci) {
+return "<?php echo base_url($this->uri->segment(1).'/data_pencarian') ?>";
+},
+ajaxSettings: {
+dataType: "json",
+method: "POST",
+data: {
+token   : token
+}
+},
+
+preparePostData: function(data) {
+data.kata_kunci = $("#pencarian").val();
+return data;
+},
+list: {
+onChooseEvent: function(value,data) {
+var kata_kunci = $("#pencarian").val();
+$('#button_cari').submit();
 },showAnimation: {
-			type: "fade", //normal|slide|fade
-			time: 400,
-			callback: function() {}
-		},
+type: "fade", //normal|slide|fade
+time: 400,
+callback: function() {}
+},
 
-		hideAnimation: {
-			type: "slide", //normal|slide|fade
-			time: 400,
-			callback: function() {}
-		}	
-	},
-    categories: [
-        {  
-            listLocation: "data_dokumen",
-            header: "<div>Hasil Pencarian Data Dokumen Penunjang</div>"
-        },{  
-            listLocation: "data_dokumen_utama",
-            header: "<div>Hasil Pencarian Data Dokumen Utama</div>"
-        }, 
-        {  
-            listLocation: "data_client",
-            header: "<div > Hasil Pencarian Data Client</div>"
-        }
-    ]
+hideAnimation: {
+type: "slide", //normal|slide|fade
+time: 400,
+callback: function() {}
+}	
+},
+categories: [
+{  
+listLocation: "data_dokumen",
+header: "<div>Hasil Pencarian Data Dokumen Penunjang</div>"
+},{  
+listLocation: "data_dokumen_utama",
+header: "<div>Hasil Pencarian Data Dokumen Utama</div>"
+}, 
+{  
+listLocation: "data_client",
+header: "<div > Hasil Pencarian Data Client</div>"
+}
+]
 
 };
 
 $("#pencarian").easyAutocomplete(options);
- 
+
 }); 
 
-       
- 
+
+
 
 function cek_download(no_berkas){
 
@@ -195,10 +193,3 @@ title: r[0].messages
 <Title>App Management Document</Title>
 <link rel="icon" type="image/gif/png" href="<?php echo base_url('assets/icon.png') ?>">
 </Head>
-<style>
-      @font-face {
-font-family: "fontweb";
-src: url("<?php echo base_url('assets/fontku')?>/breeserif-regular-webfont.woff");
-}
-
-</style>

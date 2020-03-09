@@ -786,9 +786,20 @@ $this->load->view('DataArsip/PengaturanAkun');
 }
 
 public function PengaturanPersonal(){
-echo "<div class='col-md-7  mt-5'>asdasd</div>";
-
-    
+$no_user    = $this->session->userdata('no_user');
+$static     = $this->db->get_where('user',array('no_user'=>$no_user))->row_array();    
+echo "<div class='mt-5 text-center'>";    
+if(!file_exists('./uploads/user/'.$static['foto'])){ 
+echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img " >';    
+}else{ 
+if($static['foto'] != NULL){
+echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/'.$static['foto']).'" img="" class="img " >';    
+ }else{ 
+echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img " >';    
+ } 
+}
+echo "<br>".$this->session->userdata('nama_lengkap');
+echo"</div>";    
 }
 
 }

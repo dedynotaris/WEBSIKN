@@ -260,8 +260,8 @@ type:"post",
 data:"token="+token,
 url:"<?php echo base_url('DataArsip/PengaturanPersonal'); ?>",
 success:function(data){
-$(".hasil_click").addClass("col-md-5").html(data);
-$(".data_menu").addClass('col-auto').removeClass('col-sm-6');
+$(".hasil_click").addClass("col-md-7").html(data);
+$(".data_menu").addClass('col-sm-12').removeClass('col-sm-6');
 }
 }); 
 }    

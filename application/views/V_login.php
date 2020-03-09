@@ -42,7 +42,7 @@
 <script type="text/javascript">
 var callback = function() {
 
-//$("#proses_login").attr("disabled", true);
+$("#proses_login").attr("disabled", true);
 $("#FormLogin").find(".form-control").removeClass("is-invalid").addClass("is-valid");
 $("#FormLogin").find('.form-control + p').remove();
 
