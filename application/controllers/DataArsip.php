@@ -788,18 +788,71 @@ $this->load->view('DataArsip/PengaturanAkun');
 public function PengaturanPersonal(){
 $no_user    = $this->session->userdata('no_user');
 $static     = $this->db->get_where('user',array('no_user'=>$no_user))->row_array();    
-echo "<div class='mt-5 text-center'>";    
+
+
+echo "<div class='mt-5 '>"
+. "<div class='row'><div class='col text-bottom p-4'>";    
+echo "<button onclick=BukaFile(); class='btn btn-warning btn-sm btn-block m-1'>Edit Foto</button>";
+echo "<button class='btn btn-warning btn-sm btn-block m-1'>Edit Akun</button>";
+echo "<button class='btn btn-warning btn-sm btn-block m-1'>Perbaharui Password</button>";
+echo "</div>"
+. "<div class='col text-center'>";
+echo '<input id="foto-input" type="file" name="fotobaru" style="display: none;"   accept="image/x-png, image/gif, image/jpeg"/>';
 if(!file_exists('./uploads/user/'.$static['foto'])){ 
 echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img " >';    
 }else{ 
 if($static['foto'] != NULL){
 echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/'.$static['foto']).'" img="" class="img " >';    
- }else{ 
+}else{ 
 echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img " >';    
- } 
+} 
 }
 echo "<br>".$this->session->userdata('nama_lengkap');
-echo"</div>";    
+echo"</div></div>";
+
+
+echo "<label>Username : </label>"
+     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['username']."'>";
+
+echo "<label>Nama Lengkap : </label>"
+     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['nama_lengkap']."'>";
+
+echo "<label>Email : </label>"
+     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['email']."'>";
+
+echo "<label>Nomor Kontak : </label>"
+     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['phone']."'>";
+
+}
+
+public function simpan_profile(){
+$foto_lama = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user')))->row_array();
+if(!file_exists('./uploads/user/'.$foto_lama['foto'])){
+    
+}else{
+if($foto_lama['foto'] != NULL){
+unlink('./uploads/user/'.$foto_lama['foto']);    
+}   
+}
+$img =  $this->input->post();
+define('UPLOAD_DIR', './uploads/user/');
+$image_parts = explode(";base64,", $img['image']);
+$image_type_aux = explode("image/", $image_parts[0]);
+$image_type = $image_type_aux[1];
+$image_base64 = base64_decode($image_parts[1]);
+$file_name = uniqid() . '.png';
+$file = UPLOAD_DIR .$file_name;
+file_put_contents($file, $image_base64);
+$data = array(
+'foto' =>$file_name,    
+);
+$this->db->update('user',$data,array('no_user'=>$this->session->userdata('no_user')));
+$this->session->set_userdata($data);
+$status = array(
+"status"     => "success",
+"pesan"      => "Foto profil berhasil diperbaharui"    
+);
+echo json_encode($status);
 }
 
 }

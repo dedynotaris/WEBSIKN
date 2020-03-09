@@ -250,7 +250,25 @@ Notaris Dewantari Handayani SH.MPA
 </div>
 
 
-
+<div class="modal fade" id="modal_ubah_profile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Crop profile picture</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<img id="my-image" src="#" />
+</div>
+<div class="modal-footer">
+<button id="use" class="btn btn-success btn-sm btn-block btn_upload">Upload</button>
+</div>
+</div>
+</div>
+</div>
+    
 
 <script type="text/javascript">
 function PengaturanPersonal(){
@@ -281,6 +299,77 @@ navbar.classList.remove("sticky-top")
 navbar.classList.remove("shadow-sticky")
 }
 }
+
+function BukaFile(){
+$('#foto-input').trigger('click');
+$("#foto-input").change(function() {
+$('#modal_ubah_profile').modal('show');  
+readURL(this);
+});
+
+}
+
+
+function readURL(input) {
+if (input.files ){
+    
+var reader = new FileReader();
+reader.onload = function(e) {
+$('#my-image').attr('src',e.target.result);
+var resize = new Croppie($('#my-image')[0], {
+enableExif: true,
+ zoom: 0,
+viewport: { width: 300, height: 300, type: 'circle' },
+boundary: { width: 400, height: 400 },
+maxZoomedCropWidth: 400,
+showZoomer: true,
+enableResize:true,
+enableOrientation:true
+});
+
+$('.btn_upload').on('click', function() {
+resize.result('base64').then(function(dataImg) {
+var data = [{ image: dataImg }, { name: 'myimgage.jpg' }];
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+formData = new FormData();
+formData.append('token',token);
+formData.append('image',dataImg);
+formData.append('name',"myimage.jpg");
+
+$.ajax({
+type:"post",
+processData: false,
+contentType: false,
+url:"<?php echo base_url('DataArsip/simpan_profile'); ?>",
+data:formData,
+success:function(data){
+$('#modal_ubah_profile').modal('hide');  
+
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+}).then(function(){
+PengaturanPersonal();
+});   
+}
+}); 
+});
+});
+},
+reader.readAsDataURL(input.files[0]);
+}
+}
+
 </script>
 </body>
 
