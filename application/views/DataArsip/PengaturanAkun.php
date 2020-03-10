@@ -301,39 +301,62 @@ navbar.classList.remove("shadow-sticky")
 }
 
 function BukaFile(){
-$('#foto-input').trigger('click');
+$('#foto-input').trigger('click');    
 $("#foto-input").change(function() {
 $('#modal_ubah_profile').modal('show');  
 readURL(this);
 });
-
+}
+function EditFile(){
+$(".edit").attr('disabled',false);
+$(".edit-button").show();
 }
 
 
 function readURL(input) {
+   
 if (input.files ){
-    
+$image_crop = $('#my-image').croppie({
+    enableExif: true,
+    viewport: {
+      width:300,
+      height:300,
+      type:'circle'
+    },
+    boundary:{
+      width:400,
+      height:400
+    }
+  });
+
+
 var reader = new FileReader();
 reader.onload = function(e) {
-$('#my-image').attr('src',e.target.result);
-var resize = new Croppie($('#my-image')[0], {
-enableExif: true,
- zoom: 0,
-viewport: { width: 300, height: 300, type: 'circle' },
-boundary: { width: 400, height: 400 },
-maxZoomedCropWidth: 400,
-showZoomer: true,
-enableResize:true,
-enableOrientation:true
-});
 
-$('.btn_upload').on('click', function() {
-resize.result('base64').then(function(dataImg) {
-var data = [{ image: dataImg }, { name: 'myimgage.jpg' }];
+if($('.croppie-container').length >1) {
+$image_crop.croppie('bind', {
+url: e.target.result
+}).then(function(){
+$('.cr-slider').attr({'min':0.5000, 'max':1.5000});
+});
+}else{
+$image_crop.croppie('bind', {
+url: e.target.result
+}).then(function(){
+$('.cr-slider').attr({'min':0.5000, 'max':1.5000});
+});
+}
+
+$('.btn_upload').click(function(event){
+    $image_crop.croppie('result', {
+      type: 'canvas',
+      size: 'viewport'
+    }).then(function(response){
+var data = [{ image: response }, { name: 'myimgage.jpg' }];
 var token    = "<?php echo $this->security->get_csrf_hash() ?>";
 formData = new FormData();
 formData.append('token',token);
-formData.append('image',dataImg);
+formData.append('image',response);
 formData.append('name',"myimage.jpg");
 
 $.ajax({
@@ -360,16 +383,55 @@ type: r.status,
 title: r.pesan
 }).then(function(){
 PengaturanPersonal();
+
 });   
 }
 }); 
 });
+
 });
 },
 reader.readAsDataURL(input.files[0]);
 }
 }
 
+function SimpanPerubahan(){
+$("#edit_akun").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+type:"post",
+data:$("#edit_akun").serialize(),
+url:"<?php echo base_url('DataArsip/UpdateAkun') ?>",
+success:function(data){
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#edit_akun").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#edit_akun").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+PengaturanPersonal();
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+}  
+}
+});  
+}
+
 </script>
+
 </body>
 

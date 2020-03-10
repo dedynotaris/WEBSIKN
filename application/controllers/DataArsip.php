@@ -793,7 +793,7 @@ $static     = $this->db->get_where('user',array('no_user'=>$no_user))->row_array
 echo "<div class='mt-5 '>"
 . "<div class='row'><div class='col text-bottom p-4'>";    
 echo "<button onclick=BukaFile(); class='btn btn-warning btn-sm btn-block m-1'>Edit Foto</button>";
-echo "<button class='btn btn-warning btn-sm btn-block m-1'>Edit Akun</button>";
+echo "<button onclick=EditFile(); class='btn btn-warning btn-sm btn-block m-1'>Edit Akun</button>";
 echo "<button class='btn btn-warning btn-sm btn-block m-1'>Perbaharui Password</button>";
 echo "</div>"
 . "<div class='col text-center'>";
@@ -810,18 +810,20 @@ echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_
 echo "<br>".$this->session->userdata('nama_lengkap');
 echo"</div></div>";
 
-
+echo "<form id='edit_akun'>";
 echo "<label>Username : </label>"
-     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['username']."'>";
+     ."<input type='text' name='username' id='username' class='form-control form-control-sm' disabled value='".$static['username']."'>";
 
 echo "<label>Nama Lengkap : </label>"
-     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['nama_lengkap']."'>";
+     ."<input type='text' name='nama_lengkap' id='nama_lengkap' class='form-control edit form-control-sm' disabled value='".$static['nama_lengkap']."'>";
 
 echo "<label>Email : </label>"
-     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['email']."'>";
+     ."<input type='text' name='email' id='email' class='form-control edit form-control-sm' disabled value='".$static['email']."'>";
 
 echo "<label>Nomor Kontak : </label>"
-     ."<input type='text' class='form-control form-control-sm' readonly value='".$static['phone']."'>";
+     ."<input type='text' name='nomor_kontak' id='nomor_kontak' class='form-control edit form-control-sm' disabled value='".$static['phone']."'>";
+
+ echo "<hr><button style='display:none;'  onclick=SimpanPerubahan(); type='button' class='btn btn-success btn-sm btn-block edit-button'>Simpan Perubahan</button> </form>";
 
 }
 
@@ -855,4 +857,38 @@ $status = array(
 echo json_encode($status);
 }
 
+public function UpdateAkun(){
+if($this->input->post()){
+$input = $this->input->post();
+$this->form_validation->set_rules('nama_lengkap', 'nama lengkap', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('email', 'email', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('nomor_kontak', 'nomor_kontak', 'required',array('required' => 'Data ini tidak boleh kosong'));
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+$data = array(
+'nama_lengkap'=>$input['nama_lengkap'],
+'email'       =>$input['email'],
+'phone'       =>$input['nomor_kontak']    
+);
+$this->session->set_userdata($data);
+$this->db->update('user',$data,array('no_user'=>$this->session->userdata('no_user')));
+$status[] = array(
+"status"    =>"success",
+"messages"  =>"Jenis Pekerjaan Baru Berhasil Ditambahkan",
+);
+echo json_encode($status);
+    
+}    
+}else{
+redirect(404);    
+}
+
+}
 }

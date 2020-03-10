@@ -3,8 +3,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">		    
-<link href="<?php echo base_url() ?>assets/croppie/croppie.css" rel="stylesheet" type="text/css"/>
-<script src="<?php echo base_url() ?>assets/croppie/croppie.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/jquery/jquery-3.3.1.js" type="text/javascript"></script>
 <link href="<?php echo base_url() ?>assets/chart/chart.js/dist/Chart.css" rel="stylesheet" type="text/css"/>
 <script src="<?php echo base_url() ?>assets/chart/chart.js/dist/Chart.js" type="text/javascript"></script>
@@ -17,6 +15,8 @@
 <script src="<?php echo base_url() ?>assets/fontawesome-free-5.7.1/js/all.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/jquery/popper.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url() ?>assets/sweetalert2/dist/sweetalert2.all.js" type="text/javascript"></script>
+<link href="<?php echo base_url() ?>assets/croppie/croppie.css" rel="stylesheet" type="text/css"/>
+<script src="<?php echo base_url() ?>assets/croppie/croppie.js" type="text/javascript"></script>
 <link href="<?php echo base_url() ?>assets/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo base_url() ?>assets/sweetalert2/dist/animate.css" rel="stylesheet" type="text/css"/>
 <link href="<?php echo base_url() ?>assets/datatables/datatables.min.css" rel="stylesheet" type="text/css"/>
