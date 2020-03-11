@@ -794,10 +794,9 @@ echo "<div class='mt-5 '>"
 . "<div class='row'><div class='col text-bottom p-4'>";    
 echo "<button onclick=BukaFile(); class='btn btn-warning btn-sm btn-block m-1'>Edit Foto</button>";
 echo "<button onclick=EditFile(); class='btn btn-warning btn-sm btn-block m-1'>Edit Akun</button>";
-echo "<button class='btn btn-warning btn-sm btn-block m-1'>Perbaharui Password</button>";
+echo "<button onclick=UpdatePassword(); class='btn btn-warning btn-sm btn-block m-1'>Perbaharui Password</button>";
 echo "</div>"
 . "<div class='col text-center'>";
-echo '<input id="foto-input" type="file" name="fotobaru" style="display: none;"   accept="image/x-png, image/gif, image/jpeg"/>';
 if(!file_exists('./uploads/user/'.$static['foto'])){ 
 echo '<img style="width:150px; height: 150px;" src="'.base_url('uploads/user/no_profile.jpg').'" img="" class="img " >';    
 }else{ 
@@ -811,6 +810,7 @@ echo "<br>".$this->session->userdata('nama_lengkap');
 echo"</div></div>";
 
 echo "<form id='edit_akun'>";
+echo '<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">';
 echo "<label>Username : </label>"
      ."<input type='text' name='username' id='username' class='form-control form-control-sm' disabled value='".$static['username']."'>";
 
@@ -825,6 +825,20 @@ echo "<label>Nomor Kontak : </label>"
 
  echo "<hr><button style='display:none;'  onclick=SimpanPerubahan(); type='button' class='btn btn-success btn-sm btn-block edit-button'>Simpan Perubahan</button> </form>";
 
+ 
+echo "<form id='update_password' style='display:none;'>";
+echo '<input type="hidden" name="'. $this->security->get_csrf_token_name().'" value="'.$this->security->get_csrf_hash().'" readonly="" class="form-control required"  accept="text/plain">';
+echo "<label>Masukan Password Lama : </label>"
+     ."<input type='password' name='password_lama' id='password_lama' placeholder='password lama' class='form-control form-control-sm' >";
+
+echo "<label>Masukan Password Baru : </label>"
+     ."<input type='password' name='password_baru' id='password_baru' placeholder='password baru' class='form-control edit form-control-sm' >";
+
+echo "<label>Ulangi Password baru : </label>"
+     ."<input type='password' name='ulangi_password' id='ulangi_password' placeholder='ulangi password' class='form-control edit form-control-sm' >";
+
+echo "<hr><button   onclick=SimpanPassword(); type='button' class='btn btn-success btn-sm btn-block edit-button'>Simpan Perubahan</button> </form>";
+ 
 }
 
 public function simpan_profile(){
@@ -885,6 +899,56 @@ $status[] = array(
 );
 echo json_encode($status);
     
+}    
+}else{
+redirect(404);    
+}
+
+}
+
+public function UpdatePassword(){
+if($this->input->post()){
+$input = $this->input->post();
+$this->form_validation->set_rules('password_lama', 'password lama', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('password_baru', 'password baru', 'required',array('required' => 'Data ini tidak boleh kosong'));
+$this->form_validation->set_rules('ulangi_password', 'ulangi password', 'required',array('required' => 'Data ini tidak boleh kosong'));
+
+if ($this->form_validation->run() == FALSE){
+$status_input = $this->form_validation->error_array();
+$status[] = array(
+'status'  => 'error_validasi',
+'messages'=>array($status_input),    
+);
+echo json_encode($status);
+}else{
+    
+$cek_password_lama = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user'),'password'=>md5($input['password_lama'])));    
+if($cek_password_lama->num_rows() == 1 ){
+
+if($input['password_baru'] != $input['ulangi_password']){    
+$status[] = array(
+"status"    =>"error_validasi",
+"messages"  =>[array('password_baru'=>'Password baru tidak sama','ulangi_password'=>'Password baru tidak sama')],
+);
+echo json_encode($status);
+
+}else{
+$data = array('password'=> md5($input['password_baru']));    
+$this->db->update('user',$data,array('no_user'=>$this->session->userdata('no_user')));    
+$status[] = array(
+"status"    =>"success",
+"messages"  =>"Password berhasil diperbaharui",
+);
+echo json_encode($status);     
+}
+}else{
+$status[] = array(
+"status"    =>"error_validasi",
+"messages"  =>[array('password_lama'=>'Password yang dimasukan tidaklah sama dengan password sebelumnya')],
+);
+echo json_encode($status);
+}
+
 }    
 }else{
 redirect(404);    

@@ -126,6 +126,7 @@ color: cornflowerblue;
 <img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
+
 </button>
 
 <div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
@@ -177,44 +178,9 @@ color: cornflowerblue;
 </div>
 </div>
 
-<div class="data_menu col-sm-6 mt-5">
-<div class='card'>
-<div class='card-body'>
-<div class="row">
-<div class="col">Pengaturan data pekerjaan yang telah kamu buat</div>
-<div class="col-md-5 text-center"><img style="width:100px; height: 100px;" src="<?php echo base_url() ?>assets/icon/pekerjaan.png" alt=""/></div>
 
-</div>    
-</div>
-<div class="card-footer text-center">Pengaturan tentang pekerjaan kamu</div>
-</div>
 
-</div>
-<div class="data_menu col-sm-6 mt-5">
-<div class='card'>
-<div class='card-body'>
-<div class="row">
-<div class="col">Pengaturan data berkas yang kamu miliki</div>
-<div class="col-md-5 text-center"><img style="width:100px; height: 100px;" src="<?php echo base_url() ?>assets/icon/berkas.png" alt=""/></div>
 
-</div>    
-</div>
-<div class="card-footer text-center">Pengaturan Berkas yang kamu miliki</div>
-</div>
-</div>
-
-<div class="data_menu col-sm-6 mt-5" >
-<div class='card'>
-<div class='card-body'>
-<div class="row">
-<div class="col">Pengaturan data pekerjaan yang telah kamu buat</div>
-<div class="col-md-5 text-center"><img style="width:100px; height: 100px;" src="<?php echo base_url() ?>assets/icon/sharing.png" alt=""/></div>
-
-</div>    
-</div>
-<div class="card-footer text-center">File Sharing</div>
-</div>
-</div>
 
 </div>
 </div>
@@ -254,13 +220,16 @@ Notaris Dewantari Handayani SH.MPA
 <div class="modal-dialog" role="document">
 <div class="modal-content">
 <div class="modal-header">
-<h5 class="modal-title" id="exampleModalLabel">Crop profile picture</h5>
+<h6 class="modal-title" id="exampleModalLabel">Crop profile picture</h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
 <div class="modal-body">
 <img id="my-image" src="#" />
+</div>
+<div class="modal-footer">
+<input id="foto-input" class="form-control form-control-sm" type="file" name="fotobaru"   accept="image/x-png, image/gif, image/jpeg"/>
 </div>
 <div class="modal-footer">
 <button id="use" class="btn btn-success btn-sm btn-block btn_upload">Upload</button>
@@ -282,7 +251,11 @@ $(".hasil_click").addClass("col-md-7").html(data);
 $(".data_menu").addClass('col-sm-12').removeClass('col-sm-6');
 }
 }); 
-}    
+}
+
+function UpdatePassword(){
+$("#update_password").show();
+}   
 
 
 window.onscroll = function() {myFunction()};
@@ -299,101 +272,12 @@ navbar.classList.remove("sticky-top")
 navbar.classList.remove("shadow-sticky")
 }
 }
-
-function BukaFile(){
-$('#foto-input').trigger('click');    
-$("#foto-input").change(function() {
-$('#modal_ubah_profile').modal('show');  
-readURL(this);
-});
-}
 function EditFile(){
 $(".edit").attr('disabled',false);
 $(".edit-button").show();
 }
 
 
-function readURL(input) {
-   
-if (input.files ){
-$image_crop = $('#my-image').croppie({
-    enableExif: true,
-    viewport: {
-      width:300,
-      height:300,
-      type:'circle'
-    },
-    boundary:{
-      width:400,
-      height:400
-    }
-  });
-
-
-var reader = new FileReader();
-reader.onload = function(e) {
-
-if($('.croppie-container').length >1) {
-$image_crop.croppie('bind', {
-url: e.target.result
-}).then(function(){
-$('.cr-slider').attr({'min':0.5000, 'max':1.5000});
-});
-}else{
-$image_crop.croppie('bind', {
-url: e.target.result
-}).then(function(){
-$('.cr-slider').attr({'min':0.5000, 'max':1.5000});
-});
-}
-
-$('.btn_upload').click(function(event){
-    $image_crop.croppie('result', {
-      type: 'canvas',
-      size: 'viewport'
-    }).then(function(response){
-var data = [{ image: response }, { name: 'myimgage.jpg' }];
-var token    = "<?php echo $this->security->get_csrf_hash() ?>";
-formData = new FormData();
-formData.append('token',token);
-formData.append('image',response);
-formData.append('name',"myimage.jpg");
-
-$.ajax({
-type:"post",
-processData: false,
-contentType: false,
-url:"<?php echo base_url('DataArsip/simpan_profile'); ?>",
-data:formData,
-success:function(data){
-$('#modal_ubah_profile').modal('hide');  
-
-var r = JSON.parse(data);
-const Toast = Swal.mixin({
-toast: true,
-position: 'center',
-showConfirmButton: false,
-timer: 3000,
-animation: false,
-customClass: 'animated bounceInDown'
-});
-
-Toast.fire({
-type: r.status,
-title: r.pesan
-}).then(function(){
-PengaturanPersonal();
-
-});   
-}
-}); 
-});
-
-});
-},
-reader.readAsDataURL(input.files[0]);
-}
-}
 
 function SimpanPerubahan(){
 $("#edit_akun").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
@@ -431,6 +315,159 @@ title: r[0].messages
 });  
 }
 
+function SimpanPassword(){
+$("#update_password").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+$.ajax({
+type:"post",
+data:$("#update_password").serialize(),
+url:"<?php echo base_url('DataArsip/UpdatePassword') ?>",
+success:function(data){
+var r  = JSON.parse(data);
+if(r[0].status == 'error_validasi'){
+$.each(r[0].messages, function(key, value){
+$.each(value, function(key, value){
+$("#update_password").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#update_password").find("#"+key).removeClass("is-valid");
+});
+});
+}else{
+PengaturanPersonal();
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r[0].status,
+title: r[0].messages
+});
+}  
+}
+});  
+}
+
+function BukaFile(){
+$("#foto-input").trigger("click");    
+$('#modal_ubah_profile').modal("show");
+}
+
+$( document ).ready(function() {
+
+
+
+var $uploadCrop;
+
+function readFile(input) {
+if (input.files && input.files[0]) {
+var reader = new FileReader();          
+reader.onload = function (e) {
+$uploadCrop.croppie('bind', {
+url: e.target.result
+});
+}           
+reader.readAsDataURL(input.files[0]);
+}
+}
+
+$uploadCrop = $('#my-image').croppie({
+viewport: {
+width: 300,
+height: 300,
+type: 'circle'
+},
+boundary: {
+width: 400,
+height: 400
+}
+});
+
+$('#foto-input').on('change', function () { readFile(this); });
+$('.btn_upload').on('click', function (ev) {
+$uploadCrop.croppie('result', {
+type: 'canvas',
+size: 'original'
+}).then(function (resp) {
+var token    = "<?php echo $this->security->get_csrf_hash() ?>";
+    
+formData = new FormData();
+formData.append('token',token);
+formData.append('image',resp);
+formData.append('name',"myimage.jpg");
+
+$.ajax({
+type:"post",
+processData: false,
+contentType: false,
+url:"<?php echo base_url('DataArsip/simpan_profile'); ?>",
+data:formData,
+success:function(data){
+$('#modal_ubah_profile').modal('hide');  
+
+var r = JSON.parse(data);
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated bounceInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan
+}).then(function(){
+window.location.href="<?php echo base_url('DataArsip/PengaturanAkun') ?>";
+});   
+}
+}); 
+
+
+});
+});
+
+});
+
+function check_akses(model,model2){
+var token = "<?php echo $this->security->get_csrf_hash(); ?>";      
+
+$.ajax({
+type:"post",
+url:"<?php echo base_url('DataArsip/check_akses') ?>",
+data:"token="+token+"&model="+model,
+success:function(data){
+var r = JSON.parse(data);
+
+if(r.status == 'error'){
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: r.status,
+title: r.pesan,
+});
+
+}else{
+window.location.href="<?php  echo base_url()?>"+model2
+}
+
+}
+
+});
+
+
+}
 </script>
 
 </body>

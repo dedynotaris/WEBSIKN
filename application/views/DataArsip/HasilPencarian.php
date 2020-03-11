@@ -25,9 +25,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 .ui-autocomplete {
 max-height: 500px;
 overflow-y: auto;
-/* prevent horizontal scrollbar */
 overflow-x: hidden;
-/* add padding to account for vertical scrollbar */
 padding-right: 20px;
 }
 .shadow-sticky{
@@ -53,7 +51,6 @@ text-decoration: none;
 background-color: #f8f9fa !important; 
 color: cornflowerblue;
 }
-
 .bg-lightaktif .btn {
 color: cornflowerblue;
 }
