@@ -177,7 +177,7 @@ $data_client = $this->db->get_where('data_client',array('no_client'=>$input['no_
 if(!empty($_FILES['file_berkas'])){
 $config['upload_path']          = './berkas/'.$data_client['nama_folder'];
 $config['allowed_types']        = 'gif|jpg|png|pdf|docx|doc|xlxs|';
-$config['encrypt_name']         = TRUE;
+$config['encrypt_name']         = FALSE;
 $config['max_size']             = 50000;
 $this->upload->initialize($config);   
 
@@ -189,7 +189,7 @@ $status[] = array(
 echo json_encode($status);
 
 }else{
-$lampiran = $this->upload->data('file_name');    
+$lampiran = $this->upload->data();    
 $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
 
@@ -217,7 +217,8 @@ $data_berkas = array(
 'no_client'         => $input['no_client'],    
 'no_pekerjaan'      => $input['no_pekerjaan'],
 'no_nama_dokumen'   => $input['no_nama_dokumen'],
-'nama_berkas'       => $lampiran,
+'nama_berkas'       => $lampiran['file_name'],
+'mime-type'         => $lampiran['file_type'],    
 'Pengupload'        => $this->session->userdata('no_user'),
 'tanggal_upload'    => date('Y/m/d' ),  
 );    

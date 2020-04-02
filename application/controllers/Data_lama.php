@@ -674,7 +674,7 @@ $status[] = array(
 'name_file'     => $this->upload->data('file_name')
 );
 }else{
-$lampiran = $this->upload->data('file_name');    
+$lampiran = $this->upload->data();    
 $this->simpan_data_persyaratan($input,$lampiran);
 $status[] = array(
 "status"        => "success",
@@ -694,7 +694,8 @@ $data_berkas = array(
 'no_client'         => $input['no_client'],    
 'no_pekerjaan'      => base64_decode($input['no_pekerjaan']),
 'no_nama_dokumen'   => NULL,
-'nama_berkas'       => $lampiran,
+'nama_berkas'       => $lampiran['file_name'],
+'mime-type'         => $lampiran['file_type'],   
 'Pengupload'        => $this->session->userdata('no_user'),
 'tanggal_upload'    => date('Y/m/d' )
 );    
@@ -1045,6 +1046,7 @@ echo json_encode($status);
 }else{
 $data = array(
 'nama_file'    =>$this->upload->data('file_name'),
+'mime-type'    =>$this->upload->data('file_type'),
 'nama_berkas'  =>$input['jenis_utama']." " .$data_pekerjaan['nama_client']." ".$data_pekerjaan['nama_jenis'],
 'no_pekerjaan' =>$data_pekerjaan['no_pekerjaan'],
 'waktu'        =>date('Y/m/d'),

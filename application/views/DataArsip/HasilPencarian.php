@@ -18,9 +18,10 @@ border-radius: 2.25rem;
 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .form-search:hover {
--webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
--moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
+-webkit-box-shadow: 1px 1px 1px 1px #dc3545;
+-moz-box-shadow: 1px 1px 1px 1px #dc3545;
+box-shadow: 1px 1px 4px 1px #dc3545;
+
 }
 .ui-autocomplete {
 max-height: 500px;
@@ -41,18 +42,15 @@ margin-block-end: 0em;
 }
 .btn:focus, .btn.focus {
 outline: 0;
-box-shadow: 0 0 0 0.1rem cornflowerblue;
+box-shadow: 0 0 0 0.1rem #fd7e14;
 }
 .btn:hover {
 color: cornflowerblue;
 text-decoration: none;
 }
 .bg-lightaktif {
-background-color: #f8f9fa !important; 
-color: cornflowerblue;
-}
-.bg-lightaktif .btn {
-color: cornflowerblue;
+background-color: #fd7e14 !important; 
+color: #000;
 }
 
 
@@ -66,7 +64,7 @@ color: cornflowerblue;
 <input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
 <input type="hidden" name="kategori" value="dokumen_penunjang">
 <span class="input-group-append">
-<button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+<button type="submit" class="btn  btn-tranparent border-left-0" type="button">
 <i class="fa fa-search"></i>
 </button>
 </span>
@@ -115,12 +113,12 @@ color: cornflowerblue;
 <div class="btn-group pull-right  ">
 <button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
 </button>
@@ -128,12 +126,12 @@ color: cornflowerblue;
 <div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
 <div class="text-center px-6 py-6 ">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
 <?php }else{ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
@@ -149,7 +147,7 @@ color: cornflowerblue;
 </div>  
 </div>
 
-<div class="container-fluid" style="background-color:#D3D3D3;">
+<div class="container-fluid" style="background-color:#dc3545; color:#fff;">
 <div class="container">
 <div class="row ">
 <div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-lightaktif"; } ?>">
@@ -157,7 +155,7 @@ color: cornflowerblue;
 <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_penunjang">    
-<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
+<button type="submit" class="btn btn-tranparent btn-block "  style="color:#fff;">Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
 </form>
 </div>
 <div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-lightaktif"; } ?>">
@@ -166,7 +164,7 @@ color: cornflowerblue;
 <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="dokumen_utama">    
-<button type="submit" class="btn btn-tranparent btn-block text-theme1" >Dokumen Utama <i class="fas fa-file-alt"></i> </button>
+<button type="submit" class="btn btn-tranparent btn-block " style="color:#fff;">Dokumen Utama <i class="fas fa-file-alt"></i> </button>
 </form>
 
 </div>
@@ -175,7 +173,7 @@ color: cornflowerblue;
 <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
 <input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
 <input type="hidden" name="kategori" value="data_client">    
-<button type="submit" class="btn btn-tranparent btn-block " >Data Client <i class="fas fa-users"></i></button>
+<button type="submit" class="btn btn-tranparent btn-block " style="color:#fff;">Data Client <i class="fas fa-users"></i></button>
 </form>
 </div>
 </div>
@@ -221,9 +219,9 @@ echo  $this->db->get()->num_rows();
 </div>
 </div>    
 
-    <div class="container-fluid bg-light p-3  " style="margin-top:7%;">
+    <div class="container-fluid  p-3  " style="margin-top:7%; background-color: #fd7e14; color:#fff; ">
 <div class="container">
-<div class ="row p-2 " style="background-color:'#ccc;'">
+<div class ="row p-2 " >
     <div class="col-md-7 ">Total Dokumen Penunjang<hr>
         <h1><?php echo number_format($this->db->get('data_berkas')->num_rows()); ?></h1>
     </div>
@@ -236,12 +234,12 @@ echo  $this->db->get()->num_rows();
 </div>
 </div>
 </div>
-    <div class="container-fluid" style="background-color:#D3D3D3;">
+    <div class="container-fluid" style="background-color:#dc3545;">
         <div class="container">       
 <div class="row " >
-<div class="col p-2 m-2 text-theme1">
+    <div class="col p-2 m-2 " style="color:#fff;">
 &COPY; 2020 
-Notaris Dewantari Handayani SH.MPA
+SIKN Notaris Dewantari Handayani,SH, MPA
 </div>
 </div>
 </div>  

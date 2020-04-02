@@ -17,13 +17,13 @@
 <form id="FormLogin" >
 
 <input type="hidden" name="token" value="<?php echo $this->security->get_csrf_hash() ?>">
-<label>Username</label>
+<label class="text-danger">Username</label>
 <input type="text" class="form-control" id="username" name="username"  placeholder="username . . .">
-<label>Password</label>
+<label class="text-danger">Password</label>
 <input type="password" class="form-control" id="password" name="password"  placeholder="password . . .">
 <br>
 </form>
-<button type="button" class="btn btn-md btn-outline-dark btn-block" id="proses_login">Sign in <i class="fa fa-key"></i></button>
+<button type="button" class="btn btn-md  btn-block btn-danger" id="proses_login">Sign in <i class="fa fa-key"></i></button>
 </div>
 </div> 
 
@@ -34,11 +34,12 @@
 <div class="mt-5 pt-5">
 <div class="row">
 <div class="mx-auto">    
-<p class="text-center">App Management Document <br> V.2.1</p>
+    <p class="text-center text-danger">&copy; 2020 Sistem Informasi Kantor Notaris <br> Dewantari Handayani, SH, MPA. <br></p>
 </div>
 </div>
 </div>   
 </body>
+
 <script type="text/javascript">
 var callback = function() {
 

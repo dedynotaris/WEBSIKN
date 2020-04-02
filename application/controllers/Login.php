@@ -72,5 +72,45 @@ redirect(404);
 public function berkas(){
 }
 
+public function UbahMimeUtama(){
+$this->db->select('data_client.nama_folder,'
+        . 'data_dokumen_utama.nama_file,'
+        . 'data_dokumen_utama.id_data_dokumen_utama');
+$this->db->from('data_dokumen_utama');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_dokumen_utama.no_pekerjaan');
+$this->db->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$dokumen_utama = $this->db->get();
+foreach ($dokumen_utama->result_array() as $c){
+$url = './berkas/'.$c['nama_folder']."/".$c['nama_file'];
+if(file_exists($url)){
+$data = array(
+'mime-type' =>mime_content_type($url)    
+);
+$this->db->update('data_dokumen_utama',$data,array('id_data_dokumen_utama'=>$c['id_data_dokumen_utama']));
+}
+echo "selesai";    
+}
+}
+
+public function UbahMimePenunjang(){
+$this->db->select('data_client.nama_folder,'
+                  .'data_berkas.nama_berkas,'
+                  .'data_berkas.no_berkas');
+$this->db->from('data_berkas');
+$this->db->join('data_client','data_client.no_client = data_berkas.no_client');
+$dokumen_utama = $this->db->get();
+foreach ($dokumen_utama->result_array() as $c){
+$url = './berkas/'.$c['nama_folder']."/".$c['nama_berkas'];
+if(file_exists($url)){
+$data = array(
+'mime-type' =>mime_content_type($url)    
+);
+$this->db->update('data_berkas',$data,array('no_berkas'=>$c['no_berkas']));
+}
+echo "selesai";    
+}
+
+}
+
 }
 

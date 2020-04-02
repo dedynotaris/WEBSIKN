@@ -12,7 +12,7 @@ padding:0.375rem 1.75rem;
 font-size: 1rem;
 font-weight: 400;
 line-height: 1.5;
-color: #495057;
+color: #dc3545;
 background-color: #fff;
 background-clip: padding-box;
 border: 1px solid #ced4da;
@@ -22,9 +22,9 @@ transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
 
 .form-search:hover {
--webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
--moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
+-webkit-box-shadow: 1px 1px 1px 1px #dc3545;
+-moz-box-shadow: 1px 1px 1px 1px #dc3545;
+box-shadow: 1px 1px 4px 1px #dc3545;
 
 }
 
@@ -37,7 +37,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
             padding-right: 20px;
         } 
 .input-group-append {
-    margin-left: -37px;
+    margin-left: -55px;
 }        
 </style>
 
@@ -84,12 +84,12 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 
 <div class="btn-group">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
 
@@ -98,12 +98,12 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="text-center px-6 py-6 ">
 
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
 <?php }else{ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
 <?php } ?> 
 <?php } ?>
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
@@ -130,7 +130,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
 <div class="row">
 <div class="col text-center">
 <img style='width:180px;'  src='<?php echo base_url('assets/icon.png') ?>'>      
-<p>Pencarian Dokumen Arsip </p>
+<p class="mt-3 text-danger">Pencarian Dokumen Arsip </p>
 </div>
 </div>
     <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
@@ -143,7 +143,7 @@ box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
            <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
         <input type="hidden" name="kategori" value="dokumen_penunjang">
            <span class="input-group-append">
-              <button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+              <button type="submit" class="btn  btn-tranparent mr-3" type="button">
                     <i class="fa fa-search"></i>
               </button>
             </span>

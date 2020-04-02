@@ -570,7 +570,7 @@ $this->datatables->add_column('view',""
 $this->datatables->group_by('data_client.no_client');
 $this->datatables->where_in('data_pekerjaan.status_pekerjaan',array('Selesai','ArsipSelesai'));
 $this->datatables->where('data_pekerjaan.id_no_loker !=',NULL);
-$this->datatables->where('data_pekerjaan.no_user_peminjam ',NULL);
+$this->datatables->where('data_pekerjaan.no_user_peminjam ','');
 return $this->datatables->generate();
 }
 

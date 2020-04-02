@@ -172,7 +172,7 @@ echo"<img style='width:80px; height:80px;'  src='".base_url('assets/pdficon.png'
 }else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
 echo"<img style='width:80px; height:80px;'  src='".base_url('assets/imageicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
 }else{
-echo"<img style='width:80px; height:80px;'  src='".base_url('assets/othericon.png')."' alt='MS WORD' class='  img-thumbnail'>";
+echo"<img style='width:80px; height:80px;'  src='".base_url('assets/wordicon.png')."' alt='MS WORD' class='  img-thumbnail'>";
 }
 echo "
 </div>
