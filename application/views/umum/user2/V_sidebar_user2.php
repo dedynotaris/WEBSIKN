@@ -1,23 +1,23 @@
 <div class="d-flex <?php if($this->session->userdata('toggled') == 'Aktif'){ echo "toggled"; } ?>" id="wrapper">
 <div class="bg-theme2 " id="sidebar-wrapper">
 <div style="" class="sidebar-heading ">
-<div class="text-center" style="padding:0.890rem 1rem; background-color:darkcyan; font-size:16px">
+<div class="text-center" style="padding:0.890rem 1rem; background-color:#dc3545; font-size:16px">
     <a href="<?php echo base_url('User2'); ?>"><span style="color:#fff;">Divisi Asisten</span></a>
    
 </div>
 
 <div class="p-2 text-center bg-light">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:130px; height: 130px;  border:3px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle" ><br>    
+<img style="width:130px; height: 130px;  border:3px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:130px; height: 130px;  border:3px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle mb-3" ><br>    
+<img style="width:130px; height: 130px;  border:3px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle mb-3" ><br>    
 <?php }else{ ?>
-<img style="width:130px; height: 130px;  border:3px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle" ><br>        
+<img style="width:130px; height: 130px;  border:3px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle" ><br>        
 <?php } ?> 
 
 <?php } ?>
-<p style="font-size:15px; color:darkcyan;">Welcome<br>    
+<p style="font-size:15px; color:#000;">Welcome<br>    
 <?php echo $this->session->userdata('nama_lengkap') ?></p>
 </div>
 

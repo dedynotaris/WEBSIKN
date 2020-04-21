@@ -456,7 +456,7 @@ $input = $this->input->post();
 $data = array(
 'laporan_pekerjaan'       => $input['laporan'],
 'no_pekerjaan'            => base64_decode($input['no_pekerjaan']),
-'waktu'                   => date('Y/m/d')    
+'waktu'                   => date('Y/m/d H:i:s')    
 );
 $this->db->insert('data_progress_pekerjaan',$data);
 $status = array(

@@ -49,23 +49,20 @@ border-color: rgb(185, 74, 72) !important;
 <input type="text" placeholder="Kontak yang bisa dihubungi" class="form-control form-control-sm required" id="contact_person" name="contact_person" accept="text/plain">
 <label>*Nomor Kontak Telephone / HP</label>
 <input type="text" placeholder="Nomor Kontak Telephone  / HP" class="form-control form-control-sm required" id="contact_number" name="contact_number" accept="text/plain">
-<label></label>
+<label>&nbsp;</label>
 <button type="button"  onclick="simpan_pekerjaan();" class="btn btn-success btn-sm mx-auto btn-block simpan_perizinan">Buat pekerjaan dan klien baru <i class="fa fa-save"></i></button>
-<hr>
-<i style="font-size:14px;" class="text-danger">*Hanya Jika Client sudah tersedia</i>
+
+<label class="text-center">Hanya Jika Client sudah tersedia</label>
 <button type="button"   onclick="buat_pekerjaan_baru();" class="btn btn-warning btn-sm mx-auto btn-block ">Buat Pekerjaan Baru Saja</button>  
 </div>
 </form>
 </div>
 </div>
-
 <!------------- Modal ---------------->
 <div class="modal fade bd-example-modal-md" id="modal" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
 <div class="modal-dialog modal-md data_modal" role="document">
-
 </div>
 </div>
-
 </div>
 
 

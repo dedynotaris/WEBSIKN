@@ -28,7 +28,6 @@
 
 <button onclick="form_laporan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Buat laporan"><i class="far fa-clipboard"></i></button>    
 <button onclick="form_rekam_dokumen('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>','<?php echo $data['no_client']?>');" class="btn btn-sm btn-success" title="Rekam perizinan"><i class="fa fa-pencil-alt"></i></button>    
-<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary" title="Dokumen Pemilik"><i class="fa fa-archive"></i></button>    
 <button onclick="selesaikan_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Selesaikan status perizinan"><i class="fa fa-check"></i></button>    
     
 </td>

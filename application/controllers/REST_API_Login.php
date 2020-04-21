@@ -14,6 +14,17 @@ function index_post(){
 
 $query = $this->db->get_where('user',array('username'=>$this->post('username'),'password'=>md5($this->post('password'))));
 $data = $query->row_array();
+
+if(!file_exists('./uploads/user/'.$data['foto'])){ 
+$foto = 'no_profile.jpg';
+}else{ 
+if($data['foto'] != NULL){ 
+$foto = $data['foto'];
+}else{ 
+$foto = 'no_profile.jpg';
+}
+}
+
 if($query->num_rows() == 1){
 $r  = array(
 'status'        =>'Success',
@@ -21,7 +32,7 @@ $r  = array(
 'nama_lengkap'  =>$data['nama_lengkap'],
 'email'         =>$data['email'],
 'phone'         =>$data['phone'],
-'foto'          =>$data['foto']
+'foto'          =>$foto
 );
 echo json_encode($r);
 }else{
@@ -36,5 +47,6 @@ echo "put";
 function index_delete(){
 echo "delete";
 }
+
 
 }

@@ -155,7 +155,10 @@ if($this->input->post()){
 $input = $this->input->post();
 
 foreach ($_POST as $key=>$val) {
+if($key == 'ci_csrf_token'){ 
+}else{    
 $this->form_validation->set_rules($key,str_replace('_', ' ', $key), 'required');
+}
 }
 
 if ($this->form_validation->run() == FALSE){
@@ -197,11 +200,7 @@ $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 $lampiran = NULL;
 $this->simpan_data_persyaratan($no_berkas,$input,$lampiran);
 }
-
-
 //echo "validasi _berhasil";    
-
-
 }
 }else{
 redirect(404);    
@@ -264,7 +263,7 @@ echo json_encode($status);
 $data = array(
 'no_berkas_perizinan'    => $input['no_berkas_perizinan'],
 'laporan'                => $input['laporan'],
-'waktu'                  => date('Y/m/d')    
+'waktu'                  => date('Y/m/d H:i:s')    
 );
 $this->db->insert('data_progress_perizinan',$data);
 
