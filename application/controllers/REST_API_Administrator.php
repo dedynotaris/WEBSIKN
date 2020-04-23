@@ -14,23 +14,11 @@ function index_get(){
 public function index_post(){
 if($this->post('status') == 'DaftarPekerjaan'){
 $this->db->select('data_jenis_pekerjaan.nama_jenis as nama_jenis,'
-        . 'user.nama_lengkap as pembuat_pekerjaan,'
         . 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
-        . 'data_pekerjaan.tanggal_dibuat as tanggal_dibuat,'
-        . 'data_client.nama_folder as nama_folder,'
-        . 'data_client.nama_client as nama_client,'
-        . 'data_client.contact_person as contact_person,'
-        . 'data_client.contact_number as contact_number,'
-        . 'data_pekerjaan.target_kelar as target_selesai,'
-        . 'data_pekerjaan.tanggal_selesai as tanggal_selesai,'
-        . 'data_daftar_loker.no_loker as no_loker,'
-        . 'data_daftar_lemari.nama_tempat as nama_tempat');
+        . 'data_pekerjaan.no_jenis_pekerjaan');
 $this->db->from('data_pekerjaan');
-$this->db->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->db->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
-$this->db->join('user', 'user.no_user = data_pekerjaan.no_user');
-$this->db->join('data_daftar_loker', 'data_daftar_loker.id_no_loker = data_pekerjaan.id_no_loker','left');
-$this->db->join('data_daftar_lemari', 'data_daftar_lemari.no_lemari = data_daftar_loker.no_lemari','left');
+$this->db->group_by('data_jenis_pekerjaan.no_jenis_pekerjaan');
 $this->db->where('data_pekerjaan.status_pekerjaan',$this->post('status_pekerjaan'));  
 
 $data_pekerjaan = $this->db->get();
@@ -38,22 +26,14 @@ if($data_pekerjaan->num_rows() == 0){
 $status = array(
 'status_response'  =>'error',    
 'messages'         =>'Pekerjaan '.$this->post('status_pekerjaan').' Tidak Tersedia',
+'DaftarPekerjaan'  =>''        
 );    
 }else{
 foreach ($data_pekerjaan->result_array() as $p){
 $data[] = array(
 'no_pekerjaan'          =>$p['no_pekerjaan'],    
-'nama_folder'           =>$p['nama_folder'],    
-'nama_jenis'            =>$p['nama_jenis'],    
-'tanggal_dibuat'        =>$p['tanggal_dibuat'],    
-'tanggal_selesai'       =>$p['tanggal_selesai'],    
-'target_selesai'        =>$p['target_selesai'],    
-'pembuat_pekerjaan'     =>$p['pembuat_pekerjaan'],
-'no_loker'              =>$p['no_loker'],
-'nama_tempat'           =>$p['nama_tempat'],
-'nama_client'           =>$p['nama_client'],
-'contact_person'        =>$p['contact_person'],
-'contact_number'        =>$p['contact_number'], 
+'nama_jenis'            =>$p['nama_jenis'],
+'jumlah'                =>$this->db->get_where('data_pekerjaan',array('status_pekerjaan'=>$this->post('status_pekerjaan'),'no_jenis_pekerjaan'=>$p['no_jenis_pekerjaan']))->num_rows()    
 );    
 }
 
