@@ -25,10 +25,6 @@
 <div class="list-group list-group-flush">   
 <ul class="list-unstyled components">
 
-<li class="active">
-<a href="#homeSubmenu"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
-<i class="fas fa-users"></i> Client</a>
-<ul class="list-unstyled collapse show" id="homeSubmenu">
 <li>
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/buat_pekerjaan'); ?>">Client Baru <i class="fa fa-plus float-right"></i></a>
 </li>
@@ -39,29 +35,22 @@
 <a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/data_client_perorangan'); ?>">Client Perorangan <i class="fa fa-list-alt float-right"></i></a>
 </li>
 
-</ul>
-</li>
 
 
-<li class="active">
-<a href="#homepekerjaan"  data-toggle="collapse" aria-expanded="false" class="dropdown-toggle list-group-item list-group-item-action ">
-<i class="fa fa-briefcase"></i> Pekerjaan</a>
-<ul class="list-unstyled collapse " id="homepekerjaan">
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_antrian') ?>">Pekerjaan Masuk <i class="fa fa-hourglass-start float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_antrian') ?>">Tahapan Penunjang <i class="fa fa-hourglass-start float-right"></i></a>
 </li>
 
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_proses') ?>">Pekerjaan dikerjakan<i class="fa fa-hourglass-half float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_proses') ?>">Tahapan Perizinan<i class="fa fa-hourglass-half float-right"></i></a>
 </li>
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_selesai') ?>">Pekerjaan  Selesai <i class="fa fa-hourglass-end float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/pekerjaan_selesai') ?>">Pekerjaan Diselesaikan <i class="fa fa-hourglass-end float-right"></i></a>
 </li>
 
-</ul>
-</li>
+
 <li>
-<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/asisten'); ?>">Asisten<i class="fa fa-users float-right"></i></a>
+<a class="list-group-item list-group-item-action " href="<?php echo base_url('User2/asisten'); ?>">Petugas Perizinan<i class="fa fa-users float-right"></i></a>
 </li>
 
 

@@ -12,7 +12,24 @@ function index_get(){
 
 
 public function index_post(){
-if($this->post('status') == 'DaftarPekerjaan'){
+if($this->post('status') == 'CekAkses'){
+
+$cek = $this->db->get_where('sublevel_user',array('sublevel'=>'Level 1','no_user'=>$this->post('no_user'))); 
+    
+if($cek->num_rows() == 0){
+$status = array(
+'status_response'  =>'error',    
+'messages'         =>'Anda Tidak Memiliki Akses Di Menu Ini',
+);    
+}else{
+
+$status = array(
+'status_response'  =>'success',    
+'messages'         =>'User Memiliki Akses',
+);  
+}
+$this->response($status,REST_Controller::HTTP_CREATED);   
+}else if($this->post('status') == 'DaftarPekerjaan'){
 $this->db->select('data_jenis_pekerjaan.nama_jenis as nama_jenis,'
         . 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
         . 'data_pekerjaan.no_jenis_pekerjaan');
@@ -31,7 +48,7 @@ $status = array(
 }else{
 foreach ($data_pekerjaan->result_array() as $p){
 $data[] = array(
-'no_pekerjaan'          =>$p['no_pekerjaan'],    
+'no_jenis_pekerjaan'    =>$p['no_jenis_pekerjaan'],    
 'nama_jenis'            =>$p['nama_jenis'],
 'jumlah'                =>$this->db->get_where('data_pekerjaan',array('status_pekerjaan'=>$this->post('status_pekerjaan'),'no_jenis_pekerjaan'=>$p['no_jenis_pekerjaan']))->num_rows()    
 );    
@@ -46,7 +63,57 @@ $status = array(
 }
 $this->response($status,REST_Controller::HTTP_CREATED);
    
-}else if($this->post('status') == 'DataAsisten'){
+}else if($this->post('status') == 'DetailPekerjaan'){
+$this->db->select('data_jenis_pekerjaan.nama_jenis as nama_jenis,'
+        . 'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
+        . 'data_pekerjaan.no_jenis_pekerjaan,'
+        . 'data_client.nama_client,'
+        . 'data_client.no_client,'
+        . 'data_pekerjaan.tanggal_dibuat,'
+        . 'data_pekerjaan.tanggal_selesai,'
+        . 'data_pekerjaan.target_kelar,'
+        . 'user.nama_lengkap as nama_asisten,'
+        . 'data_pekerjaan.no_pekerjaan');
+$this->db->from('data_pekerjaan');
+$this->db->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_jenis_pekerjaan','data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('user','user.no_user = data_pekerjaan.no_user');
+$this->db->where('data_pekerjaan.status_pekerjaan',$this->post('status_pekerjaan'));  
+$this->db->where('data_pekerjaan.no_jenis_pekerjaan',$this->post('no_jenis_pekerjaan'));  
+
+$data_pekerjaan = $this->db->get();
+if($data_pekerjaan->num_rows() == 0){
+$status = array(
+'status_response'  =>'error',    
+'messages'         =>'Detail Pekerjaan '.$this->post('status_pekerjaan').' Tidak Tersedia',
+'DetailPekerjaan'  =>''        
+);    
+}else{
+foreach ($data_pekerjaan->result_array() as $p){
+$data[] = array(
+'no_jenis_pekerjaan'    =>$p['no_jenis_pekerjaan'],    
+'nama_jenis'            =>$p['nama_jenis'],
+'nama_client'           =>$p['nama_client'],
+'nama_asisten'          =>$p['nama_asisten'],
+'tanggal_dibuat'        =>$p['tanggal_dibuat'],
+'target_selesai'        =>$p['target_kelar'],
+'tanggal_selesai'       =>$p['tanggal_selesai'],
+'no_pekerjaan'          =>$p['no_pekerjaan'],    
+'no_client'             =>$p['no_client'],    
+);    
+}
+
+
+$status = array(
+'status_response'  =>'success',    
+'messages'         =>'Detail Pekerjaan Ditemukan',
+'DetailPekerjaan'  =>$data    
+);  
+}
+$this->response($status,REST_Controller::HTTP_CREATED);
+    
+}
+else if($this->post('status') == 'DataAsisten'){
 $this->db->select('user.nama_lengkap,'
         . 'user.email,'
         . 'user.no_user,'
@@ -228,7 +295,47 @@ $this->response($status,REST_Controller::HTTP_CREATED);
 
 $this->db->select('data_jenis_pekerjaan.nama_jenis,'
         . 'nama_dokumen.nama_dokumen,'
+        . 'nama_dokumen.no_nama_dokumen,'
+        . 'data_berkas_perizinan.no_berkas_perizinan,'
+        . 'data_pekerjaan.no_pekerjaan');
+$this->db->from('data_berkas_perizinan');
+$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
+$this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
+$this->db->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
+$this->db->group_by('data_berkas_perizinan.no_nama_dokumen');
+$this->db->where('data_berkas_perizinan.status_berkas',$this->post('status_perizinan'));    
+
+$data_perizinan = $this->db->get();
+
+if($data_perizinan->num_rows() == 0){
+$status = array(
+'status_response'  =>'error',    
+'messages'         =>'Dokumen Perizinan Tidak Tersedia',
+'DaftarPerizinan'  =>''    
+);      
+}else{
+foreach ($data_perizinan->result_array() as $p){
+$data[] = array(
+'nama_dokumen'         =>$p['nama_dokumen'],    
+'no_pekerjaan'         =>$p['no_pekerjaan'],    
+'no_nama_dokumen'      =>$p['no_nama_dokumen'],
+'jumlah'               =>$this->db->get_where('data_berkas_perizinan',array('status_berkas'=>$this->post('status_perizinan'),'no_nama_dokumen'=>$p['no_nama_dokumen']))->num_rows()    
+);    
+}
+
+$status = array(
+'status_response'  =>'success',    
+'messages'         =>'Dokumen Perizinan Ditemukan',
+'DaftarPerizinan'  =>$data    
+); 
+}
+$this->response($status,REST_Controller::HTTP_CREATED);
+}else if($this->post('status') == 'DetailDataPerizinan'){
+
+$this->db->select('data_jenis_pekerjaan.nama_jenis,'
+        . 'nama_dokumen.nama_dokumen,'
         . 'data_client.nama_client,'
+        . 'data_client.no_client,'
         . 'petugas.nama_lengkap,'
         . 'penugas.nama_lengkap as nama_penugas,'
         . 'data_berkas_perizinan.tanggal_penugasan,'
@@ -244,13 +351,15 @@ $this->db->join('data_client','data_client.no_client = data_pekerjaan.no_client'
 $this->db->join('user as petugas', 'petugas.no_user = data_berkas_perizinan.no_user_perizinan');
 $this->db->join('user as penugas', 'penugas.no_user = data_berkas_perizinan.no_user_penugas');
 $this->db->where('data_berkas_perizinan.status_berkas',$this->post('status_perizinan'));    
+$this->db->where('data_berkas_perizinan.no_nama_dokumen',$this->post('no_nama_dokumen'));    
 
 $data_perizinan = $this->db->get();
 
 if($data_perizinan->num_rows() == 0){
 $status = array(
 'status_response'  =>'error',    
-'messages'         =>'Dokumen Perizinan Tidak Tersedia',
+'messages'         =>'Detail Perizinan Tidak Tersedia',
+'DetailPerizinan'  =>''    
 );      
 }else{
 foreach ($data_perizinan->result_array() as $p){
@@ -264,17 +373,18 @@ $data[] = array(
 'target_selesai'       =>$p['target_selesai_perizinan'],    
 'tanggal_selesai'      =>$p['tanggal_selesai'],
 'no_berkas_perizinan'  =>$p['no_berkas_perizinan'],
-'no_pekerjaan'         =>$p['no_pekerjaan']    
+'no_pekerjaan'         =>$p['no_pekerjaan'],
+'no_client'            =>$p['no_client']    
 );    
 }
 
 $status = array(
 'status_response'  =>'success',    
 'messages'         =>'Dokumen Perizinan Ditemukan',
-'DaftarPerizinan'  =>$data    
+'DetailPerizinan'  =>$data    
 ); 
 }
-$this->response($status,REST_Controller::HTTP_CREATED);
+$this->response($status,REST_Controller::HTTP_CREATED);    
 }else if($this->post('status') == 'DataProgressPerizinan'){
                 $this->db->order_by('id_laporan','DESC');
 $data_laporan = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$this->post('no_berkas_perizinan')));

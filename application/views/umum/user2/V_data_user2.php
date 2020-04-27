@@ -4,10 +4,10 @@
 <div class="bg_data rounded-top">
 <div class="p-2">
 <span class="	fa fa-share-square float-right fa-3x sticky-top"></span>
-In <br>
+Tahap Persyaratan Dokumen Penunjang <br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah" >Pekerjaan Masuk  <div class="float-right">
+<div class="footer p-2 bg_data_bawah" >Memasukan Dokumen Penunjang  <div class="float-right">
 <?php echo $this->db->get_where('data_pekerjaan',array('no_user'=>$this->session->userdata('no_user'),'status_pekerjaan'=>"Masuk" ))->num_rows(); ?>   
    
 </div></div>
@@ -19,10 +19,10 @@ In <br>
 <div class="bg_data rounded-top">
 <div class="p-2">
 <span class="fa fa-arrow-right  float-right fa-3x sticky-top"></span>
-Proses <br>
+Tahap Untuk Membuat Dokumen Perizinan <br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah" >Pekerjaan Dikerjakan
+<div class="footer p-2 bg_data_bawah" >Membuat Dokumen Perizinan 
 <div class="float-right">
 <?php echo $this->db->get_where('data_pekerjaan',array('no_user'=>$this->session->userdata('no_user'),'status_pekerjaan'=>"Proses" ))->num_rows(); ?>   
     
@@ -34,11 +34,11 @@ Proses <br>
 <div class="col-md-4 "><a  style="text-decoration:none;" href="<?php echo base_url('User2/pekerjaan_selesai') ?>">
 <div class="bg_data rounded-top">
 <div class="p-2">
-<span class="fab fa-font-awesome-flag float-right fa-3x sticky-top"></span>
-Out <br>
+<span class="fa fa-flag float-right fa-3x sticky-top"></span>
+Pekerjaan diselesaikan di bulan ini <br>
 <h4>&nbsp;</h4>
 </div>
-<div class="footer p-2 bg_data_bawah" >Pekerjaan Diselesaikan Bulan Ini <div class="float-right">
+<div class="footer p-2 bg_data_bawah" >Pekerjaan Bulan Ini <div class="float-right">
 <?php //echo $this->db->get_where('data_pekerjaan',array('no_user'=>$this->session->userdata('no_user'),'status_pekerjaan'=>"Selesai" ))->num_rows(); ?>   
 <?php 
 $awal  = date('Y/m/d',strtotime("first day of this month"));
