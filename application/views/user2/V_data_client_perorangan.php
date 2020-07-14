@@ -2,25 +2,27 @@
 <?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
-<?php $this->load->view('umum/user2/V_data_user2'); ?>
-<div class="container-fluid  text-theme1"> 
+
+<?php echo $this->breadcrumbs->show(); ?>
+<div class="container-fluid "> 
 <div class="p-2 mt-2">
 
 <div class="row">
 <div class="col">
-<h5 align="center"><i class="fa fa-3x fa-user-tie"></i><br>Data client Perorangan</h5>
 
-<table style="width:100%;" id="data_client" class="table  text-theme1 table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
-<th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >No NIK</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >jenis client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >asisten</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<table style="width:100%;" id="data_client" class="table table-striped table-bordered"><thead>
+<tr class='bg-info text-center  text-white'>
+<td colspan='6'>Data Cliet Badan Hukum  </td>
+</tr>
+<tr  role="row">
+<th aria-controls="datatable-fixed-header"  >No</th>
+<th aria-controls="datatable-fixed-header"  >NIK / Paspor</th>
+<th aria-controls="datatable-fixed-header"  >Nama client</th>
+<th aria-controls="datatable-fixed-header"  >Jenis client</th>
+<th aria-controls="datatable-fixed-header"  >Asisten</th>
+<th aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody align="center">
+<tbody >
 </table> 
 </div>
 </div>
@@ -74,10 +76,9 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_client",
+"data": "no_client",
 "orderable": false
 },
-{"data": "no_client"},
 {"data": "no_identitas"},
 {"data": "nama_client"},
 {"data": "jenis_client"},

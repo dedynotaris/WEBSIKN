@@ -5,13 +5,13 @@
 <?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
 <div class="container-fluid mt-2">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-folder-open "></span><br>Daftar Dokumen arsip yang dipinjam</h5>
+<h5 align="center " class="text-info"><span class="fa-3x fas fa-folder-open "></span><br>Daftar Dokumen arsip yang dipinjam</h5>
 </div>
     <div class="row">
 
     <div class="col">
-        <table style="width:100%;" id="daftar_arsip_pinjam" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <table style="width:100%;" id="daftar_arsip_pinjam" class="table  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+                <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Pekerjaan</th>

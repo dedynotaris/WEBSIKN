@@ -1,0 +1,215 @@
+2020-07-06T02:43:01.111073Z 0 [Note] Giving 0 client threads a chance to die gracefully
+2020-07-06T02:43:01.111103Z 0 [Note] Shutting down slave threads
+2020-07-06T02:43:01.111110Z 0 [Note] Forcefully disconnecting 0 remaining clients
+2020-07-06T02:43:01.111117Z 0 [Note] Event Scheduler: Purging the queue. 0 events
+2020-07-06T02:43:01.174193Z 0 [Note] Binlog end
+2020-07-06T02:43:01.217508Z 0 [Note] Shutting down plugin 'group_replication'
+2020-07-06T02:43:01.217577Z 0 [Note] Plugin group_replication reported: 'All Group Replication server observers have been successfully unregistered'
+2020-07-06T02:43:01.217592Z 0 [Note] Shutting down plugin 'ngram'
+2020-07-06T02:43:01.217602Z 0 [Note] Shutting down plugin 'BLACKHOLE'
+2020-07-06T02:43:01.217611Z 0 [Note] Shutting down plugin 'ARCHIVE'
+2020-07-06T02:43:01.217620Z 0 [Note] Shutting down plugin 'partition'
+2020-07-06T02:43:01.217628Z 0 [Note] Shutting down plugin 'MyISAM'
+2020-07-06T02:43:01.217645Z 0 [Note] Shutting down plugin 'MRG_MYISAM'
+2020-07-06T02:43:01.217654Z 0 [Note] Shutting down plugin 'CSV'
+2020-07-06T02:43:01.217664Z 0 [Note] Shutting down plugin 'MEMORY'
+2020-07-06T02:43:01.217673Z 0 [Note] Shutting down plugin 'INNODB_SYS_VIRTUAL'
+2020-07-06T02:43:01.217681Z 0 [Note] Shutting down plugin 'INNODB_SYS_DATAFILES'
+2020-07-06T02:43:01.217689Z 0 [Note] Shutting down plugin 'INNODB_SYS_TABLESPACES'
+2020-07-06T02:43:01.217697Z 0 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN_COLS'
+2020-07-06T02:43:01.217705Z 0 [Note] Shutting down plugin 'INNODB_SYS_FOREIGN'
+2020-07-06T02:43:01.217713Z 0 [Note] Shutting down plugin 'INNODB_SYS_FIELDS'
+2020-07-06T02:43:01.217720Z 0 [Note] Shutting down plugin 'INNODB_SYS_COLUMNS'
+2020-07-06T02:43:01.217728Z 0 [Note] Shutting down plugin 'INNODB_SYS_INDEXES'
+2020-07-06T02:43:01.217736Z 0 [Note] Shutting down plugin 'INNODB_SYS_TABLESTATS'
+2020-07-06T02:43:01.217744Z 0 [Note] Shutting down plugin 'INNODB_SYS_TABLES'
+2020-07-06T02:43:01.217751Z 0 [Note] Shutting down plugin 'INNODB_FT_INDEX_TABLE'
+2020-07-06T02:43:01.217759Z 0 [Note] Shutting down plugin 'INNODB_FT_INDEX_CACHE'
+2020-07-06T02:43:01.217767Z 0 [Note] Shutting down plugin 'INNODB_FT_CONFIG'
+2020-07-06T02:43:01.217775Z 0 [Note] Shutting down plugin 'INNODB_FT_BEING_DELETED'
+2020-07-06T02:43:01.217783Z 0 [Note] Shutting down plugin 'INNODB_FT_DELETED'
+2020-07-06T02:43:01.217790Z 0 [Note] Shutting down plugin 'INNODB_FT_DEFAULT_STOPWORD'
+2020-07-06T02:43:01.217798Z 0 [Note] Shutting down plugin 'INNODB_METRICS'
+2020-07-06T02:43:01.217806Z 0 [Note] Shutting down plugin 'INNODB_TEMP_TABLE_INFO'
+2020-07-06T02:43:01.217814Z 0 [Note] Shutting down plugin 'INNODB_BUFFER_POOL_STATS'
+2020-07-06T02:43:01.217822Z 0 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE_LRU'
+2020-07-06T02:43:01.217829Z 0 [Note] Shutting down plugin 'INNODB_BUFFER_PAGE'
+2020-07-06T02:43:01.217837Z 0 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX_RESET'
+2020-07-06T02:43:01.217845Z 0 [Note] Shutting down plugin 'INNODB_CMP_PER_INDEX'
+2020-07-06T02:43:01.217853Z 0 [Note] Shutting down plugin 'INNODB_CMPMEM_RESET'
+2020-07-06T02:43:01.217860Z 0 [Note] Shutting down plugin 'INNODB_CMPMEM'
+2020-07-06T02:43:01.217868Z 0 [Note] Shutting down plugin 'INNODB_CMP_RESET'
+2020-07-06T02:43:01.217876Z 0 [Note] Shutting down plugin 'INNODB_CMP'
+2020-07-06T02:43:01.217884Z 0 [Note] Shutting down plugin 'INNODB_LOCK_WAITS'
+2020-07-06T02:43:01.217891Z 0 [Note] Shutting down plugin 'INNODB_LOCKS'
+2020-07-06T02:43:01.217899Z 0 [Note] Shutting down plugin 'INNODB_TRX'
+2020-07-06T02:43:01.217907Z 0 [Note] Shutting down plugin 'InnoDB'
+2020-07-06T02:43:01.218055Z 0 [Note] InnoDB: FTS optimize thread exiting.
+2020-07-06T02:43:01.218285Z 0 [Note] InnoDB: Starting shutdown...
+2020-07-06T02:43:01.318775Z 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2020-07-06T02:43:01.319238Z 0 [Note] InnoDB: Buffer pool(s) dump completed at 200706  2:43:01
+2020-07-06T02:43:02.925325Z 0 [Note] InnoDB: Shutdown completed; log sequence number 99511245
+2020-07-06T02:43:02.926757Z 0 [Note] InnoDB: Removed temporary tablespace data file: "ibtmp1"
+2020-07-06T02:43:02.926774Z 0 [Note] Shutting down plugin 'PERFORMANCE_SCHEMA'
+2020-07-06T02:43:02.926791Z 0 [Note] Shutting down plugin 'sha256_password'
+2020-07-06T02:43:02.926795Z 0 [Note] Shutting down plugin 'mysql_native_password'
+2020-07-06T02:43:02.927028Z 0 [Note] Shutting down plugin 'binlog'
+2020-07-06T02:43:02.927255Z 0 [Note] /usr/sbin/mysqld: Shutdown complete
+
+2020-07-06T02:43:03.177452Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2020-07-06T02:43:03.178853Z 0 [Note] /usr/sbin/mysqld (mysqld 5.7.20-log) starting as process 4097 ...
+2020-07-06T02:43:03.181575Z 0 [Note] InnoDB: PUNCH HOLE support available
+2020-07-06T02:43:03.181592Z 0 [Note] InnoDB: Mutexes and rw_locks use GCC atomic builtins
+2020-07-06T02:43:03.181595Z 0 [Note] InnoDB: Uses event mutexes
+2020-07-06T02:43:03.181598Z 0 [Note] InnoDB: GCC builtin __atomic_thread_fence() is used for memory barrier
+2020-07-06T02:43:03.181601Z 0 [Note] InnoDB: Compressed tables use zlib 1.2.3
+2020-07-06T02:43:03.181604Z 0 [Note] InnoDB: Using Linux native AIO
+2020-07-06T02:43:03.181818Z 0 [Note] InnoDB: Number of pools: 1
+2020-07-06T02:43:03.181890Z 0 [Note] InnoDB: Using CPU crc32 instructions
+2020-07-06T02:43:03.183133Z 0 [Note] InnoDB: Initializing buffer pool, total size = 128M, instances = 1, chunk size = 128M
+2020-07-06T02:43:03.188834Z 0 [Note] InnoDB: Completed initialization of buffer pool
+2020-07-06T02:43:03.190459Z 0 [Note] InnoDB: If the mysqld execution user is authorized, page cleaner thread priority can be changed. See the man page of setpriority().
+2020-07-06T02:43:03.201834Z 0 [Note] InnoDB: Highest supported file format is Barracuda.
+2020-07-06T02:43:03.259500Z 0 [Note] InnoDB: Creating shared tablespace for temporary tables
+2020-07-06T02:43:03.259583Z 0 [Note] InnoDB: Setting file './ibtmp1' size to 12 MB. Physically writing the file full; Please wait ...
+2020-07-06T02:43:03.384607Z 0 [Note] InnoDB: File './ibtmp1' size is now 12 MB.
+2020-07-06T02:43:03.386756Z 0 [Note] InnoDB: 96 redo rollback segment(s) found. 96 redo rollback segment(s) are active.
+2020-07-06T02:43:03.386784Z 0 [Note] InnoDB: 32 non-redo rollback segment(s) are active.
+2020-07-06T02:43:03.387836Z 0 [Note] InnoDB: Waiting for purge to start
+2020-07-06T02:43:03.438304Z 0 [Note] InnoDB: 5.7.20 started; log sequence number 99511245
+2020-07-06T02:43:03.439026Z 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2020-07-06T02:43:03.439531Z 0 [Note] Plugin 'FEDERATED' is disabled.
+2020-07-06T02:43:03.444382Z 0 [Note] InnoDB: Buffer pool(s) load completed at 200706  2:43:03
+2020-07-06T02:43:03.594086Z 0 [Note] Found ca.pem, server-cert.pem and server-key.pem in data directory. Trying to enable SSL support using them.
+2020-07-06T02:43:03.594612Z 0 [Warning] CA certificate ca.pem is self signed.
+2020-07-06T02:43:03.598418Z 0 [Note] Server hostname (bind-address): '0.0.0.0'; port: 3306
+2020-07-06T02:43:03.598455Z 0 [Note]   - '0.0.0.0' resolves to '0.0.0.0';
+2020-07-06T02:43:03.598495Z 0 [Note] Server socket created on IP: '0.0.0.0'.
+2020-07-06T02:43:03.669398Z 0 [Warning] Neither --relay-log nor --relay-log-index were used; so replication may break when this MySQL server acts as a slave and has his hostname changed!! Please use '--relay-log=server1-relay-bin' to avoid this problem.
+2020-07-06T02:43:04.041814Z 0 [Note] Event Scheduler: Loaded 0 events
+2020-07-06T02:43:04.042387Z 0 [Note] /usr/sbin/mysqld: ready for connections.
+Version: '5.7.20-log'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server (GPL)
+2020-07-06T02:43:04.042426Z 0 [Note] Executing 'SELECT * FROM INFORMATION_SCHEMA.TABLES;' to get a list of tables using the deprecated partition engine. You may use the startup option '--disable-partition-engine-check' to skip this check. 
+2020-07-06T02:43:04.042437Z 0 [Note] Beginning of list of non-natively partitioned tables
+2020-07-06T02:43:04.055743Z 0 [Note] End of list of non-natively partitioned tables
+2020-07-06T02:43:15.903860Z 3 [Note] Access denied for user 'root'@'localhost' (using password: NO)
+2020-07-06T02:43:40.246481Z 4 [Note] Plugin group_replication reported: 'Group communication SSL configuration: group_replication_ssl_mode: "DISABLED"'
+2020-07-06T02:43:40.246689Z 4 [Note] Plugin group_replication reported: '[GCS] Added automatically IP ranges 127.0.0.1/8,192.168.0.10/24 to the whitelist'
+2020-07-06T02:43:40.246890Z 4 [Note] Plugin group_replication reported: '[GCS] SSL was not enabled'
+2020-07-06T02:43:40.246931Z 4 [Note] Plugin group_replication reported: 'Initialized group communication with configuration: group_replication_group_name: "09bfc81e-b90e-43cf-91b2-c6d891896e45"; group_replication_local_address: "192.168.0.10:33061"; group_replication_group_seeds: "192.168.0.10:33061,192.168.0.12:33061"; group_replication_bootstrap_group: false; group_replication_poll_spin_loops: 0; group_replication_compression_threshold: 1000000; group_replication_ip_whitelist: "AUTOMATIC"'
+2020-07-06T02:43:40.246973Z 4 [Note] Plugin group_replication reported: 'Member configuration: member_id: 1; member_uuid: "117a7f52-a6e0-11e9-a571-6c2b59d33ca7"; single-primary mode: "false"; group_replication_auto_increment_increment: 7; '
+2020-07-06T02:43:40.247349Z 6 [Note] Plugin group_replication reported: 'Detected previous RESET MASTER invocation or an issue exists in the group replication applier relay log. Purging existing applier logs.'
+2020-07-06T02:43:40.598391Z 6 [Note] 'CHANGE MASTER TO FOR CHANNEL 'group_replication_applier' executed'. Previous state master_host='', master_port= 3306, master_log_file='', master_log_pos= 4, master_bind=''. New state master_host='<NULL>', master_port= 0, master_log_file='', master_log_pos= 4, master_bind=''.
+2020-07-06T02:43:41.017649Z 9 [Note] Slave SQL thread for channel 'group_replication_applier' initialized, starting replication in log 'FIRST' at position 0, relay log './server1-relay-bin-group_replication_applier.000001' position: 4
+2020-07-06T02:43:41.017655Z 4 [Note] Plugin group_replication reported: 'Group Replication applier module successfully initialized!'
+2020-07-06T02:43:41.017752Z 4 [Note] Plugin group_replication reported: 'auto_increment_increment is set to 7'
+2020-07-06T02:43:41.017766Z 4 [Note] Plugin group_replication reported: 'auto_increment_offset is set to 1'
+2020-07-06T02:43:41.018005Z 0 [Note] Plugin group_replication reported: 'state 0 action xa_init'
+2020-07-06T02:43:41.042740Z 0 [Note] Plugin group_replication reported: 'Successfully bound to 0.0.0.0:33061 (socket=68).'
+2020-07-06T02:43:41.042766Z 0 [Note] Plugin group_replication reported: 'Successfully set listen backlog to 32 (socket=68)!'
+2020-07-06T02:43:41.042772Z 0 [Note] Plugin group_replication reported: 'Successfully unblocked socket (socket=68)!'
+2020-07-06T02:43:41.042800Z 0 [Note] Plugin group_replication reported: 'Ready to accept incoming connections on 0.0.0.0:33061 (socket=68)!'
+2020-07-06T02:43:41.042822Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.042899Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 70'
+2020-07-06T02:43:41.043356Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.043408Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 78'
+2020-07-06T02:43:41.043650Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.043703Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 80'
+2020-07-06T02:43:41.043783Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.043819Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 82'
+2020-07-06T02:43:41.043898Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.043931Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 84'
+2020-07-06T02:43:41.044014Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:43:41.044050Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 86'
+2020-07-06T02:43:41.044128Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:44.113416Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:44.113512Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:44.113535Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:47.185385Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:47.185453Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:47.185471Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:50.257317Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:50.257388Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:50.257406Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:53.329313Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:53.329380Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:53.329398Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:56.401315Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:56.401387Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:56.401406Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:43:59.473309Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:43:59.473378Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:43:59.473396Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:44:02.545312Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:44:02.545384Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:44:02.545402Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:44:05.617311Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:44:05.617379Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:44:05.617398Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:44:08.689084Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:44:08.689152Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:44:08.689189Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.12 33061'
+2020-07-06T02:44:11.761314Z 0 [Note] Plugin group_replication reported: 'Getting the peer name failed while connecting to server 192.168.0.12 with error 113 -No route to host.'
+2020-07-06T02:44:11.761383Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error on opening a connection to 192.168.0.12:33061 on local port: 33061. Error= 0'
+2020-07-06T02:44:11.761402Z 0 [ERROR] Plugin group_replication reported: '[GCS] Error connecting to all peers. Member join failed. Local port: 33061'
+2020-07-06T02:44:11.761560Z 0 [Note] Plugin group_replication reported: 'state 4337 action xa_terminate'
+2020-07-06T02:44:11.761608Z 0 [Note] Plugin group_replication reported: 'new state x_start'
+2020-07-06T02:44:11.761620Z 0 [Note] Plugin group_replication reported: 'state 4337 action xa_exit'
+2020-07-06T02:44:11.762317Z 0 [Note] Plugin group_replication reported: 'Exiting xcom thread'
+2020-07-06T02:44:11.762350Z 0 [Note] Plugin group_replication reported: 'new state x_start'
+2020-07-06T02:44:11.762471Z 0 [Warning] Plugin group_replication reported: 'read failed'
+2020-07-06T02:44:11.773382Z 0 [ERROR] Plugin group_replication reported: '[GCS] The member was unable to join the group. Local port: 33061'
+2020-07-06T02:44:41.017901Z 4 [ERROR] Plugin group_replication reported: 'Timeout on wait for view after joining group'
+2020-07-06T02:44:41.017925Z 4 [Note] Plugin group_replication reported: 'Requesting to leave the group despite of not being a member'
+2020-07-06T02:44:41.017953Z 4 [ERROR] Plugin group_replication reported: '[GCS] The member is leaving a group without being on one.'
+2020-07-06T02:44:41.018081Z 4 [Note] Plugin group_replication reported: 'auto_increment_increment is reset to 1'
+2020-07-06T02:44:41.018090Z 4 [Note] Plugin group_replication reported: 'auto_increment_offset is reset to 1'
+2020-07-06T02:44:41.018351Z 9 [Note] Error reading relay log event for channel 'group_replication_applier': slave SQL thread was killed
+2020-07-06T02:44:41.067487Z 6 [Note] Plugin group_replication reported: 'The group replication applier thread was killed'
+2020-07-06T02:45:22.661376Z 4 [Note] Plugin group_replication reported: 'Group communication SSL configuration: group_replication_ssl_mode: "DISABLED"'
+2020-07-06T02:45:22.661565Z 4 [Note] Plugin group_replication reported: '[GCS] Added automatically IP ranges 127.0.0.1/8,192.168.0.10/24 to the whitelist'
+2020-07-06T02:45:22.661736Z 4 [Note] Plugin group_replication reported: '[GCS] SSL was not enabled'
+2020-07-06T02:45:22.661778Z 4 [Note] Plugin group_replication reported: 'Initialized group communication with configuration: group_replication_group_name: "09bfc81e-b90e-43cf-91b2-c6d891896e45"; group_replication_local_address: "192.168.0.10:33061"; group_replication_group_seeds: "192.168.0.10:33061,192.168.0.12:33061"; group_replication_bootstrap_group: true; group_replication_poll_spin_loops: 0; group_replication_compression_threshold: 1000000; group_replication_ip_whitelist: "AUTOMATIC"'
+2020-07-06T02:45:22.661821Z 4 [Note] Plugin group_replication reported: 'Member configuration: member_id: 1; member_uuid: "117a7f52-a6e0-11e9-a571-6c2b59d33ca7"; single-primary mode: "false"; group_replication_auto_increment_increment: 7; '
+2020-07-06T02:45:22.662324Z 11 [Note] 'CHANGE MASTER TO FOR CHANNEL 'group_replication_applier' executed'. Previous state master_host='<NULL>', master_port= 0, master_log_file='', master_log_pos= 4, master_bind=''. New state master_host='<NULL>', master_port= 0, master_log_file='', master_log_pos= 4, master_bind=''.
+2020-07-06T02:45:22.945071Z 14 [Note] Slave SQL thread for channel 'group_replication_applier' initialized, starting replication in log 'FIRST' at position 0, relay log './server1-relay-bin-group_replication_applier.000001' position: 4
+2020-07-06T02:45:22.945074Z 4 [Note] Plugin group_replication reported: 'Group Replication applier module successfully initialized!'
+2020-07-06T02:45:22.945226Z 4 [Note] Plugin group_replication reported: 'auto_increment_increment is set to 7'
+2020-07-06T02:45:22.945242Z 4 [Note] Plugin group_replication reported: 'auto_increment_offset is set to 1'
+2020-07-06T02:45:22.945421Z 0 [Note] Plugin group_replication reported: 'state 4337 action xa_init'
+2020-07-06T02:45:22.945499Z 0 [Note] Plugin group_replication reported: 'Successfully bound to 0.0.0.0:33061 (socket=68).'
+2020-07-06T02:45:22.945531Z 0 [Note] Plugin group_replication reported: 'Successfully set listen backlog to 32 (socket=68)!'
+2020-07-06T02:45:22.945546Z 0 [Note] Plugin group_replication reported: 'Successfully unblocked socket (socket=68)!'
+2020-07-06T02:45:22.945620Z 0 [Note] Plugin group_replication reported: 'Ready to accept incoming connections on 0.0.0.0:33061 (socket=68)!'
+2020-07-06T02:45:22.945634Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.945846Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 69'
+2020-07-06T02:45:22.946437Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.946606Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 78'
+2020-07-06T02:45:22.947287Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.947449Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 80'
+2020-07-06T02:45:22.948113Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.948267Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 82'
+2020-07-06T02:45:22.948575Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.948685Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 84'
+2020-07-06T02:45:22.949125Z 0 [Note] Plugin group_replication reported: 'connecting to 192.168.0.10 33061'
+2020-07-06T02:45:22.949238Z 0 [Note] Plugin group_replication reported: 'client connected to 192.168.0.10 33061 fd 86'
+2020-07-06T02:45:22.949829Z 0 [Note] Plugin group_replication reported: 'state 4337 action xa_net_boot'
+2020-07-06T02:45:22.949862Z 0 [Note] Plugin group_replication reported: 'getstart group_id 98bfbda8'
+2020-07-06T02:45:22.950351Z 0 [Note] Plugin group_replication reported: 'new state x_run'
+2020-07-06T02:45:22.950422Z 0 [Note] Plugin group_replication reported: 'state 4410 action xa_net_boot'
+2020-07-06T02:45:22.950435Z 0 [Note] Plugin group_replication reported: 'new state x_run'
+2020-07-06T02:45:22.950457Z 0 [Note] Plugin group_replication reported: 'getstart group_id 98bfbda8'
+2020-07-06T02:45:23.951482Z 17 [Note] Plugin group_replication reported: 'Only one server alive. Declaring this server as online within the replication group'
+2020-07-06T02:45:23.951529Z 0 [Note] Plugin group_replication reported: 'Group membership changed to 192.168.0.10:3306 on view 15940035239507555:1.'
+2020-07-06T02:45:23.997215Z 0 [Note] Plugin group_replication reported: 'This server was declared online within the replication group'
+2020-07-06T02:55:18.415986Z 0 [Note] Plugin group_replication reported: 'getstart group_id 98bfbda8'
+2020-07-06T02:55:23.909113Z 0 [Note] Plugin group_replication reported: 'Members joined the group: 192.168.0.11:3306'
+2020-07-06T02:55:23.909211Z 0 [Note] Plugin group_replication reported: 'Group membership changed to 192.168.0.10:3306, 192.168.0.11:3306 on view 15940035239507555:2.'
+2020-07-06T02:55:26.522871Z 21 [Warning] IP address '192.168.0.11' could not be resolved: Name or service not known
+2020-07-06T02:55:26.530336Z 21 [Note] Start binlog_dump to master_thread_id(21) slave_server(2), pos(, 4)
+2020-07-06T02:55:27.839259Z 0 [Note] Plugin group_replication reported: 'The member with address 192.168.0.11:3306 was declared online within the replication group'
+2020-07-06T02:56:26.531251Z 21 [Note] Aborted connection 21 to db: 'unconnected' user: 'notaris' host: '192.168.0.11' (failed on flush_net())
+2020-07-06T03:09:16.495738Z 59 [ERROR] Plugin group_replication reported: 'Table data_meta_berkas does not have any PRIMARY KEY. This is not compatible with Group Replication'
+2020-07-06T03:09:23.439499Z 60 [ERROR] Plugin group_replication reported: 'Table data_meta_berkas does not have any PRIMARY KEY. This is not compatible with Group Replication'
+2020-07-06T03:13:54.470074Z 61 [ERROR] Plugin group_replication reported: 'Table data_meta_berkas does not have any PRIMARY KEY. This is not compatible with Group Replication'
+2020-07-06T03:14:40.630954Z 74 [ERROR] Plugin group_replication reported: 'Table data_meta_berkas does not have any PRIMARY KEY. This is not compatible with Group Replication'

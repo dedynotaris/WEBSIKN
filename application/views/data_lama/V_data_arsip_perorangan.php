@@ -2,25 +2,26 @@
 <?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
-<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
-
+<?php echo $this->breadcrumbs->show(); ?>
 <div class="container-fluid">
     
     
-<div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-3x fa fa-users"></span><br>Data Client Perorangan</h5>
-</div>
+<div class="mt-2 ">
+
 
 <div class="row ">
 <div class="col ">
-<table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
-<th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >No Client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >NIK</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama Asisten</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
+<table style="width:100%;" id="data_arsip" class="table  table-striped table-bordered  "><thead>
+<tr class='bg-info text-center  text-white'>
+<td colspan='7'>Data Client Badan Hukum</td>
+</tr>
+  <tr  role="row">
+<th   aria-controls="datatable-fixed-header"  >No</th>
+<th   aria-controls="datatable-fixed-header"  >No Client</th>
+<th   aria-controls="datatable-fixed-header"  >NIK</th>
+<th   aria-controls="datatable-fixed-header"  >Nama client</th>
+<th   aria-controls="datatable-fixed-header"  >Nama Asisten</th>
+<th   aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody >
 </table> 
@@ -70,7 +71,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_client",
+"data": "no_client",
 "orderable": false
 },
 {"data": "no_client"},

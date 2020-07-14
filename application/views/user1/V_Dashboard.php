@@ -3,7 +3,7 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
-<div class="container-fluid mt-3 text-theme1">
+<div class="container-fluid mt-3 ">
 LAPORAN PEKERJAAN
 <hr>
 <div class="row">
@@ -42,7 +42,7 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 
 <div class="col">
 <label>&nbsp;</label>
-<button type="submit" class="btn btn-sm btn-success btn-block">Data Laporan <i class="far fa-clipboard"></i></button>
+<button type="submit" class="btn btn-sm btn-dark btn-block">Buat Data Laporan <i class="far fa-clipboard"></i></button>
 </form>    
 </div>    
 </div>
@@ -70,7 +70,7 @@ echo "<option value=".$nama['no_user'].">".$nama['nama_lengkap']."</option>";
 </div>
   
     <div class="col">
-        <button onclick="ShowGrafikBerkasHarian()" class="btn btn-sm btn-success btn-block">Show Grafik Berkas <i class="fas fa-chart-line"></i></button>  
+        <button onclick="ShowGrafikBerkasHarian()" class="btn btn-sm btn-dark btn-block">Show Grafik Berkas <i class="fas fa-chart-line"></i></button>  
     </div>    
 </div>    
 
@@ -148,8 +148,8 @@ data: {
 labels:r.asisten,
 datasets: [{
 label: 'Grafik Berkas Asisten ',
-backgroundColor:"#116466",
-borderColor:"#DAA520",
+backgroundColor:"#17a2b8",
+borderColor:"#17a2b8",
 BorderWidth:10,
 data:r.jumlah
 }]
@@ -182,8 +182,8 @@ data: {
 labels:r.asisten,
 datasets: [{
 label: 'Grafik Pekerjaan Selesai ',
-backgroundColor:"#FF8C00",
-borderColor:"#116466",
+backgroundColor:"#17a2b8",
+borderColor:"#17a2b8",
 BorderWidth:10,
 data:r.pekerjaan
 }]
@@ -209,8 +209,8 @@ data: {
 labels:"",
 datasets: [{
 label: 'Grafik Berkas Masuk Perharinya ',
-backgroundColor:"#116466",
-borderColor:"#FF8C00",
+backgroundColor:"#17a2b8",
+borderColor:"#17a2b8",
 BorderWidth:10,
 data:""
 }]
@@ -256,8 +256,8 @@ data: {
 labels:r.nama,
 datasets: [{
 label: 'Grafik Peerizinan Selesai ',
-backgroundColor:"#FF8C00",
-borderColor:"#116466",
+backgroundColor:"#17a2b8",
+borderColor:"#17a2b8",
 BorderWidth:10,
 data:r.jumlah
 }]

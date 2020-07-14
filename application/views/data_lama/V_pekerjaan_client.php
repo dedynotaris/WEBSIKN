@@ -1,6 +1,6 @@
 
-<table style="width:100%;" id="table_pekerjaan" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<table style="width:100%;" id="table_pekerjaan" class="table    table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+        <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >No Pekerjaan</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Pekerjaan</th>

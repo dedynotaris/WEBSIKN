@@ -4,14 +4,13 @@
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
 <div class="mt-4  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-box "></span><br> DATA BERKAS</h5>
+<h5 align="center " class="text-info"><span class="fa-3x fa fa-file"></span><br> DATA BERKAS</h5>
 </div>
 <div class="row">    
 <div class="col mt-2">
 <table style="width:100%;" id="data_berkas" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >No berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Pengupload</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Tanggal Upload</th>
@@ -66,7 +65,6 @@ columns: [
 "data": "no_berkas",
 "orderable": false
 },
-{"data": "no_berkas"},
 {"data": "nama_file"},
 {"data": "pengupload"},
 {"data": "tanggal_upload"},

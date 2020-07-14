@@ -2,23 +2,24 @@
 <?php $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
-<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
+<?php echo $this->breadcrumbs->show(); ?>
 <div class="container-fluid ">
-<div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-flag-checkered "></span><br>Arsip Selesai</h5>
-</div>
 
 <div class="row">
 <div class="col mt-2">
-<table style="width:100%;" id="DataArsipSelesai" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
-<th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >No Pekerjaaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Asisten</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
+<table style="width:100%;" id="DataArsipSelesai" class="table table-bordered  table-striped  "><thead>
+<tr class='bg-info text-center  text-white'>
+<td colspan='6'>Data Pekerjaan yang telah selesai di kerjakan</td>
+</tr>
+<tr  role="row">
+<th   aria-controls="datatable-fixed-header"  >No</th>
+<th   aria-controls="datatable-fixed-header"  >No Pekerjaan</th>
+<th   aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th   aria-controls="datatable-fixed-header"  >Asisten</th>
+<th   aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
+</tr>
 </thead>
-<tbody align="center">
+<tbody >
 </table> 
 
 </div>

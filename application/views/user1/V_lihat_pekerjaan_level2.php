@@ -6,15 +6,15 @@
 <?php $kar = $data->row_array(); ?>
 <div class="container-fluid ">
     
-<div class="text-theme1 mt-2 text-center ">
+<div class=" mt-2 text-center text-info ">
 <h5 align="center">Data pekerjaan <?php echo base64_decode($this->uri->segment(4)) ?></h5>
 </div>
     
 
 <div class="row mt-2">
 <div class="col">
-<table class="table text-theme1 table-sm table-bordered table-striped  text-center table-condensed">
-<tr>
+<table class="table table-striped ">
+    <tr class="text-info">
 <th>Pekerjaan</th>
 <th>Nama client</th>
 <th>Pekerjaan</th>
@@ -58,9 +58,9 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 }
 ?> </td>
 <td>
-<button onclick="lihat_laporan_pekerjaan('<?php echo base64_encode($d['no_pekerjaan']) ?>');" class="btn btn-success btn-sm" title="Lihat laporan"><i class="far fa-clipboard"></i></button>
-<button onclick="alihkan_pekerjaan('<?php echo $d['id_data_pekerjaan'] ?>');" class="btn btn-success btn-sm" title="Alihkan pekerjaan"><i class="far fa-share-square"></i></button>
-<button onclick="lihat_dokumen('<?php echo base64_encode($d['no_pekerjaan']) ?>')" class="btn btn-success btn-sm" title="Lihat Dokumen"><i class="far fa-eye"></i></span></button>
+<button onclick="lihat_laporan_pekerjaan('<?php echo base64_encode($d['no_pekerjaan']) ?>');" class="btn btn-dark btn-sm" title="Lihat laporan"><i class="far fa-clipboard"></i></button>
+<button onclick="alihkan_pekerjaan('<?php echo $d['id_data_pekerjaan'] ?>');" class="btn btn-dark btn-sm" title="Alihkan pekerjaan"><i class="far fa-share-square"></i></button>
+<button onclick="lihat_dokumen('<?php echo base64_encode($d['no_pekerjaan']) ?>')" class="btn btn-dark btn-sm" title="Lihat Dokumen"><i class="far fa-eye"></i></span></button>
 
 </td>
 </tr>
@@ -81,11 +81,9 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
  <!-------------------modal laporan--------------------->
 
 <div class="modal fade" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-body" id="lihat_status_sekarang">
+<div class="modal-dialog modal-md" role="document">
+<div class="modal-content" id="lihat_status_sekarang">
 
-</div>
 </div>
 </div>
 </div>    

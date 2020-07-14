@@ -1,12 +1,27 @@
 <body >
 <?php $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
-    
+<style>
+.hasil_data {
+cursor: pointer;  
+background-color:"#f60";  
+}
+
+.hasil_data:hover {
+  background-color: #f8f9fa !important;
+}
+.hover:hover {
+  -webkit-transform: scale(1.3);
+        -ms-transform: scale(1.3);
+        transform: scale(1.3);
+cursor: pointer;  
+color:"#f60";
+}
+</style>
 <?php $this->load->view('umum/user3/V_navbar_user3'); ?>
-<?php $this->load->view('umum/user3/V_data_user3'); ?>
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1">Data Perizinan masuk<br><span class="fa-2x far fa-share-square"></span></h5>
+<h5  class="text-info"><span class="fa-3x far fa-share-square"></span><br>Data Perizinan masuk</h5>
 </div>
 <div class="row ">
 <div class="col">    
@@ -14,7 +29,7 @@
 <h5 class="text-center text-theme1">Data perizinan yang masuk belum tersedia <br>
 </h5>
 <?php } else{ ?> 
-<table class="table mt-2 text-theme1 table-hover table-sm table-bordered text-center table-striped ">
+<table class="table mt-2 table-bordered  table-striped ">
 <tr>
 <th>No</th>    
 <th>Nama client</th>
@@ -32,9 +47,9 @@
 <td><?php echo $data['tanggal_penugasan'] ?></td>
 <td>
 
-<button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-success" title="Terima tugas">Terima tugas <i class="fa fa-check"></i></button>    
-<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-danger" title="Tolak tugas">Tolak tugas <i class="fa fa-arrow-circle-left"></i></button>    
-<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-primary mt-2" title="Dokumen Pemilik">Dokumen Penunjang <i class="fa fa-archive"></i></button>    
+<button onclick="terima_perizinan('<?php echo $data['no_berkas_perizinan']?>');" class="btn btn-sm btn-info" title="Terima tugas"> <i class="fa fa-check"></i></button>    
+<button onclick="tolak_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm  btn-info" title="Tolak tugas"> <i class="fa fa-reply"></i></button>    
+<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');"class="btn btn-sm btn-info  " title="Dokumen Pemilik"> <i class="fa fa-archive"></i></button>    
 </td>
 </tr>
 <?php } ?>
@@ -51,7 +66,7 @@
 <div class="modal fade" id="data_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-info text-white">
         <h6 class="modal-title" id="exampleModalScrollableTitle"></h6>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -63,6 +78,27 @@
     </div>
   </div>
 </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="DataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h6 class="modal-title" id="judul">Modal title</h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<div class="embed-responsive embed-responsive-16by9 data_link">
+
+</div>
+</div>
+</div>
+</div>
+</div>  
 
 <style>
 .swal2-overflow {
@@ -168,6 +204,41 @@ $('#data_modal').modal('show');
 });
 
 }
+
+
+function LihatFile(jenis_dokumen,no_dokumen){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&jenis_dokumen="+jenis_dokumen+"&no_dokumen="+no_dokumen,
+url:"<?php echo base_url('User3/BukaFile'); ?>",
+success:function(data){
+var r = JSON.parse(data);
+if(r[0].status == 'Dokumen Lihat'){
+$("#judul").html(r[0].titel);
+$(".data_link").html(r[0].link);
+$('#DataModal').modal('show');
+}else{
+window.location.href=r[0].link;
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: 'success',
+title: r[0].messages,
+});
+}
+
+}
+});
+} 
+
 
 function download(id_data_berkas){
 window.location.href="<?php echo base_url('User3/download_berkas/') ?>"+id_data_berkas;

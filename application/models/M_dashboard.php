@@ -71,7 +71,7 @@ public function SimpanNamaDokumen($data){
 $this->db->insert('nama_dokumen',$data);    
 }
 public function data_jenis(){
-$this->db->order_by('id_jenis_pekerjaan','DESC');
+$this->db->order_by('no_jenis_pekerjaan','DESC');
 $query = $this->db->get('data_jenis_pekerjaan');
 return $query;            
 }
@@ -97,10 +97,11 @@ $this->db->limit(15);
 $array = array('nama_dokumen' => $term);
 $this->db->like($array);
 $query = $this->db->get();
-if($query->num_rows() >0 ){
-return $query->result();
+return $query;
+
+
 }
-}
+
 public function cari_data_perorangan($term){
 $this->db->from("data_perorangan");
 $this->db->limit(15);
@@ -148,8 +149,7 @@ $this->db->insert('data_syarat_jenis_dokumen',$data);
 }
 
 function JsonDataJenisPekerjaan(){
-$this->datatables->select('id_jenis_pekerjaan,'
-. 'data_jenis_pekerjaan.id_jenis_pekerjaan as id_jenis_pekerjaan,'
+$this->datatables->select('no_jenis_pekerjaan,'
 . 'data_jenis_pekerjaan.no_jenis_pekerjaan as no_jenis_pekerjaan,'
 . 'data_jenis_pekerjaan.pekerjaan as pekerjaan,'
 . 'data_jenis_pekerjaan.nama_jenis as nama_jenis,'
@@ -157,7 +157,7 @@ $this->datatables->select('id_jenis_pekerjaan,'
 
 $this->datatables->from('data_jenis_pekerjaan');
 $this->datatables->add_column('view',""
-. "<button onclick=DetailPekerjaan('$1'); class='btn btn-sm  m-1 btn-success' title='Lihat Persyaratan'>Persyaratan <span class='fa fa-eye'></span></button>"
+. "<button onclick=DetailPekerjaan('$1'); class='btn btn-sm   btn-dark btn-block' title='Lihat Persyaratan'>Edit <span class='fa fa-edit'></span></button>"
 . "",'no_jenis_pekerjaan');
 
 
@@ -178,7 +178,7 @@ $this->datatables->from('data_pekerjaan');
 $this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->where('data_pekerjaan.no_client', base64_decode($no_client));
-$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/LihatDetailPekerjaan/$1').'"><button class="btn btn-success btn-sm"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_pekerjaan)');
+$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/LihatDetailPekerjaan/$1').'"><button class="btn btn-sm btn-success  btn-dark btn-block"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_pekerjaan)');
 
 
 return $this->datatables->generate();
@@ -209,19 +209,18 @@ $this->datatables->select('id_user,'
 
 $this->datatables->from('user');
 $this->datatables->add_column('view',""
-. "<button class='btn btn-sm btn-success'  onclick=DetailDataUser('$1');  title='Detail User'>Detail User  <i class='fa fa-user'></i></button>"
+. "<button class='btn btn-sm btn-dark btn-block'  onclick=DetailDataUser('$1');  title='Detail User'>Detail User  <i class='fa fa-user'></i></button>"
 . "",'no_user');
 return $this->datatables->generate();
 }
 function json_data_nama_dokumen(){
-$this->datatables->select('id_nama_dokumen,'
-.'nama_dokumen.id_nama_dokumen as id_nama_dokumen,'
+$this->datatables->select('no_nama_dokumen,'
 .'nama_dokumen.no_nama_dokumen as no_nama_dokumen,'
 .'nama_dokumen.nama_dokumen as nama_dokumen,'
 );
 $this->datatables->from('nama_dokumen');
 $this->datatables->add_column('view',""
-. "<button onclick=LihatDetailDokumen('$1') title='Lihat Detail Dokumen' class='m-1 btn btn-sm btn-success'> Detail Dokumen <span class='fa fa-eye'></span></button>"
+. "<button onclick=LihatDetailDokumen('$1') title='Lihat Detail Dokumen' class='m-1 btn btn-sm  btn-dark btn-block'>Edit Dokumen <span class='fa fa-edit'></span></button>"
 . "",'no_nama_dokumen');
 
 return $this->datatables->generate();
@@ -242,7 +241,7 @@ $this->datatables->join('data_client', 'data_client.no_client = data_berkas.no_c
 $this->datatables->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen','left');
 $this->datatables->join('user', 'user.no_user = data_berkas.pengupload');
 $this->datatables->where('data_berkas.no_client',base64_decode($no_client));
-$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-success">Download <span class="fa fa-download"></span></button>', 'base64_encode(no_berkas)');
+$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-dark btn-block">Download <span class="fa fa-download"></span></button>', 'base64_encode(no_berkas)');
 return $this->datatables->generate();
 }
 
@@ -259,7 +258,7 @@ $this->datatables->join('data_client', 'data_client.no_client = data_berkas.no_c
 $this->datatables->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen','left');
 $this->datatables->join('user', 'user.no_user = data_berkas.pengupload');
 $this->datatables->where('data_berkas.no_pekerjaan',base64_decode($no_pekerjaan));
-$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-success">Download <span class="fa fa-download"></span></button>', 'base64_encode(no_berkas)');
+$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-dark btn-block">Download <span class="fa fa-download"></span></button>', 'base64_encode(no_berkas)');
 return $this->datatables->generate();
 }
 
@@ -272,14 +271,14 @@ $this->datatables->select('id_data_dokumen_utama,'
 . 'data_dokumen_utama.jenis as jenis_utama');
 $this->datatables->from('data_dokumen_utama');
 $this->datatables->where('data_dokumen_utama.no_pekerjaan',base64_decode($no_pekerjaan));
-$this->datatables->add_column('view','<button onclick=download_utama("$1") class="btn btn-sm btn-success">Download <span class="fa fa-download"></span></button>', 'base64_encode(id_data_dokumen_utama)');
+$this->datatables->add_column('view','<button onclick=download_utama("$1") class="btn btn-sm  btn-dark btn-block">Download <span class="fa fa-download"></span></button>', 'base64_encode(id_data_dokumen_utama)');
 return $this->datatables->generate();
 }
 
 
 function json_data_berkas(){
 
-$this->datatables->select('no_berkas,'
+$this->datatables->select('data_berkas.no_berkas,'
 .'nama_dokumen.nama_dokumen as nama_file,'
 .'user.nama_lengkap as pengupload,'
 .'data_berkas.tanggal_upload as tanggal_upload,'
@@ -289,9 +288,10 @@ $this->datatables->from('data_berkas');
 $this->datatables->join('data_client', 'data_client.no_client = data_berkas.no_client');
 $this->datatables->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas.no_nama_dokumen');
 $this->datatables->join('user', 'user.no_user = data_berkas.pengupload');
-$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-success"><span class="fa fa-download"></span> Download</button>', 'base64_encode(no_berkas)');
+$this->datatables->add_column('view','<button onclick=cek_download("$1") class="btn btn-sm btn-dark btn-block"><span class="fa fa-download"></span> Download</button>', 'base64_encode(no_berkas)');
 return $this->datatables->generate();
 }
+
 function JsonPihakTerlibat($no_pekerjaan){
 $this->datatables->select('id_data_pemilik,'
 . 'data_client.no_client,'
@@ -299,12 +299,12 @@ $this->datatables->select('id_data_pemilik,'
 $this->datatables->from('data_pemilik');
 $this->datatables->join('data_client', 'data_client.no_client = data_pemilik.no_client');
 $this->datatables->where('data_pemilik.no_pekerjaan',base64_decode($no_pekerjaan));
-$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/DetailClient/$1').'"><button class="btn btn-success btn-sm"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_client)');
+$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/DetailClient/$1').'"><button class="btn btn-success btn-sm  btn-dark btn-block"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_client)');
 return $this->datatables->generate();
 }
 
 function json_data_pekerjaan(){    
-$this->datatables->select('id_data_pekerjaan,'
+$this->datatables->select('no_jenis_pekerjaan,'
 .'data_pekerjaan.no_pekerjaan as no_pekerjaan,'
 .'data_jenis_pekerjaan.nama_jenis as jenis_perizinan,'
 .'data_pekerjaan.pembuat_pekerjaan as pembuat_pekerjaan,'
@@ -317,13 +317,13 @@ $this->datatables->from('data_pekerjaan');
 $this->datatables->join('data_client', 'data_client.no_client = data_pekerjaan.no_client');
 $this->datatables->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 
-$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/LihatDetailPekerjaan/$1').'"><button class="btn btn-success btn-sm"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_pekerjaan)');
+$this->datatables->add_column('view','<a href ="'.base_url('Dashboard/LihatDetailPekerjaan/$1').'"><button class="btn btn-dark btn-block btn-sm"> <i class="fa fa-eye"></i> Detail </button></a>', 'base64_encode(no_pekerjaan)');
 return $this->datatables->generate();
 }
 
 function json_data_client_hukum(){
 
-$this->datatables->select('id_data_client,'
+$this->datatables->select('no_client,'
 .'data_client.no_client as no_client,'
 .'data_client.pembuat_client as pembuat_client,'
 .'data_client.jenis_client as jenis_client,'
@@ -332,7 +332,7 @@ $this->datatables->select('id_data_client,'
 );
 $this->datatables->from('data_client');
 $this->datatables->where('data_client.jenis_client','Badan Hukum');
-$this->datatables->add_column('view',"<button onclick=DetailClient('$1') class='btn btn-sm btn-success'> Detail <span class='fa fa-eye'></span></button>",'no_client');
+$this->datatables->add_column('view',"<button onclick=DetailClient('$1') class='btn btn-sm btn-block btn-dark'> Detail <span class='fa fa-eye'></span></button>",'no_client');
 return $this->datatables->generate();
 }
 
@@ -340,7 +340,7 @@ return $this->datatables->generate();
 
 function json_data_client_perorangan(){
 
-$this->datatables->select('id_data_client,'
+$this->datatables->select('no_client,'
 .'data_client.no_client as no_client,'
 .'data_client.pembuat_client as pembuat_client,'
 .'data_client.jenis_client as jenis_client,'
@@ -349,7 +349,7 @@ $this->datatables->select('id_data_client,'
 );
 $this->datatables->from('data_client');
 $this->datatables->where('data_client.jenis_client','Perorangan');
-$this->datatables->add_column('view',"<button onclick=DetailClient('$1') class='btn btn-sm btn-success'> Detail Client <span class='fa fa-eye'></span></button>",'no_client');
+$this->datatables->add_column('view',"<button onclick=DetailClient('$1') class='btn btn-sm btn-dark btn-block'> Detail Client <span class='fa fa-eye'></span></button>",'no_client');
 return $this->datatables->generate();
 }
 

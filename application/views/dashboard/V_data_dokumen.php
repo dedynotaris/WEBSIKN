@@ -1,20 +1,14 @@
-<table  id="data_nama_dokumen" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<table  id="data_nama_dokumen" class="table table-striped"><thead>
+        <tr class="text-info" role="row">
 <th  aria-controls="datatable-fixed-header"  >No</th>
-<th  aria-controls="datatable-fixed-header"  >no nama dokumen</th>
-<th aria-controls="datatable-fixed-header"  >nama dokumen</th>
-<th class='text-center' style="width: 1%;"  aria-controls="datatable-fixed-header"  >aksi</th>
+<th  aria-controls="datatable-fixed-header"  >No Dokumen</th>
+<th aria-controls="datatable-fixed-header"  >Nama Dokumen</th>
+<th class='text-center' style="width: 1%;"  aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody >
 </table>
 
 
-<!------------- Modal Detail Dokumen---------------->
-<div class="modal fade bd-example-modal-lg" id="ModalDetailDokumen" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document" id="DataDetailDokumen">
-
-</div>
-</div>
 
 
 <script type="text/javascript">
@@ -59,7 +53,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_nama_dokumen",
+"data": "no_nama_dokumen",
 "orderable": false
 },
 {"data": "no_nama_dokumen"},
@@ -89,8 +83,9 @@ type:"post",
 data:"token="+token+"&no_dokumen="+no_dokumen,
 url:"<?php echo base_url('Dashboard/DetailDokumen') ?>",
 success:function(data){
-$("#DataDetailDokumen").html(data);
-$('#ModalDetailDokumen').modal('show');
+
+$("#DataDetailDokumen2").html(data);
+$('#ModalDetailDokumen2').modal('show');    
 check_inputan();
 }
 });       
@@ -116,7 +111,7 @@ $("#FormUpdateDokumen").find("#"+key).removeClass("is-valid");
 });
 }else{
 refresh_nama_dokumen();
-
+$('#ModalDetailDokumen2').modal('hide'); 
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -144,6 +139,7 @@ $('#data_nama_dokumen').val( json.lastInput );
 }
 
 function SimpanFormMeta(no_dokumen){
+var form = $("#FormMeta").serialize();
 $("#FormMeta").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
 $('.form-control + p').remove();
 
@@ -320,7 +316,7 @@ data:"token="+token+"&no_dokumen="+no_dokumen,
 success:function(data){
 
 
-$('#ModalDetailDokumen').modal('hide');
+$('#ModalDetailDokumen2').modal('hide');
 refresh_nama_dokumen();
 Swal.fire(
       'Terhapus !',
@@ -351,15 +347,39 @@ $('#ModalDetailDokumen').modal('show');
 
 
 function SimpanDokumenBaru(){
+
+var viewData = [];
+$('#data_identifikasi').find('.no').each(function(){
+var jsonData = {};
+$(this).find("td").each(function(a){
+if(this.id){
+jsonData[this.id] = $(this).text();
+}
+
+});
+viewData.push(jsonData);
+});
+
+var data = {
+'nama_dokumen'      :$("#nama_dokumen").val(),  
+'identifikasi'      : viewData,
+'penunjang_client'  :$("input[name='penunjang_client']:checked").val(),
+'badan_hukum'       :$("input[name='badan_hukum']:checked").val(),
+'perorangan'        :$("input[name='perorangan']:checked").val(),
+'syarat_daftar'     :$("input[name='syarat_daftar']:checked").val()
+}
+console.log(data);
 $("#FormBuatDokumen").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
 $('.form-control + p').remove();
 
 $.ajax({
-type:"post",
-url :"<?php echo base_url('Dashboard/SimpanNamaDokumen') ?>",
-data:$("#FormBuatDokumen").serialize(),
-success:function(data){
-var r  = JSON.parse(data);
+method      :"post",
+url         :"<?php echo base_url('Dashboard/SimpanNamaDokumen') ?>",
+dataType    :'json',
+data        : data,
+success:function(data2){
+var r  = data2;
+
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
 $.each(value, function(key, value){
@@ -368,10 +388,8 @@ $("#FormBuatDokumen").find("#"+key).removeClass("is-valid");
 });
 });
 }else{
-
 $('#ModalDetailDokumen').modal('hide');
 refresh_nama_dokumen();
- 
 const Toast = Swal.mixin({
 toast: true,
 position: 'center',
@@ -389,4 +407,53 @@ title: r[0].messages
 }
 });
 }
+
+function SimpanIdentifikasi(){
+var jumlah       = $(".no").length +1;
+
+var nama_meta       = $("#nama_meta").val();
+var maxlength       = $("#maxlength").val();
+var jenis_inputan   = $("#jenis_inputan option:selected").text();
+var jenis_bilangan  = $("#jenis_bilangan option:selected").text();
+
+if(nama_meta.length == 0  && maxlength.length == 0){
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: "error",
+title:"Masukan Data Identifikasi secara lengkap"
+});
+
+}else{
+
+var data = "<tr class='no no"+jumlah+"'>\n\
+<td  id='nama_meta' >"+nama_meta+"</td>\n\
+<td  id='max_length' >"+maxlength+"</td>\n\
+<td  id='jenis_inputan' >"+jenis_inputan+"</td>\n\
+<td  id='jenis_bilangan' style='display:none;'>"+jenis_bilangan+"</td>\n\
+<td><button onclick=HapusIdentifikasi('no"+jumlah+"') class='btn btn-block btn-danger btn-sm'><span class='fa fa-trash'></span></button></td>\n\
+</tr>";
+
+$("#data_identifikasi").append(data);
+var nama_meta       = $("#nama_meta").val("");
+var maxlength       = $("#maxlength").val("");
+var jenis_inputan   = $("#jenis_inputan option:selected").text();
+var jenis_bilangan  = $("#jenis_bilangan option:selected").text();
+
+$("#FormBuatDokumen").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$('.form-control + p').remove();
+}
+}
+
+function HapusIdentifikasi(no){
+$("tr").remove("."+no);
+}
+
 </script> 

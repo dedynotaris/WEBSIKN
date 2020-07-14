@@ -2,22 +2,25 @@
 <?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
-<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
+
+<?php echo $this->breadcrumbs->show(); ?>
 <div class="container-fluid mt-2">
-<div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-flag-checkered "></span><br>Pekerjaan Baru Selesai</h5>
-</div>
+
     <div class="row">
 
     <div class="col">
-        <table style="width:100%;" id="daftar_pekerjaan" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
-<th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama Pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Asisten</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Setting loker</th>
+        <table style="width:100%;" id="daftar_pekerjaan" class="table  table-striped table-bordered"><thead>
+        <tr class='bg-info text-center  text-white'>
+<td colspan='6'>Data Pekerjaan Selesai yang akan dimasukan kedalam bantex</td>
+</tr>
+<tr class="text-info" role="row">
+<th   aria-controls="datatable-fixed-header"  >No</th>
+<th   aria-controls="datatable-fixed-header"  >Pekerjaan</th>
+<th   aria-controls="datatable-fixed-header"  >Nama Pekerjaan</th>
+<th   aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th   aria-controls="datatable-fixed-header"  >Asisten</th>
+<th   aria-controls="datatable-fixed-header"  >Setting loker</th>
+</tr>
 </thead>
 <tbody>
 </table>
@@ -25,12 +28,17 @@
     </div>
 </div>
 </div>    
+<!------------- Modal ---------------->
+<div class="modal fade bd-example-modal-lg"  id="modal"  role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
+<div class="modal-dialog modal-lg data_modal" role="document">
+</div>
+</div>
+</div>
 
 <script type="text/javascript">
-function pilihloker(id_no_loker,no_loker,no_pekerjaan){
-var nama_lemari = $(".no_lemari"+no_pekerjaan+" option:selected").text();    
-Swal.fire({
-  text: "Arsip Fisik akan dimasukan "+nama_lemari+" di loker nomor "+no_loker +" Kamu yakin ?",
+function SimpanArsipFisik(no_bantek,no_pekerjaan){
+  Swal.fire({
+  text: "Pekerjaan akan dimasukan kedalam bantex tersebut, Kamu yakin ?",
   icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
@@ -41,8 +49,66 @@ if (result.value) {
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&id_no_loker="+id_no_loker+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('data_lama/simpan_arsip_fisik') ?>",
+data:"token="+token+"&no_bantek="+no_bantek+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('data_lama/SimpanArsipFisik') ?>",
+success:function(data){
+read_response(data);    
+var table = $('#daftar_pekerjaan').DataTable();
+table.ajax.reload( function ( json ) {
+$('#daftar_pekerjaan').val( json.lastInput );
+}); 
+}
+});
+}
+});   
+}
+
+function DetailBantek(no_pekerjaan){
+var token           = "<?php echo $this->security->get_csrf_hash(); ?>";
+var no_bantek       = $(".no_bantex"+no_pekerjaan+" option:selected").val();
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/DetailBantek') ?>",
+data:"token="+token+"&no_bantek="+no_bantek+"&no_pekerjaan="+no_pekerjaan,
+success:function(data){
+$(".DetailBantek"+no_pekerjaan).html(data);    
+}
+});
+}
+
+function BuatBantek(no_pekerjaan){
+var token           = "<?php echo $this->security->get_csrf_hash(); ?>";
+$.ajax({
+type:"post",
+url:"<?php echo base_url('Data_lama/FormBuatBantek') ?>",
+data:"token="+token,
+success:function(data){
+$(".data_modal").html(data);    
+$('#modal').modal('show');
+}
+});
+}
+  
+  
+
+function pilihloker(id_no_loker,no_loker){
+var nama_lemari = $(".no_lemari option:selected").text();
+var no_bantex   = $(".no_bantek").val();
+var judul       = $(".judul").val();
+Swal.fire({
+  text: no_bantex+" akan dimasukan kedalam "+nama_lemari+" di loker nomor "+no_loker +" Kamu yakin ?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Ya, Yakin!'
+}).then((result) => {
+if (result.value) {
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&id_no_loker="+id_no_loker+"&no_bantek="+no_bantex+"&judul="+judul,
+url:"<?php echo base_url('data_lama/simpan_arsip_bantek') ?>",
 success:function(data){
 read_response(data);    
 var table = $('#daftar_pekerjaan').DataTable();
@@ -53,17 +119,18 @@ $('#daftar_pekerjaan').val( json.lastInput );
 });
 }
 });    
-    
+  
+$('#modal').modal('hide');   
 }    
 function tampilkanloker(no_pekerjaan){
-var no_lemari = $(".no_lemari"+no_pekerjaan+" option:selected").val();
+var no_lemari = $(".no_lemari option:selected").val();
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
 data:"token="+token+"&no_pekerjaan="+no_pekerjaan+"&no_lemari="+no_lemari,
 url:"<?php echo base_url('data_lama/tampilkan_loker') ?>",
 success:function(data){
-$(".daftarloker"+no_pekerjaan).html(data);    
+$(".daftarloker").html(data);    
 }
 });
 }    

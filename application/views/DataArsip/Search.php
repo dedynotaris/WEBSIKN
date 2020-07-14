@@ -1,18 +1,18 @@
-<body  style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover; " class="bg_login">
+<body style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; ">
 <style>
 .form-search {
 display: block;
-width: 90%;
+width: 98%;
 height: calc(2.5rem + 2px);
 padding:0.375rem 1.75rem;
 font-size: 1rem;
 font-weight: 400;
 line-height: 1.5;
-color: #dc3545;
+color:#17a2b8;
 background-color: #fff;
 background-clip: padding-box;
 border: 1px solid #ced4da;
@@ -22,9 +22,9 @@ transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
 
 .form-search:hover {
--webkit-box-shadow: 1px 1px 1px 1px #dc3545;
--moz-box-shadow: 1px 1px 1px 1px #dc3545;
-box-shadow: 1px 1px 4px 1px #dc3545;
+-webkit-box-shadow: 1px 1px 1px 1px #17a2b8;
+-moz-box-shadow: 1px 1px 1px 1px #17a2b8;
+box-shadow: 1px 1px 4px 1px #17a2b8;
 
 }
 
@@ -38,44 +38,106 @@ box-shadow: 1px 1px 4px 1px #dc3545;
         } 
 .input-group-append {
     margin-left: -55px;
-}        
+}  
+
+.hover:hover {
+  
+  cursor: pointer;  
+    background-color: #f8f9fa !important;
+  }
 </style>
 
 <div class="container-fluid">
 <div class="row ">
 
-<div class="col text-right bg-transparent   m-2">
+<div class="col text-right bg-transparent   p-3">
 <div class="btn-group dropup mr-1">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <i style="font-size: 1.4em;" class="fas fa-th  text-theme1"></i>
 </button>
-<div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
+<div class="dropdown-menu dropdown-menu-right pb-0 pt-0 bg-white"  style="width:320px;">
 <div class="row text-theme1 text-center text-lowercase">
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 1','User1');" >
-<i class="fas fa-user-tie fa-2x"></i><br>Notaris
+<div class="col-6 text-center text-lowercase" onclick="check_akses('Level 1','User1');" >
+<div class='
+<?php 
+
+$notaris = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 1'));
+if($notaris->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+p-3'>
+<i class=" fas fa-user-tie fa-2x"></i>
+<br>Notaris
+</div>
 </div> 
 
-<div class="col-md-6 text-center mt-2" onclick="check_akses('Level 2','User2');" >
-<i class="fas fa-user-edit fa-2x"></i><br>Divisi Asisten
+<div class="col-6 text-center  text-lowercase" onclick="check_akses('Level 2','User2');" >
+<div class='
+
+<?php 
+
+$asisten = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 2'));
+if($asisten->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+ p-3'>
+<i class="fas fa-user-edit fa-2x"></i>
+<br>Divisi Asisten
+</div>
 </div>
 
-</div>
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-<div class="col-md-6 text-center mt-2 text-lowercase"  onclick="check_akses('Level 3','User3');" >
-<i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan
-</div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','data_lama');" >
-<i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip
-</div> 
-</div>
+<div class="col-6 text-center  text-lowercase"  onclick="check_akses('Level 3','User3');" >
+<div class='<?php 
 
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-
-<div class="col-md-6 text-center mt-2 text-lowercase" onclick="check_akses('Admin','Dashboard');" >
-<i class="fas fa-user-cog fa-2x"></i><br>Administrator
+$perizinan = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 3'));
+if($perizinan->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan</div>
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 5','Resepsionis');" >
-<i class="fas fa-concierge-bell fa-2x"></i><br>Resepsionis
+
+<div class="col  text-center text-lowercase" onclick="check_akses('Level 4','data_lama');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 4'));
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+
+ p-3  '><i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip</div>
+</div> 
+
+<div class="col-6 
+ text-center  text-lowercase" onclick="check_akses('Admin','Dashboard');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user'),'level'=>'Super Admin'));
+
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-cog fa-2x"></i><br>Administrator</div>
 </div> 
 
 </div>
@@ -83,13 +145,14 @@ box-shadow: 1px 1px 4px 1px #dc3545;
 </div>
 
 <div class="btn-group">
+
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" id="dropdownMenuButton" data-toggle="dropdown" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" id="dropdownMenuButton" data-toggle="dropdown" ><br>    
 <?php }else{ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" id="dropdownMenuButton" data-toggle="dropdown" ><br>        
 <?php } ?> 
 <?php } ?>
 
@@ -98,12 +161,12 @@ box-shadow: 1px 1px 4px 1px #dc3545;
 <div class="text-center px-6 py-6 ">
 
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" ><br>        
 <?php } ?> 
 <?php } ?>
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
@@ -123,25 +186,25 @@ box-shadow: 1px 1px 4px 1px #dc3545;
 
 <div class="container">
 
-<div class="row align-items-center " style="height:80%;">
+<div class="row align-items-center " >
 <div class="col text-center">
 
 
 <div class="row">
 <div class="col text-center">
-<img style='width:180px;'  src='<?php echo base_url('assets/icon.png') ?>'>      
-<p class="mt-3 text-danger">Pencarian Dokumen Arsip </p>
+<img style='width:180px;   '   class='bg-light rounded-circle '   src='<?php echo base_url('assets/icon.png') ?>'>      
+<p class="m-3 text-white h5 ">Pencarian Dokumen Arsip </p>
 </div>
 </div>
     <form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-<div class="row mt-1">
+<div class="row ">
 <div class="col-md-2"></div>
 <div class="col mx-auto">
     <form class="input-group">
      <div class="input-group col-md-11 mx-auto ">
-         <input name="search" minlength="1" class="form-search py-2 border-right-0 border" type="text" placeholder="Masukan Nama Perorangan atau Badan Hukum" id="example-search-input">
+         <input name="search" required minlength="1" class="form-search py-2 border-right-0 border" type="text" placeholder="Masukan Nama Perorangan atau Badan Hukum" id="example-search-input">
            <input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
-        <input type="hidden" name="kategori" value="dokumen_penunjang">
+        <input type="hidden" name="kategori" value="data_client">
            <span class="input-group-append">
               <button type="submit" class="btn  btn-tranparent mr-3" type="button">
                     <i class="fa fa-search"></i>
@@ -156,9 +219,21 @@ box-shadow: 1px 1px 4px 1px #dc3545;
     </form>
 </div>
 </div>
-
 </div>
- 
+</div>
+<div class="container-fluid mt-5  p-3 text-info  ">
+<div class ="row p-2 text-center" >
+    <div class="col-md-3 m-2 p-2 mx-auto card shadow-lg  bg-white rounded">Total Dokumen Penunjang<hr>
+        <h1><?php echo number_format($this->db->get('data_berkas')->num_rows()); ?></h1>
+    </div>
+    <div class="col-md-3 m-2 p-2 mx-auto card shadow-lg   bg-white rounded">Total Dokumen Utama<hr>
+         <h1><?php echo number_format($this->db->get('data_dokumen_utama')->num_rows()); ?></h1>
+   </div>
+    <div class="col-md-3 m-2 p-2 mx-auto card shadow-lg   bg-white rounded">Total Data Client<hr>
+         <h1><?php echo number_format($this->db->get('data_client')->num_rows()); ?></h1>
+   </div>
+</div>
+</div>
 </body>
 <script>
 /*$( function() {

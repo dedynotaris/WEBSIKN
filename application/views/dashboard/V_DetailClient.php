@@ -2,8 +2,31 @@
 <?php  $this->load->view('umum/V_sidebar'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
-<?php $static = $DataClient->row_array(); ?>   
-<div class="container-fluid mt-3 text-theme1">
+<?php $static = $DataClient->row_array(); ?>
+<style>
+ .nav-tabs .nav-link {
+    background-color:#212529;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+   
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+ a {
+   color: #fff;
+   
+}
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+    </style>     
+<div class="container-fluid mt-3 text-dark">
 <div class="row">
 <div class="col">
 <div class="card p-2">
@@ -77,10 +100,10 @@
 <div class="row p-2">
 <div class="col">
 <h5 align="center">&nbsp;</h5>
-<h5 align="center">Data Pekerjaan Client</h5>
+<h5 align="center " class="text-info">Data Pekerjaan Client</h5>
 
 <table style="width:100%;" id="DataPekerjaanClient" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th   aria-controls="datatable-fixed-header"  >No</th>
 <th   aria-controls="datatable-fixed-header"  >No Pekerjaan</th>
 <th   aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
@@ -99,9 +122,9 @@
 <div class="tab-pane  container-fluid fade" id="dokumen">
 <div class="row p-2">
 <div class="col">
-<h5 align="center">Data Dokumen Penunjang</h5>
+<h5 align="center"  class="text-info">Data Dokumen Penunjang</h5>
 <table style="width:100%;" id="DataDokumenPenunjang" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th aria-controls="datatable-fixed-header"  >No</th>
 <th aria-controls="datatable-fixed-header"  >Nama File</th>
 <th aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>

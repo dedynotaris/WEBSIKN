@@ -4,13 +4,13 @@
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fas fa-pencil-alt "></span><br> PEKERJAAN DI PROSES</h5>
+<h5 align="center " class="text-info"><span class="fa-3x fas fa-pencil-alt "></span><br> PEKERJAAN DI PROSES</h5>
 </div>
     
 <div class="row">    
 <div class="col mt-2">
 <table style="width:100%;" id="data_pekerjaan" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th   aria-controls="datatable-fixed-header"  >No</th>
 <th   aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>
 <th   aria-controls="datatable-fixed-header"  >Pembuat</th>

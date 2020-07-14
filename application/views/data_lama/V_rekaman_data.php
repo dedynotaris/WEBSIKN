@@ -14,9 +14,7 @@
                     <th>Nama Dokumen</th>
                     <th>Aksi</th>
                 </tr>
-                
-                
-                <?php foreach ($data_perekaman->result_array() as $data){?>
+                 <?php foreach ($data_perekaman->result_array() as $data){?>
                 <tr>
                     <td><?php echo $data['nama_dokumen'] ?></td>
                     <td><button onclick=lihat_data_perekaman("<?php echo $data['no_nama_dokumen'] ?>","<?php echo $data['no_pekerjaan'] ?>","<?php echo $data['no_client'] ?>"); class="btn btn-sm btn-outline-dark">Lihat data <span class="fa fa-eye"></span></button></td>

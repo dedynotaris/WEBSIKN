@@ -4,7 +4,7 @@
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-users "></span><br> DATA USER APLIKASI</h5>
+<h5 align="center " class="text-info"><span class="fa-3x fa fa-users "></span><br> DATA USER APLIKASI</h5>
 </div>
 
 <div class="row">    

@@ -10,7 +10,7 @@
 <div class="row card m-2 p-2">
 <div class="col ">
 <table style="width:100%;" id="data_arsip" class="table mt- table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr  class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Pekerjaan</th>

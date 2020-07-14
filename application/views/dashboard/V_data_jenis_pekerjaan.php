@@ -1,22 +1,14 @@
-<table style="width:100%;"  id="DataJenisPekerjaan" class="table table-sm table-bordered table-striped table-condensed  table-hover table-sm"><thead>
-<tr role="row">
+<table style="width:100%;"  id="DataJenisPekerjaan" class="table  table-striped"><thead>
+        <tr class="text-info" role="row">
 <th  aria-controls="datatable-fixed-header">  No</th>
-<th  aria-controls="datatable-fixed-header">  no jenis pekerjaan</th>
-<th  aria-controls="datatable-fixed-header">  pekerjaan</th>
-<th  aria-controls="datatable-fixed-header">  nama pekerjaan</th>
+<th  aria-controls="datatable-fixed-header">  No Jenis Pekerjaan</th>
+<th  aria-controls="datatable-fixed-header">  Pekerjaan</th>
+<th  aria-controls="datatable-fixed-header">  Nama Pekerjaan</th>
 <th  sclass='text-center' style="width: 1%;"  aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody >
 </table>
 
-
-
-<!------------- Modal Detail Pekerjaaan---------------->
-<div class="modal fade bd-example-modal-lg" id="ModalDetailPekerjaan" role="dialog" aria-labelledby="tambah_syarat1" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document" id="DataDetailPekerjaan">
-
-</div>
-</div>
 
 
 
@@ -60,7 +52,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_jenis_pekerjaan",
+"data": "no_jenis_pekerjaan",
 "orderable": false
 },
 {"data": "no_jenis_pekerjaan"},
@@ -92,8 +84,8 @@ type:'post',
 url:'<?php echo base_url('Dashboard/DetailPekerjaan') ?>',
 data:"token="+token+"&no_jenis_pekerjaan="+no_jenis_pekerjaan,
 success:function(data){
-$('#ModalDetailPekerjaan').modal('show');
-$('#DataDetailPekerjaan').html(data);
+$('#ModalDetail').modal('show');
+$('#DataDetail').html(data);
 CariJenisDokumen();
 }
 });
@@ -130,7 +122,7 @@ data:"token="+token+"&no_jenis_pekerjaan="+no_jenis_pekerjaan,
 success:function(data){
 
 refresh_table_pekerjaan();
-$('#ModalDetailPekerjaan').modal('hide');
+$('#ModalDetail').modal('hide');
 Swal.fire(
       'Terhapus !',
       'Seluruh Dokumen yang terkait jenis pekerjaan ini telah dihapus.',
@@ -143,9 +135,25 @@ Swal.fire(
 })
 }
 
+function formatState (state) {
+ if(state.error){
+  var $state = $(
+  '<p class="text-center col-7 mx-auto">Pencarian Dokumen Penunjang Tidak di temukan Silahkan tambahkan terlebih dahulu <br> <button type="button" onclick=FormTambahDokumen();  class="btn btn-dark btn-block">Tambahkan Dokumen Penunjang  <span class="fa fa-plus"></span></button></p>'
+  );
+  return $state;
+ }else{
+ var $state = $(
+  '<span >'+state.text+'</span>'
+  );
+  return $state;
+ }
+};
+
 function CariJenisDokumen(){
 var token           = "<?php echo $this->security->get_csrf_hash() ?>";
 $(".jenis_dokumen").select2({
+dropdownParent: $("#ModalDetailPekerjaan"),  
+templateResult: formatState,    
 ajax: {
 url: '<?php echo site_url('Dashboard/CariJenisDokumen') ?>',
 method : "post",
@@ -224,6 +232,8 @@ type:"POST",
 url:"<?php echo base_url('Dashboard/UpdateJenisPekerjaan') ?>",
 data:$("#FormUpdatePekerjaan").serialize(),
 success:function(data){
+
+$('#ModalDetail').modal('hide');    
  var r  = JSON.parse(data);
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
@@ -270,26 +280,32 @@ data:"token="+token,
 success:function(data){
 $('#ModalDetailPekerjaan').modal('show');
 $('#DataDetailPekerjaan').html(data);
+CariJenisDokumen();
 }
 });
 }
 function BuatPekerjaanBaru(){
-$("#FormBuatPekerjaanBaru").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
-$("#FormBuatPekerjaanBaru").find(".select2").removeClass("is-invalid").addClass("is-valid");    
+$("#FormTambahPekerjaan").find(".is-invalid").removeClass("is-invalid").addClass("is-valid");
+$("#FormTambahPekerjaan").find(".select2").removeClass("is-invalid").addClass("is-valid");    
 $('.form-control + p').remove();
 
+formVals = $("#FormTambahPekerjaan").serialize();
+$('#persyaratan').find('.data_text').each(function(){
+formVals += '&' + this.id + '=' + encodeURIComponent($(this).text());
+});   
+console.log(formVals);
 $.ajax({
 type:"POST",
 url:"<?php echo base_url('Dashboard/SimpanPekerjaanBaru') ?>",
-data:$("#FormBuatPekerjaanBaru").serialize(),
+data:formVals,
 success:function(data){
 var r  = JSON.parse(data);
 
 if(r[0].status == 'error_validasi'){
 $.each(r[0].messages, function(key, value){
 $.each(value, function(key, value){
-$("#FormBuatPekerjaanBaru").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
-$("#FormBuatPekerjaanBaru").find("#"+key).removeClass("is-valid");
+$("#FormTambahPekerjaan").find("#"+key).addClass("is-invalid").after("<p class='"+key+"alert text-danger'>"+value+"</p>");
+$("#FormTambahPekerjaan").find("#"+key).removeClass("is-valid");
 });
 });
 
@@ -306,12 +322,37 @@ Toast.fire({
 type: r[0].status,
 title: r[0].messages
 });
+
 refresh_table_pekerjaan();
 }
-
 }
 });
+}
+function BuatPersyaratan(){
+var jumlah       = $(".no").length +1;
+var no_dokumen   = $(".jenis_dokumen option:selected" ).val();
+var nama_dokumen = $(".jenis_dokumen option:selected").text();
+if(nama_dokumen ==''){
 
+alert("Anda Belum Memilih Jenis Dokumen");
+}else if($("."+no_dokumen).length ==0 ){
+
+var data = "<tr class='no no"+jumlah+" "+no_dokumen+"'>\n\
+<td>"+jumlah+"</td>\n\
+<td class='data_text' id="+no_dokumen+">"+nama_dokumen+"</td>\n\
+<td width='10%'><button onclick=HapusSyarat('"+no_dokumen+"'); class='btn btn-danger btn-block btn-sm'><span class='fa fa-trash'></span></button></td>\n\
+";
+
+
+$(".data_persyaratan").append(data);
+}else{
+alert("Jenis Persyaratan Sudah Ditambahkan");
+}
+
+}
+
+function HapusSyarat(no){
+$("tr").remove("."+no);
 }
 
 

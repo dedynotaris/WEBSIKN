@@ -3,8 +3,8 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
-<div class="container-fluid text-theme1">
-<div class=" mt-2 text-center ">
+<div class="container-fluid ">
+<div class=" mt-2 text-center text-info ">
 <h5 align="center"><i class="far fa-3x fa-flag"></i><br>Pekerjaan diselesaikan
 </h5>
 </div>
@@ -12,9 +12,8 @@
     
 <div class="row mt-2 ">
     <div class="col">
-<table style="width:100%;" id="data_selesai" class="table text-theme1 table-striped table-condensed table-xs table-bordered  table-hover table-sm"><thead>
+<table style="width:100%;" id="data_selesai" class="table table-striped "><thead>
 <th align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th align="center" aria-controls="datatable-fixed-header"  >No pekerjaan</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
 <th align="center" aria-controls="datatable-fixed-header"  >Jenis pekerjaan</th>
 <th align="center" aria-controls="datatable-fixed-header"  >pembuat pekerjaan</th>
@@ -70,7 +69,6 @@ columns: [
 "data": "id_data_pekerjaan",
 "orderable": false
 },
-{"data": "no_pekerjaan"},
 {"data": "nama_client"},
 {"data": "jenis_perizinan"},
 {"data": "pembuat_pekerjaan"},

@@ -1,5 +1,9 @@
-<body onload="search();">    
-<div class="container-fluid bg-light " id='navbar'>
+<body  class="d-flex flex-column" onload="search();">    
+<div class="container-fluid bg-light " id='navbar' style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;" >
 <div class="row">
 <style>
 .form-search {
@@ -10,17 +14,18 @@ padding: 0.375rem 0.75rem;
 font-size: 1rem;
 font-weight: 400;
 line-height: 1.5;
-color: #495057;
+color:#17a2b8;
 background-color: #fff;
 background-clip: padding-box;
 border: 1px solid #ced4da;
 border-radius: 2.25rem;
 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
 .form-search:hover {
--webkit-box-shadow: 1px 1px 1px 1px #dc3545;
--moz-box-shadow: 1px 1px 1px 1px #dc3545;
-box-shadow: 1px 1px 4px 1px #dc3545;
+-webkit-box-shadow: 1px 1px 1px 1px #17a2b8;
+-moz-box-shadow: 1px 1px 1px 1px #17a2b8;
+box-shadow: 1px 1px 4px 1px #17a2b8;
 
 }
 .ui-autocomplete {
@@ -42,27 +47,60 @@ margin-block-end: 0em;
 }
 .btn:focus, .btn.focus {
 outline: 0;
-box-shadow: 0 0 0 0.1rem #fd7e14;
+box-shadow: 0 0 0 0.1rem #343a40;
 }
 .btn:hover {
 color: cornflowerblue;
 text-decoration: none;
 }
 .bg-lightaktif {
-background-color: #fd7e14 !important; 
+background-color: #343a40 !important; 
 color: #000;
 }
 
+.sortable{
+    cursor: pointer;
+}
+
+.hasil_data {
+cursor: pointer;  
+background-color:"#f60";  
+}
+
+.hasil_data:hover {
+  background-color: #f8f9fa !important;
+}
+.hover:hover {
+  -webkit-transform: scale(1.3);
+        -ms-transform: scale(1.3);
+        transform: scale(1.3);
+cursor: pointer;  
+color:"#f60";
+}
+
+
+body {
+  height: 100%;
+}
+
+#page-content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  flex-shrink: none;
+}
 
 </style>
-<div class="col-md-2 text-right d-flex justify-content-start p-2">
-<a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
+<div class="col-md-2 p-3" >
+<a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto bg-light rounded p-1" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
 </div>
-<div class="col-md-6  align-items-center d-flex justify-content-start">
+
+<div class="col align-items-center d-flex ">
 <form class="input-group " method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <div class="input-group col">
 <input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
-<input type="hidden" name="kategori" value="dokumen_penunjang">
+<input type="hidden" name="kategori" value="data_client">
 <span class="input-group-append">
 <button type="submit" class="btn  btn-tranparent border-left-0" type="button">
 <i class="fa fa-search"></i>
@@ -71,39 +109,96 @@ color: #000;
 </div>
 </form>
 </div>
-<div class="col"></div> 
-<div class="col-md-2   d-flex justify-content-end ">
+
+<div class="col-md-2  d-flex justify-content-end ">
 <div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <i style="font-size: 1.4em;" class="fas fa-th text-theme1"></i>
 </button>
-<div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
-<div class="row text-theme1 text-center text-lowercase">
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 1','User1');" >
-<i class="fas fa-user-tie fa-2x"></i><br>Notaris
+<div class="dropdown-menu dropdown-menu-right pb-0 pt-0 bg-white "  style="width:320px;">
+<div class="row ">
+
+<div class="col-6 text-center text-lowercase" onclick="check_akses('Level 1','User1');" >
+<div class='
+<?php 
+
+$notaris = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 1'));
+if($notaris->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+p-3'>
+<i class=" fas fa-user-tie fa-2x"></i>
+<br>Notaris
+</div>
 </div> 
 
-<div class="col-md-6 text-center mt-2" onclick="check_akses('Level 2','User2');" >
-<i class="fas fa-user-edit fa-2x"></i><br>Divisi Asisten
+<div class="col-6 text-center  text-lowercase" onclick="check_akses('Level 2','User2');" >
+<div class='
+
+<?php 
+
+$asisten = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 2'));
+if($asisten->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+ p-3'>
+<i class="fas fa-user-edit fa-2x"></i>
+<br>Divisi Asisten
+</div>
 </div>
 
-</div>
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-<div class="col-md-6 text-center mt-2 text-lowercase"  onclick="check_akses('Level 3','User3');" >
-<i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan
-</div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','data_lama');" >
-<i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip
-</div> 
-</div>
+<div class="col-6 text-center  text-lowercase"  onclick="check_akses('Level 3','User3');" >
+<div class='<?php 
 
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-
-<div class="col-md-6 text-center mt-2 text-lowercase" onclick="check_akses('Admin','Dashboard');" >
-<i class="fas fa-user-cog fa-2x"></i><br>Administrator
+$perizinan = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 3'));
+if($perizinan->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan</div>
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 5','Resepsionis');" >
-<i class="fas fa-concierge-bell fa-2x"></i><br>Resepsionis
+
+<div class="col  text-center text-lowercase" onclick="check_akses('Level 4','data_lama');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 4'));
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+
+ p-3  '><i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip</div>
+</div> 
+
+<div class="col-6 
+ text-center  text-lowercase" onclick="check_akses('Admin','Dashboard');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user'),'level'=>'Super Admin'));
+
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-cog fa-2x"></i><br>Administrator</div>
 </div> 
 
 </div>
@@ -111,27 +206,28 @@ color: #000;
 </div>
 
 <div class="btn-group pull-right  ">
-<button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
+<button type="button" class="btn btn-transparent pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
-<img style="width:40px; height: 40px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" ><br>        
 <?php } ?> 
 <?php } ?>
+
 </button>
 
-<div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
+<div class="dropdown-menu dropdown-menu-right " style="width:300px;" >
 <div class="text-center px-6 py-6 ">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
-<img style="width:100px; height: 100px;  border:2px solid #dc3545;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" ><br>        
 <?php } ?> 
 <?php } ?>
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
@@ -147,79 +243,21 @@ color: #000;
 </div>  
 </div>
 
-<div class="container-fluid" style="background-color:#dc3545; color:#fff;">
-<div class="container">
-<div class="row ">
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_penunjang'){echo "bg-lightaktif"; } ?>">
-<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
-<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
-<input type="hidden" name="kategori" value="dokumen_penunjang">    
-<button type="submit" class="btn btn-tranparent btn-block "  style="color:#fff;">Dokumen Penunjang <i class="fas fa-file-contract"></i></button>
-</form>
-</div>
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'dokumen_utama'){echo "bg-lightaktif"; } ?>">
-
-<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
-<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
-<input type="hidden" name="kategori" value="dokumen_utama">    
-<button type="submit" class="btn btn-tranparent btn-block " style="color:#fff;">Dokumen Utama <i class="fas fa-file-alt"></i> </button>
-</form>
-
-</div>
-<div class="col-md-3 mx-auto <?php if($this->input->get('kategori') == 'data_client'){echo "bg-lightaktif"; } ?>">
-<form method="get" action="<?php echo base_url('DataArsip/Pencarian/') ?>">
-<input type="hidden" class="form-control" name="<?php echo  $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" />
-<input type="hidden" name="search" value="<?php echo $this->input->get('search') ?>">    
-<input type="hidden" name="kategori" value="data_client">    
-<button type="submit" class="btn btn-tranparent btn-block " style="color:#fff;">Data Client <i class="fas fa-users"></i></button>
-</form>
-</div>
-</div>
-</div>
-</div>    
-<div class="container">
+<div id="page-content">
+<div class="container" >
 <div class="row mt-2">
-<div class="col-md-8  hasil_pencarian">
-</div>
-<div class="col">
-<div class='card'>
-<div class="card-header text-center">Detail Hasil Pencarian</div>
-<div class='card-body'>
-Jumlah Dokumen Penujang  : 
-<?php 
-$this->db->select('data_meta_berkas.nama_meta,'
-.'data_meta_berkas.value_meta');
-$this->db->from('data_meta_berkas');
-$this->db->group_by('data_meta_berkas.no_berkas');
-$this->db->like('data_meta_berkas.value_meta',$this->input->get('search'));
-echo $this->db->get()->num_rows();
-?>
-<br><hr>
-Jumlah Dokumen Utama     : 
-<?php 
-$this->db->select('data_dokumen_utama.nama_berkas');
-$this->db->from('data_dokumen_utama');
-$this->db->like('data_dokumen_utama.nama_berkas',$this->input->get('search'));
-echo $this->db->get()->num_rows();
-?>
-<br><hr>
-Jumlah Client            : 
-<?php 
-$this->db->select('data_client.nama_client');
-$this->db->from('data_client');
-$this->db->like('data_client.nama_client',$this->input->get('search'));
-echo  $this->db->get()->num_rows();
-?>
-<br>
+<div class="col hasil_pencarian">
 </div>
 </div>
-</div>    
 </div>
-</div>    
+</div>
 
-    <div class="container-fluid  p-3  " style="margin-top:7%; background-color: #fd7e14; color:#fff; ">
+<footer id="sticky-footer" >
+    <div class="container-fluid  p-3 bg-info text-white  " style="background: url(<?php echo base_url('assets') ?>/bg_login.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;">
 <div class="container">
 <div class ="row p-2 " >
     <div class="col-md-7 ">Total Dokumen Penunjang<hr>
@@ -233,11 +271,10 @@ echo  $this->db->get()->num_rows();
    </div>
 </div>
 </div>
-</div>
-    <div class="container-fluid" style="background-color:#dc3545;">
+    <div class="container-fluid "  >
         <div class="container">       
 <div class="row " >
-    <div class="col p-2 m-2 " style="color:#fff;">
+    <div class="col p-2 m-2 text-white" >
 &COPY; 2020 
 SIKN Notaris Dewantari Handayani,SH, MPA
 </div>
@@ -250,30 +287,13 @@ SIKN Notaris Dewantari Handayani,SH, MPA
 <div class="modal fade" id="LihatClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content">
-<div class="modal-header ">
-<h6 class="modal-title" id="titelclient"></h6>
+<div class="modal-header bg-info ">
+<h6 class="modal-title text-white" id="titelclient"></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
     <div class="modal-body lihat_client overflow-auto" style="max-height:500px;">
-
-</div>
-</div>
-</div>
-</div>        
-
-<!-- Modal keterlibatan -->
-<div class="modal fade" id="ModalKeterlibatan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-xl" role="document">
-<div class="modal-content">
-<div class="modal-header ">
-<h6 class="modal-title" id="titelterlibat"></h6>
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-</div>
-    <div class="modal-body lihat_keterlibatan overflow-auto" style="max-height:500px;">
 
 </div>
 </div>
@@ -298,12 +318,129 @@ SIKN Notaris Dewantari Handayani,SH, MPA
 </div>
 </div>
 </div>
-</div>   
-
+</div>  
 
 </body>
 
 <script>
+
+function LihatDetailLaporanPerizinan(no_pekerjaan,no_client,no_berkas_perizinan){
+  var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+  $.ajax({
+  type:"post",
+  data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan+"&no_berkas_perizinan="+no_berkas_perizinan,
+  url:"<?php echo base_url('DataArsip/LihatDetailLaporanPerizinan'); ?>",
+  success:function(data){
+  $(".detail_pekerjaan").html(data);
+  }
+  });
+}
+
+function LihatLaporanPerizinan(no_pekerjaan,no_client){
+  var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+  $.ajax({
+  type:"post",
+  data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+  url:"<?php echo base_url('DataArsip/LihatLaporanPerizinan'); ?>",
+  success:function(data){
+  $(".detail_pekerjaan").html(data);
+  }
+  });
+}
+
+function LihatLaporanPekerjaan(no_pekerjaan,no_client){
+  
+  var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+  $.ajax({
+  type:"post",
+  data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+  url:"<?php echo base_url('DataArsip/LihatLaporanPekerjaan'); ?>",
+  success:function(data){
+  $(".detail_pekerjaan").html(data);
+  }
+  });
+  }
+
+
+function LihatDokumenUtama(no_pekerjaan,no_client){
+  
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('DataArsip/LihatDokumenUtama'); ?>",
+success:function(data){
+$(".detail_pekerjaan").html(data);
+}
+});
+}
+
+function LihatDokumenPenunjang(no_pekerjaan,no_client){
+  
+  var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+  $.ajax({
+  type:"post",
+  data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+  url:"<?php echo base_url('DataArsip/LihatDokumenPenunjang'); ?>",
+  success:function(data){
+  $(".detail_pekerjaan").html(data);
+  }
+  });
+  }
+
+function LihatDetailPekerjaan(no_pekerjaan,no_client){
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
+url:"<?php echo base_url('DataArsip/LihatDetailPekerjaan'); ?>",
+success:function(data){
+$(".detail_pekerjaan").html(data);
+}
+});
+}
+
+
+function LihatLampiran(nama_folder,nama_berkas){
+window.open( 
+  "<?php echo base_url('berkas/') ?>"+nama_folder+"/"+nama_berkas+"","_blank"); 
+}
+
+function download_utama(id_data_dokumen_utama){
+window.location.href="<?php echo base_url('DataArsip/download_utama/') ?>"+btoa(id_data_dokumen_utama);
+}
+
+
+function FormLihatMeta(no_berkas,nama_folder,nama_berkas){
+
+if($(".data_edit"+no_berkas).length > 0 ){
+$('.'+no_berkas).slideUp("slow").remove();
+}else{
+var token             = "<?php echo $this->security->get_csrf_hash() ?>";
+$.ajax({
+type:"post",
+data:"token="+token+"&no_berkas="+no_berkas+"&nama_folder="+nama_folder+"&nama_berkas="+nama_berkas,
+url:"<?php echo base_url('DataArsip/FormLihatMeta') ?>",
+success:function(data){
+$(".data"+no_berkas).slideDown().after("<tr class="+no_berkas+"><td colspan='2'>"+data+"</tr></td>"); 
+
+}
+});
+}
+}
+
+function LihatSemuaDokumen(no_client){
+var token           = "<?php echo $this->security->get_csrf_hash(); ?>";
+$.ajax({
+type:"post",
+url:"<?php echo base_url('DataArsip/LihatSemuaDokumen') ?>",
+data:"token="+token+"&no_client="+no_client,
+success:function(data){
+$("#LihatSemua").slideUp().before(data);
+
+}
+});
+}
 
 function LihatFile(jenis_dokumen,no_dokumen){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
@@ -423,10 +560,10 @@ var sticky = navbar.offsetTop;
 
 function myFunction() {
 if (window.pageYOffset > sticky) {
-navbar.classList.add("sticky-top")
+navbar.classList.add("fixed-top")
 navbar.classList.add("shadow-sticky")
 } else {
-navbar.classList.remove("sticky-top")
+navbar.classList.remove("fixed-top")
 navbar.classList.remove("shadow-sticky")
 }
 }
@@ -447,84 +584,14 @@ $('#LihatClient').modal('show');
 }
 });
 }
-function LihatDokumenUtama(no_pekerjaan,no_client){
-var $attrib = $("#"+no_pekerjaan);
-if($('#toggle'+no_pekerjaan).length > 0 ){
-$('#toggle'+no_pekerjaan).slideUp("slow").remove();
-$(".btnutama"+no_pekerjaan).addClass("btn-light").removeClass( "btn-info" ).html("Lihat <i class='fa fa-eye'></i>");
-}else{
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('DataArsip/LihatDokumenUtama'); ?>",
-success:function(data){
-$("#"+no_pekerjaan).slideDown().after(data);
-$(".btnutama"+no_pekerjaan).addClass("btn-info").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
-}
-});
-}    
-}
 
 
-function LihatTerlibat(no_pekerjaan,no_client){
-var $attrib = $("#"+no_pekerjaan);
-if($('#terlibat'+no_pekerjaan).length > 0 ){
-$('#terlibat'+no_pekerjaan).slideUp("slow").remove();
-$(".btnterlibat"+no_pekerjaan).addClass("btn-light").removeClass( "btn-primary" ).html("Lihat <i class='fa fa-eye'></i>");
-}else{
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('DataArsip/LihatPihakTerlibat'); ?>",
-success:function(data){
-$("#"+no_pekerjaan).slideDown().after(data);
-$(".btnterlibat"+no_pekerjaan).addClass("btn-primary").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
-}
-});
-}    
 
-}
-function LihatKeterlibatan(no_client,no_client_awal){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_client_awal="+no_client_awal,
-url:"<?php echo base_url('DataArsip/LihatKeterlibatan'); ?>",
-success:function(data){
-var r = JSON.parse(data);
 
-$("#titelterlibat").html(r[0].titel);
-$(".lihat_keterlibatan").html(r[0].linkhtml);
-$('#ModalKeterlibatan').modal('show');
 
-}
-});
-
-}
-function LihatClientBaru(no_pekerjaan,no_client){
-        
-var $attrib = $("#"+no_pekerjaan);
-if($('#terlibat'+no_pekerjaan).length > 0 ){
-$('#terlibat'+no_pekerjaan).slideUp("slow").remove();
-$(".btnterlibat"+no_pekerjaan).addClass("btn-light").removeClass( "btn-primary" ).html("Lihat <i class='fa fa-eye'></i>");
-}else{
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_client="+no_client+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('DataArsip/LihatPihakTerlibatKedua'); ?>",
-success:function(data){
-$("#"+no_pekerjaan).slideDown().after(data);
-$(".btnterlibat"+no_pekerjaan).addClass("btn-primary").removeClass( "btn-light" ).html("Tutup <i class='fa fa-times-circle'></i>");
-}
-});
-}    
-}
 function BukaClientBaru(no_client){
 Swal.fire({
-  text: "kamu yakin ingin berpindah client ?",
+  text: "Fungsi Ini Akan menampilkan client tersebut,kamu yakin ingin berpindah client ?",
   icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',

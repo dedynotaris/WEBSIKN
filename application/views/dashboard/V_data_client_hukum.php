@@ -3,12 +3,12 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
 <div class="container-fluid">
-<div class="mt-4 mb-2 text-theme1 text-center"><i class="far fa-building fa-4x"></i></span><br> Data Client Badan Hukum</div>
+<div class="mt-4 mb-2 text-info text-center"><i class="far fa-building fa-3x"></i></span><br> Data Client Badan Hukum</div>
     
 <div class="row">    
 <div class="col mt-2">
 <table style="width:100%;" id="data_client" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th   aria-controls="datatable-fixed-header"  >No</th>
 <th   aria-controls="datatable-fixed-header"  >No Client</th>
 <th   aria-controls="datatable-fixed-header"  >Nama Client</th>
@@ -63,7 +63,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_client",
+"data": "no_client",
 "orderable": false
 },
 {"data": "no_client"},

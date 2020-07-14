@@ -2,30 +2,50 @@
 <?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
-<?php $this->load->view('umum/user2/V_data_user2'); ?>
-<div class="container-fluid">
-<div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Pekerjaan Masuk<br><span class="fa-2x far fa-share-square"></span></h5>
-</div>
+<?php echo $this->breadcrumbs->show(); ?>
+
+
+<div class='container'>
 
 <div class="row te">    
-<div class="col mt-2">
+<div class="col mt-1">
 <?php if($query->num_rows() == 0){ ?>    
-    <h5 class="text-center text-theme1">Pekerjaan yang baru masuk belum tersedia<br>
-    </h5>
+  <div class="col-12 d-flex justify-content-center text-center" >
+  <div class='text-center mt-5'>
+    <svg class='text-info m-5' width="9em" height="9em" viewBox="0 0 16 16" class="bi bi-emoji-frown" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      <path fill-rule="evenodd" d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683z"/>
+      <path d="M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+    </svg>
+    <br>
+    Data Tidak Ditemukan Silahkan Tambahkan Data Pekerjaan Terlebih Dahulu
+    <br>
+    <a href="<?php echo base_url('User2/buat_pekerjaan') ?>"><button class='btn btn-block btn-info'>Tambahkan Pekerjaan</button></a>
+    </div>
+</div>
+
     
 <?php } else { ?>
-<table class="table text-theme1 table-hover table-bordered table-sm text-center table-striped ">
+<table class="table  table-bordered  table-striped ">
+<tr class='bg-info  text-white text-center'>
+<td colspan='6'>Data Pekerjaan Dalam Tahapan Persyaratan Dokumen Penunjang </td>
+</tr>
+
 <tr>
+
+<th>No</th>
+<th>No Pekerjaan</th>
 <th>Nama client</th>
 <th>Jenis Pekerjaan</th>
 <th class="text-center">Target Selesai</th>
 <th>Aksi</th>
 </tr>
-<?php foreach ($query->result_array() as $data){ ?>
+<?php $h=1; foreach ($query->result_array() as $data){ ?>
 
 
 <tr>
+<td><?php echo $h++ ?></td>
+<td><?php echo $data['no_pekerjaan'] ?></td>
 <td id='nama_client<?php echo $data['id_data_pekerjaan'] ?>'><?php echo $data['nama_client'] ?></td>
 <td><?php echo $data['nama_jenis'] ?></td>
 <td>
@@ -51,10 +71,9 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </td>
 <td>
 
-<button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Proses persyaratan" class="btn btn-sm btn-success"><span class="fa fa-retweet"></span></button>    
-<button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>','<?php echo $data['id_data_pekerjaan'] ?>')" title="Buat Laporan" class="btn btn-sm btn-success"><span class="fas fa-pencil-alt"></span></button>    
-<button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Lihat Laporan" class="btn btn-sm btn-success"><i class="far fa-clipboard"></i></button>    
-<button onclick="lihat_data('<?php echo base64_encode($data['no_pekerjaan'])  ?>')" title="Lihat data perekaman" class="btn btn-sm btn-success"><span class="fa fa-eye"></span></button>    
+<button onclick="tambahkan_kedalam_proses('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Proses persyaratan" class="btn btn-sm btn-dark"><span class="fa fa-retweet"></span></button>    
+<button onclick="buat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Buat Laporan" class="btn btn-sm btn-dark"><span class="fas fa-pencil-alt"></span></button>    
+<button onclick="lihat_laporan('<?php echo base64_encode($data['no_pekerjaan']) ?>')" title="Lihat Laporan Kemajuan" class="btn btn-sm btn-dark"><i class="far fa-clipboard"></i></button>    
     
    
 </td>
@@ -68,11 +87,11 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
 </div>
 
-<div class="modal fade text-theme1" id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade  " id="modal_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
-<div class="modal-header text-center">
-<h6 class="text-center"> LAPORAN PROSES PEKERJAAN <span class="laporan_client"></span> </h6>  
+<div class="modal-header bg-info text-center">
+<h6 class="text-center text-white">Buat Laporan Proses Pekerjaan <span class="laporan_client"></span> </h6>  
 </div>
     
 <div class="modal-body">
@@ -82,7 +101,7 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
     
 <div class="modal-footer">
-<button type="button" class="btn btn-success btn-sm simpan_progress btn-block">Simpan laporan <span class="fa fa-save"></span></button>
+<button type="button" class="btn btn-dark btn-sm simpan_progress btn-block">Simpan laporan <span class="fa fa-save"></span></button>
 </div>
 </div>
 </div>
@@ -98,15 +117,6 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
 </div>
 
-<div class="modal fade" id="lihat_data_meta" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-<div class="modal-content">
-<div class="modal-body lihat_data_meta">
-    
-</div>
-</div>
-</div>
-</div>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -142,18 +152,6 @@ $(".laporan").val("");
 });    
 
 });
-function lihat_data(no_pekerjaan){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
-$.ajax({
-type:"post",
-data:"token="+token+"&no_pekerjaan="+no_pekerjaan,
-url:"<?php echo base_url('User2/lihat_data_meta') ?>",
-success:function(data){
-$('#lihat_data_meta').modal('show');
-$(".lihat_data_meta").html(data);
-}
-});
-}
 
 
 function buat_laporan(no_pekerjaan,id_data_pekerjaan){
@@ -164,10 +162,6 @@ $(".no_pekerjaan").val(no_pekerjaan);
 $(".id_data_pekerjaan").val(id_data_pekerjaan);
 
 }
-
-
-
-
 function lihat_laporan(no_pekerjaan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";    
 $.ajax({

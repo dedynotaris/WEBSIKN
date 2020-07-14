@@ -5,14 +5,14 @@
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
 <?php $kar = $data->row_array(); ?>
 <div class="container-fluid ">
-<div class="text-theme1 mt-2 text-center ">
+<div class="text-info mt-2 text-center ">
 <h5 align="center">Data pekerjaan <?php echo base64_decode($this->uri->segment(4)) ?>  </h5>
 </div>    
 
 <div class="row mt-2">
 <div class="col">
-<table class="table text-theme1 table-sm table-bordered table-striped  table-condensed">
-<tr>
+<table class="table table-striped  ">
+    <tr class="text-info">
 <th>Nama Tugas</th>
 <th>Nama client</th>
 <th>Status</th>
@@ -47,9 +47,10 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 }
 ?> </td>
 <td class="text-center">
-<button onclick="lihat_laporan('<?php echo base64_encode($d['no_berkas_perizinan']) ?>');" class="btn btn-success btn-sm" title="Lihat laporan"><i class="far fa-clipboard"></i></button>
-<button onclick="lihat_data_perekaman('<?php echo $d['no_nama_dokumen'] ?>','<?php echo $d['no_client'] ?>')" class="btn btn-success btn-sm" title="Lihat Dokumen"><i class="far fa-eye"></i></span></button>
-   
+<button onclick="lihat_laporan('<?php echo base64_encode($d['no_berkas_perizinan']) ?>');" class="btn btn-dark btn-sm" title="Lihat laporan"> Laporan Perizinan <i class="far fa-clipboard"></i></button>
+<?php if(base64_decode($this->uri->segment(4)) == 'Selesai'){ ?>
+<button onclick="lihat_data_perekaman('<?php echo $d['no_berkas'] ?>','<?php echo base64_encode($d['no_berkas_perizinan']) ?>')" class="btn btn-dark btn-sm" title="Lihat Dokumen">Lihat Perizinan <i class="far fa-eye"></i></button>
+<?php }?>   
 
 </td>
 </tr>
@@ -61,11 +62,9 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
 </div>
 </div>
 <div class="modal fade" id="data_laporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-body data_laporan">
+<div class="modal-dialog modal-md" role="document">
+<div class="modal-content  data_laporan">
 
-</div>
 
 </div>
 </div>
@@ -73,15 +72,17 @@ echo "<b><span class='text-success'>".$numberDays." Hari lagi </span><b>" ;
     <div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content ">
-<div class="modal-header">
-<h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
+<div class="modal-header bg-info text-white">
+<h6 class="modal-title" id="exampleModalLabel text-center">Dokumen Hasil Perizinan<span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
 
-<div class="modal-body data_perekaman">
-
+<div class="modal-body ">
+    <div class="embed-responsive embed-responsive-16by9 data_perekaman">
+        
+    </div>
 
 </div>
 </div>
@@ -119,15 +120,34 @@ $(".data_laporan").html(data);
 </script> 
 
 <script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_client){
+function lihat_data_perekaman(no_berkas,no_berkas_perizinan){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
+data:"token="+token+"&no_berkas="+no_berkas+"&no_berkas_perizinan="+no_berkas_perizinan,
 url:"<?php echo base_url('User1/data_perekaman') ?>",
 success:function(data){
-$(".data_perekaman").html(data);    
+var r = JSON.parse(data);
+if(r[0].status == 'Dokumen Lihat'){
+$("#judul").html(r[0].titel);
+$(".data_perekaman").html(r[0].link);
 $('#data_perekaman').modal('show');
+}else{
+window.location.href=r[0].link;
+const Toast = Swal.mixin({
+toast: true,
+position: 'center',
+showConfirmButton: false,
+timer: 3000,
+animation: false,
+customClass: 'animated zoomInDown'
+});
+
+Toast.fire({
+type: 'success',
+title: r[0].messages,
+});
+}
 }
 
 });

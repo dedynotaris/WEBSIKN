@@ -1,5 +1,5 @@
-            <table class="table text-theme1 table-striped table-bordered table-sm mt-2">
-                <thead>
+            <table class="table  table-striped mt-2">
+                <thead class="text-info">
                     <tr>
                         <th>No</th>
                         <th>No pekerjaan</th>

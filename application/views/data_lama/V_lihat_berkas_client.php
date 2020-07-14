@@ -7,18 +7,16 @@
 <div class="container-fluid mt-2"></div>
 <div class="col ">
 <div class="mt-2   text-center  ">
-    <h5 align="center " class="text-theme1">Data Berkas <?php echo  $static['nama_client'] ?><br><span class="fa-2x fas fa-list-alt"></span></h5>
+    <h5 align="center " class="text-info"><span class="fa-3x fas fa-list-alt"></span><br> DATA BERKAS <?php echo  $static['nama_client'] ?></h5>
 </div>
 
-<table style="width:100%;" id="data_berkas" class="table  text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<table style="width:100%;" id="data_berkas" class="table  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<tr class='text-info' role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama berkas</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody align="center">
+<tbody >
 </table>
 
 
@@ -86,8 +84,6 @@ columns: [
 "data": "id_data_berkas",
 "orderable": false
 },
-{"data": "no_client"},
-{"data": "nama_client"},
 {"data": "nama_file"},
 {"data": "view"}
 

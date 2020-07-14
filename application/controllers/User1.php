@@ -1,9 +1,9 @@
 <?php
 
-require('vendor/autoload.php');
+require 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 class User1 extends CI_Controller{
 public function __construct() {
 parent::__construct();
@@ -17,7 +17,6 @@ $this->load->library('Breadcrumbs');
 if($this->session->userdata('sublevel')  != 'Level 1' ){
 redirect(base_url('Menu'));
 }
-
 }
 
 public function index(){
@@ -69,8 +68,8 @@ redirect(404);
 
 }
 public function halaman_proses(){
-$this->breadcrumbs->push('Beranda', '/User1');
-$this->breadcrumbs->push('Pekerjaan Diproses', '/User1/halaman_proses');   
+//$this->breadcrumbs->push('Beranda', '/User1');
+//$this->breadcrumbs->push('Pekerjaan Diproses', '/User1/halaman_proses');   
     
 $data_tugas = $this->M_user1->data_tugas('Proses');    
 $this->load->view('umum/V_header');
@@ -78,8 +77,8 @@ $this->load->view('user1/V_halaman_proses',['data_tugas'=>$data_tugas]);
 }
 
 public function halaman_selesai(){
-$this->breadcrumbs->push('Beranda', '/User1');
-$this->breadcrumbs->push('Pekerjaan Selesai', '/User1/halaman_selesai');   
+//$this->breadcrumbs->push('Beranda', '/User1');
+//$this->breadcrumbs->push('Pekerjaan Selesai', '/User1/halaman_selesai');   
     
     
 $data_tugas = $this->M_user1->data_tugas('Selesai');       
@@ -108,8 +107,8 @@ redirect(404);
 }
 
 public function lihat_karyawan(){
-$this->breadcrumbs->push('Beranda', '/User1');
-$this->breadcrumbs->push('Lihat Asisten', '/User1/lihat_karyawan');
+//$this->breadcrumbs->push('Beranda', '/User1');
+//$this->breadcrumbs->push('Lihat Asisten', '/User1/lihat_karyawan');
     
 $karyawan = $this->M_user1->data_user();               
 $this->load->view('umum/V_header');
@@ -153,23 +152,31 @@ $this->load->view('user1/V_lihat_berkas_dikerjakan',['data_utama'=>$data_utama,'
 public function lihat_laporan_pekerjaan(){
 if($this->input->post()){
 $input = $this->input->post();
-
+echo'<div class="modal-header bg-dark">
+<h6 class="modal-title text-white" >Laporan Pekerjaan <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body p-0"  >';
 $data = $this->db->get_where('data_progress_pekerjaan',array('no_pekerjaan'=> base64_decode($input['no_pekerjaan'])));
 if($data->num_rows() != 0){
-echo "<table class='table table-striped table-bordered text-center table-hover table-sm'>"
+echo "<table class='table table-striped'>"
 . "<tr>"
-. "<th>Tanggal </th>"
+. "<th>No </th>"
 . "<th>laporan</th>"
 . "</tr>";
+$h=1;
 foreach ($data->result_array() as $d){
 echo "<tr>"
-    . "<td>".$d['waktu']."</td>"
-    . "<td>".$d['laporan_pekerjaan']."</td>"
+    . "<td>".$h++."</td>"
+    . "<td>".$d['laporan_pekerjaan']." <br> <span style='color:#ccc'>".$d['waktu']."</span></td>"
     . "</tr>";    
 }
 echo "</table>";
+echo"</div>";
 }else{
-echo "<div class='text-center text-theme1 h5'> <i class='far fa-clipboard fa-3x'></i><br>Belum ada laporan yang diberikan</div>";    
+echo "<div class='text-center text-info h5'> <i class='far fa-clipboard fa-3x'></i><br>Belum ada laporan yang diberikan</div>";    
 }
 
 }else{
@@ -317,25 +324,33 @@ echo $this->M_user1->json_data_riwayat();
 public function lihat_laporan(){
 if($this->input->post()){
 $input = $this->input->post();
-
-$data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=>$input['no_berkas_perizinan']));
+echo'<div class="modal-header bg-dark">
+<h6 class="modal-title text-white" >Laporan Perizinan <span id="title"></span> </h6>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body p-0"  >';
+$data = $this->db->get_where('data_progress_perizinan',array('no_berkas_perizinan'=> base64_decode($input['no_berkas_perizinan'])));
 if($data->num_rows() == 0){
 echo "<div class='text-center text-theme1 h5'> <i class='far fa-clipboard fa-3x'></i><br>Belum ada laporan yang diberikan</div>";    
     
-}else{echo "<table text-theme1 class='table table-bordered table-striped table-hover table-sm'>"
-. "<tr>"
-. "<th>Tanggal </th>"
-. "<th>laporan</th>"
+}else{echo "<table  class='table table-striped '>"
+. "<tr class='text-info'>"
+. "<th>No </th>"
+. "<th>Laporan</th>"
 . "</tr>";
+$h=1;
 foreach ($data->result_array() as $d){
 echo "<tr>"
-    . "<td>".$d['waktu']."</td>"
-    . "<td>".$d['laporan']."</td>"
+    . "<td>".$h++."</td>"
+    . "<td>".$d['laporan']."<br><span style='color:#ccc'>".$d['waktu']."</span></td>"
     . "</tr>";    
 }
 echo "</table>";    
 
 }
+echo"</div>";
 }else{
 redirect(404);    
 }    
@@ -353,40 +368,41 @@ echo print_r($this->session->userdata());
 }
 public function data_perekaman(){
 if($this->input->post()){
-$input = $this->input->post();
-$query     = $this->M_user1->data_perekaman($input['no_nama_dokumen'],$input['no_client']);
-$query2     = $this->M_user1->data_perekaman2($input['no_nama_dokumen'],$input['no_client']);
+$input = $this->input->post();  
+$this->db->select('data_berkas.nama_berkas,'
+               .'data_client.nama_folder,'
+        . 'nama_dokumen.nama_dokumen,'
+        . 'data_client.nama_client');
+$this->db->from('data_berkas_perizinan');
+$this->db->join('data_berkas', 'data_berkas.no_berkas = data_berkas_perizinan.no_berkas');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
+$this->db->join('data_client', 'data_client.no_client = data_berkas_perizinan.no_client');
+$this->db->where('data_berkas_perizinan.no_berkas',$input['no_berkas']);
+$query = $this->db->get()->row_array();    
 
-echo "<table class='table table-sm table-striped table-bordered'>";
-echo "<thead>
-    <tr>";
-foreach ($query->result_array() as $d){
-echo "<th>".$d['nama_meta']."</th>";
+
+
+$ext = pathinfo($query['nama_berkas'], PATHINFO_EXTENSION);
+if($ext =="docx" || $ext =="doc" || $ext =="pptx" ){
+$data[] =array(
+'status'   =>'Dokumen Download',
+'messages' =>$query['nama_dokumen'].' Dokumen Berhasil di download',
+'link'     =>base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']),
+);
+}else if($ext == "JPG"  || $ext == "jpg" || $ext == "png"  || $ext == "PNG"){
+$data[] = array(
+'titel'  =>$query['nama_dokumen']." ".$query['nama_client'],
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url('DataArsip/BukaGambar/dokumen_penunjang/'.$query['no_berkas']).'"></iframe>',
+'status' =>'Dokumen Lihat'
+);
+}else{    
+$data[] = array(
+'titel'  =>$query['nama_dokumen']." ".$query['nama_client'],
+'link'   =>'<iframe class="embed-responsive-item " src="'.base_url("berkas/".$query['nama_folder']."/".$query['nama_berkas']).'" ></iframe>',
+'status' =>'Dokumen Lihat'
+);
 }
-echo "<th>Aksi</th>";
-echo "</tr>"
-
-. "</thead>";
-
-echo "<tbody>";
-foreach ($query2->result_array() as $d){
-$b = $this->db->get_where('data_meta_berkas',array('no_berkas'=>$d['no_berkas']));
-echo "<tr>";
-
-foreach ($b->result_array() as $i){
-echo "<td>".$i['value_meta']."</td>";    
-}
-echo '<td class="text-center">'
-.'<button class="btn btn-success btn-sm" onclick=cek_download("'. base64_encode($d['no_berkas']).'")><span class="fa fa-download"></span></button>';
-    echo '</td>';
-echo "</tr>";
-    
-    
-}
-echo "</tbody>";
-
-
-echo"</table>";  
+echo json_encode($data);
 }else{
 redirect(404);    
 }  

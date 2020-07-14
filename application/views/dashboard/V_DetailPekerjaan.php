@@ -2,10 +2,33 @@
 <?php  $this->load->view('umum/V_sidebar'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/V_navbar'); ?>
-<?php $static = $DetailPekerjaan->row_array(); ?>   
+<?php $static = $DetailPekerjaan->row_array(); ?> 
+<style>
+ .nav-tabs .nav-link {
+    background-color:#212529;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+   
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+ a {
+   color: #fff;
+   
+}
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+    </style>     
 <div class="container-fluid mt-2">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1"><span class="fa-2x fa fa-exchange-alt "></span><br> DETAIL PEKERJAAN</h5>
+<h5 align="center " class="text-info"><span class="fa-3x fa fa-exchange-alt "></span><br> DETAIL PEKERJAAN</h5>
 </div>
 <div class="row">
 <div class="col">
@@ -66,10 +89,10 @@
 <li class="nav-item">
 <a class="nav-link active" data-toggle="tab" href="#jenis">Dokumen Penunjang <i class="fas fa-file-word"></i></a>
 </li>
-<li class="nav-item ml-1">
+<li class="nav-item ">
 <a class="nav-link " data-toggle="tab" href="#dokumen">Dokumen Utama <i class="fas fa-file"></i></a>
 </li>
-<li class="nav-item ml-1">
+<li class="nav-item ">
 <a class="nav-link" data-toggle="tab" href="#aplikasi">Pihak Terlibat <i class="fas fa-users"></i></a>
 </li>
 </ul>
@@ -77,10 +100,8 @@
 <div class="tab-content">
 
 <div class="tab-pane  container-fluid active" id="jenis">
-<div class="row p-2">
-<div class="col">
 <table style="width:100%;" id="DokumenPenunjang" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama File</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
@@ -93,14 +114,10 @@
 </table>
     
 </div>
-</div>
-</div>
 <!----------------------------Dokumen------------------------------>
 <div class="tab-pane  container-fluid fade" id="dokumen">
-<div class="row p-2">
-<div class="col">
 <table style="width:100%;" id="DokumenUtama" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Berkas</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Berkas</th>
@@ -112,15 +129,12 @@
 <tbody>
 </table>
     
-</div>
-</div>
+
 </div>
 <!----------------------------Aplikasi------------------------------>
 <div class="tab-pane container-fluid fade" id="aplikasi">
-<div class="row p-2">
-<div class="col">
 <table style="width:100%;" id="PihakTerlibat" class="table table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+        <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >No Client</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
@@ -129,8 +143,6 @@
 <tbody>
 </table>
    
-</div>
-</div>
 </div>
 
 </div>

@@ -18,16 +18,15 @@ border-radius: 2.25rem;
 transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .form-search:hover {
--webkit-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
--moz-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
-box-shadow: 1px 1px 4px 1px rgba(0,0,0,0.30);
+-webkit-box-shadow: 1px 1px 1px 1px #dc3545;
+-moz-box-shadow: 1px 1px 1px 1px #dc3545;
+box-shadow: 1px 1px 4px 1px #dc3545;
+
 }
 .ui-autocomplete {
 max-height: 500px;
 overflow-y: auto;
-/* prevent horizontal scrollbar */
 overflow-x: hidden;
-/* add padding to account for vertical scrollbar */
 padding-right: 20px;
 }
 .shadow-sticky{
@@ -43,72 +42,142 @@ margin-block-end: 0em;
 }
 .btn:focus, .btn.focus {
 outline: 0;
-box-shadow: 0 0 0 0.1rem cornflowerblue;
+box-shadow: 0 0 0 0.1rem #343a40;
 }
 .btn:hover {
 color: cornflowerblue;
 text-decoration: none;
 }
 .bg-lightaktif {
-background-color: #f8f9fa !important; 
-color: cornflowerblue;
+background-color: #343a40 !important; 
+color: #000;
 }
 
-.bg-lightaktif .btn {
-color: cornflowerblue;
+.sortable{
+    cursor: pointer;
 }
 
+.hasil_data {
+cursor: pointer;  
+background-color:"#f60";  
+}
 
+.hasil_data:hover {
+  background-color: #f8f9fa !important;
+}
+.hover:hover {
+  
+cursor: pointer;  
+  background-color: #f8f9fa !important;
+}
 </style>
-<div class="col-md-2 text-right d-flex justify-content-start p-2">
+<div class="col-md-2 p-3">
 <a href="<?php echo base_url() ?>"><img style='width:200px;' class="mx-auto" src='<?php echo base_url('assets/iconc.png') ?>'></a>   
 </div>
-<div class="col-md-6  align-items-center d-flex justify-content-start">
+
+<div class="col align-items-center d-flex ">
 <form class="input-group " method="get" style="margin-bottom:0; width:100%; " action="<?php echo base_url('DataArsip/Pencarian/') ?>">
 <div class="input-group col">
 <input name="search" class="form-search py- border-right-0 border" value="<?php echo $this->input->get('search') ?>" type="text" placeholder="Masukan Nama Peroranngan atau Badan Hukum" id="example-search-input">
-<input type="hidden" name="kategori" value="dokumen_penunjang">
+<input type="hidden" name="kategori" value="data_client">
 <span class="input-group-append">
-<button type="submit" class="btn form-search btn-tranparent border-left-0 border" type="button">
+<button type="submit" class="btn  btn-tranparent border-left-0" type="button">
 <i class="fa fa-search"></i>
 </button>
 </span>
 </div>
 </form>
 </div>
-<div class="col"></div> 
-<div class="col-md-2   d-flex justify-content-end ">
+
+<div class="col-md-2  d-flex justify-content-end ">
 <div class="btn-group dropup pull-right ">
 <button type="button" class="btn btn-tranparent " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <i style="font-size: 1.4em;" class="fas fa-th text-theme1"></i>
 </button>
-<div class="dropdown-menu dropdown-menu-right p-3"  style="width:300px;">
-<div class="row text-theme1 text-center text-lowercase">
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 1','User1');" >
-<i class="fas fa-user-tie fa-2x"></i><br>Notaris
+<div class="dropdown-menu dropdown-menu-right pb-0 pt-0 bg-white "  style="width:320px;">
+<div class="row ">
+
+<div class="col-6 text-center text-lowercase" onclick="check_akses('Level 1','User1');" >
+<div class='
+<?php 
+
+$notaris = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 1'));
+if($notaris->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+p-3'>
+<i class=" fas fa-user-tie fa-2x"></i>
+<br>Notaris
+</div>
 </div> 
 
-<div class="col-md-6 text-center mt-2" onclick="check_akses('Level 2','User2');" >
-<i class="fas fa-user-edit fa-2x"></i><br>Divisi Asisten
+<div class="col-6 text-center  text-lowercase" onclick="check_akses('Level 2','User2');" >
+<div class='
+
+<?php 
+
+$asisten = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 2'));
+if($asisten->num_rows() >0){
+  echo "text-info hover";
+}else{
+  echo "text-dark";  
+}
+?>
+
+ p-3'>
+<i class="fas fa-user-edit fa-2x"></i>
+<br>Divisi Asisten
+</div>
 </div>
 
-</div>
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-<div class="col-md-6 text-center mt-2 text-lowercase"  onclick="check_akses('Level 3','User3');" >
-<i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan
-</div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 4','data_lama');" >
-<i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip
-</div> 
-</div>
+<div class="col-6 text-center  text-lowercase"  onclick="check_akses('Level 3','User3');" >
+<div class='<?php 
 
-<div class="row mt-3 text-theme1 text-center text-lowercase">
-
-<div class="col-md-6 text-center mt-2 text-lowercase" onclick="check_akses('Admin','Dashboard');" >
-<i class="fas fa-user-cog fa-2x"></i><br>Administrator
+$perizinan = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 3'));
+if($perizinan->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-check fa-2x"></i><br>Divisi Perizinan</div>
 </div> 
-<div class="col text-center mt-2 text-lowercase" onclick="check_akses('Level 5','Resepsionis');" >
-<i class="fas fa-concierge-bell fa-2x"></i><br>Resepsionis
+
+<div class="col  text-center text-lowercase" onclick="check_akses('Level 4','data_lama');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('sublevel_user',array('no_user'=>$this->session->userdata('no_user'),'sublevel'=>'Level 4'));
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+
+ p-3  '><i class="fas fa-people-carry fa-2x"></i><br>Divisi Arsip</div>
+</div> 
+
+<div class="col-6 
+ text-center  text-lowercase" onclick="check_akses('Admin','Dashboard');" >
+<div class='
+
+<?php 
+
+$arsip = $this->db->get_where('user',array('no_user'=>$this->session->userdata('no_user'),'level'=>'Super Admin'));
+
+if($arsip->num_rows() >0){
+  echo " text-info hover ";
+}else{
+  echo " text-dark ";  
+}
+?>
+ p-3 '><i class="fas fa-user-cog fa-2x"></i><br>Administrator</div>
 </div> 
 
 </div>
@@ -116,28 +185,28 @@ color: cornflowerblue;
 </div>
 
 <div class="btn-group pull-right  ">
-<button class="btn btn-tranparent  pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
+<button type="button" class="btn btn-transparent pull-right"  id="dropdownMenuButton" data-toggle="dropdown">    
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle  dropdown-toggle pull-right" id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
-<img style="width:40px; height: 40px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle pull-right"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:50px; height: 50px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" ><br>        
 <?php } ?> 
 <?php } ?>
 
 </button>
 
-<div class="dropdown-menu dropdown-menu-right" style="width:300px;" >
+<div class="dropdown-menu dropdown-menu-right " style="width:300px;" >
 <div class="text-center px-6 py-6 ">
 <?php if(!file_exists('./uploads/user/'.$this->session->userdata('foto'))){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class=" img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
 <?php if($this->session->userdata('foto') != NULL){ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class=" img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" ><br>    
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/'.$this->session->userdata('foto')) ?>" img="" class="img rounded-circle border border-white" ><br>    
 <?php }else{ ?>
-<img style="width:100px; height: 100px;  border:2px solid darkcyan;" src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown"  ><br>        
+<img style="width:130px; height: 130px;  " src="<?php echo base_url('uploads/user/no_profile.jpg') ?>" img="" class="img rounded-circle border border-white" ><br>        
 <?php } ?> 
 <?php } ?>
 <b><?php echo $this->session->userdata('nama_lengkap'); ?></b><br>
@@ -152,6 +221,7 @@ color: cornflowerblue;
 </div>
 </div>  
 </div>
+
 
 
 

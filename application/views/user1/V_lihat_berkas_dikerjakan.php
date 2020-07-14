@@ -3,6 +3,34 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
+    <style>
+ .nav-tabs .nav-link {
+    background-color:#212529;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+   
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+   background-color: #17a2b8;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+ a {
+   color: #fff;
+   
+}
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+form {
+    display: inherit;
+    width: inherit;
+    margin-bottom: 0;
+    width: -webkit-fill-available;
+}
+    </style>  
 <div class="container-fluid ">
 
 
@@ -47,21 +75,7 @@
 </div>
 </div>
 
-<script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_client){
-var token             = "<?php echo $this->security->get_csrf_hash() ?>";
-$.ajax({
-type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_client="+no_client,
-url:"<?php echo base_url('User1/data_perekaman') ?>",
-success:function(data){
-$(".data_perekaman").html(data);    
-$('#data_perekaman').modal('show');
-}
 
-});
-}
-</script>
 
 <script type="text/javascript">
 $(function () {

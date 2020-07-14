@@ -7,16 +7,16 @@
 <div class="container-fluid mt-2"></div>
 <div class="col ">
 <div class="mt-2   text-center  ">
-    <h5 align="center " class="text-theme1">Data Berkas <?php echo  $static['nama_client'] ?><br><span class="fa-2x fas fa-list-alt"></span></h5>
+    <h5 align="center " class="text-info"> <span class="fa-3x fas fa-list-alt"> </span> <br>DATA BERKAS <?php echo  $static['nama_client'] ?></h5>
 </div>
 
-<table style="width:100%;" id="data_berkas" class="table  text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<table style="width:100%;" id="data_berkas" class="table  table-striped table-condensed "><thead>
+        <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >no client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >Nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama berkas</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >No Client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Nama Berkas</th>
+<th  align="center" aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
 <tbody align="center">
 </table>
@@ -29,7 +29,7 @@
 <div class="modal fade" id="data_perekaman" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-xl" role="document">
 <div class="modal-content ">
-<div class="modal-header">
+<div class="modal-header  bg-info  text-white">
 <h6 class="modal-title" id="exampleModalLabel text-center">Data yang telah direkam<span class="i"><span></h6>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">&times;</span>
@@ -83,7 +83,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_berkas",
+"data": "no_berkas",
 "orderable": false
 },
 {"data": "no_client"},

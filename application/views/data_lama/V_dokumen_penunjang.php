@@ -1,6 +1,6 @@
 
-<table style="width:100%;" id="data_berkas" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<table style="width:100%;" id="data_berkas" class="table  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+        <tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama lampiran</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Jenis Dokumen</th>
@@ -159,9 +159,9 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_berkas",
+"data": "no_berkas",
 "orderable": false,
-"class":"id_data_berkas"
+"class":"no_berkas"
 },
 {"data": "nama_lampiran"},
 {"data": "jenis_dokumen"},

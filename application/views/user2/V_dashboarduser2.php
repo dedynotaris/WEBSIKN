@@ -8,85 +8,27 @@
 border-color: rgb(185, 74, 72) !important;
 }
 </style>
-<div class="container-fluid p-2 ">
-    <div class="row">   
-<div class="col-md-9">
+<div class="container-fluid  ">
+    <div class="row p-2">   
+<div class="col mt-2">
 <div class="row">
 <div class="col">
-<div id="reportrange" style="background: #fff; cursor: pointer; padding: 2px 18px; border: 1px solid #ccc; width: 100%">
+<div id="reportrange" style="background: #fff; cursor: pointer; padding: 6px 18px; border: 1px solid #ccc; width: 100%">
 <i class="fa fa-calendar"></i>
 <span></span> <i class="fa fa-caret-down"></i>
 </div>
 </div>
   
 <div class="col">
-<button onclick="ShowGrafikBerkasHarian()" class="btn btn-sm btn-warning btn-block ">Tampilkan Berkas Grafik Harian <i class="fas fa-chart-line"></i></button>  
+<button onclick="ShowGrafikBerkasHarian()" class="btn btn-dark btn-block ">Tampilkan Berkas Grafik Harian Anda <i class="fas fa-chart-line"></i></button>  
 </div>    
+<canvas id="GrafikBerkas" width="10" height="4"></canvas>
+
 </div>    
 
-<hr>    
-<canvas id="GrafikBerkas" width="200" height="80"></canvas>
 </div>
     
-<div class="col">
-    <div class="row">
-        <div class="col-md-12 mt-4">
-            <div class="bg_data rounded-top">
-<div class="p-2 text-center">
-    <h5><?php 
-    $this->db->select('');
-$this->db->from('data_berkas_perizinan');
-$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
-$this->db->where_in('data_berkas_perizinan.status_berkas',array('Masuk','Selesai'));
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
-$perizinan = $this->db->get();
 
-echo $perizinan->num_rows();    
-    ?></h5>   
-</div>
-<div class="footer p-2 bg-dark text-white text-center" >Perizinan sedang dikerjakan <div class="float-right">
-</div></div>
-</div>
-            
-        </div>
-        
-        <div class="col-md-12 mt-4">
-            <div class="bg_data rounded-top">
-<div class="p-2 text-center">
-    <h5><?php 
-    $this->db->select('');
-$this->db->from('data_berkas');
-$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
-$this->db->where_in('data_pekerjaan.status_pekerjaan',array('ArsipSelesai','Selesai'));
-$this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas.no_pekerjaan');
-$query = $this->db->get();
-
-echo $query->num_rows();    
-    ?></h5>   
-</div>
-<div class="footer p-2 bg-dark text-white text-center" >Total data berkas <div class="float-right">
-</div></div>
-</div>
-            
-        </div>
-        <div class="col-md-12 mt-4">
-            <div class="bg_data rounded-top">
-<div class="p-2 text-center">
-    <h5><?php 
-    $this->db->select('');
-$this->db->from('data_pekerjaan');
-$this->db->where('data_pekerjaan.no_user',$this->session->userdata('no_user'));
-$this->db->where_in('status_pekerjaan',array('ArsipSelesai','Selesai'));
-echo $pekerjaan = $this->db->get()->num_rows();
-    ?></h5>   
-</div>
-<div class="footer p-2 bg-dark text-white text-center" >Total pekerjaan selesai<div class="float-right">
-
-</div></div>
-</div>
-        </div>
-   </div>
-</div>    
 </div>
 
 </body>
@@ -133,8 +75,8 @@ data: {
 labels:"",
 datasets: [{
 label: 'Grafik Berkas Masuk Milik Kamu Perharinya ',
-backgroundColor:"#116466",
-borderColor:"#FF8C00",
+backgroundColor:"#17a2b8",
+borderColor:"#17a2b8",
 BorderWidth:3,
 data:""
 }]

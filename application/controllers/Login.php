@@ -65,7 +65,8 @@ echo json_encode($status);
 }
 }
 }else{
-redirect(404);	
+echo print_r($this->input->post());
+        //redirect(404);	
 }
 }
 

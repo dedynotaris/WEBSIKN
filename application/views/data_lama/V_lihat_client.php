@@ -3,10 +3,33 @@
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
 <?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
-<?php $static = $data_client->row_array(); ?>   
+<?php $static = $data_client->row_array(); ?>
+    <style>
+ .nav-tabs .nav-link {
+    background-color:#212529;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+   
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+ a {
+   color: #fff;
+   
+}
+a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+    </style>   
 <div class="container-fluid mt-2">
     
-    <h4 class='text-center text-theme1'><i class="fa fa-2x fa-list-alt"></i><br>DATA DETAIL <?php echo $static['nama_client'] ?></h4>    
+    <h4 class='text-center text-info'><i class="fa fa-3x fa-list-alt"></i><br>DATA DETAIL <?php echo $static['nama_client'] ?></h4>    
 <ul class="nav nav-tabs">
 <li class="nav-item">
 <a class="nav-link active" data-toggle="tab" href="#jenis">Detail Dokumen Penunjang </a>

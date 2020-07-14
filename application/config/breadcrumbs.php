@@ -14,7 +14,7 @@
 | Defaults provided for twitter bootstrap 2.0
 */
 
-$config['crumb_divider'] = ' <span class="divider">&nbsp;>&nbsp;</span> ';
+$config['crumb_divider'] = ' <span class="divider">&nbsp;/&nbsp;</span> ';
 $config['tag_open'] = ' <ul class="breadcrumb"> ';
 $config['tag_close'] = ' </ul> ';
 $config['crumb_open'] = ' <li class="noactive"> ';

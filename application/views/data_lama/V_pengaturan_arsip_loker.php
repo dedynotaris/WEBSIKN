@@ -2,8 +2,16 @@
 <?php  $this->load->view('umum/data_lama/V_sidebar_data_lama'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/data_lama/V_navbar_data_lama'); ?>
-<?php  $this->load->view('umum/data_lama/V_data_data_lama'); ?>
+<?php echo $this->breadcrumbs->show(); ?>
+
 <div class="container-fluid mt-2">
+<div class="mt-4 col-2   text-center mx-auto  ">
+<i class="fas fa-cogs fa-5x text-info"></i>
+
+<br>
+Daftar Client Badan Hukum
+</div>
+
 <div class="row">
 <div class="col-md-4">
 <div class="card">
@@ -21,10 +29,9 @@
 </form>
 </div>
 </div>
-
-    <div class="col">
-        <table style="width:100%;" id="daftar_lemari" class="table  text-theme1  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
+<div class="col">
+<table style="width:100%;" id="daftar_lemari" class="table  table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
+<tr class="text-info" role="row">
 <th  align="center" aria-controls="datatable-fixed-header"  >No</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >No Lemari</th>
 <th  align="center" aria-controls="datatable-fixed-header"  >Nama Tempat</th>
@@ -32,8 +39,7 @@
 </thead>
 <tbody>
 </table>
-        
-    </div>
+</div>
 </div>
 </div>    
 

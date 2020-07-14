@@ -2,33 +2,34 @@
 <?php  $this->load->view('umum/user3/V_sidebar_user3'); ?>
 <div id="page-content-wrapper">
 <?php  $this->load->view('umum/user3/V_navbar_user3'); ?>
-    <?php $this->load->view('umum/user3/V_data_user3'); ?>
 
 <div class="container-fluid ">
 <div class="mt-2  text-center  ">
-<h5 align="center " class="text-theme1">Pekerjaan Proses<br><span class="fa-2x fas fa-retweet"></span></h5>
+<h5 align="center " class="text-info"><span class="fa-3x fas fa-retweet"></span><br>Pekerjaan Proses</h5>
 </div>   
 <div class="row">
 <div class="col">    
-<table class="table text-theme1 table-hover table-striped table-sm table-bordered text-center">
+<table class="table  table-striped text-center table-bordered">
 <tr>
+<th>No</th>
 <th>Nama client</th>
 <th>Nama Dokumen</th>
 <th>Tugas Dari</th>
-<th class="text-center">Target selesai perizinan</th>
+<th >Target selesai perizinan</th>
 <th>Aksi</th>
 </tr>
-<?php foreach ($data_tugas->result_array() as    $data){  ?>
+<?php $h=1; foreach ($data_tugas->result_array() as    $data){  ?>
 <tr>
+<td><?php echo $h++ ?></td>
 <td><?php echo $data['nama_client'] ?></td>
 <td><?php echo $data['nama_dokumen'] ?></td>
 <td><?php echo $data['nama_lengkap'] ?></td>
 <td class="text-center"><?php echo $data['target_selesai_perizinan'] ?></td>
 <td>
 
-<button onclick="form_laporan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Buat laporan"><i class="far fa-clipboard"></i></button>    
-<button onclick="form_rekam_dokumen('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>','<?php echo $data['no_client']?>');" class="btn btn-sm btn-success" title="Rekam perizinan"><i class="fa fa-pencil-alt"></i></button>    
-<button onclick="selesaikan_perizinan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-success" title="Selesaikan status perizinan"><i class="fa fa-check"></i></button>    
+<button onclick="form_laporan('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>');" class="btn btn-sm btn-info " title="Buat laporan"><i class="far fa-clipboard"></i></button>    
+<button onclick="form_rekam_dokumen('<?php echo $data['no_berkas_perizinan']?>','<?php echo $data['no_pekerjaan']?>','<?php echo $data['no_client']?>');" class="btn btn-sm btn-info " title="Rekam perizinan"> <i class="fa fa-upload"></i></button>    
+<button onclick="lihat_dokumen_client('<?php echo $data['no_client']?>');" class="btn btn-sm btn-info" title="Rekam perizinan"> <i class="fa fa-file"></i></button>    
     
 </td>
 </tr>
@@ -122,6 +123,8 @@ $("#form_laporan").find("#"+key).removeClass("is-valid");
 });
 }else{
 read_response(data);
+
+$('#data_modal').modal('hide');
 }
 $(".btn_simpan_laporan").attr("disabled", false);
 }

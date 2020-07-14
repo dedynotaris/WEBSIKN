@@ -10,7 +10,6 @@ function index_get(){
     echo "get";
 }
 
-
 public function index_post(){
 if($this->post('status') == 'CekAkses'){
 
@@ -340,6 +339,7 @@ $this->db->select('data_jenis_pekerjaan.nama_jenis,'
         . 'penugas.nama_lengkap as nama_penugas,'
         . 'data_berkas_perizinan.tanggal_penugasan,'
         . 'data_berkas_perizinan.target_selesai_perizinan,'
+        . 'data_berkas_perizinan.status_berkas as status_perizinan,'
         . 'data_berkas_perizinan.tanggal_selesai,'
         . 'data_berkas_perizinan.no_berkas_perizinan,'
         . 'data_pekerjaan.no_pekerjaan');
@@ -347,11 +347,11 @@ $this->db->from('data_berkas_perizinan');
 $this->db->join('data_pekerjaan', 'data_pekerjaan.no_pekerjaan = data_berkas_perizinan.no_pekerjaan');
 $this->db->join('data_jenis_pekerjaan', 'data_jenis_pekerjaan.no_jenis_pekerjaan = data_pekerjaan.no_jenis_pekerjaan');
 $this->db->join('nama_dokumen','nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
-$this->db->join('data_client','data_client.no_client = data_pekerjaan.no_client');
+$this->db->join('data_client','data_client.no_client = data_berkas_perizinan.no_client');
 $this->db->join('user as petugas', 'petugas.no_user = data_berkas_perizinan.no_user_perizinan');
 $this->db->join('user as penugas', 'penugas.no_user = data_berkas_perizinan.no_user_penugas');
-$this->db->where('data_berkas_perizinan.status_berkas',$this->post('status_perizinan'));    
-$this->db->where('data_berkas_perizinan.no_nama_dokumen',$this->post('no_nama_dokumen'));    
+$this->db->where('data_berkas_perizinan.no_pekerjaan',$this->post('no_pekerjaan'));    
+$this->db->where('data_berkas_perizinan.no_client',$this->post('no_client'));    
 
 $data_perizinan = $this->db->get();
 
@@ -374,7 +374,8 @@ $data[] = array(
 'tanggal_selesai'      =>$p['tanggal_selesai'],
 'no_berkas_perizinan'  =>$p['no_berkas_perizinan'],
 'no_pekerjaan'         =>$p['no_pekerjaan'],
-'no_client'            =>$p['no_client']    
+'no_client'            =>$p['no_client'],
+'status_perizinan'     =>$p['status_perizinan']    
 );    
 }
 
@@ -409,6 +410,76 @@ $status = array(
 }
 
 $this->response($status,REST_Controller::HTTP_CREATED);
+}elseif($this->post('status') == 'PihakTerlibat'){
+$this->db->select('data_client.nama_client,'
+        . 'data_client.jenis_client,'
+        . 'data_client.contact_person,'
+        . 'data_client.contact_number,'
+        . 'user.nama_lengkap as pembuat_client,'
+        . 'data_client.alamat_client,'
+        . 'data_client.no_client');
+$this->db->from('data_pemilik');
+$this->db->join('data_client', 'data_client.no_client = data_pemilik.no_client');
+$this->db->join('user', 'user.no_user = data_client.no_user');
+
+$this->db->where('data_pemilik.no_pekerjaan',$this->post('no_pekerjaan'));    
+$data_terlibat = $this->db->get();    
+
+if($data_terlibat->num_rows() == 0){
+$status = array(
+'status_response'  =>'success',    
+'messages'         =>'Pihak Terlibat Tidak Tersedia'    
+);     
+}else{
+
+foreach ($data_terlibat->result_array() as $t){
+$this->db->select('nama_dokumen.nama_dokumen,'
+        . 'data_berkas_perizinan.status_berkas,'
+        . 'data_berkas_perizinan.no_berkas_perizinan,'
+        . 'data_berkas_perizinan.target_selesai_perizinan,'
+        . 'petugas.nama_lengkap,'
+        . 'penugas.nama_lengkap as nama_penugas'
+        );
+$this->db->from('data_berkas_perizinan');
+$this->db->join('nama_dokumen', 'nama_dokumen.no_nama_dokumen = data_berkas_perizinan.no_nama_dokumen');
+$this->db->join('user as petugas', 'petugas.no_user = data_berkas_perizinan.no_user_perizinan');
+$this->db->join('user as penugas', 'penugas.no_user = data_berkas_perizinan.no_user_penugas');
+$this->db->where('data_berkas_perizinan.no_pekerjaan',$this->post('no_pekerjaan'));    
+$this->db->where('data_berkas_perizinan.no_client',$t['no_client']);    
+$data_perizinan = $this->db->get(); 
+
+$per = array();
+foreach ($data_perizinan->result_array() as $perizinan){
+$per[]=array(
+'nama_dokumen'              =>$perizinan['nama_dokumen'],
+'status_dokumen'            =>$perizinan['status_berkas'],
+'no_berkas_perizinan'       =>$perizinan['no_berkas_perizinan'],
+'petugas'                   =>$perizinan['nama_lengkap'],
+'penugas'                   =>$perizinan['nama_penugas'],
+'target_selesai'            =>$perizinan['target_selesai_perizinan'],
+);    
+}
+
+$data[] = array(
+'no_client'             =>$t['no_client'],    
+'nama_client'           =>$t['nama_client'],
+'jenis_client'          =>$t['jenis_client'],
+'no_client'             =>$t['no_client'],
+'pembuat_client'        =>$t['pembuat_client'],
+'contact_number'        =>$t['contact_number'],
+'contact_person'        =>$t['contact_person'],
+'data_perizinan'        =>$per    
+);    
+}
+
+$status = array(
+'status_response'  =>'success',    
+'messages'         =>'Pihak Terlibat Tersedia',
+'PihakTerlibat'     =>$data    
+);        
+}
+ 
+$this->response($status,REST_Controller::HTTP_CREATED);   
 }
 
 }

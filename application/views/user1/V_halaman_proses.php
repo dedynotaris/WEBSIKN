@@ -4,7 +4,7 @@
 <?php  $this->load->view('umum/user1/V_navbar_user1'); ?>
 <?php  $this->load->view('umum/user1/V_data_user1'); ?>
 <div class="container-fluid text-theme1">
-<div class=" mt-2 text-center ">
+<div class=" mt-2 text-center text-info">
 <h5 align="center"><i class="fa fa-3x fa-retweet"></i><br>Pekerjaan diproses
 </h5>
 </div>
@@ -12,8 +12,8 @@
 
 <div class="row mt-2">
 <div class="col">    
-<table class="table text-theme1 table-sm table-bordered table-striped table-hover">
-<tr>
+<table class="table table-striped ">
+    <tr class="text-info">
 <th>Nama Client</th>
 <th>Pembuat Client</th>
 <th>Tanggal dibuat</th>

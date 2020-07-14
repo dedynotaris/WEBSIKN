@@ -2,23 +2,25 @@
 <?php $this->load->view('umum/user2/V_sidebar_user2'); ?>
 <div id="page-content-wrapper">
 <?php $this->load->view('umum/user2/V_navbar_user2'); ?>
-<?php $this->load->view('umum/user2/V_data_user2'); ?>
+<?php echo $this->breadcrumbs->show(); ?>
 <div class="container-fluid">
-<div class="mt-2  text-center  ">
-    <h5 align="center " class="text-theme1">Pekerjaan Selesai<br><span class="fa-2x fab fa-font-awesome-flag"></span></h5>
-</div>    
+
+   
 <div class="row p-2">
 <div class="col ">    
-<table style="width:100%;" id="data_pekerjaan_selesai" class="table text-theme1 text-center table-striped table-condensed table-sm table-bordered  table-hover table-sm"><thead>
-<tr role="row">
-<th  align="center" aria-controls="datatable-fixed-header"  >No</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >no pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >nama client</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >jenis pekerjaan</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >tanggal selesai</th>
-<th  align="center" aria-controls="datatable-fixed-header"  >aksi</th>
+<table style="width:100%;" id="data_pekerjaan_selesai" class="table  text-center table-bordered table-striped "><thead>
+<tr class='bg-info text-center  text-white'>
+<td colspan='6'>Data Pekerjaan yang di kerjakan pada bulan  <?php echo date('F') ?></td>
+</tr>
+        <tr  role="row">
+<th aria-controls="datatable-fixed-header"  >No</th>
+<th aria-controls="datatable-fixed-header"  >No Pekerjaan</th>
+<th aria-controls="datatable-fixed-header"  >Nama Client</th>
+<th aria-controls="datatable-fixed-header"  >Jenis pekerjaan</th>
+<th aria-controls="datatable-fixed-header"  >Tanggal selesai</th>
+<th aria-controls="datatable-fixed-header"  >Aksi</th>
 </thead>
-<tbody align="center">
+<tbody >
 </table>
 
 </div>
@@ -94,7 +96,7 @@ d.token = '<?php echo $this->security->get_csrf_hash(); ?>';
 },
 columns: [
 {
-"data": "id_data_pekerjaan",
+"data": "no_pekerjaan",
 "orderable": false
 },
 {"data": "no_pekerjaan"},

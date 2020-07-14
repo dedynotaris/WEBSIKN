@@ -1,5 +1,5 @@
-            <table class="table text-theme1 table-striped table-bordered table-sm mt-2">
-                <thead>
+            <table class="table  table-striped mt-2">
+                <thead class="text-info">
                     <tr>
                         <th>No</th>
                         <th>No pekerjaan</th>
@@ -15,7 +15,7 @@
         <td><?php echo $data['no_pekerjaan'] ?></td>
         <td><?php echo $data['nama_dokumen'] ?></td>
         <td><?php echo $data['nama_lengkap'] ?></td>
-        <td><button onclick="lihat_data_perekaman('<?php echo $data['no_nama_dokumen'] ?>','<?php echo $data['no_client'] ?>')" class="btn btn-sm btn-dark btn-block" titl="Lihat rekaman data"><span class="fa fa-eye"></span></button></td>
+        <td><button onclick="lihat_data_perekaman('<?php echo $data['no_berkas'] ?>')" class="btn btn-sm btn-dark btn-block" titl="Lihat rekaman data"><span class="fa fa-eye"></span></button></td>
     </tr> 
             <?php } ?>
         </table>
@@ -40,11 +40,11 @@
 </div>
 
 <script type="text/javascript">
-function lihat_data_perekaman(no_nama_dokumen,no_pekerjaan){
+function lihat_data_perekaman(no_berkas){
 var token             = "<?php echo $this->security->get_csrf_hash() ?>";
 $.ajax({
 type:"post",
-data:"token="+token+"&no_nama_dokumen="+no_nama_dokumen+"&no_pekerjaan="+no_pekerjaan,
+data:"token="+token+"&no_berkas="+no_berkas,
 url:"<?php echo base_url('User1/data_perekaman') ?>",
 success:function(data){
 $(".data_perekaman").html(data);    
